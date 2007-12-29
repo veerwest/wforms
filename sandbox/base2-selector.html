@@ -1,0 +1,39 @@
+<html>
+<head>
+
+   <title>Test base2 Selector</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>	
+	<script type="text/javascript" src="http://base2.googlecode.com/svn/version/1.0(beta)/base2-dom-fp.js"></script>
+</head>
+
+<body>
+
+	<div title="One's title">
+		<h1>test</h1>
+	</div>
+	<script type="text/javascript">
+		base2.DOM.bind(document);
+		try {
+			document.querySelectorAll('*[title="One\'s title"]').forEach(
+				function(elem){ alert(elem.getAttribute('title')); }
+			);
+		} catch(x) {
+			document.write("<span style='color:red'>"+x+"</span>");
+		}
+ 	</script>
+<p>&nbsp;</p>	
+<h3>Source:</h3>
+<pre>&lt;div title="One's title"&gt;
+&lt;h1&gt;test&lt;/h1&gt;
+&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+base2.DOM.bind(document);
+try {
+	document.querySelectorAll('*[title="One\'s title"]').forEach(
+		function(elem){ alert(element.getAttribute('title')); }
+	);
+} catch(x) {
+	document.write("&lt;span style='color:red'&gt;"+x+"&lt;/span&gt;");
+}</pre>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>wFORMS Library Development Guidelines</title>
+<style type="text/css">
+	dt { font-weight: bold}
+	dd { margin-bottom: 1em;}
+</style>
+</head>
+<body>
+<h1>wFORMS Library Development Guidelines</h1>
+
+<h2>Source-code Documentation</h2>
+
+<p>Use JSDoc/JavaDoc syntax (see: <a href="http://jsdoc.sourceforge.net/#usage">JSDoc</a>).
+</p>
+
+<h2>Behavior Implementation</h2>
+
+<dl>
+	<dt>The behavior object</dt>
+	<dd>
+		<code>wFORMS.behaviors.<em>behaviorName</em> = { ... }</code><br/>
+		The behavior's object is: <br/>
+		1. a namespace for all functions and properties related to the behavior.<br/>
+		2. a container for customizable properties.<br/>		
+	</dd>
+	
+	<dt><em>applyTo()</em> factory method:</dt>
+	<dd>1. Inspects the given HTML element and its descendant and determine if and where the behavior should apply.<br/>
+	2. Generates an instance of the behavior<br/>
+	3. Sets event handlers as appropriate to execute the instance's <em>run()</em> method.<br/>
+	
+	<code>wFORMS.behaviors.<em>behaviorName</em>.<em>applyTo</em> = function(<em>element</em>) { 
+	}</code>
+	</dd>
+	
+	<dt><em>instance() constructor</em></dt>
+	<dd>
+		<code>var <em>mybehavior</em> = new <code>wFORMS.behaviors.<em>behaviorName</em>.instance(<em>targetElement</em>);</code><br/>
+		<em>instance</em> is called by the <em>applyTo</em> factory method. 
+	</dd>
+	 
+	<dt><em>instance.run()</em> method:</dt>
+	<dd>Executes the behavior<br/>
+	<code>wFORMS.behaviors.validation.instance.prototype.run = function(e, element) { ... }</code></dd>
+</dl>
+Other methods may be implemented as needed.
+
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>wForms 3.0 - Hint Behavior Test Suite</title>
+        <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+        <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+		<script language="JavaScript" type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+        <link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+        <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+       
+		<script type="text/javascript" src="../lib/base2-p.js"></script>
+		<script type="text/javascript" src="../lib/base2-dom-p.js"></script>>
+		<script type="text/javascript" src="../wforms_core.js"></script>
+		<script type="text/javascript" src="../wforms_hint.js"></script>
+
+		<script type="text/javascript">
+           function switchHintPosition() {
+                var f = document.getElementById('hintFieldset');            
+               if(!f.hasClass)
+                base2.DOM.bind(f);
+               if(f.hasClass('hintsTooltip')) 
+                f.removeClass('hintsTooltip');
+               else 
+                   f.addClass('hintsTooltip');
+               return false;
+           }
+		</script>
+    </head>
+
+    <body class="wForm">
+        <form id="testForm">
+            <p>
+                <a href="#" onclick="return switchHintPosition()">Switch Hint Position</a>
+            </p>
+
+            <fieldset id="hintFieldset">
+                <legend>Field Hint Examples</legend>
+
+                <div class="oneField">
+                    <label for="testInputField" class="preField">Text input:</label>
+                    <input id="testInputField" type="text" />
+                    <span id="testInputField-H" class="field-hint-inactive">Sample text input hint 1</span>
+                </div>
+
+                <div class="oneField">
+                    <label for="testTextarea" class="preField">Textarea:</label>
+                    <textarea id="testTextarea"></textarea>
+                    <span id="testTextarea-H" class="field-hint-inactive">Sample textarea hint</span>
+                </div>
+
+                <div class="oneField">
+                    <label for="testInputField11" class="preField">Select drop-down:</label>
+
+                    <select id="testInputField11">
+                        <option>1 - first choice</option>
+                        <option>2 - second choice</option>
+                        <option>3 - third choice</option>
+                    </select>
+
+                    <span id="testInputField11-H" class="field-hint-inactive">Sample hint on a drop down select</span>
+                </div>
+
+                <div class="oneField">
+                    <label for="testSelectMultiple" class="preField">Select drop-down:</label>
+
+                    <select id="testSelectMultiple" multiple="multiple">
+                        <option>1 - first choice</option>
+
+                        <option>2 - second choice</option>
+
+                        <option>3 - third choice</option>
+                    </select>
+
+                    <span id="testSelectMultiple-H" class="field-hint-inactive">Sample hint on a multiple select</span>
+                </div>
+
+                <div class="oneField">
+                    <label for="testUploadField" class="preField">File Upload:</label>
+
+                    <input id="testUploadField" type="file" />
+
+                    <span id="testUploadField-H" class="field-hint-inactive">Sample file upload hint</span>
+                </div>
+
+                <div class="oneField">
+                    <label class="preField">Radio group:</label>
+
+                    <span class="oneChoice">
+                        <input type="radio" id="radio1" name="radioGroup" />
+
+                        <label for="radio1">First choice</label>
+                    </span>
+
+                    <span class="oneChoice">
+                        <input type="radio" id="radio2" name="radioGroup" />
+
+                        <label for="radio2">Second choice</label>
+                    </span>
+
+                    <span class="oneChoice">
+                        <input type="radio" id="radio3" name="radioGroup" />
+
+                        <label for="radio3">Third choice</label>
+                    </span>
+
+                    <span id="radio1-H" class="field-hint-inactive">Radio #1 hint</span>
+
+                    <span id="radio2-H" class="field-hint-inactive">Radio #2 hint</span>
+
+                    <span id="radio3-H" class="field-hint-inactive">Radio #3 hint</span>
+                </div>
+
+                <div class="oneField">
+                    <label class="preField">Checkboxes:</label>
+
+                    <span class="oneChoice">
+                        <input type="checkbox" id="checkbox1" />
+
+                        <label for="checkbox1" class="postField">First choice</label>
+                    </span>
+
+                    <span class="oneChoice">
+                        <input type="checkbox" id="checkbox2" name="radioGroup" />
+
+                        <label for="checkbox2" class="postField">Second choice</label>
+                    </span>
+
+                    <span class="oneChoice">
+                        <input type="checkbox" id="checkbox3" name="radioGroup" />
+
+                        <label for="checkbox3" class="postField">Third choice</label>
+                    </span>
+
+                    <span id="checkbox1-H" class="field-hint-inactive">Checkbox #1 hint</span>
+
+                    <span id="checkbox2-H" class="field-hint-inactive">Checkbox #2 hint</span>
+
+                    <span id="checkbox3-H" class="field-hint-inactive">Checkbox #3 hint</span>
+                </div>
+
+                <div class="oneField">
+                    <label class="preField">Any HTML Element:</label>
+
+                    <span id="testHTMLElement" style="background-color:red">Hint Zone</span>
+
+                    <span id="testHTMLElement-H" class="field-hint-inactive">Sample hint on any HTML element</span>
+                </div>
+
+                <div style="position:absolute; top: 80px; left:600px; background-color:#eee;">
+                    <label for="testInputFieldAbs" class="preField">Absolutely positioned text input:</label>
+
+                    <input id="testInputFieldAbs" />
+
+                    <span id="testInputFieldAbs-H" class="field-hint-inactive">Sample text input hint</span>
+                </div>
+
+                <div style="position: relative; border: 1px solid #CCC; padding: 5px; margin: -5px; ">
+                    <label for="testInputFieldRel" class="preField">Text input:</label>
+
+                    <input id="testInputFieldRel" />
+
+                    <span id="testInputFieldRel-H" class="field-hint-inactive">Sample hint in a relatively positionned div</span>
+
+                    <span id="testHTMLElement2" style="position:absolute; top:50px; left: 215px; background-color:red">Absolutely Positionned Hint Zone</span>
+
+                    <span id="testHTMLElement2-H" class="field-hint-inactive">Sample hint on an absolutely positionned HTML element</span>
+                </div>
+
+                <div class="oneField" style="margin-top:50px;">
+                    <label class="preField">Hint on an HTML element with nested hints:</label>
+
+                    <div id="testHTMLElement3" style="border:1px solid #F00; padding: 5px; margin: -5px;">
+                        <div class="oneField">
+                            <input type="checkbox" id="checkbox0" />
+
+                            <label for="checkbox0" class="postField">Nested checkbox</label>
+
+                            <span id="checkbox0-H" class="field-hint-inactive">Sample nested hint</span>
+                        </div>
+
+                        <div class="oneField">
+                            <label for="testInputField0" class="preField">Nested text input:</label>
+
+                            <input id="testInputField0" />
+
+                            <span id="testInputField0-H" class="field-hint-inactive">Sample nested hint</span>
+                        </div>
+                    </div>
+
+                    <span id="testHTMLElement3-H" class="field-hint-inactive">Sample hint on an HTML element with nested fields</span>
+                </div>
+
+                <fieldset id="tfa_GuestInformation" class="">
+                    <legend>Guest Information</legend>
+
+                    <table>
+                        <tr class="headerRow">
+                            <th>&nbsp;</th>
+
+                            <th>Name&nbsp;</th>
+
+                            <th>Address City, State, Zip</th>
+
+                            <th>Full Name&nbsp;</th>
+
+  
+                            <th>Expiration Date&nbsp;</th>
+
+                            <th>Birthdate&nbsp;</th>
+                        </tr>
+
+                        <tr id="tfa_1495125532210" class="repeat alternate-0">
+                            <th>&nbsp;</th>
+
+                            <td>
+                                <div class="oneField">
+                                    <input type="text" id="tfa_PP2" name="tfa_PP2" value="" size="" class="" />
+
+                                    <div class="field-hint-inactive" id="tfa_PP2-H">
+                                        <span>Enter the first and last name of the guest. This should be the common name or nickname that will be printed on the name badge.</span>
+                                    </div>
+
+                                    <span class="errMsg" id="tfa_PP2-E">
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="oneField">
+                                    <textarea cols="12" id="tfa_pp3" name="tfa_pp3" class="">
+                                    </textarea>
+
+                                    <div class="field-hint-inactive" id="tfa_pp3-H">
+                                        <span>If different than Contact address.</span>
+                                    </div>
+
+                                    <span class="errMsg" id="tfa_pp3-E">
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="oneField">
+                                    <input type="text" id="tfa_FullName" name="tfa_FullName" value="" size="" />
+
+                                    <div class="field-hint-inactive" id="tfa_FullName-H">
+                                        <span>Enter full name of guest, exactly as shown on passport, including middle name.</span>
+                                    </div>
+
+                                    <span class="errMsg" id="tfa_FullName-E">
+                                    </span>
+                                </div>
+                            </td>
+
+  
+                            <td>
+                                <div class="oneField">
+                                    <input type="text" id="tfa_ExpirationDate" name="tfa_ExpirationDate" value="" size="10" />
+
+                                    <div class="field-hint-inactive" id="tfa_ExpirationDate-H">
+                                        <span>Enter the passport expiration date. If it will expire before June, be sure to get it renewed immediately.</span>
+                                    </div>
+
+                                    <span class="errMsg" id="tfa_ExpirationDate-E">
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="oneField">
+                                    <input type="text" id="tfa_Birthdate" name="tfa_Birthdate" value="" size="10" />
+
+                                    <div class="field-hint-inactive" id="tfa_Birthdate-H">
+                                        <span>Enter birthdate as shown on the passport.</span>
+                                    </div>
+
+                                    <span class="errMsg" id="tfa_Birthdate-E">
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </fieldset>
+        </form>
+    </body>
+</html>
+

@@ -1,0 +1,184 @@
+<html>
+<head>	
+	<title>wForms 3.0 - Calculation Behavior Test Suite</title>
+	
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+	<!-- Testing purposes -->
+	<link href="../../css/main.css" type="text/css" rel="stylesheet">
+	<link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet">
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="../../lib/base2.js"></script>
+	<script type="text/javascript" src="../../lib/base2-bom.js"></script>
+	<script type="text/javascript" src="../../lib/base2-dom.js"></script>
+	
+	<script type="text/javascript" src="../../wforms_core.js"></script>
+	<script type="text/javascript" src="../../wforms_validation.js"></script>
+	<script type="text/javascript" src="../../wforms_calculation.js"></script>
+	<script type="text/javascript" src="../../wforms_switch.js"></script>
+    <script type="text/javascript" src="../../customization/wforms_custom_clear_switch.js"></script>
+    	
+</head>
+
+<body>
+	<form id="testForm">
+		
+	<fieldset id="fieldset" style="width:45%;float:left">
+		<legend>Calculation Examples</legend>
+			<div class="oneField">
+				<label class="preField">SWITCH (Calc  E):</label>		
+				<span class="oneChoice">				
+					<input type="radio" id="switch1" name="radioSwitch1" value="14" class="calc-E switch-a"/>
+					<label for="switch1">Enable Switch (14)</label>
+				</span>
+				<span class="oneChoice">
+					<input type="radio" id="switch2" name="radioSwitch1" value="24" class="calc-E" />
+					<label for="switch2">Disable Switch (24)</label>
+				</span>
+						
+			</div>	
+			
+			<div class="offstate-a">
+				<div class="oneField">
+					<label for="testInputField" class="preField">Text input (A):</label> 
+					<input id="testInputField" type="" value="10" class="calc-A" />
+				</div>
+				<div class="oneField">
+					<label for="testTextarea" class="preField">Textarea (B):</label>
+					<textarea id="testTextarea"  class="calc-B" >40</textarea>
+				</div>
+				<div class="oneField">
+					<p>Value for calculation stored in the value attribute.</p>
+					<label for="testInputField11" class="preField">Select drop-down (C):</label>
+					<select id="testInputField11" class="calc-C">
+						<option value="">select..</option>
+						<option value="1" selected>1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+					</select>
+				</div>
+			
+				<div class="oneField">
+					<p>Value for calculation stored in the class attribute.</p>
+					<label for="testInputField11" class="preField">Select drop-down (C):</label>
+					<select id="testInputField11" class="calc-C">
+						<option value="">select..</option>
+						<option value="zz" selected class="calcval-15 otherclass">15</option>
+						<option value="ee" class="otherclass calcval-25">25</option>
+						<option value="qq" class="calcval-35">35</option>
+					</select>
+				</div>
+			</div>
+
+		<div class="oneField">
+				<label class="preField">SWITCH B:</label>		
+				<span class="oneChoice">				
+					<input type="radio" id="switch3" name="radioSwitch2" value="14" class="switch-b"/>
+					<label for="switch3">Enable Switch</label>
+				</span>
+				<span class="oneChoice">
+					<input type="radio" id="switch4" name="radioSwitch2" value="24" class="" />
+					<label for="switch4">Disable Switch</label>
+				</span>
+						
+			</div>	
+			<div class="offstate-b">
+				<div class="oneField">
+					<p>Value for calculation stored in the value attribute.</p>
+					<label for="testSelectMultiple" class="preField">Select drop-down (D):</label>
+					<select id="testSelectMultiple" multiple="multiple" class="calc-D">
+						<option value="5">5</option>
+						<option value="7">7</option>
+						<option value="12">12</option>
+					</select>
+				</div>	
+			
+				<div class="oneField">
+					<p>Value for calculation stored in the value attribute.</p>
+					<label class="preField">Radio group (E):</label>		
+					<span class="oneChoice">				
+						<input type="radio" id="radio1" name="radioGroup1" value="14" class="calc-E"/>
+						<label for="radio1">14</label>
+					</span>
+					<span class="oneChoice">
+						<input type="radio" id="radio2" name="radioGroup1" value="24" class="calc-E" />
+						<label for="radio2">24</label>
+					</span>
+					<span class="oneChoice">
+						<input type="radio" id="radio3" name="radioGroup1"  value="34" class="calc-E" />
+						<label for="radio3">34</label>
+					</span>			
+				</div>	
+				
+				<div class="oneField">
+					<p>Value for calculation stored in the value attribute.</p>
+					<label class="preField">Checkboxes (F):</label> 
+					<span class="oneChoice">
+						<input type="checkbox" id="checkbox1" value="2" class="calc-F" />
+						<label for="checkbox1" class="postField">2</label>
+					</span>
+					<span class="oneChoice">
+						<input type="checkbox" id="checkbox2" name="radioGroup" value="3" class="calc-F" />
+						<label for="checkbox2" class="postField">3</label>
+					</span>
+					<span class="oneChoice">
+						<input type="checkbox" id="checkbox3" name="radioGroup" value="4" class="calc-F" />
+						<label for="checkbox3" class="postField">4</label>			
+					</span>
+				</div>
+			</div>
+			
+		</fieldset>
+		<fieldset><legend>Totals</legend>
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total A=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalA" class="formula=A calc-TOTA" />
+			</div>			
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total B=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalB" class="formula=B calc-TOTB" />
+			</div>	
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total A+B=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalAB" class="formula=A+B" />
+			</div>		
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total C=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalC" class="formula=C" />
+			</div>			
+
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total D=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalD" class="formula=D" />
+			</div>
+						
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total E=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalE" class="formula=E" />
+			</div>
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total F=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalF" class="formula=F" />
+			</div>
+			
+			<hr/>
+			<p>Using calculated fields as variables:</p>
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Grand Total A+B=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalG" class="formula=TOTA+TOTB calc-GRANDTOTAL" />
+			</div>
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">10% of Grand Total=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalG" class="formula=GRANDTOTAL/10" />%
+			</div>
+						
+		</fieldset>
+	</form>
+</body>
+</html>

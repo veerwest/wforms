@@ -1,0 +1,82 @@
+<html>
+<head>	
+	<title>wForms 3.0 - Repeat Behavior Test Suite</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+   
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_repeat.js"></script>
+	<script type="text/javascript" src="../wforms_hint.js"></script>
+	<script type="text/javascript" src="../wforms_switch.js"></script>
+	<script type="text/javascript" src="../wforms_validation.js"></script>
+	<script type="text/javascript">
+		wFORMS.behaviors.repeat.onRepeat = function(n) {
+			var f=n.getElementsByTagName('input');
+			for(var i=0;i<f.length;i++) {
+				if(f.type=='text')
+					f[i].value='name='+f[i].name+'      id='+f[i].id;
+			}
+		}		
+	</script>
+</head>
+
+<body class="wForm">
+	<h2>Repeat Behavior Test Suite</h2>
+
+	<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="wf_TestForm" style="width: 550px">
+		
+		<h3>Repeated Fieldset with Validation</h3>
+		<fieldset class="repeat" id="test1">
+			<div class="oneField">
+				<label for="wf_Texte" class="preField" style="min-width:5em">Texte</label>
+				<textarea cols="30" rows="3" id="wf_Texte" name="wf_Texte" class="required"></textarea>
+				<span class="errMsg" id="wf_Texte-E"></span>
+			</div>
+			<div class="oneField">
+				<label for="wf_Auteur" class="preField" style="min-width:5em">Auteur</label>
+				<input type="text" id="wf_Auteur" name="wf_Auteur" value="" size="" class="required">
+				<span class="errMsg" id="wf_Auteur-E"></span>
+			</div>
+		</fieldset>
+		<div class="actions"><input type="submit" value="Submit"/></div>
+		
+		<h3>Repeated Fieldset with Field-Hint</h3>
+		<div class="repeat">
+			<div class="oneField">
+				<label for="tfa_Date" class="preField" style="min-width:5em">Date</label>
+				<input type="text" id="tfa_Date" name="tfa_Date" value="" size="" >
+				<div class="field-hint-inactive" id="tfa_Date-H">
+					<span>JJ/MM/AAAA </span>
+				</div>						
+			</div>
+		</div>
+		
+		<h3>Repeated Table Row</h3>
+		<table style="width:100%;">
+			<tbody>
+				<tr><th>Label</th></th><th>Field</th><th>Repeat</th></tr>
+				<tr class="repeat" id="choiceRepeat">
+					<td>Input:</td>
+					<td>
+						<input id="listItemValue" value="" type="hidden" />
+						<input id="listItemLabel" value="" maxlength="255" type="text" />
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		
+	</form>
+
+	
+</body>
+</html>
+
+
