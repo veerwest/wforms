@@ -16,11 +16,6 @@
 			} else {
 				alert("fail: class as an extra space: '" + testDiv.className + "'");
 			}			
-			// from \base2\src\base2\DOM\html\HTMLElement.js
-			var regexp = new RegExp("(^|\\s)" + 'changeMe' + "(\\s|$)", "g");
-			var testString = "changeMe someClass";
-   			testString = testString.replace(regexp, "");
-			document.write("'"+testString+"'");
 		}
  	</script>
 </head>
