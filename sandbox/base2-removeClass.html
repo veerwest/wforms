@@ -6,21 +6,15 @@
 	<script type="text/javascript" src="http://base2.googlecode.com/svn/trunk/lib/base2-dom-fp.js"></script>
 	<script type="text/javascript">
 		function test() {
-			
-			var testDiv = document.getElementById('testdiv');
-			base2.DOM.bind(testDiv);
-			testDiv.removeClass('changeMe');
-			
-			if(testDiv.className=='someClass'){
-				alert('success');
-			} else {
-				alert("fail: class as an extra space: '" + testDiv.className + "'");
-			}			
+			elem = document.getElementById('testdiv');
+			base2.DOM.bind(elem);
+			elem.removeClass('removeme');
+			alert(elem.className.length);
 		}
  	</script>
 </head>
 
 <body onload='test()'>
-	<div class="changeMe someClass" id="testdiv"></div>
+	<div class="removeme someclass" id="testdiv"></div>
 </body>
 </html>
