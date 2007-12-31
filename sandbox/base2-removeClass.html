@@ -1,0 +1,31 @@
+<html>
+<head>
+
+   <title>Test base2 removeClass</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>	
+	<script type="text/javascript" src="http://base2.googlecode.com/svn/trunk/lib/base2-dom-fp.js"></script>
+	<script type="text/javascript">
+		function test() {
+			
+			var testDiv = document.getElementById('testdiv');
+			base2.DOM.bind(testDiv);
+			testDiv.removeClass('changeMe');
+			
+			if(testDiv.className=='someClass'){
+				alert('success');
+			} else {
+				alert("fail: class as an extra space: '" + testDiv.className + "'");
+			}			
+			// from \base2\src\base2\DOM\html\HTMLElement.js
+			var regexp = new RegExp("(^|\\s)" + 'changeMe' + "(\\s|$)", "g");
+			var testString = "changeMe someClass";
+   			testString = testString.replace(regexp, "");
+			document.write("'"+testString+"'");
+		}
+ 	</script>
+</head>
+
+<body onload='test()'>
+	<div class="changeMe someClass" id="testdiv"></div>
+</body>
+</html>
