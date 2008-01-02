@@ -7,7 +7,7 @@ if (typeof(wFORMS) == "undefined") {
 	wFORMS = {};
 }
 wFORMS.NAME 	= "wFORMS";
-wFORMS.VERSION 	= "3.0.beta";
+wFORMS.VERSION 	= "3.0";
 wFORMS.__repr__ = function () {
 	return "[" + this.NAME + " " + this.VERSION + "]";
 };
@@ -193,12 +193,15 @@ wFORMS.applyBehaviors = function(f) {
 		if(behaviorName == 'switch'){
 			continue;
 		}
+		
 		var b = wFORMS.behaviors[behaviorName].applyTo(f);
+		
 		// behaviors may create several instances
 		// if single instance returned, convert it to an array
-		if(b && b.constructor.toString().indexOf("Array") == -1) {
+		if(b && b.constructor != Array) {
 			b=[b];			
 		} 
+		
 		for(var i=0;b && i<b.length;i++) {
 			if(!wFORMS.instances[behaviorName]) {
 				wFORMS.instances[behaviorName] = [b[i]];
@@ -235,8 +238,9 @@ wFORMS.removeBehavior = function(f, behaviorName) {
  * TODO: Returns an array if more than one instance for the given form
  */
 wFORMS.getBehaviorInstance = function(f, behaviorName) {
-	if(!wFORMS.instances[behaviorName]) 
+	if(!f || !wFORMS.instances[behaviorName]) 
 		return null;
+	
 	for(var i=0; i < wFORMS.instances[behaviorName].length; i++) {
 		if(wFORMS.instances[behaviorName][i].target==f) {
 			return wFORMS.instances[behaviorName][i];

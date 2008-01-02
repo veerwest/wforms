@@ -122,7 +122,6 @@ wFORMS.behaviors.paging = {
 	instance: function(f) {
 		this.behavior = wFORMS.behaviors.paging; 
 		this.target = f;
-
 		this.currentPageIndex = 1;
 	}
 }
@@ -191,7 +190,7 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		b.currentPageIndex = 0;
 		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p));
 		b.onApply();		
-	}
+	}	
 	return b;
 }
 
@@ -228,10 +227,9 @@ wFORMS.behaviors.paging.getPageIndex = function(elem){
  * @see wFORMS.behaviors.paging.createNextPageButton
  */
 wFORMS.behaviors.paging._createNextPageButton = function(index){
-	var elem = wFORMS.behaviors.paging.createNextPageButton();
-	elem.setAttribute(wFORMS.behaviors.paging.ATTR_INDEX, index + 1);
-	elem.id = wFORMS.behaviors.paging.ID_BUTTON_NEXT_PREFIX + index;
-
+	var elem = this.createNextPageButton();
+	elem.setAttribute(this.ATTR_INDEX, index + 1);
+	elem.id = this.ID_BUTTON_NEXT_PREFIX + index;
 	return elem;
 }
 
@@ -243,11 +241,9 @@ wFORMS.behaviors.paging._createNextPageButton = function(index){
  */
 wFORMS.behaviors.paging.createNextPageButton = function(){
 	var elem = document.createElement('input'); 
-	elem.setAttribute('value', wFORMS.behaviors.paging.MESSAGES.CAPTION_NEXT);
-	elem.setAttribute('type', 'button');
-
-	elem.className = wFORMS.behaviors.paging.CSS_BUTTON_NEXT;
-
+	elem.setAttribute('value', this.MESSAGES.CAPTION_NEXT);
+	elem.type = 'button';
+	elem.className = this.CSS_BUTTON_NEXT;
 	return elem;
 }
 
@@ -259,10 +255,9 @@ wFORMS.behaviors.paging.createNextPageButton = function(){
  * @see wFORMS.behaviors.paging.createPreviousPageButton
  */
 wFORMS.behaviors.paging._createPreviousPageButton = function(index){
-	var elem = wFORMS.behaviors.paging.createPreviousPageButton();
-	elem.setAttribute(wFORMS.behaviors.paging.ATTR_INDEX, index - 1);
-	elem.id = wFORMS.behaviors.paging.ID_BUTTON_PREVIOUS_PREFIX + index;;
-
+	var elem = this.createPreviousPageButton();
+	elem.setAttribute(this.ATTR_INDEX, index - 1);
+	elem.id = this.ID_BUTTON_PREVIOUS_PREFIX + index;;
 	return elem;
 }
 
@@ -274,11 +269,9 @@ wFORMS.behaviors.paging._createPreviousPageButton = function(index){
  */
 wFORMS.behaviors.paging.createPreviousPageButton = function(){
 	var elem = document.createElement('input'); 
-	elem.setAttribute('value', wFORMS.behaviors.paging.MESSAGES.CAPTION_PREVIOUS);
-	elem.setAttribute('type', 'button');
-
-	elem.className = wFORMS.behaviors.paging.CSS_BUTTON_PREVIOUS;
-
+	elem.setAttribute('value', this.MESSAGES.CAPTION_PREVIOUS);
+	elem.type = 'button';
+	elem.className = this.CSS_BUTTON_PREVIOUS;
 	return elem;
 }
 
@@ -288,13 +281,13 @@ wFORMS.behaviors.paging.createPreviousPageButton = function(){
  * @return	{HTMLElement}
  */
 wFORMS.behaviors.paging.instance.prototype.getOrCreatePlaceHolder = function(pageElem){
-	var id = pageElem.id + wFORMS.behaviors.paging.ID_PLACEHOLDER_SUFFIX;
+	var id = pageElem.id + this.ID_PLACEHOLDER_SUFFIX;
 	var elem = document.getElementById(id);
 
 	if(!elem){
 		elem = pageElem.appendChild(document.createElement('div'));
 		elem.id = id;
-		elem.className = wFORMS.behaviors.paging.CSS_BUTTON_PLACEHOLDER;
+		elem.className = this.CSS_BUTTON_PLACEHOLDER;
 	}	
 
 	return elem;
@@ -306,6 +299,12 @@ wFORMS.behaviors.paging.instance.prototype.getOrCreatePlaceHolder = function(pag
  */
 wFORMS.behaviors.paging.hidePage = function(e){
 	if(e) {
+		if(!e.removeClass) { // no base2.DOM.bind to speed up function 
+			e.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+		}
+		if(!e.addClass) { // no base2.DOM.bind to speed up function 
+			e.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
+		}
 		e.removeClass(wFORMS.behaviors.paging.CSS_CURRENT_PAGE);
 		e.addClass(wFORMS.behaviors.paging.CSS_PAGE);
 	}
@@ -317,6 +316,12 @@ wFORMS.behaviors.paging.hidePage = function(e){
  */
 wFORMS.behaviors.paging.showPage = function(e){
 	if(e) {
+		if(!e.removeClass) { // no base2.DOM.bind to speed up function 
+			e.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+		}
+		if(!e.addClass) { // no base2.DOM.bind to speed up function 
+			e.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
+		}
 		e.removeClass(wFORMS.behaviors.paging.CSS_PAGE);
 		e.addClass(wFORMS.behaviors.paging.CSS_CURRENT_PAGE);
 	}
@@ -340,8 +345,8 @@ wFORMS.behaviors.paging.instance.prototype.activatePage = function(index){
 	if(p) { 
 		// Workaround for Safari. Otherwise it crashes with Safari 1.2
 		var _self = this;
-		setTimeout(
-			function(){
+	//	setTimeout(
+		//	function(){
 				var index = _self.behavior.getPageIndex(p);
 				_self.setupManagedControls(index);
 				_self.behavior.hidePage(_self.behavior.getPageByIndex(_self.currentPageIndex));				
@@ -355,8 +360,8 @@ wFORMS.behaviors.paging.instance.prototype.activatePage = function(index){
 				} else {
 					_self.behavior.onPagePrevious(p);
 				}
-			}, 1
-		);
+		//	}, 1
+		//);
 	}
 }
 
@@ -374,22 +379,22 @@ wFORMS.behaviors.paging.instance.prototype.setupManagedControls = function(index
 	var b = wFORMS.behaviors.paging;
 	if(b.isFirstPageIndex(index)){
 		if(ctrl = b.getPreviousButton(index)){
-			ctrl.style.display = 'none';
+		//	ctrl.style.display = 'none';
 		}
 	}else{
 		if(ctrl = b.getPreviousButton(index)){
-			ctrl.style.display = 'inline';
+		//	ctrl.style.display = 'inline';
 		}
 	}
 
 	if(b.isLastPageIndex(index)){
 		if(ctrl = b.getNextButton(index)){
-			ctrl.style.display = 'none';
+		//	ctrl.style.display = 'none';
 		}
 		this.showSubmitButtons();
 	} else {
 		if(ctrl = b.getNextButton(index)){
-			ctrl.style.display = 'inline';
+		//	ctrl.style.display = 'inline';
 		}
 		this.hideSubmitButtons();
 	}
@@ -399,18 +404,26 @@ wFORMS.behaviors.paging.instance.prototype.setupManagedControls = function(index
  * Shows all submit buttons
  */
 wFORMS.behaviors.paging.instance.prototype.showSubmitButtons = function(){
-	this.target.querySelectorAll('input[type~="submit"]').forEach(function(elem){
-		elem.removeClass(wFORMS.behaviors.paging.CSS_SUBMIT_HIDDEN);
-	});
+	var nl = this.target.getElementsByTagName('input');
+	for(var i=0;i<nl.length;i++) {
+		if(nl[i].type=='submit') {
+			nl[i].className = nl[i].className.replace(new RegExp("(^|\\s)" + this.behavior.CSS_SUBMIT_HIDDEN + "(\\s|$)", "g"), "$2");
+		}	
+	}
 }
 
 /**
  * Hides all submit button
  */
 wFORMS.behaviors.paging.instance.prototype.hideSubmitButtons = function(){
-	this.target.querySelectorAll('input[type~="submit"]').forEach(function(elem){
-		elem.addClass(wFORMS.behaviors.paging.CSS_SUBMIT_HIDDEN);
-	});
+	var nl = this.target.getElementsByTagName('input');
+	for(var i=0;i<nl.length;i++) {
+		if(nl[i].type=='submit') {
+			if(!(new RegExp("(^|\\s)" + this.behavior.CSS_SUBMIT_HIDDEN + "(\\s|$)")).test(nl[i].className)) {
+				nl[i].className+=' '+this.behavior.CSS_SUBMIT_HIDDEN;
+			}
+		}
+	}
 }
 
 /**

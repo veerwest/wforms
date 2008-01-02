@@ -68,7 +68,7 @@
 		assertNotNull('Insert Node should be valid', bInstance.getInsertNode(elem));
 		
 		// Check counter value
-		var c = wFORMS.behaviors.repeat.getOrCreateCounterField(elem);
+		var c = bInstance.getOrCreateCounterField(elem);
 		assertEquals('0',c.value);
 		
 		// Clone master element
@@ -97,7 +97,7 @@
 		assertTrue(typeof wFORMS.behaviors.repeat.onRepeat == 'function');
 		
 		// Check counter value:
-		var c = wFORMS.behaviors.repeat.getOrCreateCounterField(elem);
+		var c = bInstance.getOrCreateCounterField(elem);
 		assertEquals('1',c.value);
 
 		// Check counter update method
@@ -106,47 +106,6 @@
 		
 	}
 	
-	/**
-	 * Speed Test
-	 * IE6:						460.9ms -> 318ms
-	 * Firefox 2.0.0.11/PC:		254.7ms -> 160ms	14537 calls
-	 * Opera 9.10/PC:   		204.7ms	-> 81ms
-	 */
-	function testSpeed() {
-	    return; // disabled
-		
-		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('speedTest2'), 'repeat');
-		
-		if(typeof console != 'undefined' && console.profile) {
-			console.profile('Repeat Behavior Speed Test');
-		}
-		var start = new Date();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		bInstance.run();
-		var end = new Date();
-		if(typeof console != 'undefined' && console.profile) {
-			console.profileEnd();
-		}
-				
-		var difference = (end.getTime() - start.getTime()) / 10;
-		if(typeof console != 'undefined' && console.log) {
-			console.log("Repeat Behavior Speed Test: "+difference + "ms.");	
-		} else {
-			var d = top.mainFrame.mainErrors.document; 
-			var p = d.createElement('p');		
-			var t = d.createTextNode("Repeat Behavior Speed Test: "+difference + "ms. ["+(new Date()).toString()+"]");		
-			p.appendChild(t);
-			d.getElementsByTagName('body')[0].appendChild(p);	
-		}
-	}
 	
 	function testRepeatLinkCreation() {
 		// Checks if repeat links are created

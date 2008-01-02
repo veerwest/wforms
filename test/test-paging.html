@@ -6,42 +6,25 @@
     <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
 	
 	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
-	<script type="text/javascript" src="jsunit/app/jsUnitMockTimeout.js"></script>
 	
 	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
     <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
-	
+	<style type="text/css">
+		/* .wForm .wfPage { display: block !important } */
+	</style>
 	<script type="text/javascript" src="../lib/base2-p.js"></script>
 	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_paging.js"></script>	
 	
 	<script type="text/javascript">
-		/* jsUnitMockTimeout.js breaks activatePage if no Click.tick is made.
-		 */	
-		wFORMS.behaviors.paging.instance.prototype._activatePage = wFORMS.behaviors.paging.instance.prototype.activatePage;
-		wFORMS.behaviors.paging.instance.prototype.activatePage = function(index) {
-			Clock.reset(); 
-			this._activatePage(index);
-			Clock.tick(10);
-		} 
-		/*  jsUnitMockTimeout.js breaks base2's DOMContentLoaded in Safari 3/Windows
-		 */
-		if (/WebKit/i.test(navigator.userAgent)) { // sniff
-		  	var _loadHandler = function() {
-			  wFORMS.onLoadHandler();
-		  	}
-		} else {
-			var _loadHandler = function() {}
-		}
-
-	
+		
 		wFORMS.behaviors.paging.instance.prototype.onApply = function() {
-			setUpPageStatus = 'complete';
+			setUpPageStatus = 'complete';		
 		} 
 		
 		function setUpPage() {
-			Clock.tick(10000); // breaks test in IE6 otherwise
+			// Clock.tick(10000); // breaks test in IE6 otherwise			
 		}
 	  
 	  	function setUp() {
@@ -54,7 +37,7 @@
 			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'paging');
 			bInstance.currentPageIndex=1; 
 			wFORMS.behaviors.paging.applyTo(document.getElementById('testForm'));
-			Clock.tick(1000);
+			// Clock.tick(1000);
 		}
 		
 		function tearDown() {
@@ -74,6 +57,14 @@
 			var page3 = document.getElementById('wfPgIndex-3');
 			assertEquals('wfPage',page3.className);
 			
+			// Check page next/previous buttons
+			assertNotNull('next button on first page',document.getElementById('wfPageNextId1'));
+			assertNull('No previous button on first page',document.getElementById('wfPagePreviousId1'));
+			assertNotNull('next button on second page',document.getElementById('wfPageNextId2'));
+			assertNotNull('previous button on second page',document.getElementById('wfPagePreviousId2'));
+			assertNull('No next button on last page',document.getElementById('wfPageNextId3'));
+			assertNotNull('previous button on last page',document.getElementById('wfPagePreviousId3'));
+			
 			// Check that submit button is hidden
 			var submitButton = document.getElementById('submitButton'); 
 			assertEquals('primaryAction wfHideSubmit',submitButton.className);
@@ -86,7 +77,7 @@
 			var page3 = document.getElementById('wfPgIndex-3');
 
 			bInstance.activatePage(2);
-			Clock.tick(10);	 // activatePage uses a timeout
+			//Clock.tick(10);	 // activatePage uses a timeout
 			assertEquals('page 1 should not be the current page','wfPage',page1.className);
 			assertEquals('page 2 should be the current page','wfCurrentPage',page2.className);
 			assertEquals('page 3 should not be the current page','wfPage',page3.className);
@@ -115,22 +106,23 @@
 		
 		function testRevealSubmit() {
 			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'paging');
+		
 			var page1 = document.getElementById('wfPgIndex-1');
 			var page2 = document.getElementById('wfPgIndex-2');
 			var page3 = document.getElementById('wfPgIndex-3');
-			
+				
 			bInstance.activatePage(2);
 			
 			bInstance.activatePage(3);
 			
 			// Check that submit button is visible
-			var submitButton = document.getElementById('submitButton'); 
+			var submitButton = document.getElementById('submitButton'); 		
 			assertEquals('primaryAction',submitButton.className);
 		}
 
 	</script>
 	</head>
-	<body class="wForm" style="padding:5px; margin:10px;" onload="_loadHandler();" >
+	<body class="wForm" style="padding:5px; margin:10px;" >
         <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
         	<div class="wfPage" id="wfPgIndex-1">
 	            <div class="oneField" id="testDiv">
@@ -166,6 +158,9 @@
 				<input type="submit" value="submit" class="primaryAction" id="submitButton" />
 			</div>
 		</form>
+		
+		<a href="#" onclick="testRevealSubmit()">click</a>
+
 		
     </body>
 	

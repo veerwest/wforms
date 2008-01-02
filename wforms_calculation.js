@@ -181,7 +181,7 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 				} 
 				if(!value) value=0;
 				
-				if(value.constructor.toString().indexOf("Array") !== -1) { // array (multiple select)
+				if(value.constructor==Array) { // array (multiple select)
 					for(var j=0;j<value.length;j++) { 
 						varval += parseFloat(value[j]);
 					}					

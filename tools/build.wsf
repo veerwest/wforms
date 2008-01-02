@@ -16,6 +16,8 @@
 	try {
 		FileSystem.deleteFile(outfile);
 		FileSystem.deleteFile(outfile_packed);
+		FileSystem.deleteFile(outfile_onlywforms);
+		FileSystem.deleteFile(outfile_onlywforms_packed);
 	} catch (ex) {}
 
 	var file = FileSystem.openTextFile(srcDir + "/wforms_core.js", 1, -2);
@@ -24,11 +26,9 @@
 	file.close();
 	source = null;
 
-	// when bug fixed in base2, use "lib/base2-dom-fp" instead of base2, base2-bom & base2-dom
 	var SUBMODULES = [
-		"lib/base2",
-		"lib/base2-bom",
-		"lib/base2-dom",
+	    "lib/base2-p",
+		"lib/base2-dom-p",
 		"wforms_core",
 		"wforms_hint",
 		"wforms_paging",
@@ -54,8 +54,8 @@
 	    "\n    For more information, visit: http://www.formassembly.com/wForms " +
 		"\n" +
 		"\n    Build script by Troels Knak-Nielsen <troelskn@gmail.com>" +
-		"\n    wForms version 3.0 by Demid Nikitin." +
-		"\n    wForms 3.0 requires base2 - copyright 2007, Dean Edwards " +
+		"\n    wForms version 3.0 by Demid Nikitin and Cedric Savarese." +
+		"\n    wForms 3.0 requires base2 - copyright 2007, Dean Edwards. " +
 		"\n***" + "/" +
 		"\n";
 
@@ -84,11 +84,14 @@
 	
 	
 	Shell.CurrentDirectory = cwd;
-	var cmd = "%comspec% /c java -jar custom_rhino.jar -c \""+outfile+"\" > \""+outfile_packed+"\" 2>&1";
+	// var cmd = "%comspec% /c java -jar custom_rhino.jar -c \""+outfile+"\" > \""+outfile_packed+"\" 2>&1";
+	var cmd = "%comspec% /c java -jar yuicompressor-2.2.4.jar --type js -o \""+outfile_packed+"\" \""+outfile+"\"";
+	
 	var r = Shell.run(cmd,0,true);
 	
 	Shell.CurrentDirectory = cwd;
-	var cmd = "%comspec% /c java -jar custom_rhino.jar -c \""+outfile_onlywforms+"\" > \""+outfile_onlywforms_packed+"\" 2>&1";
+	// var cmd = "%comspec% /c java -jar custom_rhino.jar -c \""+outfile_onlywforms+"\" > \""+outfile_onlywforms_packed+"\" 2>&1";
+	var cmd = "%comspec% /c java -jar yuicompressor-2.2.4.jar --type js -o \""+outfile_onlywforms_packed+"\" \""+outfile_onlywforms+"\"";	
 	var r = Shell.run(cmd,0,true);
 
 	]]>

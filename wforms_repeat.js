@@ -23,8 +23,7 @@ wFORMS.behaviors.repeat = {
 	SELECTOR_REMOVEABLE : '*[class~="removeable"]',
 
 	/**
-	 * Suffix for the ID of the element that is a control field to make a duplicate 
-     * of the section specififed
+	 * Suffix for the ID of 'repeat' link
      * @final
 	 */
 	ID_SUFFIX_DUPLICATE_LINK : '-wfDL',
@@ -158,13 +157,19 @@ wFORMS.behaviors.repeat = {
 	}
 }
 
+/*
+ * Temporary shortcuts
+ */
+var _b = wFORMS.behaviors.repeat;
+var _i = wFORMS.behaviors.repeat.instance;
+
 /**
  * Factory Method.
  * Applies the behavior to the given HTML element by setting the appropriate event handlers.
  * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
  * @return {object} an instance of the behavior 
  */	
-wFORMS.behaviors.repeat.applyTo = function(f) {
+_b.applyTo = function(f) {
 	// look up for the all elements that could be repeated.
 	// Trying to add event listeners to elements for adding new container.
 	// If need create Add new section element
@@ -181,42 +186,21 @@ wFORMS.behaviors.repeat.applyTo = function(f) {
 			var _b = new _self.instance(elem);
 			var e = _b.getOrCreateRepeatLink(elem);
 			e.addEventListener('click', function(event) { _b.run(event, e) }, false);
-			b.push(_b);	
-			
-			// Sets element to handled state and iterates its child matching for
-			// repeat behavior. The idea is to have different instances of repeat
-			// behavior for every group that could be duplicated
-			// for all indexes for each group begin from zero
-			_self.handleElement(elem);			
-			//elem.querySelectorAll(_self.SELECTOR_REPEAT).forEach(
-			//	function(__elem){
-			//		_self.applyTo(__elem);
-			//	}
-			//);
+			_b.setElementHandled(elem);
+			b.push(_b);							
 		}
 	);
-	// When section is duplicated remove link should be added to it
-	// It is done here because for each new section new behavior instance is created
-	// And event from the correct instance should be assigned to Remove Link
-	var addRemoveLinkToSection= function(elem){
-		e = _self.createRemoveLink(elem.id);
-		
-		// looking for the place where to paste link
-		if(elem.tagName == 'TR'){
-			var tds = elem.getElementsByTagName('TD');
-			var tdElem = tds[tds.length-1];
-			tdElem.appendChild(e);
-		} else {
-			elem.appendChild(e)
-		}
-	}
-
-	if(f.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE)){
-		addRemoveLinkToSection(f);
+	
+	if(f.hasClass(this.CSS_REMOVEABLE)){
+		var m  = this.getMasterSection(f);		
+		var _i = wFORMS.getBehaviorInstance(m, 'repeat');
+		_i.getOrCreateRemoveLink(f);
 	}
 	
 	f.querySelectorAll(this.SELECTOR_REMOVEABLE).forEach(function(e){
-		addRemoveLinkToSection(e);
+		var m  = wFORMS.behaviors.repeat.getMasterSection(e);
+		var _i = wFORMS.getBehaviorInstance(m, 'repeat');
+		_i.getOrCreateRemoveLink(e);
 	});
 	
 	for(var i=0;i<b.length;i++) {
@@ -229,7 +213,7 @@ wFORMS.behaviors.repeat.applyTo = function(f) {
  * Executed once the behavior has been applied to the document.
  * Can be overwritten.
  */
-wFORMS.behaviors.repeat.instance.prototype.onApply = function() {} 
+_i.prototype.onApply = function() {} 
 
 
 /**
@@ -238,15 +222,15 @@ wFORMS.behaviors.repeat.instance.prototype.onApply = function() {}
  * @param	{HTMLElement}	elem	Element repeat link is related to
  * @return	{HTMLElement}
  */
-wFORMS.behaviors.repeat.instance.prototype.getOrCreateRepeatLink = function(elem){
-	var id = elem.id + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK;
+_i.prototype.getOrCreateRepeatLink = function(elem){
+	var id = elem.id + this.behavior.ID_SUFFIX_DUPLICATE_LINK;
 	var e = document.getElementById(id);
 	if(!e || e == ''){
 		e = this.createRepeatLink(id);
 		
 		// Wraps in a span for better CSS positionning control.
 		var spanElem = document.createElement('span');
-		spanElem.className = wFORMS.behaviors.repeat.CSS_DUPLICATE_SPAN;
+		spanElem.className = this.behavior.CSS_DUPLICATE_SPAN;
 		e = spanElem.appendChild(e);
 		
 		if(elem.tagName.toUpperCase() == 'TR'){
@@ -271,20 +255,36 @@ wFORMS.behaviors.repeat.instance.prototype.getOrCreateRepeatLink = function(elem
  * @param	{DOMString}	id	ID of the group
  * @return	{HTMLElement}
  */
-wFORMS.behaviors.repeat.instance.prototype.createRepeatLink = function(id){
+_i.prototype.createRepeatLink = function(id){
 	// Creates repeat link element
 	var linkElem = document.createElement("A");
 				
 	linkElem.id = id;
 	linkElem.setAttribute('href', '#');	
-	linkElem.className = wFORMS.behaviors.repeat.CSS_DUPLICATE_LINK;
-	linkElem.setAttribute('title', wFORMS.behaviors.repeat.MESSAGES.ADD_TITLE);	
+	linkElem.className = this.behavior.CSS_DUPLICATE_LINK;
+	linkElem.setAttribute('title', this.behavior.MESSAGES.ADD_TITLE);	
 
 	// Appends text inside the <span element (for CSS replacement purposes) to <a element
 	linkElem.appendChild(document.createElement('span').appendChild(
-		document.createTextNode(wFORMS.behaviors.repeat.MESSAGES.ADD_CAPTION)));
+		document.createTextNode(this.behavior.MESSAGES.ADD_CAPTION)));
 
 	return linkElem;
+}
+
+/*
+ * Add remove link to duplicated section
+ * @param 	{DOMElement}	duplicated section.
+ */ 	
+_i.prototype.getOrCreateRemoveLink= function(elem){
+	var e  = this.createRemoveLink(elem.id);
+	// looking for the place where to paste link
+	if(elem.tagName == 'TR'){
+		var tds = elem.getElementsByTagName('TD');
+		var tdElem = tds[tds.length-1];
+		tdElem.appendChild(e);
+	} else {
+		elem.appendChild(e)
+	}
 }
 
 /**
@@ -292,26 +292,26 @@ wFORMS.behaviors.repeat.instance.prototype.createRepeatLink = function(id){
  * @param	{DOMString}	id	ID of the field group
  * @return	{HTMLElement}
  */
-wFORMS.behaviors.repeat.createRemoveLink = function(id){
+_i.prototype.createRemoveLink = function(id){
 	// Creates repeat link element
 	var linkElem = document.createElement("a");
 	
-	linkElem.id = id + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK;
+	linkElem.id = id + this.behavior.ID_SUFFIX_DUPLICATE_LINK;
 	linkElem.setAttribute('href', '#');	
-	linkElem.className = wFORMS.behaviors.repeat.CSS_DELETE_LINK;
-	linkElem.setAttribute('title', wFORMS.behaviors.repeat.MESSAGES.REMOVE_TITLE);	
-	linkElem.setAttribute(wFORMS.behaviors.repeat.ATTR_LINK_SECTION_ID, id);
+	linkElem.className = this.behavior.CSS_DELETE_LINK;
+	linkElem.setAttribute('title', this.behavior.MESSAGES.REMOVE_TITLE);	
+	linkElem.setAttribute(this.behavior.ATTR_LINK_SECTION_ID, id);
 
 	// Appends text inside the <span element (for CSS image replacement) to <a element
 	var spanElem = document.createElement('span');
-	spanElem.appendChild(document.createTextNode(wFORMS.behaviors.repeat.MESSAGES.REMOVE_CAPTION));
+	spanElem.appendChild(document.createTextNode(this.behavior.MESSAGES.REMOVE_CAPTION));
 	linkElem.appendChild(spanElem);
 
 	linkElem.onclick = function(event) { wFORMS.behaviors.repeat.onRemoveLinkClick(event, linkElem); };	
 
 	// Wraps in a span for better CSS positionning control.
 	var spanElem = document.createElement('span');
-	spanElem.className = wFORMS.behaviors.repeat.CSS_DELETE_SPAN;
+	spanElem.className = this.behavior.CSS_DELETE_SPAN;
 	spanElem.appendChild(linkElem);
 	
 	return spanElem;
@@ -319,22 +319,10 @@ wFORMS.behaviors.repeat.createRemoveLink = function(id){
 
 
 /**
- * Returns target area that should be copyied by repeat link element
- * @param	{HTMLElement}	elem	Repeat Link Element
- * @return	{HTMLElement}
- * @DEPRECATED
- */
-wFORMS.behaviors.repeat.instance.prototype.getTargetByRepeatLink = function(elem){
-	return this.target.matchSingle('#' + 
-		elem.id.substring(0, elem.id.length - wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK.length));
-
-}
-
-/**
  * Duplicates repeat section. Changes ID of the elements, adds event listeners
  * @param	{HTMLElement}	elem	Element to duplicate
  */
-wFORMS.behaviors.repeat.instance.prototype.duplicateSection = function(elem){
+_i.prototype.duplicateSection = function(elem){
 	// Call custom function. By default return true
 	if(!this.behavior.allowRepeat(elem, this)){
 		return false;
@@ -348,28 +336,19 @@ wFORMS.behaviors.repeat.instance.prototype.duplicateSection = function(elem){
 	this.updateDuplicatedSection(newElem);	
 	wFORMS.applyBehaviors(newElem);
 	// Calls custom function
-	wFORMS.behaviors.repeat.onRepeat(newElem);
+	this.behavior.onRepeat(newElem);
 }
 
 /**
  * Removes section specified by id
- * @param	{DOMString}	id
+ * @param	{DOMElement}	element to remove
  */
-wFORMS.behaviors.repeat.removeSection = function(id){
-	var elem = document.getElementById(id);
-
-	// Removes section
-	if(elem != ''){
-		// SHOULD NOT Decrease count of the sections
-		// or else, REPEAT TWICE + DELETE FIRST + REPEAT AGAIN => field name collision    
-		//var cElem = wFORMS.behaviors.repeat.getOrCreateCounterField(
-		//	wFORMS.behaviors.repeat.getMasterSection(elem));
-		//cElem.value = parseInt(cElem.value) - 1;
-		
+_i.prototype.removeSection = function(elem){
+	if(elem){
+		// Removes section
 		elem.parentNode.removeChild(elem);
-
 		// Calls custom function
-		wFORMS.behaviors.repeat.onRemove();
+		this.behavior.onRemove();
 	}
 }
 /**
@@ -377,7 +356,7 @@ wFORMS.behaviors.repeat.removeSection = function(id){
  * @param 	{DOMElement} 	source element
  * @return 	{DOMElement} 	target element for 'insertBefore' call.
  */
-wFORMS.behaviors.repeat.instance.prototype.getInsertNode = function(elem) {
+_i.prototype.getInsertNode = function(elem) {
  	var insertNode = elem.nextSibling;
  	
  	if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
@@ -386,7 +365,7 @@ wFORMS.behaviors.repeat.instance.prototype.getInsertNode = function(elem) {
   	
 	while(insertNode && 
 		 (insertNode.nodeType==3 ||       // skip text-node that can be generated server-side when populating a previously repeated group 
-		  insertNode.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE))) {						
+		  insertNode.hasClass(this.behavior.CSS_REMOVEABLE))) {						
 		
 		insertNode = insertNode.nextSibling;
 		
@@ -401,8 +380,11 @@ wFORMS.behaviors.repeat.instance.prototype.getInsertNode = function(elem) {
  * @param	{DOMEvent}		Event	catched
  * @param	{HTMLElement}	elem	Element produced event
  */
-wFORMS.behaviors.repeat.onRemoveLinkClick = function(event, elem){
-	this.removeSection(elem.getAttribute(wFORMS.behaviors.repeat.ATTR_LINK_SECTION_ID));
+_b.onRemoveLinkClick = function(event, link){
+	var e  = document.getElementById(link.getAttribute(this.ATTR_LINK_SECTION_ID));
+	var m  = this.getMasterSection(e);
+	var _i = wFORMS.getBehaviorInstance(m, 'repeat');
+	_i.removeSection(e);
 	if(event) event.preventDefault();
 }
 
@@ -410,7 +392,7 @@ wFORMS.behaviors.repeat.onRemoveLinkClick = function(event, elem){
  * Updates attributes inside the master element
   * @param	{HTMLElement}	elem
  */
-wFORMS.behaviors.repeat.instance.prototype.updateMasterSection = function(elem){
+_i.prototype.updateMasterSection = function(elem){
 	// do it once 
 	if(elem.doItOnce==true)
 		return true;
@@ -422,7 +404,7 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterSection = function(elem){
 	
 	this.updateMasterElements(elem, suffix);
 }
-wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem, suffix){
+_i.prototype.updateMasterElements  = function(elem, suffix){
 	
 	if(!elem || elem.nodeType!=1) 
 		return;
@@ -438,13 +420,13 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem
 		
 		// suffix may change for this node and child nodes, but not sibling nodes, so keep a copy
 		var siblingSuffix = suffix;
-		if(n.hasClass(wFORMS.behaviors.repeat.CSS_REPEATABLE)) {
+		if(n.hasClass(this.behavior.CSS_REPEATABLE)) {
 			suffix += "[0]";
 		}
-		if(!n.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE)){
+		if(!n.hasClass(this.behavior.CSS_REMOVEABLE)){
 			// Iterates over updateable attribute names
-			for(var j = 0; j < wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY.length; j++){
-				var attrName = wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY[j];
+			for(var j = 0; j < this.behavior.UPDATEABLE_ATTR_ARRAY.length; j++){
+				var attrName = this.behavior.UPDATEABLE_ATTR_ARRAY[j];
 				var value = this.clearSuffix(n.getAttribute(attrName));
 				if(!value){
 					continue;
@@ -453,8 +435,8 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem
 					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.hint.HINT_SUFFIX + ')$'),"$1" + suffix + "$2");
 				} else if(attrName=='id' && wFORMS.behaviors.validation && wFORMS.behaviors.validation.isErrorPlaceholderId(n.id)){
 					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX + ')$'),"$1" + suffix + "$2"); 
-				} else if(attrName=='id' && n.id.indexOf(wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK) != -1){
-					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK + ')$'), "$1" + suffix + "$2");
+				} else if(attrName=='id' && n.id.indexOf(this.behavior.ID_SUFFIX_DUPLICATE_LINK) != -1){
+					n.id = value.replace(new RegExp("(.*)(" + this.behavior.ID_SUFFIX_DUPLICATE_LINK + ')$'), "$1" + suffix + "$2");
 				} else if(attrName=='id'){ 
 					n.id = value + suffix;		// do not use setAttribute for the id property (doesn't work in IE6)	
 				} else if(attrName=='name'){ 
@@ -475,13 +457,15 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem
  * TODO rename
  * @param	{HTMLElement}	elem
  */
-wFORMS.behaviors.repeat.instance.prototype.updateDuplicatedSection = function(elem){
+_i.prototype.updateDuplicatedSection = function(elem){
 	
 	var index  = this.getNextDuplicateIndex(this.target);
 	var suffix = this.createSuffix(elem, index);
 
 	// Caches master section ID in the dublicate
-	elem.setAttribute(this.behavior.ATTR_MASTER_SECTION, elem.id);
+	elem[this.behavior.ATTR_MASTER_SECTION]=elem.id;
+	
+	
 	// Updates element ID (possible problems when repeat element is Hint or switch etc)
 	elem.id = this.clearSuffix(elem.id) + suffix;
 	// Updates classname	
@@ -507,7 +491,7 @@ wFORMS.behaviors.repeat.instance.prototype.updateDuplicatedSection = function(el
  * @param	elems	Array of the elements should be updated
  * @param	suffix	Suffix value should be added to attributes
  */
-wFORMS.behaviors.repeat.instance.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName){
+_i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName){
 	
 	var removeStack = new Array();
 	var l=elem.childNodes.length;
@@ -568,15 +552,15 @@ wFORMS.behaviors.repeat.instance.prototype.updateSectionChildNodes = function(el
  * Creates suffix that should be used inside duplicated repeat section
  * @param	e	Repeat section element
  */
-wFORMS.behaviors.repeat.instance.prototype.createSuffix = function(e, index){
+_i.prototype.createSuffix = function(e, index){
 
 	// var idx = e.getAttribute('dindex');
 	var suffix = '[' + (index ? index : '0' ) + ']';
     var reg = /\[(\d+)\]$/;
 	e = e.parentNode;
 	while(e){
-		if(e.hasClass && (e.hasClass(wFORMS.behaviors.repeat.CSS_REPEATABLE) ||
-			e.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE))){
+		if(e.hasClass && (e.hasClass(this.behavior.CSS_REPEATABLE) ||
+			e.hasClass(this.behavior.CSS_REMOVEABLE))){
 			var idx = reg.exec(e.id);
 			if(idx) idx = idx[1];
 			//var idx = e.getAttribute('dindex');
@@ -592,7 +576,7 @@ wFORMS.behaviors.repeat.instance.prototype.createSuffix = function(e, index){
  * @param	id	Current element id
  * @return	DOMString
  */
-wFORMS.behaviors.repeat.instance.prototype.clearSuffix = function(value){
+_i.prototype.clearSuffix = function(value){
 	if(!value){
 		return;
 	}
@@ -608,17 +592,16 @@ wFORMS.behaviors.repeat.instance.prototype.clearSuffix = function(value){
  * TODO rename
  * @param	{HTMLElement}	elem
  */
-wFORMS.behaviors.repeat.instance.prototype.updateAttributes = function(e, idSuffix, preserveRadioName){
+_i.prototype.updateAttributes = function(e, idSuffix, preserveRadioName){
 	var isHint = wFORMS.behaviors.hint && wFORMS.behaviors.hint.isHintId(e.id);
 	var isErrorPlaceholder = wFORMS.behaviors.validation && wFORMS.behaviors.validation.isErrorPlaceholderId(e.id);
-	var isDuplicate = e.id.indexOf(wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK) != -1;
+	var isDuplicateLink = e.id.indexOf(this.behavior.ID_SUFFIX_DUPLICATE_LINK) != -1;
 
 	// Sets that element belongs to duplicate group
-	wFORMS.behaviors.repeat.setInDuplicateGroup(e);
+	this.setInDuplicateGroup(e);
 
-	// TODO Check if it is neccessary
-	if(wFORMS.behaviors.repeat.isHandled(e)){
-		wFORMS.behaviors.repeat.removeHandled(e)
+	if(this.behavior.isHandled(e)){
+		this.removeHandled(e)
 	}
 
 	if(wFORMS.behaviors['switch'] && wFORMS.behaviors['switch'].isHandled(e)){
@@ -626,9 +609,9 @@ wFORMS.behaviors.repeat.instance.prototype.updateAttributes = function(e, idSuff
 	}
 
 	// Iterates over updateable attribute names
-	var l = wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY.length;
+	var l = this.behavior.UPDATEABLE_ATTR_ARRAY.length;
 	for(var i = 0; i < l; i++){
-		var attrName = wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY[i];
+		var attrName = this.behavior.UPDATEABLE_ATTR_ARRAY[i];
 		
 		var value = this.clearSuffix(e.getAttribute(attrName));	
 		if(!value){
@@ -641,8 +624,8 @@ wFORMS.behaviors.repeat.instance.prototype.updateAttributes = function(e, idSuff
 			e.id = value + idSuffix + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX;
 		} else if(isHint && attrName=='id'){			
 			e.id = value + idSuffix + wFORMS.behaviors.hint.HINT_SUFFIX;
-		} else if(isDuplicate && attrName=='id'){
-			e.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK + ')$'),"$1" + idSuffix + "$2");
+		} else if(isDuplicateLink && attrName=='id'){
+			e.id = value.replace(new RegExp("(.*)(" + this.behavior.ID_SUFFIX_DUPLICATE_LINK + ')$'),"$1" + idSuffix + "$2");
 		} else if(attrName=='id'){ 
 			e.id = value + idSuffix;	// do not use setAttribute for the id property (doesn't work in IE6)	
 		} else if(attrName=='name'){ 
@@ -658,8 +641,8 @@ wFORMS.behaviors.repeat.instance.prototype.updateAttributes = function(e, idSuff
  * @param	{HTMLElement}	elem
  * @return	{Integer}
  */
-wFORMS.behaviors.repeat.instance.prototype.getNextDuplicateIndex = function(elem){
-	var c = wFORMS.behaviors.repeat.getOrCreateCounterField(elem);
+_i.prototype.getNextDuplicateIndex = function(elem){
+	var c = this.getOrCreateCounterField(elem);
 	var newValue = parseInt(c.value) + 1;
 	c.value = newValue;
 	return newValue;
@@ -671,15 +654,15 @@ wFORMS.behaviors.repeat.instance.prototype.getNextDuplicateIndex = function(elem
  * @param	{HTMLElement}	elem
  * @return	{HTMLElement}
  */
-wFORMS.behaviors.repeat.getOrCreateCounterField = function(elem){
+_i.prototype.getOrCreateCounterField = function(elem){
 		
-	var cId = elem.id + wFORMS.behaviors.repeat.ID_SUFFIX_COUNTER;
+	var cId = elem.id + this.behavior.ID_SUFFIX_COUNTER;
 	
 	// Using getElementById except matchSingle because of lib bug
 	// when element is not exists exception is thrown
 	var cElem = document.getElementById(cId);
 	if(!cElem || cElem == ''){
-		cElem = wFORMS.behaviors.repeat.createCounterField(cId);
+		cElem = this.createCounterField(cId);
 		// Trying to find form element
 		var formElem = elem.parentNode;
 		while(formElem && formElem.tagName.toUpperCase() != 'FORM'){
@@ -696,30 +679,13 @@ wFORMS.behaviors.repeat.getOrCreateCounterField = function(elem){
  * @param	{DOMString}	id
  * @return	{HTMLElement}
  */
-wFORMS.behaviors.repeat.createCounterField = function(id){
+_i.prototype.createCounterField = function(id){
 	cElem = document.createElement('input');
 	cElem.id = id;
 	cElem.setAttribute('type', 'hidden');
 	cElem.setAttribute('name', id);
 	cElem.value = '0';
-
 	return cElem;
-}
-
-/**
- * Returns count of already duplicated sections. If was called from the behavior 
- * belonged to dupolicated section, returns false
- * @public
- * @DEPRECATED
- * @return	{Integer} or {boolean}
- */
-wFORMS.behaviors.repeat.instance.prototype.getDuplicatedSectionsCount = function(){
-	var b = wFORMS.behaviors.repeat;
-	if(b.isDuplicate(this.target)){
-		return false;
-	}
-
-	return parseInt(b.getOrCreateCounterField(this.target).value);
 }
 
 /**
@@ -728,40 +694,11 @@ wFORMS.behaviors.repeat.instance.prototype.getDuplicatedSectionsCount = function
  * @public
  * @return	{Integer} or {boolean}
  */
-wFORMS.behaviors.repeat.instance.prototype.getSectionsCount = function(){
-	var b = wFORMS.behaviors.repeat;
-	if(b.isDuplicate(this.target)){
+_i.prototype.getSectionsCount = function(){
+	if(this.behavior.isDuplicate(this.target)){
 		return false;
 	}
-
-	return parseInt(b.getOrCreateCounterField(this.target).value) + 1;
-}
-
-
-/**
- * Returns true if element is duplicate of initial group, false otherwise
- * @param	{HTMLElement}	elem
- * @return	boolean
- */
-wFORMS.behaviors.repeat.isDuplicate = function(elem){
-	return elem.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE);
-}
-
-/**
- * Sets duplicate flag to element
- * @param	{HTMLElement}	elem
- */
-wFORMS.behaviors.repeat.setDuplicate = function(elem){
-	// elem.setAttribute(wFORMS.behaviors.repeat.ATTR_DUPLICATE, 'true');
-}
-
-/**
- * Returns true if element belongs to duplicate group
- * @param	{HTMLElement}	elem
- * @return	boolean
- */
-wFORMS.behaviors.repeat.isInDuplicateGroup = function(elem){
-	return elem.getAttribute(wFORMS.behaviors.repeat.ATTR_DUPLICATE_ELEM) ? true : false;
+	return parseInt(this.getOrCreateCounterField(this.target).value) + 1;
 }
 
 /**
@@ -769,17 +706,57 @@ wFORMS.behaviors.repeat.isInDuplicateGroup = function(elem){
  * @param	{HTMLElement}	elem
  * @return	boolean
  */
-wFORMS.behaviors.repeat.setInDuplicateGroup = function(elem){
-	return elem.setAttribute(wFORMS.behaviors.repeat.ATTR_DUPLICATE_ELEM, true);
+_i.prototype.setInDuplicateGroup = function(elem){
+	return elem.setAttribute(this.behavior.ATTR_DUPLICATE_ELEM, true);
 }
+
+
+/**
+ * setElementHandled
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_i.prototype.setElementHandled = function(elem){
+	return elem.setAttribute(this.behavior.ATTR_HANDLED, true);
+}
+
+/**
+ * Remove handled attribute from element
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_i.prototype.removeHandled = function(elem){
+	return elem.removeAttribute(this.behavior.ATTR_HANDLED);
+}
+
+/**
+ * Returns true if element is duplicate of initial group, false otherwise
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_b.isDuplicate = function(elem){
+	return elem.hasClass(this.CSS_REMOVEABLE);
+}
+
+
+/**
+ * Returns true if element belongs to duplicate group
+ * (to be used by other behaviors) 
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_b.isInDuplicateGroup = function(elem){
+	return elem.getAttribute(this.ATTR_DUPLICATE_ELEM) ? true : false;
+}
+
 
 /**
  * Checks if element is already handled
  * @param	{HTMLElement}	elem
  * @return	boolean
  */
-wFORMS.behaviors.repeat.isHandled = function(elem){
-	return elem.getAttribute(wFORMS.behaviors.repeat.ATTR_HANDLED);
+_b.isHandled = function(elem){
+	return elem.getAttribute(this.ATTR_HANDLED);
 }
 
 
@@ -788,39 +765,18 @@ wFORMS.behaviors.repeat.isHandled = function(elem){
  * @param	{HTMLElement}	elem
  * @return	{HTMLElement} or false
  */
-wFORMS.behaviors.repeat.getMasterSection = function(elem){
-	if(!wFORMS.behaviors.repeat.isDuplicate(elem)){
-		return false;
-	}
-	var e = document.getElementById(elem.getAttribute(wFORMS.behaviors.repeat.ATTR_MASTER_SECTION));
-
-	return e == '' ? null : e;
+_b.getMasterSection = function(elem){
+	if(!this.isDuplicate(elem)) return false;	
+	return document.getElementById(elem[this.ATTR_MASTER_SECTION]);
 }
 
-/**
- * Handles element
- * @param	{HTMLElement}	elem
- * @return	boolean
- */
-wFORMS.behaviors.repeat.handleElement = function(elem){
-	return elem.setAttribute(wFORMS.behaviors.repeat.ATTR_HANDLED, true);
-}
-
-/**
- * Remove handled attribute from element
- * @param	{HTMLElement}	elem
- * @return	boolean
- */
-wFORMS.behaviors.repeat.removeHandled = function(elem){
-	return elem.removeAttribute(wFORMS.behaviors.repeat.ATTR_HANDLED);
-}
 
 /**
  * Executes the behavior
  * @param {event} e 
  * @param {domElement} element
  */
-wFORMS.behaviors.repeat.instance.prototype.run = function(e, element){ 	
+_i.prototype.run = function(e, element){ 	
 	this.duplicateSection(this.target);
 	if(e) e.preventDefault();
 }
