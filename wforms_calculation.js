@@ -52,8 +52,6 @@ wFORMS.behaviors.calculation  = {
 wFORMS.behaviors.calculation.applyTo = function(f) {
 	var b = new wFORMS.behaviors.calculation.instance(f);
 
-	// Selects all hints elements using predefined selector and attaches
-	// event listeners to related HTML elements for each hint
 	f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR).forEach(
 		function(elem){
 			// extract formula
@@ -146,16 +144,28 @@ wFORMS.behaviors.calculation.instance.prototype.run = function(event, element) {
 wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) {
 	var f = this.target;
 	var formula = calculation.formula;
+	var _processedVariables = new Array();
 	
 	for(var i=0; i<calculation.variables.length;i++) {
 		var v = calculation.variables[i];
 		var varval = 0;
 		var _self  = this;
-		// we don't rely on calculation.variables[i].field because 
+		
+		// We don't rely on calculation.variables[i].field because 
 		// the form may have changed since we've applied the behavior
 		// (repeat behavior for instance).
+		
+		// Since the calculations can have several variables with the same name
+		// querySelectorAll will catch them all, so we don't need to also loop 
+		// through all of them.
+		if(wFORMS.helpers.contains(_processedVariables,v.name)) {
+			continue;
+		} else {
+			_processedVariables.push(v.name);
+		}
+		 
 		// TODO: Exclude switched-off variables?
-		f.querySelectorAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+v.name+"\"]").forEach(
+		f.querySelectorAll("*[class*=\""+_self.behavior.VARIABLE_SELECTOR_PREFIX+v.name+"\"]").forEach(
 			function(f){
 				
 				// make sure the variable is an exact match.
@@ -168,40 +178,34 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 					var value = _self.getValueFromClassName(f);
 				} else {
 					var value = wFORMS.helpers.getFieldValue(f);					
-				}
-				
+				} 
 				if(!value) value=0;
 				
 				if(value.constructor.toString().indexOf("Array") !== -1) { // array (multiple select)
 					for(var j=0;j<value.length;j++) { 
 						varval += parseFloat(value[j]);
-					}
+					}					
 				} else {
 					varval += parseFloat(value);
 				}
+				
 			}
 		);		
 		
-	    var rgx = new RegExp("[^a-z]+("+v.name+")[^a-z]+","gi");
-	    
-	    var m = rgx.exec(' '+formula+' ');
-	    if (m) {
-	    	if(m[1])
-				formula = formula.replace(m[1], varval);
-			else
-				formula = formula.replace(m[0], varval);
-	    }		
+	    var rgx = new RegExp("([^a-z])("+v.name+")([^a-z])","gi");
+	    while((' '+formula+' ').match(rgx)) {
+	    	formula = (' '+formula+' ').replace(rgx, "$1"+varval+"$3");
+	    }	      
 	} 
+	  
 	try {
 		var result = eval(formula);
-//		if(result=='Infinity' || result=='NaN') {
-		// [don] Added for Safari
-		// TODO check if "result == 'NaN'" result == 'Infinity' is neccessary
 		if(result == 'Infinity' || result == 'NaN' || isNaN(result)){
 			result = 'error';
 		}
 	} catch(x) {		
-		result = 'error';		
+		result = 'error';	
+		console.log(calculation.formula, formula);	
 	} 
 	// Check if validation behavior is available. Then flag field if error.
 	var validationBehavior = wFORMS.getBehaviorInstance(this.target,'validation');	

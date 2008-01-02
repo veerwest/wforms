@@ -1,0 +1,1924 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Test Bug Report #81</title>
+<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../lib/base2-p.js"></script>
+<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+<script type="text/javascript" src="../wforms_core.js"></script>
+<script type="text/javascript" src="../wforms_repeat.js"></script>	
+<script type="text/javascript" src="../wforms_switch.js"></script>
+
+<style type="text/css">
+	.offstate-bm { display: none !important; }
+	form .onstate-bm { display: block !important; }
+	.offstate-bn { display: none !important; }
+	form .onstate-bn { display: block !important; }
+	.offstate-bo { display: none !important; }
+	form .onstate-bo { display: block !important; }
+	.offstate-bp { display: none !important; }
+	form .onstate-bp { display: block !important; }
+	.offstate-bq { display: none !important; }
+	form .onstate-bq { display: block !important; }
+	.offstate-br { display: none !important; }
+	form .onstate-br { display: block !important; }
+	.offstate-bs { display: none !important; }
+	form .onstate-bs { display: block !important; }
+	.offstate-bt { display: none !important; }
+	form .onstate-bt { display: block !important; }
+</style>
+</head>
+
+<body class="wForm">
+
+<form method="post" action="https://app.formassembly.com/responses/testprocessor" class="labelsLeftAligned hintsTooltip">
+
+<div class="oneField">
+<label for="tfa_Whattypeofinsura" class="preField">What type of insurance would you like to receive a quote on? Select one or more of the following:
+				&nbsp;<span class="reqMark">*</span></label><span class="required"><span class="oneChoice"><input type="checkbox" value="tfa_Auto" class="switch-a" id="tfa_Auto" name="tfa_Auto"><label for="tfa_Auto" class="postField">Auto (Includes Motorhomes, Travel Trailers, and Utility Trailers)</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Boat1" class="switch-b" id="tfa_Boat1" name="tfa_Boat1"><label for="tfa_Boat1" class="postField">Boat</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Condominium" class="switch-q" id="tfa_Condominium" name="tfa_Condominium"><label for="tfa_Condominium" class="postField">Condominium Unit Owner</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Boat100tmp-0824679309105" class="switch-r" id="tfa_Boat100tmp-0824679309105" name="tfa_Boat100tmp-0824679309105"><label for="tfa_Boat100tmp-0824679309105" class="postField">Home Owner's</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Condominium00tmp-0824680621804" class="switch-c" id="tfa_Condominium00tmp-0824680621804" name="tfa_Condominium00tmp-0824680621804"><label for="tfa_Condominium00tmp-0824680621804" class="postField">Jet Ski and Personal Watercraft</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Motorcycle" class="switch-d" id="tfa_Motorcycle" name="tfa_Motorcycle"><label for="tfa_Motorcycle" class="postField">Motorcycle</label></span><span class="oneChoice"><input type="checkbox" value="tfa_OffRoadIncludesA" class="switch-e" id="tfa_OffRoadIncludesA" name="tfa_OffRoadIncludesA"><label for="tfa_OffRoadIncludesA" class="postField">Off Road (Includes ATV, Dirt Bike, Snowmobile)</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Renter" class="switch-s" id="tfa_Renter" name="tfa_Renter"><label for="tfa_Renter" class="postField">Renter's</label></span></span><br><span class="errMsg" id="tfa_Whattypeofinsura-E"></span>
+</div>
+<fieldset id="tfa_Vehicles" class="offstate-a offstate-b offstate-q offstate-r offstate-c offstate-d offstate-e offstate-s">
+<legend>General Information</legend>
+<fieldset id="tfa_OwnerOperatorInf" class="repeat">
+<legend>Owner/Operator/Household Member Information (Complete for each individual starting with yourself)</legend>
+<div class="oneField">
+<label for="tfa_Relationshiptoap" class="preField">Relationship to applicant
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Relationshiptoap" name="tfa_Relationshiptoap" class="required"><option value="">Please select...</option>
+<option value="tfa_Self" class="switch-bf">Self</option>
+<option value="tfa_1879708739070" class="switch-bk">Spouse</option>
+<option value="tfa_Son" class="switch-bd">Son</option>
+<option value="tfa_Daughter" class="switch-be">Daughter</option>
+<option value="tfa_Other" class="switch-bl">Other</option></select><br><span class="errMsg" id="tfa_Relationshiptoap-E"></span>
+</div>
+<div class="offstate-bf offstate-bk offstate-bl oneField">
+<label for="tfa_Gender" class="preField">Gender
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Gender" name="tfa_Gender" class="required"><option value="">Please select...</option>
+<option value="tfa_Male" class="">Male</option>
+<option value="tfa_Female" class="">Female</option></select><br><span class="errMsg" id="tfa_Gender-E"></span>
+</div>
+<div id="tfa_FullName1" class="inlineSection offstate-bk offstate-bd offstate-be offstate-bl">
+<label class="preField">Full Name: </label><div class="oneField">
+<label for="tfa_First1" class="inlineLabel">First
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_First1" name="tfa_First1" value="" size="12" class="required"><span class="errMsg" id="tfa_First1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Middleinitial1" class="inlineLabel">Middle initial</label><input type="text" id="tfa_Middleinitial1" name="tfa_Middleinitial1" value="" size="2" class=""><span class="errMsg" id="tfa_Middleinitial1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Last1" class="inlineLabel">Last
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Last1" name="tfa_Last1" value="" size="15" class="required"><span class="errMsg" id="tfa_Last1-E"></span>
+</div>
+</div>
+<div id="tfa_DateofBirth1" class="inlineSection">
+<label class="preField">Date of Birth:</label><div class="oneField">
+<label for="tfa_Month10" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month10" name="tfa_Month10" class="required"><option value="">Please select...</option>
+<option value="tfa_1" class="">January</option>
+<option value="tfa_212" class="">February</option>
+<option value="tfa_34" class="">March</option>
+<option value="tfa_44" class="">April</option>
+<option value="tfa_54" class="">May</option>
+<option value="tfa_64" class="">June</option>
+<option value="tfa_74" class="">July</option>
+<option value="tfa_84" class="">August</option>
+<option value="tfa_93" class="">September</option>
+<option value="tfa_103" class="">October</option>
+<option value="tfa_113" class="">November</option>
+<option value="tfa_123" class="">December</option></select><span class="errMsg" id="tfa_Month10-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Day" class="inlineLabel">Day
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Day" name="tfa_Day" class="required"><option value="">Please select...</option>
+<option value="tfa_6076325415654" class="">1</option>
+<option value="tfa_22" class="">2</option>
+<option value="tfa_32" class="">3</option>
+<option value="tfa_42" class="">4</option>
+<option value="tfa_52" class="">5</option>
+<option value="tfa_62" class="">6</option>
+<option value="tfa_72" class="">7</option>
+<option value="tfa_82" class="">8</option>
+<option value="tfa_92" class="">9</option>
+<option value="tfa_102" class="">10</option>
+<option value="tfa_112" class="">11</option>
+<option value="tfa_122" class="">12</option>
+<option value="tfa_13" class="">13</option>
+<option value="tfa_14" class="">14</option>
+<option value="tfa_15" class="">15</option>
+<option value="tfa_16" class="">16</option>
+<option value="tfa_17" class="">17</option>
+<option value="tfa_181" class="">18</option>
+<option value="tfa_19" class="">19</option>
+<option value="tfa_20" class="">20</option>
+<option value="tfa_211" class="">21</option>
+<option value="tfa_221" class="">22</option>
+<option value="tfa_23" class="">23</option>
+<option value="tfa_24" class="">24</option>
+<option value="tfa_25" class="">25</option>
+<option value="tfa_26" class="">26</option>
+<option value="tfa_271" class="">27</option>
+<option value="tfa_28" class="">28</option>
+<option value="tfa_29" class="">29</option>
+<option value="tfa_30" class="">30</option>
+<option value="tfa_311" class="">31</option></select><span class="errMsg" id="tfa_Day-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year" name="tfa_Year" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year-E"></span>
+</div>
+</div>
+<fieldset id="tfa_Address" class="offstate-bf">
+<legend>Address</legend>
+<div class="oneField">
+<label for="tfa_StreetAddress" class="preField">Street Address
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_StreetAddress" name="tfa_StreetAddress" value="" size="50" class="required"><br><span class="errMsg" id="tfa_StreetAddress-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Addresscontinued" class="preField">Address continued</label><input type="text" id="tfa_Addresscontinued" name="tfa_Addresscontinued" value="" size="50" class=""><br><span class="errMsg" id="tfa_Addresscontinued-E"></span>
+</div>
+<div id="tfa_2676242319309" class="inlineSection">
+<label class="preField"></label><div class="oneField">
+<label for="tfa_City" class="inlineLabel">City
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_City" name="tfa_City" value="" size="" class="required"><span class="errMsg" id="tfa_City-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_State" class="inlineLabel">State
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_State" name="tfa_State" class="required"><option value="">Please select...</option>
+<option value="tfa_Pleaseselect" class="" selected>Please select</option>
+<option value="tfa_Alabama" class="">Alabama</option>
+<option value="tfa_Alaska" class="">Alaska</option>
+<option value="tfa_Arizona" class="">Arizona</option>
+<option value="tfa_Arkansas" class="">Arkansas</option>
+<option value="tfa_California" class="">California</option>
+<option value="tfa_Colorado" class="">Colorado</option>
+<option value="tfa_Connecticut" class="">Connecticut</option>
+<option value="tfa_Delaware" class="">Delaware</option>
+<option value="tfa_DistrictOfColumb" class="">District Of Columbia</option>
+<option value="tfa_Florida" class="">Florida</option>
+<option value="tfa_Georgia" class="">Georgia</option>
+<option value="tfa_Hawaii" class="">Hawaii</option>
+<option value="tfa_Idaho" class="">Idaho</option>
+<option value="tfa_Illinois" class="">Illinois</option>
+<option value="tfa_Indiana" class="">Indiana</option>
+<option value="tfa_Iowa" class="">Iowa</option>
+<option value="tfa_Kansas" class="">Kansas</option>
+<option value="tfa_Kentucky" class="">Kentucky</option>
+<option value="tfa_Louisiana" class="">Louisiana</option>
+<option value="tfa_Maine" class="">Maine</option>
+<option value="tfa_Maryland" class="">Maryland</option>
+<option value="tfa_Massachusetts" class="">Massachusetts</option>
+<option value="tfa_Michigan" class="">Michigan</option>
+<option value="tfa_Minnesota" class="">Minnesota</option>
+<option value="tfa_Mississippi" class="">Mississippi</option>
+<option value="tfa_Missouri" class="">Missouri</option>
+<option value="tfa_Montana" class="">Montana</option>
+<option value="tfa_Nebraska" class="">Nebraska</option>
+<option value="tfa_Nevada" class="">Nevada</option>
+<option value="tfa_NewHampshire" class="">New Hampshire</option>
+<option value="tfa_NewJersey" class="">New Jersey</option>
+<option value="tfa_NewMexico" class="">New Mexico</option>
+<option value="tfa_NewYork" class="">New York</option>
+<option value="tfa_NorthCarolina" class="">North Carolina</option>
+<option value="tfa_NorthDakota" class="">North Dakota</option>
+<option value="tfa_Ohio" class="">Ohio</option>
+<option value="tfa_Oklahoma" class="">Oklahoma</option>
+<option value="tfa_Oregon" class="">Oregon</option>
+<option value="tfa_Pennsylvania" class="">Pennsylvania</option>
+<option value="tfa_RhodeIsland" class="">Rhode Island</option>
+<option value="tfa_SouthCarolina" class="">South Carolina</option>
+<option value="tfa_SouthDakota" class="">South Dakota</option>
+<option value="tfa_Tennessee" class="">Tennessee</option>
+<option value="tfa_Texas" class="">Texas</option>
+<option value="tfa_Utah" class="">Utah</option>
+<option value="tfa_Vermont" class="">Vermont</option>
+<option value="tfa_Virginia" class="">Virginia</option>
+<option value="tfa_Washington" class="">Washington</option>
+<option value="tfa_WestVirginia" class="">West Virginia</option>
+<option value="tfa_Wisconsin" class="">Wisconsin</option>
+<option value="tfa_Wyoming" class="">Wyoming</option>
+<option value="tfa_PuertoRico" class="">Puerto Rico</option>
+<option value="tfa_VirginIsland" class="">Virgin Island</option>
+<option value="tfa_NorthernMarianaI" class="">Northern Mariana Islands</option>
+<option value="tfa_Guam" class="">Guam</option>
+<option value="tfa_AmericanSamoa" class="">American Samoa</option>
+<option value="tfa_Palau" class="">Palau</option></select><span class="errMsg" id="tfa_State-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Zip" class="inlineLabel">Zip
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Zip" name="tfa_Zip" value="" size="6" class="required"><span class="errMsg" id="tfa_Zip-E"></span>
+</div>
+</div>
+</fieldset>
+<div class="offstate-bf oneField">
+<label for="tfa_Emailaddress" class="preField">E-mail address:
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Emailaddress" name="tfa_Emailaddress" value="" size="" class="required"><br><span class="errMsg" id="tfa_Emailaddress-E"></span>
+</div>
+<div class="offstate-bf oneField">
+<label for="tfa_Preferredmethodo" class="preField">Preferred method of communication (how would you like to receive your quote?)
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Preferredmethodo" name="tfa_Preferredmethodo" class="required"><option value="">Please select...</option>
+<option value="tfa_phone1" class="">phone</option>
+<option value="tfa_email" class="">e-mail</option>
+<option value="tfa_mail" class="">mail</option></select><br><span class="errMsg" id="tfa_Preferredmethodo-E"></span>
+</div>
+<div id="tfa_Phone" class="inlineSection offstate-bf">
+<label class="preField">Phone #: </label><div class="oneField">
+<label for="tfa_6806699834504" class="inlineLabel">
+				&nbsp;<span class="reqMark">*</span></label>(<input type="text" id="tfa_6806699834504" name="tfa_6806699834504" value="" size="3" class="validate-integer required">)<span class="errMsg" id="tfa_6806699834504-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_6808077085848" class="inlineLabel">
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_6808077085848" name="tfa_6808077085848" value="" size="3" class="validate-integer required"> -<span class="errMsg" id="tfa_6808077085848-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_6809450210933" class="inlineLabel">
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_6809450210933" name="tfa_6809450210933" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_6809450210933-E"></span>
+</div>
+</div>
+<div id="tfa_SocialSecurityNu1" class="inlineSection offstate-bf">
+<label class="preField">Social Security Number:</label><div class="oneField">
+<label for="tfa_9157893697006" class="inlineLabel">
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_9157893697006" name="tfa_9157893697006" value="" size="3" class="validate-integer required"><span class="errMsg" id="tfa_9157893697006-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_9157903069522" class="inlineLabel">
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_9157903069522" name="tfa_9157903069522" value="" size="2" class="validate-integer required"><span class="errMsg" id="tfa_9157903069522-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_9157912697220" class="inlineLabel">
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_9157912697220" name="tfa_9157912697220" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_9157912697220-E"></span>
+</div>
+</div>
+<div class="offstate-bf oneField">
+<label for="tfa_DriversLicenseNu" class="preField">Driver's License Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_DriversLicenseNu" name="tfa_DriversLicenseNu" value="" size="" class="required"><br><span class="errMsg" id="tfa_DriversLicenseNu-E"></span>
+</div>
+<div class="offstate-bf oneField">
+<label for="tfa_IssuingState" class="preField">Issuing State
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_IssuingState" name="tfa_IssuingState" value="" size="" class="required"><br><span class="errMsg" id="tfa_IssuingState-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Occupation" class="preField">Occupation
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Occupation" name="tfa_Occupation" value="" size="" class="required"><br><span class="errMsg" id="tfa_Occupation-E"></span>
+</div>
+<div class="offstate-bd offstate-be oneField">
+<label for="tfa_Ifoccupationisfu" class="preField">If occupation is full-time student, is the grade point average 3.0 or higher?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Ifoccupationisfu" name="tfa_Ifoccupationisfu" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes" class="">Yes</option>
+<option value="tfa_No" class="">No</option></select><br><span class="errMsg" id="tfa_Ifoccupationisfu-E"></span>
+</div>
+<div class="offstate-a offstate-b offstate-c offstate-d offstate-e oneField">
+<label for="tfa_Hasanyoperatordr" class="preField">Has this operator/driver had any violations, accidents or claims in the past five (5) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Hasanyoperatordr" name="tfa_Hasanyoperatordr" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes1" class="switch-i">Yes</option>
+<option value="tfa_No1" class="">No</option></select><br><span class="errMsg" id="tfa_Hasanyoperatordr-E"></span>
+</div>
+<fieldset id="tfa_ViolationsAccide" class="repeat offstate-i">
+<legend>Violations / Accidents / Claims Detail (Complete for each incident)</legend>
+<div id="tfa_Date1" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month" name="tfa_Month" class="required"><option value="">Please select...</option>
+<option value="tfa_6076322040117" class="">January</option>
+<option value="tfa_2" class="">February</option>
+<option value="tfa_3" class="">March</option>
+<option value="tfa_4" class="">April</option>
+<option value="tfa_5" class="">May</option>
+<option value="tfa_6" class="">June</option>
+<option value="tfa_7" class="">July</option>
+<option value="tfa_8" class="">August</option>
+<option value="tfa_91" class="">September</option>
+<option value="tfa_101" class="">October</option>
+<option value="tfa_111" class="">November</option>
+<option value="tfa_121" class="">December</option></select><span class="errMsg" id="tfa_Month-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year11" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year11" name="tfa_Year11" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year11-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Type" class="preField">Type
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Type" name="tfa_Type" class="required"><option value="">Please select...</option>
+<option value="tfa_AccidentMinor" class="">accident, negligent</option>
+<option value="tfa_ViolationMajor" class="">accident, not at fault</option>
+<option value="tfa_ViolationOther" class="">violation</option>
+<option value="tfa_other1" class="">major violation</option>
+<option value="tfa_otherclaimhailgl" class="">other claim (hail, glass, etc.)</option></select><div class="field-hint-inactive" id="tfa_Type-H"><span>* Major violations include but are not limited to:  drag racing, operating under the influence of alcohol or drugs, reckless driving, manslaughter, negligent homicide or conviction of felony with a motor vehicle.</span></div>
+<br><span class="errMsg" id="tfa_Type-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Description" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description" name="tfa_Description" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amountoflossifan" class="preField">Amount of loss (if any)</label><input type="text" id="tfa_Amountoflossifan" name="tfa_Amountoflossifan" value="" size="" class=""><br><span class="errMsg" id="tfa_Amountoflossifan-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Auto1" class="offstate-a">
+<legend>Auto</legend>
+<div id="tfa_ExpirationofCurr1" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month1" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month1" name="tfa_Month1" class="required"><option value="">Please select...</option>
+<option value="tfa_January" class="">January</option>
+<option value="tfa_February1" class="">February</option>
+<option value="tfa_March1" class="">March</option>
+<option value="tfa_April1" class="">April</option>
+<option value="tfa_May1" class="">May</option>
+<option value="tfa_June1" class="">June</option>
+<option value="tfa_July1" class="">July</option>
+<option value="tfa_August1" class="">August</option>
+<option value="tfa_September1" class="">September</option>
+<option value="tfa_October1" class="">October</option>
+<option value="tfa_November1" class="">November</option>
+<option value="tfa_December1" class="">December</option></select><span class="errMsg" id="tfa_Month1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year12" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year12" name="tfa_Year12" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year12-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Howmanyyearshave" class="preField">How many years have you had continuous auto liability coverage?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Howmanyyearshave" name="tfa_Howmanyyearshave" class="required"><option value="">Please select...</option>
+<option value="tfa_lessthan1year" class="">less than 1 year</option>
+<option value="tfa_12years" class="">1-2 years</option>
+<option value="tfa_34years" class="">3-4 years</option>
+<option value="tfa_45years" class="">4-5 years</option>
+<option value="tfa_5years" class="">5+ years</option></select><br><span class="errMsg" id="tfa_Howmanyyearshave-E"></span>
+</div>
+<fieldset id="tfa_VehicleDetailsCo" class="repeat">
+<legend>Vehicle Details (Complete for each vehicle)</legend>
+<div class="oneField">
+<label for="tfa_Year2" class="preField">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year2" name="tfa_Year2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Year2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Make" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make" name="tfa_Make" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model" name="tfa_Model" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_VIN17digits" class="preField">VIN (17 digits)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_VIN17digits" name="tfa_VIN17digits" value="" size="" class="required"><br><span class="errMsg" id="tfa_VIN17digits-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_OdometerMiles" class="preField">Odometer/Miles
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_OdometerMiles" name="tfa_OdometerMiles" value="" size="" class="required"><br><span class="errMsg" id="tfa_OdometerMiles-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doesthisvehicleh" class="preField">Does this vehicle have four-wheel anti-lock brakes (ABS)?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doesthisvehicleh" name="tfa_Doesthisvehicleh" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes2" class="">Yes</option>
+<option value="tfa_No2" class="">No</option></select><br><span class="errMsg" id="tfa_Doesthisvehicleh-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doesthisvehicleh1" class="preField">Does this vehicle have any non-factory installed equipment?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doesthisvehicleh1" name="tfa_Doesthisvehicleh1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes3" class="switch-g">Yes</option>
+<option value="tfa_No3" class="">No</option></select><br><span class="errMsg" id="tfa_Doesthisvehicleh1-E"></span>
+</div>
+<fieldset id="tfa_NonFactoryEquipm" class="offstate-g">
+<legend>Non Factory Equipment</legend>
+<div class="oneField">
+<label for="tfa_Pleasedescribe" class="preField">Description and value ($):
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Pleasedescribe" name="tfa_Pleasedescribe" value="" size="" class="required"><br><span class="errMsg" id="tfa_Pleasedescribe-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Whichoperatorpri" class="preField">Which operator primarily drives this vehicle?
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Whichoperatorpri" name="tfa_Whichoperatorpri" value="" size="" class="required"><br><span class="errMsg" id="tfa_Whichoperatorpri-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Primaryuseofvehi" class="preField">Primary use of vehicle:
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Primaryuseofvehi" name="tfa_Primaryuseofvehi" class="required"><option value="">Please select...</option>
+<option value="tfa_commute" class="switch-h">commute</option>
+<option value="tfa_pleasure" class="switch-j">pleasure</option>
+<option value="tfa_business" class="switch-k">business</option></select><br><span class="errMsg" id="tfa_Primaryuseofvehi-E"></span>
+</div>
+<div class="offstate-h oneField">
+<label for="tfa_Milesoneway" class="preField">Miles one way:
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Milesoneway" name="tfa_Milesoneway" value="" size="" class="required"><br><span class="errMsg" id="tfa_Milesoneway-E"></span>
+</div>
+<div class="offstate-j oneField">
+<label for="tfa_Annualmiles" class="preField">Annual miles:
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Annualmiles" name="tfa_Annualmiles" value="" size="" class="required"><br><span class="errMsg" id="tfa_Annualmiles-E"></span>
+</div>
+<div class="offstate-k oneField">
+<label for="tfa_Pleasedescribe1" class="preField">Please describe:
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Pleasedescribe1" name="tfa_Pleasedescribe1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Pleasedescribe1-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Doyouhaveautilit" class="preField">Do you have a utility or travel trailer that you would like to insure?
+	&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveautilit" name="tfa_Doyouhaveautilit" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes39" class="switch-f">Yes</option>
+<option value="tfa_No39" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveautilit-E"></span>
+</div>
+<fieldset id="tfa_TravelTrailerUti" class="offstate-f">
+<legend>Travel Trailer / Utility Trailer</legend>
+<fieldset id="tfa_TrailerInformati" class="repeat">
+<legend>Trailer Information (Please complete for each trailer)</legend>
+<div class="oneField">
+<label for="tfa_Trailertype" class="preField">Trailer type:
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Trailertype" name="tfa_Trailertype" class="required"><option value="">Please select...</option>
+<option value="tfa_travel" class="switch-bg">travel</option>
+<option value="tfa_utility" class="">utility</option></select><br><span class="errMsg" id="tfa_Trailertype-E"></span>
+</div>
+<div class="offstate-bg oneField">
+<label for="tfa_Leftatcampsitepe" class="preField">Left at campsite permanently?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Leftatcampsitepe" name="tfa_Leftatcampsitepe" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes40" class="">Yes</option>
+<option value="tfa_No40" class="">No</option></select><br><span class="errMsg" id="tfa_Leftatcampsitepe-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Make9" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make9" name="tfa_Make9" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make9-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model9" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model9" name="tfa_Model9" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model9-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear8" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear8" name="tfa_ModelYear8" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear8-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_VehicleIdentific" class="preField">Vehicle Identification Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_VehicleIdentific" name="tfa_VehicleIdentific" value="" size="40" class="required"><br><span class="errMsg" id="tfa_VehicleIdentific-E"></span>
+</div>
+<div id="tfa_Length1" class="inlineSection">
+<label class="preField">Length:</label><div class="oneField">
+<label for="tfa_Feet1" class="inlineLabel">Feet
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Feet1" name="tfa_Feet1" value="" size="" class="required"><span class="errMsg" id="tfa_Feet1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Inches1" class="inlineLabel">Inches
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Inches1" name="tfa_Inches1" value="" size="" class="required"><span class="errMsg" id="tfa_Inches1-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_CurrentMarketVal2" class="preField">Current Market Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_CurrentMarketVal2" name="tfa_CurrentMarketVal2" value="" size="" class="required"><br><span class="errMsg" id="tfa_CurrentMarketVal2-E"></span>
+</div>
+</fieldset>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Weoffera10discou" class="preField">We offer a 10% discount on your car insurance if you pay monthly with an automatic bank withdrawal.  Would you like us to quote this option?</label><select id="tfa_Weoffera10discou" name="tfa_Weoffera10discou" class=""><option value="">Please select...</option>
+<option value="tfa_Yes48" class="">Yes</option>
+<option value="tfa_No48" class="">No</option></select><br><span class="errMsg" id="tfa_Weoffera10discou-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Weofferaonetime1" class="preField">We offer a one-time 10% discount on both your auto and home owner's insurance if we write them with the same effective date.  Would you like us to quote this option?</label><select id="tfa_Weofferaonetime1" name="tfa_Weofferaonetime1" class=""><option value="">Please select...</option>
+<option value="tfa_Yes49" class="">Yes</option>
+<option value="tfa_No49" class="">No</option></select><br><span class="errMsg" id="tfa_Weofferaonetime1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Wouldyoulikeusto3" class="preField">Would you like us to quote an umbrella?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Wouldyoulikeusto3" name="tfa_Wouldyoulikeusto3" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes44" class="switch-bm">Yes</option>
+<option value="tfa_No44" class="">No</option></select><br><span class="errMsg" id="tfa_Wouldyoulikeusto3-E"></span>
+</div>
+<div class="offstate-bm oneField">
+<label for="tfa_Coveragelimit" class="preField">Coverage limit
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Coveragelimit" name="tfa_Coveragelimit" class="required"><option value="">Please select...</option>
+<option value="tfa_1000000" class="">$1,000,000</option>
+<option value="tfa_4885498954508" class="">$2,000,000</option>
+<option value="tfa_3000000" class="">$3,000,000</option>
+<option value="tfa_4000000" class="">$4,000,000</option>
+<option value="tfa_5000000" class="">$5,000,000</option></select><br><span class="errMsg" id="tfa_Coveragelimit-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Boat" class="offstate-b">
+<legend>Boat</legend>
+<div id="tfa_ExpirationofCurr" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month2" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month2" name="tfa_Month2" class="required"><option value="">Please select...</option>
+<option value="tfa_January3" class="">January</option>
+<option value="tfa_February4" class="">February</option>
+<option value="tfa_March4" class="">March</option>
+<option value="tfa_April4" class="">April</option>
+<option value="tfa_May4" class="">May</option>
+<option value="tfa_June4" class="">June</option>
+<option value="tfa_July4" class="">July</option>
+<option value="tfa_August4" class="">August</option>
+<option value="tfa_September4" class="">September</option>
+<option value="tfa_October4" class="">October</option>
+<option value="tfa_November4" class="">November</option>
+<option value="tfa_December4" class="">December</option></select><span class="errMsg" id="tfa_Month2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year1" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year1" name="tfa_Year1" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year1-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Primarywatersnav" class="preField">Primary waters navigated
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Primarywatersnav" name="tfa_Primarywatersnav" class="required"><option value="">Please select...</option>
+<option value="tfa_inland" class="">inland</option>
+<option value="tfa_coastal" class="">coastal</option>
+<option value="tfa_state1" class="">Great Lakes</option></select><br><span class="errMsg" id="tfa_Primarywatersnav-E"></span>
+</div>
+<fieldset id="tfa_VesselInformatio" class="repeat">
+<legend>Vessel Information (Please complete for each vessel)</legend>
+<div class="oneField">
+<label for="tfa_Make1" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make1" name="tfa_Make1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model1" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model1" name="tfa_Model1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear" name="tfa_ModelYear" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear-E"></span>
+</div>
+<div id="tfa_Length" class="inlineSection">
+<label class="preField">Length:</label><div class="oneField">
+<label for="tfa_Feet" class="inlineLabel">Feet
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Feet" name="tfa_Feet" value="" size="" class="required"><span class="errMsg" id="tfa_Feet-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Inches" class="inlineLabel">Inches
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Inches" name="tfa_Inches" value="" size="" class="required"><span class="errMsg" id="tfa_Inches-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_HullIDNumberHIN" class="preField">Hull ID Number (HIN)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_HullIDNumberHIN" name="tfa_HullIDNumberHIN" value="" size="" class="required"><br><span class="errMsg" id="tfa_HullIDNumberHIN-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofMainDriveEngin" class="preField"># of Main Drive Engines
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ofMainDriveEngin" name="tfa_ofMainDriveEngin" value="" size="" class="required"><br><span class="errMsg" id="tfa_ofMainDriveEngin-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_HorsepowerofEach" class="preField">Horsepower of Each Engine
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_HorsepowerofEach" name="tfa_HorsepowerofEach" value="" size="" class="required"><br><span class="errMsg" id="tfa_HorsepowerofEach-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_PowerType" class="preField">Power Type
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_PowerType" name="tfa_PowerType" class="required"><option value="">Please select...</option>
+<option value="tfa_inboard" class="">inboard</option>
+<option value="tfa_outboard" class="">outboard</option>
+<option value="tfa_inboardoutdrive" class="">inboard/outdrive</option>
+<option value="tfa_jetdrive" class="">jet drive</option>
+<option value="tfa_outboardjetdrive" class="">outboard jet drive</option>
+<option value="tfa_sail" class="">sail</option>
+<option value="tfa_noengine" class="">no engine</option></select><br><span class="errMsg" id="tfa_PowerType-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_HullMaterial" class="preField">Hull Material
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_HullMaterial" name="tfa_HullMaterial" class="required"><option value="">Please select...</option>
+<option value="tfa_aluminum" class="">aluminum</option>
+<option value="tfa_fiber" class="">fiberglass</option>
+<option value="tfa_wood" class="">wood</option>
+<option value="tfa_fiberoverwood" class="">fiberglass over wood</option>
+<option value="tfa_steel" class="">steel</option>
+<option value="tfa_composite" class="">composite</option>
+<option value="tfa_other2" class="">other</option></select><br><span class="errMsg" id="tfa_HullMaterial-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ProtectiveDevice" class="preField">Protective Devices
+				&nbsp;<span class="reqMark">*</span></label><span class="required"><span class="oneChoice"><input type="checkbox" value="tfa_none" class="" id="tfa_none" name="tfa_none"><label for="tfa_none" class="postField">none</label></span><span class="oneChoice"><input type="checkbox" value="tfa_automaticfireext" class="" id="tfa_automaticfireext" name="tfa_automaticfireext"><label for="tfa_automaticfireext" class="postField">automatic fire extinguishing equipment</label></span><span class="oneChoice"><input type="checkbox" value="tfa_8089469692355" class="" id="tfa_8089469692355" name="tfa_8089469692355"><label for="tfa_8089469692355" class="postField">alarm system (high water/fire/theft)</label></span><span class="oneChoice"><input type="checkbox" value="tfa_centralstationmo" class="" id="tfa_centralstationmo" name="tfa_centralstationmo"><label for="tfa_centralstationmo" class="postField">central station monitoring system</label></span><span class="oneChoice"><input type="checkbox" value="tfa_automaticfireext00tmp-8825211233471" class="" id="tfa_automaticfireext00tmp-8825211233471" name="tfa_automaticfireext00tmp-8825211233471"><label for="tfa_automaticfireext00tmp-8825211233471" class="postField">no strike lightining system</label></span></span><br><span class="errMsg" id="tfa_ProtectiveDevice-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_AmountofCoverage" class="preField">Amount of Coverage (including motors and equipment attached to vessel, excluding trailer)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_AmountofCoverage" name="tfa_AmountofCoverage" value="" size="" class="required"><br><span class="errMsg" id="tfa_AmountofCoverage-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveatransp1" class="preField">Do you have a transport trailer you would like to insure?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveatransp1" name="tfa_Doyouhaveatransp1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes41" class="switch-bh">Yes</option>
+<option value="tfa_No41" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveatransp1-E"></span>
+</div>
+<fieldset id="tfa_DescriptionofTra" class="offstate-bh">
+<legend>Description of Trailer</legend>
+<div class="oneField">
+<label for="tfa_Make2" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make2" name="tfa_Make2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model2" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model2" name="tfa_Model2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear1" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear1" name="tfa_ModelYear1" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Value" class="preField">Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Value" name="tfa_Value" value="" size="" class="required"><br><span class="errMsg" id="tfa_Value-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_SerialNumber" class="preField">Serial Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_SerialNumber" name="tfa_SerialNumber" value="" size="" class="required"><br><span class="errMsg" id="tfa_SerialNumber-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_PrimaryOperator" class="">
+<legend>Primary Operator</legend>
+<div class="oneField">
+<label for="tfa_Numberofyearsofw" class="preField">Number of years of watercraft ownership
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Numberofyearsofw" name="tfa_Numberofyearsofw" value="" size="" class="required"><br><span class="errMsg" id="tfa_Numberofyearsofw-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Hasthisoperatorc" class="preField">Has this operator completed a boating safety course?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Hasthisoperatorc" name="tfa_Hasthisoperatorc" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes4" class="">Yes</option>
+<option value="tfa_No4" class="">No</option></select><br><span class="errMsg" id="tfa_Hasthisoperatorc-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Haveyouhadinsura" class="preField">Have you had insurance on this boat (or a similar boat) for the past 12 months with no lapse?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadinsura" name="tfa_Haveyouhadinsura" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes5" class="">Yes</option>
+<option value="tfa_No5" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadinsura-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Haveyouhadanymar" class="preField">Have you had any marine losses in the past three (3) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadanymar" name="tfa_Haveyouhadanymar" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes6" class="switch-l">Yes</option>
+<option value="tfa_No6" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadanymar-E"></span>
+</div>
+<fieldset id="tfa_LossDetailsPleas" class="repeat offstate-l">
+<legend>Loss Details (Please complete for each incident)</legend>
+<div id="tfa_Date" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month12" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month12" name="tfa_Month12" class="required"><option value="">Please select...</option>
+<option value="tfa_January1" class="">January</option>
+<option value="tfa_February2" class="">February</option>
+<option value="tfa_March2" class="">March</option>
+<option value="tfa_April2" class="">April</option>
+<option value="tfa_May2" class="">May</option>
+<option value="tfa_June2" class="">June</option>
+<option value="tfa_July2" class="">July</option>
+<option value="tfa_August2" class="">August</option>
+<option value="tfa_September2" class="">September</option>
+<option value="tfa_October2" class="">October</option>
+<option value="tfa_November2" class="">November</option>
+<option value="tfa_December2" class="">December</option></select><span class="errMsg" id="tfa_Month12-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year3" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year3" name="tfa_Year3" value="" size="" class="required"><span class="errMsg" id="tfa_Year3-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Description1" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description1" name="tfa_Description1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amount" class="preField">Amount ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Amount" name="tfa_Amount" value="" size="" class="required"><br><span class="errMsg" id="tfa_Amount-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_JetSkiPersonalWa" class="offstate-c">
+<legend>Jet Ski / Personal Watercraft</legend>
+<div id="tfa_ExpirationofCurr2" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month3" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month3" name="tfa_Month3" class="required"><option value="">Please select...</option>
+<option value="tfa_January4" class="">January</option>
+<option value="tfa_February5" class="">February</option>
+<option value="tfa_March5" class="">March</option>
+<option value="tfa_April5" class="">April</option>
+<option value="tfa_May5" class="">May</option>
+<option value="tfa_June5" class="">June</option>
+<option value="tfa_July5" class="">July</option>
+<option value="tfa_August5" class="">August</option>
+<option value="tfa_September5" class="">September</option>
+<option value="tfa_October5" class="">October</option>
+<option value="tfa_November5" class="">November</option>
+<option value="tfa_December5" class="">December</option></select><span class="errMsg" id="tfa_Month3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year6" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year6" name="tfa_Year6" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year6-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouwantwatersk" class="preField">Do you want waterskiing and towing sports liability insurance?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouwantwatersk" name="tfa_Doyouwantwatersk" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes7" class="">Yes</option>
+<option value="tfa_No7" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouwantwatersk-E"></span>
+</div>
+<fieldset id="tfa_WatercraftInform" class="repeat">
+<legend>Watercraft Information (Please complete for each watercraft)</legend>
+<div class="oneField">
+<label for="tfa_Make3" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make3" name="tfa_Make3" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model3" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model3" name="tfa_Model3" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear2" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear2" name="tfa_ModelYear2" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_EngineSizeCC" class="preField">Engine Size (CC)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_EngineSizeCC" name="tfa_EngineSizeCC" value="" size="" class="required"><br><span class="errMsg" id="tfa_EngineSizeCC-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_SerialNumber1" class="preField">Serial Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_SerialNumber1" name="tfa_SerialNumber1" value="" size="" class="required"><br><span class="errMsg" id="tfa_SerialNumber1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveoptiona" class="preField">Do you have optional equipment or accessories?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveoptiona" name="tfa_Doyouhaveoptiona" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes45" class="switch-bn">Yes</option>
+<option value="tfa_No45" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveoptiona-E"></span>
+</div>
+<fieldset id="tfa_UnitAccessoriesP" class="repeat offstate-bn">
+<legend>Unit Accessories (Please complete for each accessory)</legend>
+<div class="oneField">
+<label for="tfa_AccessoryDescrip" class="preField">Accessory Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_AccessoryDescrip" name="tfa_AccessoryDescrip" value="" size="" class="required"><br><span class="errMsg" id="tfa_AccessoryDescrip-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_CurrentValue" class="preField">Current Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_CurrentValue" name="tfa_CurrentValue" value="" size="" class="required"><br><span class="errMsg" id="tfa_CurrentValue-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_PrimaryOperator1" class="">
+<legend>Primary Operator</legend>
+<div class="oneField">
+<label for="tfa_Haveyouhadinsura1" class="preField">Have you had insurance on this watercraft for the past 12 months with no lapse?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadinsura1" name="tfa_Haveyouhadinsura1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes8" class="">Yes</option>
+<option value="tfa_No8" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadinsura1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Haveyouhadanycla" class="preField">Have you had any claims or losses under this type of policy in the past three (3) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadanycla" name="tfa_Haveyouhadanycla" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes9" class="switch-m">Yes</option>
+<option value="tfa_No9" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadanycla-E"></span>
+</div>
+<fieldset id="tfa_LossDetailsPleas1" class="repeat offstate-m">
+<legend>Loss Details (Please complete for each incident)</legend>
+<div id="tfa_Date2" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month13" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month13" name="tfa_Month13" class="required"><option value="">Please select...</option>
+<option value="tfa_January2" class="">January</option>
+<option value="tfa_February3" class="">February</option>
+<option value="tfa_March3" class="">March</option>
+<option value="tfa_April3" class="">April</option>
+<option value="tfa_May3" class="">May</option>
+<option value="tfa_June3" class="">June</option>
+<option value="tfa_July3" class="">July</option>
+<option value="tfa_August3" class="">August</option>
+<option value="tfa_September3" class="">September</option>
+<option value="tfa_October3" class="">October</option>
+<option value="tfa_November3" class="">November</option>
+<option value="tfa_December3" class="">December</option></select><span class="errMsg" id="tfa_Month13-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year4" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year4" name="tfa_Year4" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year4-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Description2" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description2" name="tfa_Description2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amount1" class="preField">Amount ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Amount1" name="tfa_Amount1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Amount1-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Doyouhaveatransp2" class="preField">Do you have a transport trailer you would like to insure?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveatransp2" name="tfa_Doyouhaveatransp2" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes42" class="switch-bi">Yes</option>
+<option value="tfa_No42" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveatransp2-E"></span>
+</div>
+<fieldset id="tfa_DescriptionofTra1" class="offstate-bi">
+<legend>Description of Trailer</legend>
+<div class="oneField">
+<label for="tfa_Make4" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make4" name="tfa_Make4" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make4-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model4" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model4" name="tfa_Model4" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model4-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear3" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear3" name="tfa_ModelYear3" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Value1" class="preField">Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Value1" name="tfa_Value1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Value1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_SerialNumber2" class="preField">Serial Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_SerialNumber2" name="tfa_SerialNumber2" value="" size="" class="required"><br><span class="errMsg" id="tfa_SerialNumber2-E"></span>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Motorcycle1" class="offstate-d">
+<legend>Motorcycle</legend>
+<div id="tfa_ExpirationofCurr3" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month5" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month5" name="tfa_Month5" class="required"><option value="">Please select...</option>
+<option value="tfa_January5" class="">January</option>
+<option value="tfa_February6" class="">February</option>
+<option value="tfa_March6" class="">March</option>
+<option value="tfa_April6" class="">April</option>
+<option value="tfa_May6" class="">May</option>
+<option value="tfa_June6" class="">June</option>
+<option value="tfa_July6" class="">July</option>
+<option value="tfa_August6" class="">August</option>
+<option value="tfa_September6" class="">September</option>
+<option value="tfa_October6" class="">October</option>
+<option value="tfa_November6" class="">November</option>
+<option value="tfa_December6" class="">December</option></select><span class="errMsg" id="tfa_Month5-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year13" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year13" name="tfa_Year13" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year13-E"></span>
+</div>
+</div>
+<fieldset id="tfa_MotorcycleInform" class="repeat">
+<legend>Motorcycle Information (Please complete for each motorcycle)</legend>
+<div class="oneField">
+<label for="tfa_Make5" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make5" name="tfa_Make5" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make5-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model5" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model5" name="tfa_Model5" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model5-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear4" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear4" name="tfa_ModelYear4" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear4-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_EngineSizeCC1" class="preField">Engine Size (CC)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_EngineSizeCC1" name="tfa_EngineSizeCC1" value="" size="" class="required"><br><span class="errMsg" id="tfa_EngineSizeCC1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_CurrentMarketVal" class="preField">Current Market Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_CurrentMarketVal" name="tfa_CurrentMarketVal" value="" size="" class="required"><br><span class="errMsg" id="tfa_CurrentMarketVal-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_StoredinaFullyEn" class="preField">Stored in a Fully-Enclosed Locked Garage or Similar Structure?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_StoredinaFullyEn" name="tfa_StoredinaFullyEn" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes10" class="">Yes</option>
+<option value="tfa_No10" class="">No</option></select><br><span class="errMsg" id="tfa_StoredinaFullyEn-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_VIN17Digits1" class="preField">VIN (17 Digits)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_VIN17Digits1" name="tfa_VIN17Digits1" value="" size="" class="required"><br><span class="errMsg" id="tfa_VIN17Digits1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_NumberofWheels" class="preField">Number of Wheels
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_NumberofWheels" name="tfa_NumberofWheels" value="" size="" class="required"><br><span class="errMsg" id="tfa_NumberofWheels-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveoptiona1" class="preField">Do you have optional equipment or accessories?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveoptiona1" name="tfa_Doyouhaveoptiona1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes46" class="switch-bo">Yes</option>
+<option value="tfa_No46" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveoptiona1-E"></span>
+</div>
+<fieldset id="tfa_OptionalEquipmen" class="repeat offstate-bo">
+<legend>Optional Equipment (Please complete for each item)</legend>
+<div class="oneField">
+<label for="tfa_AccessoryDescrip1" class="preField">Accessory Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_AccessoryDescrip1" name="tfa_AccessoryDescrip1" value="" size="" class="required"><br><span class="errMsg" id="tfa_AccessoryDescrip1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_CurrentValue1" class="preField">Current Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_CurrentValue1" name="tfa_CurrentValue1" value="" size="" class="required"><br><span class="errMsg" id="tfa_CurrentValue1-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_WhichOperatorPri1" class="preField">Which Operator Primarily Drives This Vehicle?
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_WhichOperatorPri1" name="tfa_WhichOperatorPri1" value="" size="" class="required"><br><span class="errMsg" id="tfa_WhichOperatorPri1-E"></span>
+</div>
+<fieldset id="tfa_PrimaryOperator2" class="">
+<legend>Primary Operator</legend>
+<div class="oneField">
+<label for="tfa_Haveyoutakenamot" class="preField">Have you taken a motorcycle safety course?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyoutakenamot" name="tfa_Haveyoutakenamot" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes11" class="">Yes</option>
+<option value="tfa_No11" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyoutakenamot-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveamotorc" class="preField">Do you have a motorcycle license?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveamotorc" name="tfa_Doyouhaveamotorc" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes12" class="">Yes</option>
+<option value="tfa_No12" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveamotorc-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyoubelongtoamo" class="preField">Do you belong to a motorcycle club?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyoubelongtoamo" name="tfa_Doyoubelongtoamo" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes13" class="">Yes</option>
+<option value="tfa_No13" class="">No</option></select><br><span class="errMsg" id="tfa_Doyoubelongtoamo-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Haveyouhadanycla5" class="preField">Have you had any claims or losses on the motorcycle in the past three (3) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadanycla5" name="tfa_Haveyouhadanycla5" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes38" class="switch-bc">Yes</option>
+<option value="tfa_No38" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadanycla5-E"></span>
+</div>
+<fieldset id="tfa_LossDetailsPleas6" class="repeat offstate-bc">
+<legend>Loss Details (Please complete for each incident)</legend>
+<div id="tfa_Date7" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month9" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month9" name="tfa_Month9" class="required"><option value="">Please select...</option>
+<option value="tfa_7017788153753" class="">January</option>
+<option value="tfa_21" class="">February</option>
+<option value="tfa_31" class="">March</option>
+<option value="tfa_41" class="">April</option>
+<option value="tfa_51" class="">May</option>
+<option value="tfa_61" class="">June</option>
+<option value="tfa_71" class="">July</option>
+<option value="tfa_81" class="">August</option>
+<option value="tfa_9" class="">September</option>
+<option value="tfa_10" class="">October</option>
+<option value="tfa_11" class="">November</option>
+<option value="tfa_12" class="">December</option></select><span class="errMsg" id="tfa_Month9-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year10" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year10" name="tfa_Year10" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year10-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Description7" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description7" name="tfa_Description7" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description7-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amount6" class="preField">Amount ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Amount6" name="tfa_Amount6" value="" size="" class="required"><br><span class="errMsg" id="tfa_Amount6-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Doyouhaveatransp" class="preField">Do you have a transport trailer?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveatransp" name="tfa_Doyouhaveatransp" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes14" class="switch-n">Yes</option>
+<option value="tfa_No14" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveatransp-E"></span>
+</div>
+<fieldset id="tfa_DescriptionofTra2" class="offstate-n">
+<legend>Description of Trailer</legend>
+<div class="oneField">
+<label for="tfa_Make6" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make6" name="tfa_Make6" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make6-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model6" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model6" name="tfa_Model6" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model6-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear5" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear5" name="tfa_ModelYear5" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear5-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Value2" class="preField">Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Value2" name="tfa_Value2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Value2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_SerialNumber3" class="preField">Serial Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_SerialNumber3" name="tfa_SerialNumber3" value="" size="" class="required"><br><span class="errMsg" id="tfa_SerialNumber3-E"></span>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_OffRoadVehicles" class="offstate-e">
+<legend>Off Road Vehicles</legend>
+<div id="tfa_ExpirationofCurr4" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month11" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month11" name="tfa_Month11" class="required"><option value="">Please select...</option>
+<option value="tfa_January6" class="">January</option>
+<option value="tfa_February7" class="">February</option>
+<option value="tfa_March7" class="">March</option>
+<option value="tfa_April7" class="">April</option>
+<option value="tfa_May7" class="">May</option>
+<option value="tfa_June7" class="">June</option>
+<option value="tfa_July7" class="">July</option>
+<option value="tfa_August7" class="">August</option>
+<option value="tfa_September7" class="">September</option>
+<option value="tfa_October7" class="">October</option>
+<option value="tfa_November7" class="">November</option>
+<option value="tfa_December7" class="">December</option></select><span class="errMsg" id="tfa_Month11-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year14" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year14" name="tfa_Year14" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year14-E"></span>
+</div>
+</div>
+<fieldset id="tfa_VehicleInformati" class="repeat">
+<legend>Vehicle Information (Please complete for each vehicle)</legend>
+<div class="oneField">
+<label for="tfa_VehicleType" class="preField">Vehicle Type
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_VehicleType" name="tfa_VehicleType" class="required"><option value="">Please select...</option>
+<option value="tfa_ATV" class="">ATV</option>
+<option value="tfa_offroadmotorcycl" class="">off road motorcycle</option>
+<option value="tfa_golfcart" class="">golf cart</option>
+<option value="tfa_snowmobile" class="">snowmobile</option></select><br><span class="errMsg" id="tfa_VehicleType-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Make7" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make7" name="tfa_Make7" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make7-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model7" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model7" name="tfa_Model7" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model7-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear6" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear6" name="tfa_ModelYear6" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear6-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_EngineSizeCC2" class="preField">Engine Size (CC)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_EngineSizeCC2" name="tfa_EngineSizeCC2" value="" size="" class="required"><br><span class="errMsg" id="tfa_EngineSizeCC2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_CurrentMarketVal1" class="preField">Current Market Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_CurrentMarketVal1" name="tfa_CurrentMarketVal1" value="" size="" class="required"><br><span class="errMsg" id="tfa_CurrentMarketVal1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_EstimatedAnnualM" class="preField">Estimated Annual Mileage
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_EstimatedAnnualM" name="tfa_EstimatedAnnualM" value="" size="" class="required"><br><span class="errMsg" id="tfa_EstimatedAnnualM-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_VehicleIDNumber" class="preField">Vehicle ID Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_VehicleIDNumber" name="tfa_VehicleIDNumber" value="" size="" class="required"><br><span class="errMsg" id="tfa_VehicleIDNumber-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_WhichOperatorPri2" class="preField">Which Operator Primarily Drives This Vehicle?
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_WhichOperatorPri2" name="tfa_WhichOperatorPri2" value="" size="" class="required"><br><span class="errMsg" id="tfa_WhichOperatorPri2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveoptiona2" class="preField">Do you have optional equipment or accessories?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveoptiona2" name="tfa_Doyouhaveoptiona2" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes47" class="switch-bp">Yes</option>
+<option value="tfa_No47" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveoptiona2-E"></span>
+</div>
+<fieldset id="tfa_UnitAccessoriesP1" class="repeat offstate-bp">
+<legend>Unit Accessories (Please complete for each accessory)</legend>
+<div class="oneField">
+<label for="tfa_AccessoryDescrip2" class="preField">Accessory Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_AccessoryDescrip2" name="tfa_AccessoryDescrip2" value="" size="" class="required"><br><span class="errMsg" id="tfa_AccessoryDescrip2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_CurrentValue2" class="preField">Current Value ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_CurrentValue2" name="tfa_CurrentValue2" value="" size="" class="required"><br><span class="errMsg" id="tfa_CurrentValue2-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_PrimaryOperator3" class="">
+<legend>Primary Operator</legend>
+<div class="oneField">
+<label for="tfa_Doyoubelongtoamo1" class="preField">Do you belong to any off road vehicle/snowmobile clubs?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyoubelongtoamo1" name="tfa_Doyoubelongtoamo1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes17" class="switch-p">Yes</option>
+<option value="tfa_No17" class="">No</option></select><br><span class="errMsg" id="tfa_Doyoubelongtoamo1-E"></span>
+</div>
+<fieldset id="tfa_ClubDetails" class="offstate-p">
+<legend>Club Details</legend>
+<div class="oneField">
+<label for="tfa_PleaseDescribe2" class="preField">Please Describe
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_PleaseDescribe2" name="tfa_PleaseDescribe2" value="" size="" class="required"><br><span class="errMsg" id="tfa_PleaseDescribe2-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Haveyouhadanycla1" class="preField">Have you had any claims or losses on the off road vehicle in the past three (3) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadanycla1" name="tfa_Haveyouhadanycla1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes19" class="switch-o">Yes</option>
+<option value="tfa_No19" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadanycla1-E"></span>
+</div>
+<fieldset id="tfa_LossDetailsPleas2" class="repeat offstate-o">
+<legend>Loss Details (Please complete for each incident)</legend>
+<div id="tfa_Date3" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month4" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month4" name="tfa_Month4" class="required"><option value="">Please select...</option>
+<option value="tfa_6615926686008" class="">January</option>
+<option value="tfa_February" class="">February</option>
+<option value="tfa_March" class="">March</option>
+<option value="tfa_April" class="">April</option>
+<option value="tfa_May" class="">May</option>
+<option value="tfa_June" class="">June</option>
+<option value="tfa_July" class="">July</option>
+<option value="tfa_August" class="">August</option>
+<option value="tfa_September" class="">September</option>
+<option value="tfa_October" class="">October</option>
+<option value="tfa_November" class="">November</option>
+<option value="tfa_December" class="">December</option></select><span class="errMsg" id="tfa_Month4-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year5" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year5" name="tfa_Year5" value="" size="" class="required"><span class="errMsg" id="tfa_Year5-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Description3" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description3" name="tfa_Description3" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amount2" class="preField">Amount ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Amount2" name="tfa_Amount2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Amount2-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Doyouhaveatransp3" class="preField">Do you have a transport trailer you would like to insure?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveatransp3" name="tfa_Doyouhaveatransp3" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes43" class="switch-bj">Yes</option>
+<option value="tfa_No43" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveatransp3-E"></span>
+</div>
+<fieldset id="tfa_DescriptionofTra3" class="offstate-bj">
+<legend>Description of Trailer</legend>
+<div class="oneField">
+<label for="tfa_Make8" class="preField">Make
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Make8" name="tfa_Make8" value="" size="" class="required"><br><span class="errMsg" id="tfa_Make8-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Model8" class="preField">Model
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Model8" name="tfa_Model8" value="" size="" class="required"><br><span class="errMsg" id="tfa_Model8-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ModelYear7" class="preField">Model Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_ModelYear7" name="tfa_ModelYear7" value="" size="" class="required"><br><span class="errMsg" id="tfa_ModelYear7-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_SerialNumber4" class="preField">Serial Number
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_SerialNumber4" name="tfa_SerialNumber4" value="" size="" class="required"><br><span class="errMsg" id="tfa_SerialNumber4-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Value3" class="preField">Amount of Insurance ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Value3" name="tfa_Value3" value="" size="" class="required"><br><span class="errMsg" id="tfa_Value3-E"></span>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Condominium1" class="offstate-q">
+<legend>Condominium</legend>
+<div id="tfa_ExpirationofCurr5" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month14" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month14" name="tfa_Month14" class="required"><option value="">Please select...</option>
+<option value="tfa_January7" class="">January</option>
+<option value="tfa_February8" class="">February</option>
+<option value="tfa_March8" class="">March</option>
+<option value="tfa_April8" class="">April</option>
+<option value="tfa_May8" class="">May</option>
+<option value="tfa_June8" class="">June</option>
+<option value="tfa_July8" class="">July</option>
+<option value="tfa_August8" class="">August</option>
+<option value="tfa_September8" class="">September</option>
+<option value="tfa_October8" class="">October</option>
+<option value="tfa_November8" class="">November</option>
+<option value="tfa_December8" class="">December</option></select><span class="errMsg" id="tfa_Month14-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year15" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year15" name="tfa_Year15" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year15-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Numberofunitsiny" class="preField">Number of units in your building
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Numberofunitsiny" name="tfa_Numberofunitsiny" value="" size="" class="required"><br><span class="errMsg" id="tfa_Numberofunitsiny-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Areallhouseholdm" class="preField">Are all household members nonsmokers?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Areallhouseholdm" name="tfa_Areallhouseholdm" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes15" class="">Yes</option>
+<option value="tfa_No18" class="">No</option></select><br><span class="errMsg" id="tfa_Areallhouseholdm-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouoperateabus" class="preField">Do you operate a business out of this location?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouoperateabus" name="tfa_Doyouoperateabus" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes16" class="switch-t">Yes</option>
+<option value="tfa_No20" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouoperateabus-E"></span>
+</div>
+<fieldset id="tfa_BusinessDetails" class="offstate-t">
+<legend>Business Details</legend>
+<div class="oneField">
+<label for="tfa_Typeofbusiness" class="preField">Type of business:
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Typeofbusiness" name="tfa_Typeofbusiness" value="" size="" class="required"><br><span class="errMsg" id="tfa_Typeofbusiness-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Valueofbusinessp" class="preField">Value of business personal property ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Valueofbusinessp" name="tfa_Valueofbusinessp" value="" size="" class="required"><br><span class="errMsg" id="tfa_Valueofbusinessp-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Doyouhaveafireex" class="preField">Do you have a fire extinguisher inside your condo unit?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveafireex" name="tfa_Doyouhaveafireex" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes18" class="">Yes</option>
+<option value="tfa_No21" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveafireex-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Requestedcontent" class="preField">Requested contents coverage ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Requestedcontent" name="tfa_Requestedcontent" value="" size="" class="required"><br><span class="errMsg" id="tfa_Requestedcontent-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Requestedbuildin" class="preField">Requested building coverage ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Requestedbuildin" name="tfa_Requestedbuildin" value="" size="" class="required"><br><span class="errMsg" id="tfa_Requestedbuildin-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Wouldyoulikeusto" class="preField">Would you like us to quote identity theft coverage as an option?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Wouldyoulikeusto" name="tfa_Wouldyoulikeusto" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes20" class="">Yes</option>
+<option value="tfa_No22" class="">No</option></select><br><span class="errMsg" id="tfa_Wouldyoulikeusto-E"></span>
+</div>
+<fieldset id="tfa_ValuablesDetails" class="">
+<legend>Valuables Details (Please indicate the value, if any, of the following items)</legend>
+<div class="oneField">
+<label for="tfa_Jewelrywatcheset" class="preField">Jewelry/watches, etc. ($)</label><input type="text" id="tfa_Jewelrywatcheset" name="tfa_Jewelrywatcheset" value="" size="" class=""><br><span class="errMsg" id="tfa_Jewelrywatcheset-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Computers" class="preField">Computers ($)</label><input type="text" id="tfa_Computers" name="tfa_Computers" value="" size="" class=""><br><span class="errMsg" id="tfa_Computers-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Guns" class="preField">Guns ($)</label><input type="text" id="tfa_Guns" name="tfa_Guns" value="" size="" class=""><br><span class="errMsg" id="tfa_Guns-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Sportscards" class="preField">Sports cards ($)</label><input type="text" id="tfa_Sportscards" name="tfa_Sportscards" value="" size="" class=""><br><span class="errMsg" id="tfa_Sportscards-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Finearts" class="preField">Fine arts ($)</label><input type="text" id="tfa_Finearts" name="tfa_Finearts" value="" size="" class=""><br><span class="errMsg" id="tfa_Finearts-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Furs" class="preField">Furs ($)</label><input type="text" id="tfa_Furs" name="tfa_Furs" value="" size="" class=""><br><span class="errMsg" id="tfa_Furs-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Silvergoldpewter" class="preField">Silver/gold/pewter/ware ($)</label><input type="text" id="tfa_Silvergoldpewter" name="tfa_Silvergoldpewter" value="" size="" class=""><br><span class="errMsg" id="tfa_Silvergoldpewter-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Haveyouhadanycla2" class="preField">Have you had any claims or losses under this type of policy in the past three (3) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadanycla2" name="tfa_Haveyouhadanycla2" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes21" class="switch-u">Yes</option>
+<option value="tfa_No23" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadanycla2-E"></span>
+</div>
+<fieldset id="tfa_LossDetailsPleas3" class="repeat offstate-u">
+<legend>Loss Details (Please complete for each incident)</legend>
+<div id="tfa_Date4" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month6" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month6" name="tfa_Month6" class="required"><option value="">Please select...</option>
+<option value="tfa_9158736143303" class="">January</option>
+<option value="tfa_217" class="">February</option>
+<option value="tfa_38" class="">March</option>
+<option value="tfa_48" class="">April</option>
+<option value="tfa_58" class="">May</option>
+<option value="tfa_68" class="">June</option>
+<option value="tfa_78" class="">July</option>
+<option value="tfa_88" class="">August</option>
+<option value="tfa_98" class="">September</option>
+<option value="tfa_108" class="">October</option>
+<option value="tfa_118" class="">November</option>
+<option value="tfa_128" class="">December</option></select><span class="errMsg" id="tfa_Month6-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year7" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year7" name="tfa_Year7" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year7-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Description4" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description4" name="tfa_Description4" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description4-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amount3" class="preField">Amount ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Amount3" name="tfa_Amount3" value="" size="" class="required"><br><span class="errMsg" id="tfa_Amount3-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Comments" class="preField">Comments:</label><input type="text" id="tfa_Comments" name="tfa_Comments" value="" size="" class=""><br><span class="errMsg" id="tfa_Comments-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Home" class="offstate-r">
+<legend>Home</legend>
+<div id="tfa_ExpirationofCurr6" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month15" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month15" name="tfa_Month15" class="required"><option value="">Please select...</option>
+<option value="tfa_January8" class="">January</option>
+<option value="tfa_February9" class="">February</option>
+<option value="tfa_March9" class="">March</option>
+<option value="tfa_April9" class="">April</option>
+<option value="tfa_May9" class="">May</option>
+<option value="tfa_June9" class="">June</option>
+<option value="tfa_July9" class="">July</option>
+<option value="tfa_August9" class="">August</option>
+<option value="tfa_September9" class="">September</option>
+<option value="tfa_October9" class="">October</option>
+<option value="tfa_November9" class="">November</option>
+<option value="tfa_December9" class="">December</option></select><span class="errMsg" id="tfa_Month15-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year16" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year16" name="tfa_Year16" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year16-E"></span>
+</div>
+</div>
+<fieldset id="tfa_HouseDetailsToad" class="repeat">
+<legend>House Details (Please complete for each home)</legend>
+<div class="oneField">
+<label for="tfa_Typeofoccupancy" class="preField">Type of occupancy
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Typeofoccupancy" name="tfa_Typeofoccupancy" class="required"><option value="">Please select...</option>
+<option value="tfa_primaryowneroccu" class="">primary owner occupied</option>
+<option value="tfa_secondaryseasona" class="">secondary / seasonal</option>
+<option value="tfa_nonowneroccupied" class="">non-owner occupied</option></select><br><span class="errMsg" id="tfa_Typeofoccupancy-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Areallhouseholdm1" class="preField">Are all household members nonsmokers?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Areallhouseholdm1" name="tfa_Areallhouseholdm1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes22" class="">Yes</option>
+<option value="tfa_No25" class="">No</option></select><br><span class="errMsg" id="tfa_Areallhouseholdm1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouoperateabus1" class="preField">Do you operate a business out of this location?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouoperateabus1" name="tfa_Doyouoperateabus1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes23" class="switch-x">Yes</option>
+<option value="tfa_No26" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouoperateabus1-E"></span>
+</div>
+<fieldset id="tfa_BusinessDetails1" class="offstate-x">
+<legend>Business Details</legend>
+<div class="oneField">
+<label for="tfa_Typeofbusiness1" class="preField">Type of business:
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Typeofbusiness1" name="tfa_Typeofbusiness1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Typeofbusiness1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Valueofbusinessp1" class="preField">Value of business personal property ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Valueofbusinessp1" name="tfa_Valueofbusinessp1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Valueofbusinessp1-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Yearbuilt" class="preField">Year built
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Yearbuilt" name="tfa_Yearbuilt" value="" size="" class="required"><br><span class="errMsg" id="tfa_Yearbuilt-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Numberofunits" class="preField">Number of units
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Numberofunits" name="tfa_Numberofunits" class="required"><option value="">Please select...</option>
+<option value="tfa_18" class="">1</option>
+<option value="tfa_27" class="">2</option>
+<option value="tfa_other3" class="">other</option></select><br><span class="errMsg" id="tfa_Numberofunits-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveadetach" class="preField">Do you have a detached garage?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveadetach" name="tfa_Doyouhaveadetach" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes24" class="">Yes</option>
+<option value="tfa_No15" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveadetach-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveabaseme" class="preField">Do you have a basement?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveabaseme" name="tfa_Doyouhaveabaseme" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes25" class="">Yes</option>
+<option value="tfa_No27" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveabaseme-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Numberofhalfbath" class="preField">Number of half bathrooms
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Numberofhalfbath" name="tfa_Numberofhalfbath" value="" size="" class="required"><br><span class="errMsg" id="tfa_Numberofhalfbath-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Numberoffullbath" class="preField">Number of full bathrooms
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Numberoffullbath" name="tfa_Numberoffullbath" value="" size="" class="required"><br><span class="errMsg" id="tfa_Numberoffullbath-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveapool" class="preField">Do you have a pool?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveapool" name="tfa_Doyouhaveapool" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes26" class="switch-v">Yes</option>
+<option value="tfa_No28" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveapool-E"></span>
+</div>
+<fieldset id="tfa_PoolDetails" class="offstate-v">
+<legend>Pool Details</legend>
+<div class="oneField">
+<label for="tfa_Isthepoolfenced" class="preField">Is the pool fenced?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Isthepoolfenced" name="tfa_Isthepoolfenced" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes27" class="">Yes</option>
+<option value="tfa_No16" class="">No</option></select><br><span class="errMsg" id="tfa_Isthepoolfenced-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Doyouhaveadeck" class="preField">Do you have a deck?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveadeck" name="tfa_Doyouhaveadeck" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes28" class="">Yes</option>
+<option value="tfa_No29" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveadeck-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhavea24hour" class="preField">Do you have a 24-hour monitored central alarm?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhavea24hour" name="tfa_Doyouhavea24hour" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes29" class="switch-w">Yes</option>
+<option value="tfa_No24" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhavea24hour-E"></span>
+</div>
+<fieldset id="tfa_AlarmDetails" class="offstate-w">
+<legend>Alarm Details</legend>
+<div class="oneField">
+<label for="tfa_Typeofalarm" class="preField">Type of alarm:
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Typeofalarm" name="tfa_Typeofalarm" class="required"><option value="">Please select...</option>
+<option value="tfa_burglaralarm" class="">burglar alarm</option>
+<option value="tfa_firealarm" class="">fire alarm</option>
+<option value="tfa_bothburglarandfi" class="">both burglar and fire alarm</option></select><br><span class="errMsg" id="tfa_Typeofalarm-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Currentdwellingc" class="preField">Current dwelling coverage ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Currentdwellingc" name="tfa_Currentdwellingc" value="" size="" class="required"><br><span class="errMsg" id="tfa_Currentdwellingc-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Wouldyoulikeusto1" class="preField">Would you like us to quote identity theft coverage as an option?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Wouldyoulikeusto1" name="tfa_Wouldyoulikeusto1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes30" class="">Yes</option>
+<option value="tfa_No30" class="">No</option></select><br><span class="errMsg" id="tfa_Wouldyoulikeusto1-E"></span>
+</div>
+<fieldset id="tfa_ValuablesDetails1" class="">
+<legend>Valuables Details (Please indicate the value, if any, of the following items)</legend>
+<div class="oneField">
+<label for="tfa_Jewelrywatcheset1" class="preField">Jewelry/watches, etc. ($)</label><input type="text" id="tfa_Jewelrywatcheset1" name="tfa_Jewelrywatcheset1" value="" size="" class=""><br><span class="errMsg" id="tfa_Jewelrywatcheset1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Computers1" class="preField">Computers ($)</label><input type="text" id="tfa_Computers1" name="tfa_Computers1" value="" size="" class=""><br><span class="errMsg" id="tfa_Computers1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Guns1" class="preField">Guns ($)</label><input type="text" id="tfa_Guns1" name="tfa_Guns1" value="" size="" class=""><br><span class="errMsg" id="tfa_Guns1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Sportscards1" class="preField">Sports cards ($)</label><input type="text" id="tfa_Sportscards1" name="tfa_Sportscards1" value="" size="" class=""><br><span class="errMsg" id="tfa_Sportscards1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Finearts1" class="preField">Fine arts ($)</label><input type="text" id="tfa_Finearts1" name="tfa_Finearts1" value="" size="" class=""><br><span class="errMsg" id="tfa_Finearts1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Furs1" class="preField">Furs ($)</label><input type="text" id="tfa_Furs1" name="tfa_Furs1" value="" size="" class=""><br><span class="errMsg" id="tfa_Furs1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Silvergoldpewter1" class="preField">Silver/gold/pewter/ware ($)</label><input type="text" id="tfa_Silvergoldpewter1" name="tfa_Silvergoldpewter1" value="" size="" class=""><br><span class="errMsg" id="tfa_Silvergoldpewter1-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Haveyouhadanycla3" class="preField">Have you had any claims or losses under this type of policy in the past three (3) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadanycla3" name="tfa_Haveyouhadanycla3" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes31" class="switch-y">Yes</option>
+<option value="tfa_No31" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadanycla3-E"></span>
+</div>
+<fieldset id="tfa_LossDetailsPleas4" class="repeat offstate-y">
+<legend>Loss Details (Please complete for each incident)</legend>
+<div id="tfa_Date5" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month7" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month7" name="tfa_Month7" class="required"><option value="">Please select...</option>
+<option value="tfa_1215403179523" class="">January</option>
+<option value="tfa_218" class="">February</option>
+<option value="tfa_39" class="">March</option>
+<option value="tfa_49" class="">April</option>
+<option value="tfa_59" class="">May</option>
+<option value="tfa_69" class="">June</option>
+<option value="tfa_79" class="">July</option>
+<option value="tfa_89" class="">August</option>
+<option value="tfa_99" class="">September</option>
+<option value="tfa_109" class="">October</option>
+<option value="tfa_119" class="">November</option>
+<option value="tfa_129" class="">December</option></select><span class="errMsg" id="tfa_Month7-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year8" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year8" name="tfa_Year8" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year8-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Description5" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description5" name="tfa_Description5" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description5-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amount4" class="preField">Amount ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Amount4" name="tfa_Amount4" value="" size="" class="required"><br><span class="errMsg" id="tfa_Amount4-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Wouldyoulikeusto4" class="preField">Would you like us to calculate the replacement value of this home?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Wouldyoulikeusto4" name="tfa_Wouldyoulikeusto4" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes50" class="switch-bq">Yes</option>
+<option value="tfa_No50" class="">No</option></select><br><span class="errMsg" id="tfa_Wouldyoulikeusto4-E"></span>
+</div>
+<fieldset id="tfa_ReplacementValue" class="offstate-bq">
+<legend>Replacement Value Calculation</legend>
+<div class="oneField">
+<label for="tfa_Squarefeetaboveg" class="preField">Square feet above grade (not including basement)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Squarefeetaboveg" name="tfa_Squarefeetaboveg" value="" size="40" class="required"><br><span class="errMsg" id="tfa_Squarefeetaboveg-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Styletype" class="preField">Style type:
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Styletype" name="tfa_Styletype" class="required"><option value="">Please select...</option>
+<option value="tfa_1story" class="">1 story</option>
+<option value="tfa_112story" class="">1-1/2 story</option>
+<option value="tfa_2story" class="">2 story</option>
+<option value="tfa_212story" class="">2-1/2 story</option>
+<option value="tfa_3story" class="">3 story</option>
+<option value="tfa_bilevelraisedran" class="switch-br">bi-level / raised ranch</option>
+<option value="tfa_splitleveltrilev" class="switch-bs">split level / tri-level</option>
+<option value="tfa_victorian" class="">victorian</option>
+<option value="tfa_ornatevictorian" class="">ornate victorian</option></select><br><span class="errMsg" id="tfa_Styletype-E"></span>
+</div>
+<div class="offstate-br offstate-bs oneField">
+<label for="tfa_Interiorfinished" class="preField">Interior % finished</label><select id="tfa_Interiorfinished" name="tfa_Interiorfinished" class=""><option value="">Please select...</option>
+<option value="tfa_50" class="">50</option>
+<option value="tfa_67" class="">67</option>
+<option value="tfa_841" class="">84</option>
+<option value="tfa_100" class="">100</option></select><br><span class="errMsg" id="tfa_Interiorfinished-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Ageofroof" class="preField">Age of roof
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Ageofroof" name="tfa_Ageofroof" value="" size="40" class="required"><br><span class="errMsg" id="tfa_Ageofroof-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Isyourroofshingl" class="preField">Is your roof shingle?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Isyourroofshingl" name="tfa_Isyourroofshingl" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes51" class="">Yes</option>
+<option value="tfa_No51" class="switch-bt">No</option></select><br><span class="errMsg" id="tfa_Isyourroofshingl-E"></span>
+</div>
+<div class="offstate-bt oneField">
+<label for="tfa_Roofingmaterial" class="preField">Roofing material?
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Roofingmaterial" name="tfa_Roofingmaterial" value="" size="40" class="required"><br><span class="errMsg" id="tfa_Roofingmaterial-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Garagetype" class="preField">Garage type
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Garagetype" name="tfa_Garagetype" class="required"><option value="">Please select...</option>
+<option value="tfa_none1" class="">none</option>
+<option value="tfa_carport" class="">carport</option>
+<option value="tfa_detached" class="">detached</option>
+<option value="tfa_1carattached" class="">1 car attached</option>
+<option value="tfa_2carattached" class="">2 car attached</option>
+<option value="tfa_3carattached" class="">3 car attached</option>
+<option value="tfa_4carattached" class="">4 car attached</option>
+<option value="tfa_1carbuiltin" class="">1 car built-in</option>
+<option value="tfa_2carbuiltin" class="">2 car built-in</option>
+<option value="tfa_3carbuiltin" class="">3 car built-in</option>
+<option value="tfa_4carbuiltin" class="">4 car built-in</option></select><br><span class="errMsg" id="tfa_Garagetype-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Interiorwalls" class="preField">Interior walls
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Interiorwalls" name="tfa_Interiorwalls" class="required"><option value="">Please select...</option>
+<option value="tfa_drywall" class="">drywall</option>
+<option value="tfa_plaster" class="">plaster</option></select><br><span class="errMsg" id="tfa_Interiorwalls-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Whatofyourhouseh" class="preField">What % of your house has cathedral ceilings?
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofyourhouseh" name="tfa_Whatofyourhouseh" value="" size="40" class="required"><br><span class="errMsg" id="tfa_Whatofyourhouseh-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Kitchengrade" class="preField">Kitchen grade
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Kitchengrade" name="tfa_Kitchengrade" class="required"><option value="">Please select...</option>
+<option value="tfa_standard" class="">standard</option>
+<option value="tfa_custom" class="">custom</option></select><br><span class="errMsg" id="tfa_Kitchengrade-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Basementasaofgro" class="preField">Basement as a % of ground floor (Example: Full basement = 100%):
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Basementasaofgro" name="tfa_Basementasaofgro" value="" size="40" class="required"><br><span class="errMsg" id="tfa_Basementasaofgro-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Whatofbasementis" class="preField">What % of basement is finished?
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofbasementis" name="tfa_Whatofbasementis" value="" size="40" class="required"><br><span class="errMsg" id="tfa_Whatofbasementis-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Walkoutbasement" class="preField">Walk out basement?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Walkoutbasement" name="tfa_Walkoutbasement" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes52" class="">Yes</option>
+<option value="tfa_No52" class="">No</option></select><br><span class="errMsg" id="tfa_Walkoutbasement-E"></span>
+</div>
+<fieldset id="tfa_ExteriorWallsInf" class="">
+<legend>Exterior Walls Information (Should total 100%)</legend>
+<div class="oneField">
+<label for="tfa_Aluminumsiding" class="preField">Aluminum siding (%)</label><input type="text" id="tfa_Aluminumsiding" name="tfa_Aluminumsiding" value="" size="40" class=""><br><span class="errMsg" id="tfa_Aluminumsiding-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Bricksiding" class="preField">Brick siding (%)</label><input type="text" id="tfa_Bricksiding" name="tfa_Bricksiding" value="" size="40" class=""><br><span class="errMsg" id="tfa_Bricksiding-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Logveneersiding" class="preField">Log veneer siding (%)</label><input type="text" id="tfa_Logveneersiding" name="tfa_Logveneersiding" value="" size="40" class=""><br><span class="errMsg" id="tfa_Logveneersiding-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Steelsiding" class="preField">Steel siding (%)</label><input type="text" id="tfa_Steelsiding" name="tfa_Steelsiding" value="" size="40" class=""><br><span class="errMsg" id="tfa_Steelsiding-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Stonesiding" class="preField">Stone siding (%)</label><input type="text" id="tfa_Stonesiding" name="tfa_Stonesiding" value="" size="40" class=""><br><span class="errMsg" id="tfa_Stonesiding-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Stucco" class="preField">Stucco (%)</label><input type="text" id="tfa_Stucco" name="tfa_Stucco" value="" size="40" class=""><br><span class="errMsg" id="tfa_Stucco-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Vinylsiding" class="preField">Vinyl siding (%)</label><input type="text" id="tfa_Vinylsiding" name="tfa_Vinylsiding" value="" size="40" class=""><br><span class="errMsg" id="tfa_Vinylsiding-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Woodshakes" class="preField">Wood shakes (%)</label><input type="text" id="tfa_Woodshakes" name="tfa_Woodshakes" value="" size="40" class=""><br><span class="errMsg" id="tfa_Woodshakes-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Woodsiding" class="preField">Wood siding (%)</label><input type="text" id="tfa_Woodsiding" name="tfa_Woodsiding" value="" size="40" class=""><br><span class="errMsg" id="tfa_Woodsiding-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other4" class="preField">Other (%)</label><input type="text" id="tfa_Other4" name="tfa_Other4" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other4-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other5" class="preField">Other (%)</label><input type="text" id="tfa_Other5" name="tfa_Other5" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other5-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_FloorCoveringInf" class="">
+<legend>Floor Covering Information (Should total 100%)</legend>
+<div class="oneField">
+<label for="tfa_Aluminumsiding1" class="preField">Brick (%)</label><input type="text" id="tfa_Aluminumsiding1" name="tfa_Aluminumsiding1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Aluminumsiding1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Bricksiding1" class="preField">Carpet (%)</label><input type="text" id="tfa_Bricksiding1" name="tfa_Bricksiding1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Bricksiding1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Logveneersiding1" class="preField">Carpet - custom (%)</label><input type="text" id="tfa_Logveneersiding1" name="tfa_Logveneersiding1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Logveneersiding1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Steelsiding1" class="preField">Carpet over hardwood (%)</label><input type="text" id="tfa_Steelsiding1" name="tfa_Steelsiding1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Steelsiding1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Stonesiding1" class="preField">Ceramic tile (%)</label><input type="text" id="tfa_Stonesiding1" name="tfa_Stonesiding1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Stonesiding1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Stucco1" class="preField">Concrete (%)</label><input type="text" id="tfa_Stucco1" name="tfa_Stucco1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Stucco1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Vinylsiding1" class="preField">Custom carpet over hardwood (%)</label><input type="text" id="tfa_Vinylsiding1" name="tfa_Vinylsiding1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Vinylsiding1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Woodshakes1" class="preField">Hardwood (%)</label><input type="text" id="tfa_Woodshakes1" name="tfa_Woodshakes1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Woodshakes1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Woodsiding1" class="preField">Imported ceramic tile (%)</label><input type="text" id="tfa_Woodsiding1" name="tfa_Woodsiding1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Woodsiding1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other6" class="preField">Laminated (%)</label><input type="text" id="tfa_Other6" name="tfa_Other6" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other6-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other7" class="preField">Marble (%)</label><input type="text" id="tfa_Other7" name="tfa_Other7" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other7-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other8" class="preField">Parquet (%)</label><input type="text" id="tfa_Other8" name="tfa_Other8" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other8-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other9" class="preField">Slate (%)</label><input type="text" id="tfa_Other9" name="tfa_Other9" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other9-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other10" class="preField">Stone (%)</label><input type="text" id="tfa_Other10" name="tfa_Other10" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other10-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other12" class="preField">Stamped / textured (%)</label><input type="text" id="tfa_Other12" name="tfa_Other12" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other12-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other11" class="preField">Vinyl (%)</label><input type="text" id="tfa_Other11" name="tfa_Other11" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other11-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Other13" class="preField">Other (%)</label><input type="text" id="tfa_Other13" name="tfa_Other13" value="" size="40" class=""><br><span class="errMsg" id="tfa_Other13-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_WallheightShould" class="">
+<legend>Wall height (Should total 100%)</legend>
+<div class="oneField">
+<label for="tfa_10footwalls" class="preField">10 foot walls (%)</label><input type="text" id="tfa_10footwalls" name="tfa_10footwalls" value="" size="40" class=""><br><span class="errMsg" id="tfa_10footwalls-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_9footwalls" class="preField">9 foot walls (%)</label><input type="text" id="tfa_9footwalls" name="tfa_9footwalls" value="" size="40" class=""><br><span class="errMsg" id="tfa_9footwalls-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_8footwalls" class="preField">8 foot walls (%)</label><input type="text" id="tfa_8footwalls" name="tfa_8footwalls" value="" size="40" class=""><br><span class="errMsg" id="tfa_8footwalls-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_FramingShouldtot" class="">
+<legend>Framing (Should total 100%)</legend>
+<div class="oneField">
+<label for="tfa_Postandbeam" class="preField">Post and beam (%)</label><input type="text" id="tfa_Postandbeam" name="tfa_Postandbeam" value="" size="40" class=""><br><span class="errMsg" id="tfa_Postandbeam-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Steel1" class="preField">Steel (%)</label><input type="text" id="tfa_Steel1" name="tfa_Steel1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Steel1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_2x4wood" class="preField">2 x 4 wood (%)</label><input type="text" id="tfa_2x4wood" name="tfa_2x4wood" value="" size="40" class=""><br><span class="errMsg" id="tfa_2x4wood-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_2x6wood" class="preField">2 x 6 wood (%)</label><input type="text" id="tfa_2x6wood" name="tfa_2x6wood" value="" size="40" class=""><br><span class="errMsg" id="tfa_2x6wood-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_offireplacechimn" class="preField"># of fireplace chimneys (masonry)</label><input type="text" id="tfa_offireplacechimn" name="tfa_offireplacechimn" value="" size="40" class=""><br><span class="errMsg" id="tfa_offireplacechimn-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_offireplacechimn1" class="preField"># of fireplace chimneys (metal)</label><input type="text" id="tfa_offireplacechimn1" name="tfa_offireplacechimn1" value="" size="40" class=""><br><span class="errMsg" id="tfa_offireplacechimn1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Centralaircondit" class="preField">Central air conditioning</label><select id="tfa_Centralaircondit" name="tfa_Centralaircondit" class=""><option value="">Please select...</option>
+<option value="tfa_Yes53" class="">Yes</option>
+<option value="tfa_No53" class="">No</option></select><br><span class="errMsg" id="tfa_Centralaircondit-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_AdditionalInteri" class="preField">Additional Interior Information (Please select all features that are applicable)</label><span class="oneChoice"><input type="checkbox" value="tfa_Additonalfurnace" class="" id="tfa_Additonalfurnace" name="tfa_Additonalfurnace"><label for="tfa_Additonalfurnace" class="postField">Additional furnace</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Attachedcarport" class="" id="tfa_Attachedcarport" name="tfa_Attachedcarport"><label for="tfa_Attachedcarport" class="postField">Attached carport</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Breezewayopen" class="" id="tfa_Breezewayopen" name="tfa_Breezewayopen"><label for="tfa_Breezewayopen" class="postField">Breezeway open</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Breezewayscreene" class="" id="tfa_Breezewayscreene" name="tfa_Breezewayscreene"><label for="tfa_Breezewayscreene" class="postField">Breezeway screened</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Compositedeck" class="" id="tfa_Compositedeck" name="tfa_Compositedeck"><label for="tfa_Compositedeck" class="postField">Composite deck</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Centralstereosys" class="" id="tfa_Centralstereosys" name="tfa_Centralstereosys"><label for="tfa_Centralstereosys" class="postField">Central stereo system</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Centralvacuum" class="" id="tfa_Centralvacuum" name="tfa_Centralvacuum"><label for="tfa_Centralvacuum" class="postField">Central vacuum</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Greenhouse" class="" id="tfa_Greenhouse" name="tfa_Greenhouse"><label for="tfa_Greenhouse" class="postField">Greenhouse</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Hottub" class="" id="tfa_Hottub" name="tfa_Hottub"><label for="tfa_Hottub" class="postField">Hot tub</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Intercomsystem" class="" id="tfa_Intercomsystem" name="tfa_Intercomsystem"><label for="tfa_Intercomsystem" class="postField">Intercom system</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Jacuzzi" class="" id="tfa_Jacuzzi" name="tfa_Jacuzzi"><label for="tfa_Jacuzzi" class="postField">Jacuzzi</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Metalspiralstair" class="" id="tfa_Metalspiralstair" name="tfa_Metalspiralstair"><label for="tfa_Metalspiralstair" class="postField">Metal spiral staircase</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Patiocover" class="" id="tfa_Patiocover" name="tfa_Patiocover"><label for="tfa_Patiocover" class="postField">Patio cover</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Porchopen" class="" id="tfa_Porchopen" name="tfa_Porchopen"><label for="tfa_Porchopen" class="postField">Porch open</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Porchscreened" class="" id="tfa_Porchscreened" name="tfa_Porchscreened"><label for="tfa_Porchscreened" class="postField">Porch screened</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Redwooddeck" class="" id="tfa_Redwooddeck" name="tfa_Redwooddeck"><label for="tfa_Redwooddeck" class="postField">Redwood deck</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Solarroom" class="" id="tfa_Solarroom" name="tfa_Solarroom"><label for="tfa_Solarroom" class="postField">Solar room</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Wooddeck" class="" id="tfa_Wooddeck" name="tfa_Wooddeck"><label for="tfa_Wooddeck" class="postField">Wood deck</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Woodspiralstairc" class="" id="tfa_Woodspiralstairc" name="tfa_Woodspiralstairc"><label for="tfa_Woodspiralstairc" class="postField">Wood spiral staircase</label></span><br><span class="errMsg" id="tfa_AdditionalInteri-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofatriumdoors" class="preField"># of atrium doors</label><input type="text" id="tfa_ofatriumdoors" name="tfa_ofatriumdoors" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofatriumdoors-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofatriumwindows" class="preField"># of atrium windows</label><input type="text" id="tfa_ofatriumwindows" name="tfa_ofatriumwindows" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofatriumwindows-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofbaywindows" class="preField"># of bay windows</label><input type="text" id="tfa_ofbaywindows" name="tfa_ofbaywindows" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofbaywindows-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofexteriorshutte" class="preField"># of exterior shutters</label><input type="text" id="tfa_ofexteriorshutte" name="tfa_ofexteriorshutte" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofexteriorshutte-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_offrenchdoors" class="preField"># of french doors</label><input type="text" id="tfa_offrenchdoors" name="tfa_offrenchdoors" value="" size="40" class=""><br><span class="errMsg" id="tfa_offrenchdoors-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofgreenhousewind" class="preField"># of greenhouse windows</label><input type="text" id="tfa_ofgreenhousewind" name="tfa_ofgreenhousewind" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofgreenhousewind-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofpicturewindows" class="preField"># of picture windows</label><input type="text" id="tfa_ofpicturewindows" name="tfa_ofpicturewindows" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofpicturewindows-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofskylights" class="preField"># of sky lights</label><input type="text" id="tfa_ofskylights" name="tfa_ofskylights" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofskylights-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofslidingglassdo" class="preField"># of sliding glass doors</label><input type="text" id="tfa_ofslidingglassdo" name="tfa_ofslidingglassdo" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofslidingglassdo-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofsolarpanels" class="preField"># of solar panels</label><input type="text" id="tfa_ofsolarpanels" name="tfa_ofsolarpanels" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofsolarpanels-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofstainedglasswi" class="preField"># of stained glass windows</label><input type="text" id="tfa_ofstainedglasswi" name="tfa_ofstainedglasswi" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofstainedglasswi-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofwetbars" class="preField"># of wet bars</label><input type="text" id="tfa_ofwetbars" name="tfa_ofwetbars" value="" size="40" class=""><br><span class="errMsg" id="tfa_ofwetbars-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Othervalueanddes" class="preField">Other (value and description):</label><input type="text" id="tfa_Othervalueanddes" name="tfa_Othervalueanddes" value="" size="40" class=""><br><span class="errMsg" id="tfa_Othervalueanddes-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Comments1" class="preField">Comments:</label><input type="text" id="tfa_Comments1" name="tfa_Comments1" value="" size="" class=""><br><span class="errMsg" id="tfa_Comments1-E"></span>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Renter1" class="offstate-s">
+<legend>Renter</legend>
+<div id="tfa_ExpirationofCurr7" class="inlineSection">
+<label class="preField">Expiration of Current Policy</label><div class="oneField">
+<label for="tfa_Month16" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month16" name="tfa_Month16" class="required"><option value="">Please select...</option>
+<option value="tfa_January9" class="">January</option>
+<option value="tfa_February10" class="">February</option>
+<option value="tfa_March10" class="">March</option>
+<option value="tfa_April10" class="">April</option>
+<option value="tfa_May10" class="">May</option>
+<option value="tfa_June10" class="">June</option>
+<option value="tfa_July10" class="">July</option>
+<option value="tfa_August10" class="">August</option>
+<option value="tfa_September10" class="">September</option>
+<option value="tfa_October10" class="">October</option>
+<option value="tfa_November10" class="">November</option>
+<option value="tfa_December10" class="">December</option></select><span class="errMsg" id="tfa_Month16-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year17" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year17" name="tfa_Year17" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year17-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Numberofunitsiny1" class="preField">Number of units in your building
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Numberofunitsiny1" name="tfa_Numberofunitsiny1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Numberofunitsiny1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Areallhouseholdm2" class="preField">Are all household members nonsmokers?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Areallhouseholdm2" name="tfa_Areallhouseholdm2" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes32" class="">Yes</option>
+<option value="tfa_No33" class="">No</option></select><br><span class="errMsg" id="tfa_Areallhouseholdm2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouoperateabus2" class="preField">Do you operate a business out of this location?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouoperateabus2" name="tfa_Doyouoperateabus2" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes33" class="switch-z">Yes</option>
+<option value="tfa_No34" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouoperateabus2-E"></span>
+</div>
+<fieldset id="tfa_BusinessDetails2" class="offstate-z">
+<legend>Business Details</legend>
+<div class="oneField">
+<label for="tfa_Typeofbusiness2" class="preField">Type of business:
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Typeofbusiness2" name="tfa_Typeofbusiness2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Typeofbusiness2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Valueofbusinessp2" class="preField">Value of business personal property ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Valueofbusinessp2" name="tfa_Valueofbusinessp2" value="" size="" class="required"><br><span class="errMsg" id="tfa_Valueofbusinessp2-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Doyouhaveafireex1" class="preField">Do you have a fire extinguisher inside your apartment unit?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveafireex1" name="tfa_Doyouhaveafireex1" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes34" class="">Yes</option>
+<option value="tfa_No35" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveafireex1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Doyouhaveawaterb" class="preField">Do you have a waterbed?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Doyouhaveawaterb" name="tfa_Doyouhaveawaterb" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes35" class="">Yes</option>
+<option value="tfa_No32" class="">No</option></select><br><span class="errMsg" id="tfa_Doyouhaveawaterb-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Requestedcontent1" class="preField">Requested contents coverage ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Requestedcontent1" name="tfa_Requestedcontent1" value="" size="" class="required"><br><span class="errMsg" id="tfa_Requestedcontent1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Wouldyoulikeusto2" class="preField">Would you like us to quote identity theft coverage as an option?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Wouldyoulikeusto2" name="tfa_Wouldyoulikeusto2" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes36" class="">Yes</option>
+<option value="tfa_No36" class="">No</option></select><br><span class="errMsg" id="tfa_Wouldyoulikeusto2-E"></span>
+</div>
+<fieldset id="tfa_ValuablesDetails2" class="">
+<legend>Valuables Details (Please indicate the value, if any, of the following items)</legend>
+<div class="oneField">
+<label for="tfa_Jewelrywatcheset2" class="preField">Jewelry/watches, etc. ($)</label><input type="text" id="tfa_Jewelrywatcheset2" name="tfa_Jewelrywatcheset2" value="" size="" class=""><br><span class="errMsg" id="tfa_Jewelrywatcheset2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Computers2" class="preField">Computers ($)</label><input type="text" id="tfa_Computers2" name="tfa_Computers2" value="" size="" class=""><br><span class="errMsg" id="tfa_Computers2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Guns2" class="preField">Guns ($)</label><input type="text" id="tfa_Guns2" name="tfa_Guns2" value="" size="" class=""><br><span class="errMsg" id="tfa_Guns2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Sportscards2" class="preField">Sports cards ($)</label><input type="text" id="tfa_Sportscards2" name="tfa_Sportscards2" value="" size="" class=""><br><span class="errMsg" id="tfa_Sportscards2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Finearts2" class="preField">Fine arts ($)</label><input type="text" id="tfa_Finearts2" name="tfa_Finearts2" value="" size="" class=""><br><span class="errMsg" id="tfa_Finearts2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Furs2" class="preField">Furs ($)</label><input type="text" id="tfa_Furs2" name="tfa_Furs2" value="" size="" class=""><br><span class="errMsg" id="tfa_Furs2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Silvergoldpewter2" class="preField">Silver/gold/pewter/ware ($)</label><input type="text" id="tfa_Silvergoldpewter2" name="tfa_Silvergoldpewter2" value="" size="" class=""><br><span class="errMsg" id="tfa_Silvergoldpewter2-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Haveyouhadanycla4" class="preField">Have you had any claims or losses under this type of policy in the past three (3) years?
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Haveyouhadanycla4" name="tfa_Haveyouhadanycla4" class="required"><option value="">Please select...</option>
+<option value="tfa_Yes37" class="switch-bb">Yes</option>
+<option value="tfa_No37" class="">No</option></select><br><span class="errMsg" id="tfa_Haveyouhadanycla4-E"></span>
+</div>
+<fieldset id="tfa_LossDetailsPleas5" class="repeat offstate-bb">
+<legend>Loss Details (Please complete for each incident)</legend>
+<div id="tfa_Date6" class="inlineSection">
+<label class="preField">Date:</label><div class="oneField">
+<label for="tfa_Month8" class="inlineLabel">Month
+				&nbsp;<span class="reqMark">*</span></label><select id="tfa_Month8" name="tfa_Month8" class="required"><option value="">Please select...</option>
+<option value="tfa_1954359611345" class="">January</option>
+<option value="tfa_219" class="">February</option>
+<option value="tfa_310" class="">March</option>
+<option value="tfa_410" class="">April</option>
+<option value="tfa_510" class="">May</option>
+<option value="tfa_610" class="">June</option>
+<option value="tfa_710" class="">July</option>
+<option value="tfa_810" class="">August</option>
+<option value="tfa_910" class="">September</option>
+<option value="tfa_1010" class="">October</option>
+<option value="tfa_1110" class="">November</option>
+<option value="tfa_1210" class="">December</option></select><span class="errMsg" id="tfa_Month8-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Year9" class="inlineLabel">Year
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Year9" name="tfa_Year9" value="" size="4" class="validate-integer required"><span class="errMsg" id="tfa_Year9-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_Description6" class="preField">Description
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Description6" name="tfa_Description6" value="" size="" class="required"><br><span class="errMsg" id="tfa_Description6-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Amount5" class="preField">Amount ($)
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_Amount5" name="tfa_Amount5" value="" size="" class="required"><br><span class="errMsg" id="tfa_Amount5-E"></span>
+</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Comments2" class="preField">Comments:</label><input type="text" id="tfa_Comments2" name="tfa_Comments2" value="" size="" class=""><br><span class="errMsg" id="tfa_Comments2-E"></span>
+</div>
+</fieldset>
+
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="Submit your information and obtain your free quote!"><input type="hidden" value="3320" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="809d0955b6e26804bacefd39b40a42de" name="tfa_dbControl" id="tfa_dbControl">
+</div>
+
+</form>
+
+</body>
+</html>

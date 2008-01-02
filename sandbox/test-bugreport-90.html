@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Test Bug Report #90</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+   
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_hint.js"></script>
+	<style type="text/css">
+		
+		.wForm .hintsTooltip .field-hint { visibility: visible; }
+	</style>
+</head>
+<body class="wForm">
+
+	<h3><span>Two successive inline sections: hint appears under the second inline section.</span></h3>
+	<form method="post" action="http://app.formassembly.com/responses/processor" id="id2466611" class="labelsLeftAligned hintsTooltip">
+
+		<div class="inlineSection">
+			<label class="preField"></label>
+		
+			<div class="oneField">
+				<label for="test1" class="inlineLabel">Inline Section 1</label>
+				<input type="text" id="test1" value="" size="80" class="">
+				<div class="field-hint" id="test1-H">
+					<span>Congratulations!  You are getting a $5 discount off each registration for registering before Jan 29!
+					Congratulations!  You are getting a $5 discount off each registration for registering before Jan 29!</span>
+				</div>
+				<span class="errMsg" id="test1-E"></span>
+			</div>
+		</div>
+		<br/>
+		<br/>
+		<div class="inlineSection" style="">
+			<label class="preField"></label>
+			<div class="oneField">
+				<label for="test2" class="inlineLabel">Inline Section 2</label>
+				<input type="text" id="test2" name="test2" value="" size="80" class="">
+				<span class="errMsg" id="test1-E"></span>
+			</div>
+		</div>
+		
+	</form>
+
+</body>
+</html>

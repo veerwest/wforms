@@ -2,7 +2,6 @@
 if (typeof(base2) == "undefined") {
 	throw new Error("Base2 not found. wForms 3.0 depends on the base2 library.");
 }
-base2.DOM.bind(document);
 
 if (typeof(wFORMS) == "undefined") {
 	wFORMS = {};
@@ -98,6 +97,9 @@ wFORMS.helpers.getLeft = function(elem){
 		pos += elem.offsetLeft;
 		elem = elem.offsetParent;
 	}
+ 	if(!window.opera && document.all && document.compatMode && document.compatMode != "BackCompat") {
+		pos += parseInt(document.body.currentStyle.marginTop); 	   		
+ 	}
 	return pos;
 }
 
@@ -117,6 +119,9 @@ wFORMS.helpers.getTop = function(elem){
 		pos += elem.offsetTop;
 		elem = elem.offsetParent;
 	}
+	if(!window.opera && document.all && document.compatMode && document.compatMode != "BackCompat") {
+		pos += parseInt(document.body.currentStyle.marginLeft) + 1; 	   		
+ 	}
 	return pos;
 }
 
@@ -152,9 +157,11 @@ wFORMS.helpers.contains = function(array, needle) {
  * Initialization routine. Automatically applies the behaviors to all web forms in the document.  
  */	
 wFORMS.onLoadHandler = function() {
-	document.querySelectorAll("form").forEach(function(f){
-		wFORMS.applyBehaviors(f);
-	});	
+	var forms=document.getElementsByTagName("FORM");
+	for(var i=0;i<forms.length;i++) {
+		if(forms[i].getAttribute('rel')!='no-behavior')
+			wFORMS.applyBehaviors(forms[i]);
+	}	
 }
 
 /**
@@ -163,9 +170,10 @@ wFORMS.onLoadHandler = function() {
  * TODO: Kill existing instances before applying the behavior to the same element. 
  */	
 wFORMS.applyBehaviors = function(f) {
-	if(!f.querySelectorAll)
+	
+	if(!f.querySelectorAll) {
 		base2.DOM.bind(f);
-		
+	}
 // hack [don] {{{
 // This hack is done due to switch reflects on the Targets state depends on triggers
 // state. I.e. if checkbox is checked its target should be on state
@@ -181,14 +189,10 @@ wFORMS.applyBehaviors = function(f) {
 			wFORMS.instances['switch'].push(b);
 		}		
 	}
-// hack [don] }}}
-
 	for(var behaviorName in wFORMS.behaviors) {
-// hack [don] {{{
 		if(behaviorName == 'switch'){
 			continue;
 		}
-// hack [don] }}}
 		var b = wFORMS.behaviors[behaviorName].applyTo(f);
 		// behaviors may create several instances
 		// if single instance returned, convert it to an array
@@ -233,7 +237,6 @@ wFORMS.removeBehavior = function(f, behaviorName) {
 wFORMS.getBehaviorInstance = function(f, behaviorName) {
 	if(!wFORMS.instances[behaviorName]) 
 		return null;
-
 	for(var i=0; i < wFORMS.instances[behaviorName].length; i++) {
 		if(wFORMS.instances[behaviorName][i].target==f) {
 			return wFORMS.instances[behaviorName][i];
@@ -242,6 +245,9 @@ wFORMS.getBehaviorInstance = function(f, behaviorName) {
 	return null;
 }
 
+if(!document.querySelectorAll) {
+	base2.DOM.bind(document);
+}
 document.addEventListener('DOMContentLoaded',wFORMS.onLoadHandler,false);
 // Attach JS only stylesheet.
 wFORMS.helpers.activateStylesheet('wforms-jsonly.css');

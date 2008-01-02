@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>	
+	<title>wForms 3.0 - Switch Behavior Test Suite</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+   
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_switch.js"></script>
+	<script type="text/javascript">
+	
+	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {
+		bInstance = this;
+		setUpPageStatus = 'complete';		
+	} 
+	
+	function setUpPage() {}
+  
+  	function setUp() {}
+	
+	function tearDown() {}
+	
+	function testApplyTo() {
+		// Test default setting
+		assertEquals('onstate-z', document.getElementById('casez').className);
+	}
+	function testRadioSwitch() {
+		assertEquals('offstate-a', document.getElementById('casea').className);
+		document.getElementById('switcha').checked=true;
+		bInstance.run(null, document.getElementById('switcha'));
+		assertEquals('onstate-a', document.getElementById('casea').className.replace(/^\s+/,''));
+		assertEquals('offstate-b', document.getElementById('caseb').className);
+		
+		document.getElementById('switchb').checked=true;
+		bInstance.run(null, document.getElementById('switchb'));
+		assertEquals('offstate-a', document.getElementById('casea').className.replace(/^\s+/,''));
+		assertEquals('onstate-b', document.getElementById('caseb').className);
+	}
+	function testLinkSwitch() {
+		bInstance.run(null, document.getElementById('switchc'));
+		assertEquals('switch-c swtchIsOn', document.getElementById('switchc').className);
+		assertEquals('onstate-c', document.getElementById('casec').className.replace(/^\s+/,''));
+		bInstance.run(null, document.getElementById('switchc'));		
+		assertEquals('switch-c swtchIsOff', document.getElementById('switchc').className);
+		assertEquals('offstate-c', document.getElementById('casec').className.replace(/^\s+/,''));
+	}
+	function testSelectSwitch() {
+		var s = document.getElementById('selectTest');
+		s.selectedIndex=0;
+		bInstance.run(null, s);
+		assertEquals('onstate-d', document.getElementById('cased').className);
+		assertEquals('onstate-e', document.getElementById('casee').className);
+		assertEquals('offstate-f', document.getElementById('casef').className);
+		assertEquals('offstate-g', document.getElementById('caseg').className);
+		s.selectedIndex=1;
+		bInstance.run(null, s);
+		assertEquals('offstate-d', document.getElementById('cased').className.replace(/^\s+/,''));
+		assertEquals('offstate-e', document.getElementById('casee').className.replace(/^\s+/,''));
+		assertEquals('onstate-f', document.getElementById('casef').className);
+		assertEquals('offstate-g', document.getElementById('caseg').className);
+		s.selectedIndex=2;
+		bInstance.run(null, s);
+		assertEquals('offstate-d', document.getElementById('cased').className.replace(/^\s+/,''));
+		assertEquals('offstate-e', document.getElementById('casee').className.replace(/^\s+/,''));
+		assertEquals('offstate-f', document.getElementById('casef').className.replace(/^\s+/,''));
+		assertEquals('onstate-g', document.getElementById('caseg').className.replace(/^\s+/,''));		
+		s.selectedIndex=3;
+		bInstance.run(null, s);
+		assertEquals('offstate-d', document.getElementById('cased').className.replace(/^\s+/,''));
+		assertEquals('offstate-e', document.getElementById('casee').className.replace(/^\s+/,''));
+		assertEquals('offstate-f', document.getElementById('casef').className.replace(/^\s+/,''));
+		assertEquals('offstate-g', document.getElementById('caseg').className.replace(/^\s+/,''));	
+		s.selectedIndex=-1;
+	}
+	</script>
+	
+</head>
+
+<body class="wForm">
+	<form>
+		<input name="fooz" type="checkbox" class="switch-z" id="switchz" checked="checked" />Z Switch <br/>
+		<div id="casez" class="offstate-z">This is A state</div>
+		
+		
+		<input name="foo" type="radio" class="switch-a" id="switcha" />A Switch <br/>
+		<input name="foo" type="radio" class="switch-b" id="switchb"  />B Switch <br/>	
+		<a href="#" class="switch-c swtchIsOff" id="switchc" >C Switch</a> <br/>
+	
+		<select id="selectTest">
+			<option class="switch-d switch-e">D &amp; E</option>
+			<option class="switch-f">F</option>
+			<option class="switch-g">G</option>
+			<option>Test 4</option>
+		</select>
+
+		<div id="casea" class="offstate-a">This is A state</div>
+		<div id="caseb" class="offstate-b">This is B state</div>
+		<div id="casec" class="offstate-c">This is C state</div>
+		<div id="cased" class="offstate-d">This is D state</div>
+		<div id="casee" class="offstate-e">This is E state</div>
+		<div id="casef" class="offstate-f">This is F state</div>
+		<div id="caseg" class="offstate-g">This is F state</div>
+	</form>
+</body>
+</html>
+
+

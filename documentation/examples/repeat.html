@@ -1,0 +1,70 @@
+<html>
+<head>	
+	<title>wForms 3.0 - Repeat Behavior Examples</title>
+	
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+	<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
+	
+	<script src="../../wforms_core.js"></script>
+	<script src="../../wforms_repeat.js"></script>
+</head>
+
+<body>
+	
+	<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testRepeatForm" style="width: 550px">
+		<fieldset class="repeat" id="test0"><legend>Setup Test</legend>
+			<div class="oneField">
+				<textarea cols="30" rows="3"></textarea>
+			</div>
+		</fieldset>
+		<fieldset class="repeat" id="test1">
+			<div class="oneField">
+				<label for="wf_Texte" class="preField" style="min-width:5em">Texte</label>
+				<textarea cols="30" rows="3" id="wf_Texte" name="wf_Texte" class="required"></textarea>
+				<span class="errMsg" id="wf_Texte-E"></span>
+			</div>
+		</fieldset>
+		<div class="repeat" id="test2">
+			<div class="oneField">
+				<label for="tfa_Date" class="preField" style="min-width:5em">Date</label>
+				<input type="text" id="tfa_Date" name="tfa_Date" value="" size="" />
+				<div class="field-hint-inactive" id="tfa_Date-H">
+					<span>JJ/MM/AAAA </span>
+				</div>						
+			</div>
+		</div>
+		<table>
+			<tbody>
+				<tr class="repeat" id="trRepeat">
+					<td>Input:</td>
+					<td>						
+						<input id="listItemLabel" value="" maxlength="255" type="text" />
+					</td>
+					<td class="tdRepeatLink">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		<fieldset class="repeat" id="nestedTest0"><legend>Parent Repeat</legend>
+			<div class="oneField">
+				<input id="nestedTestInput0" type="text" />
+			</div>
+			<fieldset class="repeat" id="nestedTest1"><legend>Nested Repeat</legend>
+				<div class="oneField">
+					<input id="nestedTestInput1" type="text" />
+				</div>
+				<div class="oneField">
+					<input id="nestedTestInput2" type="text" />
+				</div>
+			</fieldset>
+			<div class="oneField">
+				<input id="nestedTestInput3" type="text" />
+			</div>
+		</fieldset>
+	</form>
+</body>
+</html>

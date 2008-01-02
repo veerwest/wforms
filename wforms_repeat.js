@@ -128,15 +128,13 @@ wFORMS.behaviors.repeat = {
 	 * Evaluates when section is duplicated
      * @param	{HTMLElement}	elem	Duplicated section
 	 */
-	onRepeat : function(elem){
-	},
+	onRepeat : function(elem){},
 
 	/**
 	 * Custom function that could be overridden. 
 	 * Evaluates when section is removed
 	 */
-	onRemove : function(){
-	},
+	onRemove : function(){},
 
 	/**
 	 * Custom function that could be overridden. 
@@ -218,12 +216,21 @@ wFORMS.behaviors.repeat.applyTo = function(f) {
 	}
 	
 	f.querySelectorAll(this.SELECTOR_REMOVEABLE).forEach(function(e){
-		// 
 		addRemoveLinkToSection(e);
 	});
 	
+	for(var i=0;i<b.length;i++) {
+		b[i].onApply();
+	}
 	return b;
 }
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.repeat.instance.prototype.onApply = function() {} 
+
 
 /**
  * Returns repeat link for specified area if it exists, 
@@ -335,22 +342,9 @@ wFORMS.behaviors.repeat.instance.prototype.duplicateSection = function(elem){
 	this.updateMasterSection(elem);
 	
 	// Creates clone of the group
-	// TODO: Cloning a radio group results in the loss of the selection (in Firefox at least)
-	var newElem = base2.DOM.bind(elem.cloneNode(true));
-	// Looking for the place where to add group
-	var insertNode = elem;
-	while(insertNode && 
-		 (insertNode.nodeType==3 ||       // skip text-node that can be generated server-side when populating a previously repeated group 
-		  insertNode.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE)  || 
-		  insertNode.hasClass(wFORMS.behaviors.repeat.CSS_REPEATABLE))) {						
-		insertNode = insertNode.nextSibling;
-		if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
-			insertNode = base2.DOM.bind(insertNode);
-		}
-	}
-	
-	elem.parentNode.insertBefore(newElem, insertNode);
-	
+	var newElem = elem.cloneNode(true);	
+	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
+
 	this.updateDuplicatedSection(newElem);	
 	wFORMS.applyBehaviors(newElem);
 	// Calls custom function
@@ -378,10 +372,33 @@ wFORMS.behaviors.repeat.removeSection = function(id){
 		wFORMS.behaviors.repeat.onRemove();
 	}
 }
-
+/**
+ * Looking for the place where to insert the cloned element
+ * @param 	{DOMElement} 	source element
+ * @return 	{DOMElement} 	target element for 'insertBefore' call.
+ */
+wFORMS.behaviors.repeat.instance.prototype.getInsertNode = function(elem) {
+ 	var insertNode = elem.nextSibling;
+ 	
+ 	if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
+		insertNode = base2.DOM.bind(insertNode); 
+	}
+  	
+	while(insertNode && 
+		 (insertNode.nodeType==3 ||       // skip text-node that can be generated server-side when populating a previously repeated group 
+		  insertNode.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE))) {						
+		
+		insertNode = insertNode.nextSibling;
+		
+		if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
+			insertNode = base2.DOM.bind(insertNode);
+		}
+	}
+	return insertNode;
+}
 /**
  * Evaluates when user clicks Remove link
- * @param	{DOMEvent}	Event	catched
+ * @param	{DOMEvent}		Event	catched
  * @param	{HTMLElement}	elem	Element produced event
  */
 wFORMS.behaviors.repeat.onRemoveLinkClick = function(event, elem){
@@ -403,7 +420,7 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterSection = function(elem){
 	var suffix = this.createSuffix(elem);
 	elem.id = this.clearSuffix(elem.id) + suffix;
 	
-	this.updateMasterElements(elem, suffix);	
+	this.updateMasterElements(elem, suffix);
 }
 wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem, suffix){
 	
@@ -414,11 +431,16 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem
 	for(var i=0;i<cn.length;i++) {
 		var n = cn[i];
 		if(n.nodeType!=1) continue;
-		if(!n.hasClass) {
-			base2.DOM.bind(n);
+		
+		if(!n.hasClass) { // no base2.DOM.bind to speed up function 
+			n.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 		}
-		if(n.hasClass(wFORMS.behaviors.repeat.CSS_REPEATABLE))
+		
+		// suffix may change for this node and child nodes, but not sibling nodes, so keep a copy
+		var siblingSuffix = suffix;
+		if(n.hasClass(wFORMS.behaviors.repeat.CSS_REPEATABLE)) {
 			suffix += "[0]";
+		}
 		if(!n.hasClass(wFORMS.behaviors.repeat.CSS_REMOVEABLE)){
 			// Iterates over updateable attribute names
 			for(var j = 0; j < wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY.length; j++){
@@ -426,21 +448,25 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem
 				var value = this.clearSuffix(n.getAttribute(attrName));
 				if(!value){
 					continue;
+				}				
+				if(attrName=='id' && wFORMS.behaviors.hint && wFORMS.behaviors.hint.isHintId(n.id)){
+					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.hint.HINT_SUFFIX + ')$'),"$1" + suffix + "$2");
+				} else if(attrName=='id' && wFORMS.behaviors.validation && wFORMS.behaviors.validation.isErrorPlaceholderId(n.id)){
+					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX + ')$'),"$1" + suffix + "$2"); 
+				} else if(attrName=='id' && n.id.indexOf(wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK) != -1){
+					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK + ')$'), "$1" + suffix + "$2");
+				} else if(attrName=='id'){ 
+					n.id = value + suffix;		// do not use setAttribute for the id property (doesn't work in IE6)	
+				} else if(attrName=='name'){ 
+					n.name = value + suffix;	// do not use setAttribute for the name property (doesn't work in IE6)	
+				} else {
+					n.setAttribute(attrName, value + suffix);	
 				}
-				
-				if(wFORMS.behaviors.hint && wFORMS.behaviors.hint.isHintId(n.id)){
-					n.setAttribute(attrName, value.replace(new RegExp("(.*)(" + wFORMS.behaviors.hint.HINT_SUFFIX + ')$'),
-						"$1" + suffix + "$2"));
-				}else if(n.id.indexOf(wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK) != -1){
-					n.setAttribute(attrName, value.replace(new RegExp("(.*)(" + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK + ')$'),
-						"$1" + suffix + "$2"));
-				}else{
-					n.setAttribute(attrName, value + suffix);					
-				}
-			}
-			
+			}			
 			this.updateMasterElements(n, suffix);
 		}
+		// restore suffix for siblings if needed.
+		suffix = siblingSuffix;
 	}
 }
 
@@ -450,31 +476,28 @@ wFORMS.behaviors.repeat.instance.prototype.updateMasterElements  = function(elem
  * @param	{HTMLElement}	elem
  */
 wFORMS.behaviors.repeat.instance.prototype.updateDuplicatedSection = function(elem){
-	var clazz = this;
-//	var idSuffix = this.getNextDuplicateIndex(this.target);
-
-	// elem.setAttribute('dindex', this.getNextDuplicateIndex(this.target))
+	
 	var index  = this.getNextDuplicateIndex(this.target);
 	var suffix = this.createSuffix(elem, index);
 
 	// Caches master section ID in the dublicate
-	elem.setAttribute(wFORMS.behaviors.repeat.ATTR_MASTER_SECTION, elem.id);
+	elem.setAttribute(this.behavior.ATTR_MASTER_SECTION, elem.id);
 	// Updates element ID (possible problems when repeat element is Hint or switch etc)
 	elem.id = this.clearSuffix(elem.id) + suffix;
 	// Updates classname	
-	elem.className = elem.className.replace(wFORMS.behaviors.repeat.CSS_REPEATABLE, wFORMS.behaviors.repeat.CSS_REMOVEABLE);
+	elem.className = elem.className.replace(this.behavior.CSS_REPEATABLE, this.behavior.CSS_REMOVEABLE);
 
+	if(!elem.hasClass) { // no base2.DOM.bind to speed up function 
+		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+	}
 	// Check for preserverRadioName override
-	if(elem.hasClass(wFORMS.behaviors.repeat.CSS_PRESERVE_RADIO_NAME)) 
+	if(elem.hasClass(this.behavior.CSS_PRESERVE_RADIO_NAME)) 
 		var _preserveRadioName = true;
 	else
-		var _preserveRadioName = wFORMS.behaviors.repeat.preserveRadioName;
-
-
-	this.updateSectionChildNodes(elem.querySelectorAll('> *'), suffix, _preserveRadioName);
+		var _preserveRadioName = this.behavior.preserveRadioName;
+	
+	this.updateSectionChildNodes(elem, suffix, _preserveRadioName);
 }
-
-// new {{{
 
 
 /**
@@ -484,51 +507,61 @@ wFORMS.behaviors.repeat.instance.prototype.updateDuplicatedSection = function(el
  * @param	elems	Array of the elements should be updated
  * @param	suffix	Suffix value should be added to attributes
  */
-wFORMS.behaviors.repeat.instance.prototype.updateSectionChildNodes = function(elems, suffix, preserveRadioName){
+wFORMS.behaviors.repeat.instance.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName){
 	
-	var clazz = this;
-    elems.forEach(function(e){
-    	
+	var removeStack = new Array();
+	var l=elem.childNodes.length;
+	for(var i=0;i<l;i++) {
+		var e = elem.childNodes[i];
+		if(e.nodeType!=1) {
+			// skip text nodes 
+			continue;
+		}
+		if(!e.hasClass) { // no base2.DOM.bind to speed up function 
+			e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		}
 		// Removes created descendant duplicated group if any
-		if(wFORMS.behaviors.repeat.isDuplicate(e)){
-			e.parentNode.removeChild(e);
-			return;
+		if(this.behavior.isDuplicate(e)){
+			removeStack.push(e);
+			continue;
 		}
 		// Removes duplicate link
-		if(e.hasClass(wFORMS.behaviors.repeat.CSS_DUPLICATE_SPAN)){
-			e.parentNode.removeChild(e);
-			return ;
+		if(e.hasClass(this.behavior.CSS_DUPLICATE_SPAN)){
+			removeStack.push(e);
+			continue;
 		}
-		if(e.hasClass(wFORMS.behaviors.repeat.CSS_DUPLICATE_LINK)){
-			e.parentNode.removeChild(e);
-			return ;
+		if(e.hasClass(this.behavior.CSS_DUPLICATE_LINK)){
+			removeStack.push(e);
+			continue;
 		}
 				
-		// Clears value	
-		var tagName = e.tagName.toUpperCase();
-		if(tagName == 'INPUT' || tagName == 'TEXTAREA'){
-				
+		// Clears value	(TODO: select?)
+		if(e.tagName == 'INPUT' || e.tagName == 'TEXTAREA'){
 			if(e.type != 'radio' && e.type != 'checkbox'){
 				e.value = '';
-			}else{
+			} else {
 				e.checked = false;
 			}
 		}
 		
-		clazz.updateAttributes(e, suffix, preserveRadioName);
+		this.updateAttributes(e, suffix, preserveRadioName);
 		
-		if(_elems = e.querySelectorAll('> *')){
-			if(e.hasClass(wFORMS.behaviors.repeat.CSS_REPEATABLE)){
-				clazz.updateSectionChildNodes(_elems, 
-					wFORMS.behaviors.repeat.instance.prototype.createSuffix(e), 
-					preserveRadioName);
-
-			}else{
-				clazz.updateSectionChildNodes(_elems, suffix, preserveRadioName);
-			}
+		if(e.hasClass(this.behavior.CSS_REPEATABLE)){
+			this.updateSectionChildNodes(e, this.createSuffix(e), preserveRadioName);
+		} else{
+			this.updateSectionChildNodes(e, suffix, preserveRadioName);
 		}
-    });
-    
+   	}    
+   	for(var i=0;i<removeStack.length;i++){
+   		var e = removeStack[i];
+   		if(e.clearAttributes) {
+			// detach all event handler 
+			e.clearAttributes(false); 	
+		}
+   		if(e.parentNode) e.parentNode.removeChild(e);
+   	}
+   	
+	
 }
 
 /**
@@ -577,7 +610,9 @@ wFORMS.behaviors.repeat.instance.prototype.clearSuffix = function(value){
  */
 wFORMS.behaviors.repeat.instance.prototype.updateAttributes = function(e, idSuffix, preserveRadioName){
 	var isHint = wFORMS.behaviors.hint && wFORMS.behaviors.hint.isHintId(e.id);
+	var isErrorPlaceholder = wFORMS.behaviors.validation && wFORMS.behaviors.validation.isErrorPlaceholderId(e.id);
 	var isDuplicate = e.id.indexOf(wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK) != -1;
+
 	// Sets that element belongs to duplicate group
 	wFORMS.behaviors.repeat.setInDuplicateGroup(e);
 
@@ -591,7 +626,8 @@ wFORMS.behaviors.repeat.instance.prototype.updateAttributes = function(e, idSuff
 	}
 
 	// Iterates over updateable attribute names
-	for(var i = 0; i < wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY.length; i++){
+	var l = wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY.length;
+	for(var i = 0; i < l; i++){
 		var attrName = wFORMS.behaviors.repeat.UPDATEABLE_ATTR_ARRAY[i];
 		
 		var value = this.clearSuffix(e.getAttribute(attrName));	
@@ -599,16 +635,20 @@ wFORMS.behaviors.repeat.instance.prototype.updateAttributes = function(e, idSuff
 			continue;
 		}
 
-		if(attrName == 'name' && e.tagName.toUpperCase() == 'INPUT' && preserveRadioName){
+		if(attrName == 'name' && e.tagName == 'INPUT' && preserveRadioName){
 			continue;
-		}
-		if(isHint && attrName=='id'){			
-			e.setAttribute('id', value + idSuffix + wFORMS.behaviors.hint.HINT_SUFFIX);
-		}else if(isDuplicate){
-			e.setAttribute(attrName, value.replace(new RegExp("(.*)(" + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK + ')$'),
-				"$1" + idSuffix + "$2"));
-		}else{
-			e.setAttribute(attrName, value + idSuffix);
+		} else if(isErrorPlaceholder && attrName=='id'){	
+			e.id = value + idSuffix + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX;
+		} else if(isHint && attrName=='id'){			
+			e.id = value + idSuffix + wFORMS.behaviors.hint.HINT_SUFFIX;
+		} else if(isDuplicate && attrName=='id'){
+			e.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.repeat.ID_SUFFIX_DUPLICATE_LINK + ')$'),"$1" + idSuffix + "$2");
+		} else if(attrName=='id'){ 
+			e.id = value + idSuffix;	// do not use setAttribute for the id property (doesn't work in IE6)	
+		} else if(attrName=='name'){ 
+			e.name = value + idSuffix;	// do not use setAttribute for the id property (doesn't work in IE6)	
+		} else {
+			e.setAttribute(attrName, value + idSuffix);	
 		}
 	}
 }
@@ -657,7 +697,7 @@ wFORMS.behaviors.repeat.getOrCreateCounterField = function(elem){
  * @return	{HTMLElement}
  */
 wFORMS.behaviors.repeat.createCounterField = function(id){
-	cElem = base2.DOM.bind(document.createElement('input'));
+	cElem = document.createElement('input');
 	cElem.id = id;
 	cElem.setAttribute('type', 'hidden');
 	cElem.setAttribute('name', id);
@@ -780,7 +820,7 @@ wFORMS.behaviors.repeat.removeHandled = function(elem){
  * @param {event} e 
  * @param {domElement} element
  */
-wFORMS.behaviors.repeat.instance.prototype.run = function(e, element){ 
+wFORMS.behaviors.repeat.instance.prototype.run = function(e, element){ 	
 	this.duplicateSection(this.target);
 	if(e) e.preventDefault();
 }

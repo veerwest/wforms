@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Input Validation Behavior Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_repeat.js"></script>	
+	<script type="text/javascript" src="../wforms_switch.js"></script>
+	<script type="text/javascript" src="../wforms_validation.js"></script>
+	
+	
+	<script type="text/javascript">
+		 
+      
+		wFORMS.behaviors.validation.instance.prototype.onApply = function() {
+			setUpPageStatus = 'complete';
+		} 
+	
+		
+		function setUpPage() {}
+	  
+	  	function setUp() {
+			bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'validation');
+		}
+		
+		function tearDown() {}
+		
+		function testValidateAlpha() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			 
+			wFORMS.behaviors.validation.messages.isAlpha = "my error message";
+			testField.className='validate-alpha';
+			testField.value='999';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'))
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='AAA';
+			// Test validation rule
+			assertTrue('AAA should pass alpha validation',bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));
+		}
+		
+		function testValidateAlphanum() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			wFORMS.behaviors.validation.messages.isAlphanum = "my error message";
+			testField.className='validate-alphanum';
+			testField.value='a!99';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='A99';
+			// Test validation rule
+			assertTrue('A99 should pass alphanum validation', bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));			
+		}
+		
+		function testValidateRequired() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			wFORMS.behaviors.validation.messages.isRequired = "my error message";
+			testField.className='required';
+			testField.value=' ';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='text';
+			// Test validation rule
+			assertTrue('Should pass required validation', bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));			
+		}
+		
+		function testValidateOneRequired() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			document.getElementById('testDiv').className='required';
+			wFORMS.behaviors.validation.messages.isRequired = "my error message";
+			testField.className='';
+			testField.value=' ';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testDiv-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testDiv-E').innerHTML);
+			
+			testField.value='text';
+			// Test validation rule
+			assertTrue('Should pass one required validation', bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testDiv-E'));			
+		}
+		
+		function testValidateDate() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			wFORMS.behaviors.validation.messages.isDate = "my error message";
+			testField.className='validate-date';
+			testField.value='not a date';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='2/2/2008';
+			// Test validation rule
+			assertTrue('Should pass one required validation', bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));			
+		}
+		
+		function testValidateEmail() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			wFORMS.behaviors.validation.messages.isEmail = "my error message";
+			testField.className='validate-email';
+			testField.value='not@an_email';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='test@test.co.uk';
+			// Test validation rule
+			assertTrue('test@test.co.uk should pass email validation', bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));			
+			
+			testField.value='test.test@test.test.uk';
+			// Test validation rule
+			assertTrue('test.test@test.test.uk should pass email validation', bInstance.run(null, testForm)); 
+
+			testField.value='test_9999+test@test.test.uk';
+			// Test validation rule
+			assertTrue('test_9999+test@test.test.uk should pass email validation', bInstance.run(null, testForm)); 
+		}
+		
+		function testValidateInteger() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			wFORMS.behaviors.validation.messages.isInteger = "my error message";
+			testField.className='validate-integer';
+			testField.value='not an integer';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='4.5';			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			
+			testField.value='44444';
+			// Test validation rule
+			assertTrue('Should pass integer validation', bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));			
+		}
+		
+		function testValidateFloat() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			wFORMS.behaviors.validation.messages.isFloat = "my error message";
+			testField.className='validate-float';
+			testField.value='not a float';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='4.5';			
+			// Test validation rule
+			assertTrue('4.5 should pass float validation',bInstance.run(null, testForm)); 
+			
+			testField.value='44';
+			// Test validation rule
+			assertTrue('44 should pass float validation', bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));
+		}
+		
+		function testValidateCustom() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			wFORMS.behaviors.validation.messages.isCustom = "my error message";
+			testField.className='validate-custom /^\\d\\d\\d$/';
+			testField.value='not 3 digits';
+			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm)); 
+			// Test error message creation
+			assertNotNull(document.getElementById('testField-E'));
+			// Test error message content
+			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			
+			testField.value='4444';
+			// Test validation rule
+			assertFalse('4444 should not pass custom validation', bInstance.run(null, testForm)); 
+
+			testField.value='444';			
+			// Test validation rule
+			assertTrue('444 should pass custom validation',bInstance.run(null, testForm)); 
+			// Test error message removal
+			assertNull(document.getElementById('testField-E'));			
+		}
+		
+		
+	</script>
+	</head>
+	<body class="wForm" style="padding:5px; margin:10px;">
+        <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
+            <div class="oneField" id="testDiv">
+                <label for="testField" class="preField">Test Field
+                	<span class="reqMark">*</span>
+                </label>
+              	<input type="text" id="testField"  name="testField"  class="" value="" />
+				<input type="text" id="testField2" name="testField2" class="" value="" />
+               	<br />
+            </div>
+		</form>
+		 <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm2" >	
+			<table style="border:1px solid #EEE">
+				<tr class="required"><td>Label: <span class="reqMark">*</span></td><td><input type="text" /></td></tr>
+				<tr class="required"><td>Label: <span class="reqMark">*</span></td><td><input type="text" /></td></tr>
+			</table>
+			
+			<div class="actions"><input type="submit" value="TEST" /></div>
+        </form>
+    </body>
+</html>
+

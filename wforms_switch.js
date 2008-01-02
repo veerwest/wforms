@@ -146,9 +146,16 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 			}
 		}
 	);
-
+	b.onApply();
 	return b;
 }
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors['switch'].instance.prototype.onApply = function() {} 
+
 
 
 /**
@@ -234,7 +241,7 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggersByElements = function(e
 			case 'INPUT' : 
 				if(elem.type && elem.type.toUpperCase() == 'RADIO'){					
 					var radioGroup = elem.form[elem.name];
-					
+					if(!radioGroup) break; // bad markup
 					for(var j=radioGroup.length-1;j>=0;j--) {						
 						var _elem = radioGroup[j];
 						// Do not call getSwitchNamesFromTrigger on this radio input 

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>	
+	<title>wForms 3.0 - Switch Behavior Test Suite</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+ 		.offstate-z { display:none;}
+	</style> 
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_repeat.js"></script>	
+	<script type="text/javascript" src="../wforms_switch.js"></script>
+	<script type="text/javascript">
+	
+	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {
+		setUpPageStatus = 'complete';		
+	} 
+	
+	function setUpPage() {}
+  
+  	function setUp() {
+  		document.getElementById('switcha').checked = false;
+  	}
+	
+	function tearDown() {}
+	
+	function testApplyTo() {
+		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat'),'repeat');
+		// repeat
+		rInstance.run();
+		// turn switch on
+		document.getElementById('switcha[1]').checked = true;	
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat[1]'),'switch');	
+		sInstance.run(null, document.getElementById('switcha[1]'));
+		// check
+		assertEquals("onstate-a", document.getElementById('casea[1]').className);
+		
+	}
+	
+	</script>
+	
+</head>
+
+<body class="wForm">
+	<form id="testform">
+		<fieldset class="repeat" id="testrepeat">
+			<input type="checkbox" class="switch-a" id="switcha" />Switch A<br/>
+			<div id="casea" class="offstate-a">This is A state</div>
+		</fieldset >
+		<hr/>
+		<input type="checkbox" class="switch-z" id="switchz" />Switch Z<br/>
+	
+		<div class="offstate-z">
+			<fieldset  class="repeat" id="testrepeat2">
+				<select id="switchb">
+					<option>--</option>
+					<option class="switch-b" >Switch B</option>
+				</select>
+				<div id="caseb" class="offstate-b">This is B state</div>
+			</fieldset>
+		</div>
+	</form>
+</body>
+</html>
+
+

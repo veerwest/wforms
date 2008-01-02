@@ -55,24 +55,15 @@ wFORMS.behaviors.hint.applyTo = function(f) {
 	f.querySelectorAll(wFORMS.behaviors.hint.HINT_SELECTOR).forEach(
 		function(elem){
 			
-			// ID attribute is not checked here because of selector already contains it
+			// ID attribute is not checked here because selector already contains it
 			// if selector is changed, ID check should also exists
 			// if(!elem.id) { return ; }
 			var e = b.getElementByHintId(elem.id);
 			if(e){
 				if(!e.addEventListener) base2.DOM.bind(e);
-				if(e.tagName.match(/(select)|(input)|(textarea)/i)){		
-					if(e.attachEvent) {
-						// Weird behavior in IE when using Base2 addEventListener implementation
-						// all focus/blur events on each instance of a repeated input are triggered. 
-						// with attachEvent, only the hints on the master and the copy are triggered
-						// .. maybe a side-effect of using cloneNode in repeat behavior.  
-						e.attachEvent('onfocus', function() { b.run(window.event, e)});
-						e.attachEvent('onblur',  function() { b.run(window.event, e)});
-					} else {
-						e.addEventListener('focus', function(event) { b.run(event, e)}, false);
-						e.addEventListener('blur', function(event) { b.run(event, e)}, false);
-					}			
+				if(e.tagName == "SELECT" || e.tagName == "TEXTAREA" || (e.tagName == "INPUT" && e.type != "radio" && e.type != "checkbox")){							
+					e.addEventListener('focus', function(event) { b.run(event, this)}, false);
+					e.addEventListener('blur',  function(event) { b.run(event, this)}, false);	
 				} else {
 					e.addEventListener('mouseover', function(event) { b.run(event, e)}, false);
 					e.addEventListener('mouseout', function(event) { b.run(event, e)}, false);
@@ -80,9 +71,15 @@ wFORMS.behaviors.hint.applyTo = function(f) {
 			}
 		}
 	);
-
+	b.onApply();
 	return b;
 }
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.hint.instance.prototype.onApply = function() {} 
 
 /**
  * Executes the behavior
@@ -90,8 +87,10 @@ wFORMS.behaviors.hint.applyTo = function(f) {
  * @param {domElement} elem
  */
 wFORMS.behaviors.hint.instance.prototype.run = function(event, element) { 	
+	
 	var hint = this.getHintElement(element);
 	if(!hint) return;
+
 	if(event.type == 'focus' || event.type == 'mouseover'){
 		hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
 		hint.addClass(wFORMS.behaviors.hint.CSS_ACTIVE);
@@ -128,9 +127,10 @@ wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
  * @param   {HTMLElement}	source	HTML element with focus.
  */
 wFORMS.behaviors.hint.instance.prototype.setup = function(hint, source){
-	hint.style.left = ((source.tagName == 'SELECT' ? 
-		 + source.offsetWidth : 0) + wFORMS.helpers.getLeft(source)) + "px";
-	hint.style.top  = (wFORMS.helpers.getTop(source) + source.offsetHeight) + "px";	
+	var l = ((source.tagName == 'SELECT' ? + source.offsetWidth : 0) + wFORMS.helpers.getLeft(source));
+	var t  = (wFORMS.helpers.getTop(source) + source.offsetHeight);	
+	hint.style.left = l + "px"; 
+	hint.style.top  = t + "px";
 }
 
 /**

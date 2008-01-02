@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>wForms Layout Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+   
+	<script type="text/javascript" src="../../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../../wforms_core.js"></script>
+	<script type="text/javascript" src="../../wforms_hint.js"></script>
+	
+	<!-- Test workaround for field-hint layout bug with inline sections in Firefox (bug #90) -->
+	<style type="text/css">
+		form .inlineSection, x:-moz-any-link {
+			overflow: inherit !important;
+		}
+		.inlineSection:after, x:-moz-any-link{ content: "."; display: block; height: 0; clear: both; visibility:hidden; }
+	</style> 
+</head>
+<body>
+	<div class="wForm">
+		<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" class="labelsLeftAligned">
+			
+			<fieldset><legend>Field Hints Sections</legend>
+			
+				<fieldset><legend>On the Side</legend>
+					<div class="inlineSection">
+						<label class="preField">Inside an inline section:</label>
+						<div class="oneField labelsAbove">
+							<label for="textInput1" class="inlineLabel">Text Input 1: </label>
+							<input type="text" id="textInput1" name="textInput1" size="15" />
+							<div id="textInput1-H" class="field-hint-inactive"><div>Text Input 1 Field Hint, Text Input 1 Field Hint.</div></div>
+						</div>
+						<div class="oneField labelsAbove">
+							<label for="textInput2" class="inlineLabel">Long Label for Text Input 2: </label>
+							<input type="text" id="textInput2" name="textInput2" size="15" />
+							<div id="textInput2-H" class="field-hint-inactive"><div>Text Input 2 Field Hint, Text Input 2 Field Hint.</div></div>
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inside an inline section:</label>
+						<div class="oneField labelsAbove">
+							<label for="textarea1" class="inlineLabel">TextArea: </label>
+							<textarea type="text" id="textarea1" name="textarea1" rows="3" cols="20"></textarea>
+							<div id="textarea1-H" class="field-hint-inactive"><div>Textarea 1 Field Hint, Textarea 2 Field Hint.</div></div>
+						</div>
+						<div class="oneField labelsAbove">
+							<label for="selectInput1" class="inlineLabel">Select: </label>
+							<select id="selectInput1">
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>
+							<div id="selectInput1-H" class="field-hint-inactive"><div>Select 1 Field Hint, Select 1 Field Hint.</div></div>						
+						</div>
+						<div class="oneField labelsAbove">
+							<label for="selectInput2" class="inlineLabel">Select Multiple: </label>
+							<select id="selectInput2" multiple="multiple">
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>		
+							<div id="selectInput2-H" class="field-hint-inactive"><div>Select 2 Field Hint, Select 2 Field Hint.</div></div>						
+						</div>
+					</div>
+					<div class="oneField">
+	                    <label class="preField">On a radio group:</label>
+	
+	                    <span class="oneChoice">
+	                       <input type="radio" id="radio1" name="radioGroup" />
+	                       <label for="radio1">First choice</label>
+						    <span id="radio1-H" class="field-hint-inactive">Radio #1 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" id="radio2" name="radioGroup" />
+	                        <label for="radio2">Second choice</label>
+							 <span id="radio2-H" class="field-hint-inactive">Radio #2 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" id="radio3" name="radioGroup" />
+	                        <label for="radio3">Third choice</label>
+							 <span id="radio3-H" class="field-hint-inactive">Radio #3 hint</span>
+	                    </span>
+	                </div>
+	
+	                <div class="oneField">
+	                    <label class="preField">On checkboxes:</label>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" id="checkbox1" />
+	                        <label for="checkbox1" class="postField">First choice</label>
+							<span id="checkbox1-H" class="field-hint-inactive">Checkbox #1 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" id="checkbox2" name="radioGroup" />
+	                        <label for="checkbox2" class="postField">Second choice</label>
+							<span id="checkbox2-H" class="field-hint-inactive">Checkbox #2 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" id="checkbox3" name="radioGroup" />
+	                        <label for="checkbox3" class="postField">Third choice</label>
+							<span id="checkbox3-H" class="field-hint-inactive">Checkbox #3 hint</span>
+	                    </span>
+	                </div>
+				</fieldset>			
+				<fieldset class="hintsTooltip"><legend>As a Tooltip</legend>
+					<div class="inlineSection">
+						<label class="preField">Inside an inline section:</label>
+						<div class="oneField labelsAbove">
+							<label for="textInput3" class="inlineLabel">Text Input 3: </label>
+							<input type="text" id="textInput3" name="textInput3" size="15" />
+							<div id="textInput3-H" class="field-hint-inactive"><div>Text Input 3 Field Hint, Text Input 1 Field Hint.</div></div>
+						</div>
+						<div class="oneField labelsAbove">
+							<label for="textInput4" class="inlineLabel">Long Label for Text Input 4: </label>
+							<input type="text" id="textInput4" name="textInput4" size="15" />
+							<div id="textInput4-H" class="field-hint-inactive"><div>Text Input 4 Field Hint, Text Input 2 Field Hint.</div></div>
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inside an inline section:</label>
+						<div class="oneField labelsAbove">
+							<label for="textarea2" class="inlineLabel">TextArea: </label>
+							<textarea type="text" id="textarea2" name="textarea2" rows="3" cols="20"></textarea>
+							<div id="textarea2-H" class="field-hint-inactive"><div>Textarea 2 Field Hint, Textarea 2 Field Hint.</div></div>
+						</div>
+						<div class="oneField labelsAbove">
+							<label for="selectInput3" class="inlineLabel">Select: </label>
+							<select id="selectInput3">
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>
+							<div id="selectInput3-H" class="field-hint-inactive"><div>Select 3 Field Hint, Select 3 Field Hint.</div></div>						
+						</div>
+						<div class="oneField labelsAbove">
+							<label for="selectInput4" class="inlineLabel">Select Multiple: </label>
+							<select id="selectInput4" multiple="multiple">
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>		
+							<div id="selectInput4-H" class="field-hint-inactive"><div>Select 4 Field Hint, Select 4 Field Hint.</div></div>						
+						</div>
+					</div>
+					
+					<div class="oneField">
+	                    <label class="preField">On a radio group:</label>
+	
+	                    <span class="oneChoice">
+	                       <input type="radio" id="radio4" name="radioGroup" />
+	                       <label for="radio4">First choice</label>
+						    <span id="radio4-H" class="field-hint-inactive">Radio #1 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" id="radio5" name="radioGroup" />
+	                        <label for="radio5">Second choice</label>
+							 <span id="radio5-H" class="field-hint-inactive">Radio #2 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" id="radio6" name="radioGroup" />
+	                        <label for="radio6">Third choice</label>
+							 <span id="radio6-H" class="field-hint-inactive">Radio #3 hint</span>
+	                    </span>
+	                </div>
+	
+	                <div class="oneField">
+	                    <label class="preField">On checkboxes:</label>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" id="checkbox4" />
+	                        <label for="checkbox4" class="postField">First choice</label>
+							<span id="checkbox4-H" class="field-hint-inactive">Checkbox #1 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" id="checkbox5" name="radioGroup" />
+	                        <label for="checkbox5" class="postField">Second choice</label>
+							<span id="checkbox5-H" class="field-hint-inactive">Checkbox #2 hint</span>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" id="checkbox6" name="radioGroup" />
+	                        <label for="checkbox6" class="postField">Third choice</label>
+							<span id="checkbox6-H" class="field-hint-inactive">Checkbox #3 hint</span>
+	                    </span>
+	                </div>
+				</fieldset>
+				 
+			</fieldset>	
+			
+			<div class="actions">
+				<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="5871" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="5bdfed095fe123104093459112828666" name="tfa_dbControl" id="tfa_dbControl">
+			</div>
+		</form>
+	</div>
+</body>
+</html>

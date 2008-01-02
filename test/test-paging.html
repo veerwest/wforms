@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Paging Behavior Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+	<script type="text/javascript" src="jsunit/app/jsUnitMockTimeout.js"></script>
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_paging.js"></script>	
+	
+	<script type="text/javascript">
+		/* jsUnitMockTimeout.js breaks activatePage if no Click.tick is made.
+		 */	
+		wFORMS.behaviors.paging.instance.prototype._activatePage = wFORMS.behaviors.paging.instance.prototype.activatePage;
+		wFORMS.behaviors.paging.instance.prototype.activatePage = function(index) {
+			Clock.reset(); 
+			this._activatePage(index);
+			Clock.tick(10);
+		} 
+		/*  jsUnitMockTimeout.js breaks base2's DOMContentLoaded in Safari 3/Windows
+		 */
+		if (/WebKit/i.test(navigator.userAgent)) { // sniff
+		  	var _loadHandler = function() {
+			  wFORMS.onLoadHandler();
+		  	}
+		} else {
+			var _loadHandler = function() {}
+		}
+
+	
+		wFORMS.behaviors.paging.instance.prototype.onApply = function() {
+			setUpPageStatus = 'complete';
+		} 
+		
+		function setUpPage() {
+			Clock.tick(10000); // breaks test in IE6 otherwise
+		}
+	  
+	  	function setUp() {
+			var page1 = document.getElementById('wfPgIndex-1');
+			page1.className = 'wfPage';
+			var page2 = document.getElementById('wfPgIndex-2');
+			page2.className = 'wfPage';
+			var page3 = document.getElementById('wfPgIndex-3');
+			page3.className = 'wfPage';
+			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'paging');
+			bInstance.currentPageIndex=1; 
+			wFORMS.behaviors.paging.applyTo(document.getElementById('testForm'));
+			Clock.tick(1000);
+		}
+		
+		function tearDown() {
+			wFORMS.removeBehavior(document.getElementById('testForm'), 'paging');
+		}
+
+		function testApplyTo() {
+			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'paging');
+			
+			// Check that first page is activated
+			var page1 = document.getElementById('wfPgIndex-1');
+			assertEquals('page 1 should be the current page','wfCurrentPage',page1.className);
+			
+			// Check that other pages are not activated
+			var page2 = document.getElementById('wfPgIndex-2');
+			assertEquals('wfPage',page2.className);
+			var page3 = document.getElementById('wfPgIndex-3');
+			assertEquals('wfPage',page3.className);
+			
+			// Check that submit button is hidden
+			var submitButton = document.getElementById('submitButton'); 
+			assertEquals('primaryAction wfHideSubmit',submitButton.className);
+		}		
+					
+		function testPageNext() {
+			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'paging');
+			var page1 = document.getElementById('wfPgIndex-1');
+			var page2 = document.getElementById('wfPgIndex-2');
+			var page3 = document.getElementById('wfPgIndex-3');
+
+			bInstance.activatePage(2);
+			Clock.tick(10);	 // activatePage uses a timeout
+			assertEquals('page 1 should not be the current page','wfPage',page1.className);
+			assertEquals('page 2 should be the current page','wfCurrentPage',page2.className);
+			assertEquals('page 3 should not be the current page','wfPage',page3.className);
+		}
+		
+		function testPagePrevious() {
+			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'paging');
+			var page1 = document.getElementById('wfPgIndex-1');
+			var page2 = document.getElementById('wfPgIndex-2');
+			var page3 = document.getElementById('wfPgIndex-3');
+
+			assertEquals('page 1 should be the current page #a','wfCurrentPage',page1.className);
+			assertEquals('page 2 should not be the current page #a','wfPage',page2.className);
+			assertEquals('page 3 should not be the current page #a','wfPage',page3.className);
+			
+			bInstance.activatePage(2);
+			assertEquals('page 1 should not be the current page #b','wfPage',page1.className);
+			assertEquals('page 2 should not be the current page #b','wfCurrentPage',page2.className);
+			assertEquals('page 3 should be the current page #b','wfPage',page3.className);
+			
+			bInstance.activatePage(1);
+			assertEquals('page 1 should be the current page #c','wfCurrentPage',page1.className);
+			assertEquals('page 2 should not be the current page #c','wfPage',page2.className);
+			assertEquals('page 3 should not be the current page #c','wfPage',page3.className);
+		}
+		
+		function testRevealSubmit() {
+			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'paging');
+			var page1 = document.getElementById('wfPgIndex-1');
+			var page2 = document.getElementById('wfPgIndex-2');
+			var page3 = document.getElementById('wfPgIndex-3');
+			
+			bInstance.activatePage(2);
+			
+			bInstance.activatePage(3);
+			
+			// Check that submit button is visible
+			var submitButton = document.getElementById('submitButton'); 
+			assertEquals('primaryAction',submitButton.className);
+		}
+
+	</script>
+	</head>
+	<body class="wForm" style="padding:5px; margin:10px;" onload="_loadHandler();" >
+        <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
+        	<div class="wfPage" id="wfPgIndex-1">
+	            <div class="oneField" id="testDiv">
+	                <label for="testField" class="preField">Test Field Page 1
+	                	<span class="reqMark">*</span>
+	                </label>
+	              	<input type="text" id="testField"  name="testField"  class="" value="" />
+	               	<br/>
+	            </div>
+			</div>
+			
+			<div class="wfPage" id="wfPgIndex-2">
+	            <div class="oneField" id="testDiv">
+	                <label for="testField2" class="preField">Test Field Page 2
+	                	<span class="reqMark">*</span>
+	                </label>
+					<input type="text" id="testField2" name="testField2" class="" value="" />
+	               	<br />
+	            </div>
+			</div>
+			
+			<div class="wfPage" id="wfPgIndex-3">
+	            <div class="oneField" id="testDiv">
+	                <label for="testField3" class="preField">Test Field Page 3
+	                	<span class="reqMark">*</span>
+	                </label>
+					<input type="text" id="testField3" name="testField3" class="" value="" />
+	               	<br />
+	            </div>
+			</div>
+			
+			<div class="actions">
+				<input type="submit" value="submit" class="primaryAction" id="submitButton" />
+			</div>
+		</form>
+		
+    </body>
+	
+</html>
+

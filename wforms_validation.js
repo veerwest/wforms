@@ -7,7 +7,13 @@ if (typeof(wFORMS) == "undefined") {
  * 
  */
 wFORMS.behaviors.validation = {
-
+	
+	/*
+	 * Suffix of the ID for the error message placeholder
+ 	 */
+	ERROR_PLACEHOLDER_SUFFIX : '-E',
+	
+	
 	rules: {	
 		isRequired	: { selector: ".required", 			  check: 'validateRequired'}, 
 		isAlpha		: { selector: ".validate-alpha", 	  check: 'validateAlpha'},
@@ -78,26 +84,34 @@ wFORMS.behaviors.validation.applyTo = function(f) {
 			if(!f[i].addEventListener) base2.DOM.bind(f[i]);		
 			f[i].addEventListener('submit', function(e){ return _v.run(e, this)} ,false);
 			v.push(_v);	
+			_v.onApply();
 		}
 	} else {
 		var v = new wFORMS.behaviors.validation.instance(f);
 		if(!f.addEventListener) base2.DOM.bind(f);
 		f.addEventListener('submit', function(e){ return v.run(e, this)} ,false);	
+		v.onApply();
 	}
-		
+	
 	return v;	   
 }
  
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.validation.instance.prototype.onApply = function() {} 
+
  
 /**
  * Executes the behavior
  * @param {event} e 
  * @param {domElement} element
+ * @return	{boolean}	true if validation successful, false otherwise (and prevents event propagation)
  */
 wFORMS.behaviors.validation.instance.prototype.run = function(e, element) { 
  	var errorCount = 0;
  	this.elementsInError = {};
- 	
  	for (var ruleName in this.behavior.rules) {
  		var rule = this.behavior.rules[ruleName];
    		var _self = this;
@@ -132,7 +146,7 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  				} 					
  				errorCount ++;
  			} else {
- 				// If no previous rule has found an error on that field,
+ 				// If no previos rule has found an error on that field,
  				// remove any error message from a previous validation run.
  				if(!_self.elementsInError[element.id])
  					_self.removeErrorMessage(element);
@@ -149,7 +163,9 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  	}
 	
  	if(errorCount > 0) {
- 		e.preventDefault?e.preventDefault():e.returnValue = false;
+ 		if(e) {
+ 			e.preventDefault?e.preventDefault():e.returnValue = false;
+ 		}
  		if(this.behavior.onFail) this.behavior.onFail();
  		return false;
  	}
@@ -185,14 +201,18 @@ wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(elemen
 	if (!element.id) element.id = wFORMS.helpers.randomId(); 
 	
 	// Prepare error message
-	var txtNode = document.createTextNode(" " + message);
+	var txtNode = document.createTextNode(message);
 	
 	// Find error message placeholder.
-	var p = document.getElementById(element.id + "-E");
+	var p = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
 	if(!p) { // create placeholder.
 		p = document.createElement("div"); 
-		p.setAttribute('id', element.id + "-E");			
-		p = element.parentNode.insertBefore(p,element.nextSibling);
+		p.setAttribute('id', element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+		if(element.tagName=="TR") {
+			p = (element.getElementsByTagName('TD')[0]).appendChild(p);
+		} else {		
+			p = element.parentNode.insertBefore(p,element.nextSibling);
+		}
 	}
 	// Finish the error message.
 	p.appendChild(txtNode);
@@ -208,7 +228,7 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 	if(!element.hasClass) base2.DOM.bind(element);
 	if(element.hasClass(this.behavior.styling.fieldError)) {
 		element.removeClass(this.behavior.styling.fieldError);
-		var errorMessage  = document.getElementById(element.id + "-E");
+		var errorMessage  = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
 		if(errorMessage)  {				
 			errorMessage.parentNode.removeChild(errorMessage); 
 		}
@@ -238,6 +258,15 @@ wFORMS.behaviors.validation.instance.prototype.isSwitchedOff = function(element)
 	}	
 	return false;
 }
+ 
+/**
+ * Checks if the element with the given id is a placeholder for the error message
+ * @param {domElement} element 
+ * @return	{boolean}	true if the element is a placeholder, false otherwise.
+ */
+wFORMS.behaviors.validation.isErrorPlaceholderId = function(id) {
+	return id.match(new RegExp(wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX + '$')) != null;
+} 
   
 /**
  * Checks if the given string is empty (null or whitespace only)

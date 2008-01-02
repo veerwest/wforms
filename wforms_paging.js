@@ -97,6 +97,24 @@ wFORMS.behaviors.paging = {
 	runValidationOnPageNext : true,
 
 	/**
+	 * custom 'Page Next' event handler (to be overridden) 
+     * @param	{HTMLElement}	elem	new page
+	 */
+	 onPageNext: function() {},
+	 
+	/**
+	 * custom 'Page Previous' event handler (to be overridden) 
+     * @param	{HTMLElement}	elem	new page
+	 */
+	 onPagePrevious: function() {}, 
+	 
+	 /**
+	 * custom 'Page Change' event handler (either next or previous) (to be overridden) 
+     * @param	{HTMLElement}	elem	new page
+	 */
+	 onPageChange: function() {}, 
+	   
+	/**
 	 * Creates new instance of the behavior
      * @param	{HTMLElement}	f	Form element
      * @constructor
@@ -121,10 +139,10 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 	var isValidationAccepted = (wFORMS.behaviors.validation && wFORMS.behaviors.paging.runValidationOnPageNext);
 	// Shows that form contains paging
 	var isPagingApplied = false;
+	
 	// Iterates over the elements with specified class names
 	f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR).forEach(
-		function(elem){
-			console.log(elem);
+		function(elem){			
 			isPagingApplied = true;
 			// Creates placeholder for buttons
 			var ph = b.getOrCreatePlaceHolder(elem);
@@ -172,10 +190,16 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		p = b.findNextPage(0);
 		b.currentPageIndex = 0;
 		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p));
+		b.onApply();		
 	}
-
 	return b;
 }
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.paging.instance.prototype.onApply = function() {} 
 
 
 /**
@@ -307,30 +331,30 @@ wFORMS.behaviors.paging.instance.prototype.activatePage = function(index){
 	if(index == this.currentPageIndex){
 		return false;
 	}
-	
-	// hack
 	index = parseInt(index);
-	//hack
 	if(index > this.currentPageIndex){
 		var p = this.findNextPage(this.currentPageIndex);
 	} else {
 		var p = this.findPreviousPage(this.currentPageIndex);
 	}
 	if(p) { 
-		// rewrite index
-		var index = wFORMS.behaviors.paging.getPageIndex(p);
-	
-		var b = wFORMS.behaviors.paging;
-	
 		// Workaround for Safari. Otherwise it crashes with Safari 1.2
-		// Looks like hiding should be ran in "different thread"
-		var clazz = this;
+		var _self = this;
 		setTimeout(
 			function(){
-				clazz.setupManagedControls(index);
-				b.hidePage(b.getPageByIndex(clazz.currentPageIndex));				
-				b.showPage(p);
-				clazz.currentPageIndex = index;
+				var index = _self.behavior.getPageIndex(p);
+				_self.setupManagedControls(index);
+				_self.behavior.hidePage(_self.behavior.getPageByIndex(_self.currentPageIndex));				
+				_self.behavior.showPage(p);
+				var  _currentPageIndex = _self.currentPageIndex;
+				_self.currentPageIndex = index;
+				// run page change event handlers
+				_self.behavior.onPageChange(p);
+				if(index > _currentPageIndex){
+					_self.behavior.onPageNext(p);
+				} else {
+					_self.behavior.onPagePrevious(p);
+				}
 			}, 1
 		);
 	}
