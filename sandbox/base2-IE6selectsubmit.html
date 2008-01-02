@@ -1,0 +1,57 @@
+<html>
+<head>
+
+   <title>Test base2 Selector</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>	
+	<script type="text/javascript" src="http://base2.googlecode.com/svn/trunk/lib/base2-dom-fp.js"></script>
+</head>
+
+<body>
+	<h1>test</h1>
+	<form id="testForm">
+		<div>
+			<input type="submit" value="Submit" id="submitButton" />
+		</div>
+		
+		
+	</form>
+		
+	
+	<script type="text/javascript">
+		base2.DOM.bind(document);
+		
+		var elem = document.createElement('input'); 
+		elem.setAttribute('value', 'just a button');
+		elem.type = 'button'
+		elem.id = 'justaButton'
+		document.getElementById('testForm').appendChild(elem);
+		var found=false;
+		
+		document.querySelectorAll('input[type="submit"]').forEach(function(elem){
+			if(elem.id=="justaButton") {
+				found=true;
+			} 
+		});
+		
+		if(found) {
+			document.write("oops, wasn't expecting element of type "+elem.type+" <br/>");
+		} else {
+			document.write("first pass ok <br/>");
+		}
+		
+		document.querySelectorAll('input[type="submit"]').forEach(function(elem){
+			if(elem.id=="justaButton") {
+				found=true;
+			} 
+		});
+		
+		if(found) {
+			document.write("oops, wasn't expecting element of type "+elem.type+" <br/>");
+		} else {
+			document.write("second pass ok  <br/>");
+		}
+ 	</script>
+	<p>&nbsp;</p>	
+
+</body>
+</html>
