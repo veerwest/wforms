@@ -27,9 +27,9 @@
 .offstate-bi, .offstate-bj, .offstate-bk, .offstate-bl { 
 	display: none !important;
 }
-.wForm .wfPage, .wForm .wfHideSubmit { 
+html .wForm form .wfPage, html .wForm form .wfHideSubmit { 
 	display: none !important;
 }
-.wForm .wfCurrentPage {
+html .wForm form .wfCurrentPage {
 	display: block !important;
 }

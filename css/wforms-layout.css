@@ -274,29 +274,24 @@
 }
 
 /* IE6 BUG FIXES ==================================================================== */
-.wForm form {
-	 /* IE Pick-a-boo bug fix */
-/*	height:expression('1%');
-*/
+ /* IE Pick-a-boo bug fix */
+* html .wForm form {
+	height: 1%; 
 }
-.wForm form fieldset {
-	/* Fixes IE problem with fieldset+legend boundaries */
-/*	
-	position:expression('relative'); 
-	margin-top:expression('1em');
-	padding-top:expression('1.5em');
-*/
+/* Fixes IE 6 problem with fieldset+legend boundaries */
+* html .wForm form fieldset {	
+	position: relative; 
+	margin-top: 1em;
+	padding-top: 2em;
 }
-.wForm form fieldset legend {
-	/* Fixes IE problem with fieldset+legend boundaries */
-/*	
-	position: expression('absolute'); 
-	top: expression('-.5em'); 
-	left:expression('.5em');
-*/
+* html .wForm form fieldset legend {
+	position: absolute; 
+	top: -.5em; 
+	left: .5em;
 } 
-
-/* DEPRECATED */
-.wForm form .instructions {						
-	margin: 1em 0;
+/* Fix min-width support */
+* html .wForm label.preField,
+* html .wForm .labelsLeftAligned  label.preField,
+* html .wForm .labelsRightAligned label.preField {
+	width: 13em;	
 }
