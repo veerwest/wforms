@@ -18,7 +18,11 @@
 }
 .wForm legend {
 	margin: 0;
-	padding: 0 2px;
+	padding: 0 5px;
+}
+/* Nested Fieldset  */
+.wForm fieldset fieldset legend {
+	font-size: 90%;
 }
 
 /* Label positioning (above, left-aligned, right-aligned) */
@@ -94,6 +98,10 @@
 	overflow: hidden;
 	padding: 2px 0;
 }
+.wForm form .inlineSection .preField {
+	margin-right: 4px;
+}
+
 /* Label+Field when inside an inline section */
 .wForm form .inlineSection .oneField {			
 	float: left; 
@@ -117,17 +125,25 @@
 	margin-left: 0; 
 }
 /* Table */
-.wForm form table {}
+.wForm form table {
+
+}
 .wForm form td {
 	padding: 0 4px;
 	vertical-align: top;
 }
 .wForm form th {
-	padding: 0 4px;
-	vertical-align: bottom;
+	vertical-align: top;
 	text-align:left;
+	padding: 0 4px;
 }
-
+.wForm form .headerRow th {
+	vertical-align: bottom;
+}
+.wForm form td .oneField {
+	margin: 0;	
+	white-space: nowrap;
+}
 /* Input Validation Rules */
 
 /* Asterisk on required fields */
@@ -166,6 +182,7 @@
 	margin: 2px 0 0 10px;
 	padding: 4px;
 	background-color: #fffbb8;
+	color: #333;
 	border: 1px solid #ffc20d;	
 }
 .wForm .hintsTooltip .field-hint span {
@@ -230,6 +247,11 @@
 	display: block !important;
 }
 /* offstate classes for the Switch Behavior are in wforms-jsonly.css */
+
+/* Paging behavior buttons */
+.wForm form .wfPagingButtons {
+	margin-top: 20px;
+}
 
 /* Buttons */
 .wForm form .actions {
