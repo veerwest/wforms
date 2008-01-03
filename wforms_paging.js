@@ -319,10 +319,10 @@ wFORMS.behaviors.paging.showPage = function(e){
 		if(!e.removeClass) { // no base2.DOM.bind to speed up function 
 			e.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
 		}
+		e.removeClass(wFORMS.behaviors.paging.CSS_PAGE);
 		if(!e.addClass) { // no base2.DOM.bind to speed up function 
 			e.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
 		}
-		e.removeClass(wFORMS.behaviors.paging.CSS_PAGE);
 		e.addClass(wFORMS.behaviors.paging.CSS_CURRENT_PAGE);
 	}
 }
@@ -342,6 +342,7 @@ wFORMS.behaviors.paging.instance.prototype.activatePage = function(index){
 	} else {
 		var p = this.findPreviousPage(this.currentPageIndex);
 	}
+	
 	if(p) { 
 		// Workaround for Safari. Otherwise it crashes with Safari 1.2
 		var _self = this;
@@ -379,22 +380,22 @@ wFORMS.behaviors.paging.instance.prototype.setupManagedControls = function(index
 	var b = wFORMS.behaviors.paging;
 	if(b.isFirstPageIndex(index)){
 		if(ctrl = b.getPreviousButton(index)){
-		//	ctrl.style.display = 'none';
+			ctrl.style.visibility = 'hidden';
 		}
 	}else{
 		if(ctrl = b.getPreviousButton(index)){
-		//	ctrl.style.display = 'inline';
+			ctrl.style.visibility = 'visible';
 		}
 	}
 
 	if(b.isLastPageIndex(index)){
 		if(ctrl = b.getNextButton(index)){
-		//	ctrl.style.display = 'none';
+			ctrl.style.visibility = 'hidden';
 		}
 		this.showSubmitButtons();
 	} else {
 		if(ctrl = b.getNextButton(index)){
-		//	ctrl.style.display = 'inline';
+			ctrl.style.visibility = 'visible';
 		}
 		this.hideSubmitButtons();
 	}
@@ -514,8 +515,7 @@ wFORMS.behaviors.paging.instance.prototype.findNextPage = function(index){
 			p = b.getPageByIndex(index);
 		}
 	}
-
-	return p ? p : true;
+	return p;
 }
 
 /**
