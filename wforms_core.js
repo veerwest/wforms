@@ -88,14 +88,18 @@ wFORMS.helpers.getComputedStyle = function(element, styleName){
 wFORMS.helpers.getLeft = function(elem){
 	var pos = 0;
 	while(elem.offsetParent) {
-		if(document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'relative'){
-			return pos;
-		}
-		if(pos > 0 && document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'absolute'){
-			return pos;
-		}
+		try {
+			if(document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'relative'){
+				return pos;
+			}
+			if(pos > 0 && document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'absolute'){
+				return pos;
+			}
+		} catch(x) {}
 		pos += elem.offsetLeft;
+		
 		elem = elem.offsetParent;
+		
 	}
  	if(!window.opera && document.all && document.compatMode && document.compatMode != "BackCompat") {
 		pos += parseInt(document.body.currentStyle.marginTop); 	   		
@@ -110,13 +114,16 @@ wFORMS.helpers.getLeft = function(elem){
 wFORMS.helpers.getTop = function(elem){
 	var pos = 0;
 	while(elem.offsetParent) {
-		if(document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'relative'){
-			return pos;
-		}
-		if(pos > 0 && document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'absolute'){
-			return pos;
-		}
+		try {
+			if(document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'relative'){
+				return pos;
+			}
+			if(pos > 0 && document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'absolute'){
+				return pos;
+			}
+		} catch(x) {}
 		pos += elem.offsetTop;
+		
 		elem = elem.offsetParent;
 	}
 	if(!window.opera && document.all && document.compatMode && document.compatMode != "BackCompat") {

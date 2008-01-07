@@ -9,9 +9,15 @@
 
 	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
     <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
-	
+	<!--
+	<script type="text/javascript" src="../build/wforms.js"></script>
+	-->
+	<script type="text/javascript" src="../lib/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/src/base2-dom.js"></script>
+	<!--
 	<script type="text/javascript" src="../lib/base2-p.js"></script>
 	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	-->
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../wforms_hint.js"></script>
@@ -41,14 +47,26 @@
 		
 		function testHint() {
 			var testForm = document.getElementById('testForm');
-			var field = document.getElementById('testForm');
-			var hint = document.getElementById('testForm');
+			var field = document.getElementById('testField');
+			var hint = document.getElementById('testField-H');
 			var bInstance = wFORMS.getBehaviorInstance(testForm, 'hint');
 			
 			bInstance.setup(hint, field);
 		
-			assertEquals('15px', hint.style.left);
-			assertEquals('54px', hint.style.top);
+			assertEquals('225px', hint.style.left);
+			assertEquals('52px', hint.style.top);
+		}
+		
+		function testHintInTableCell() {
+			var testForm = document.getElementById('testForm');
+			var field = document.getElementById('testField2');
+			var hint = document.getElementById('testField2-H');
+			var bInstance = wFORMS.getBehaviorInstance(testForm, 'hint');
+			
+			bInstance.setup(hint, field);
+		
+			assertEquals('21px', hint.style.left);
+			assertEquals('90px', hint.style.top);
 		}
 		
 	</script>
@@ -64,10 +82,20 @@
                     <span>Mail and e-mail correspondence will be sent to this name.</span>
                 </div>
               	<br />
-               	<span class="errMsg" id="testField-E">
-                </span>
+               	<span class="errMsg" id="testField-E"></span>
             </div>
+			
+			 <table>
+                <tr id="testRow" class="alternate-0">
+	                  <td>                        
+                        <input type="text" id="testField2" name="testField2" value="" size="40" class="" />
 
+                        <div class="field-hint-inactive" id="testField2-H">
+                            <span>hint testField2</span>
+                        </div>          	           
+                    </td>
+                </tr>
+            </table>
         </form>
     </body>
 </html>
