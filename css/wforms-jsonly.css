@@ -33,3 +33,10 @@ html .wForm form .wfPage, html .wForm form .wfHideSubmit {
 html .wForm form .wfCurrentPage {
 	display: block !important;
 }
+
+.offstate-resumelater {
+	display: none !important;
+}
+.onstate-resumelater {
+	display: block !important;
+}

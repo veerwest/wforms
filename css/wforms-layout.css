@@ -272,6 +272,23 @@
 .wForm form .wfPagingButtons .wfPageNextButton {
 	padding: 4px 15px;
 }
+/* Captcha */
+.wForm .captchaHelp {
+	font-size: 0.75em;
+}
+/* form builder HTML Section */
+.wForm .htmlsection {
+	margin-bottom: 1em;
+}
+
+/* FIREFOX BUG FIXES ================================================================ */
+/* layout bug fix for divs with overflow:auto|hidden and absolute positioning */
+.wForm form .inlineSection, x:-moz-any-link {
+	overflow: inherit !important; 					/* override overflow setting */
+}
+.wForm .inlineSection:after, x:-moz-any-link { 		/* use :after pseudo-rule to clear floatting content */
+	content: "."; display: block; height: 0; clear: both; visibility:hidden; 
+}
 
 /* IE6 BUG FIXES ==================================================================== */
  /* IE Pick-a-boo bug fix */
