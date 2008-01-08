@@ -104,15 +104,16 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 				case 'OPTION' : 
 					var sNode = elem.parentNode;
 					// Tries to get <select node
-					while (sNode && sNode.tagName.toUpperCase() != 'SELECT'){
+					while (sNode && sNode.tagName != 'SELECT'){
 						sNode = sNode.parentNode;
 					} 
 
-					base2.DOM.bind(sNode);
+					if(!sNode.addEventListener)
+						base2.DOM.bind(sNode);
 
 					if(sNode && !wFORMS.behaviors['switch'].isHandled(sNode)){
 						sNode.addEventListener('change', function(event) { b.run(event, sNode) }, false);
-						b.setupTargets(elem);
+						b.setupTargets(sNode);
 						wFORMS.behaviors['switch'].handleElement(sNode);
 					}
 					break;

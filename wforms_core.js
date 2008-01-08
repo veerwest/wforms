@@ -133,6 +133,15 @@ wFORMS.helpers.getTop = function(elem){
 }
 
 /**
+ * highlight change 
+ */ 
+wFORMS.helpers.useSpotlight = false;
+
+wFORMS.helpers.spotlight = function(target) {
+	// not implemented	 	
+}
+
+/**
  * Activating an Alternate Stylesheet (thx to: http://www.howtocreate.co.uk/tutorials/index.php?tut=0&part=27)
  * Use this to activate a CSS Stylesheet that shouldn't be used if javascript is turned off.
  * The stylesheet rel attribute should be 'alternate stylesheet'. The title attribute MUST be set.
@@ -165,6 +174,7 @@ wFORMS.helpers.contains = function(array, needle) {
  */	
 wFORMS.onLoadHandler = function() {
 	var forms=document.getElementsByTagName("FORM");
+	
 	for(var i=0;i<forms.length;i++) {
 		if(forms[i].getAttribute('rel')!='no-behavior')
 			wFORMS.applyBehaviors(forms[i]);
@@ -181,12 +191,7 @@ wFORMS.applyBehaviors = function(f) {
 	if(!f.querySelectorAll) {
 		base2.DOM.bind(f);
 	}
-// hack [don] {{{
-// This hack is done due to switch reflects on the Targets state depends on triggers
-// state. I.e. if checkbox is checked its target should be on state
-// and inside the paging while applying it calls switch behavior (static method)
-// to check if Page is on or Off. So if paging will be loaded before switch it would be
-// initialized with possible fake values
+	// switch must run before paging behavior
 	if(wFORMS.behaviors['switch']){
 		var b = wFORMS.behaviors['switch'].applyTo(f);
 		if(!wFORMS.instances['switch']) {
@@ -256,9 +261,13 @@ wFORMS.getBehaviorInstance = function(f, behaviorName) {
 	return null;
 }
 
-if(!document.querySelectorAll) {
-	base2.DOM.bind(document);
-}
-document.addEventListener('DOMContentLoaded',wFORMS.onLoadHandler,false);
+base2.DOM.Element.addEventListener(document, 'DOMContentLoaded',wFORMS.onLoadHandler,false);
+// document.addEventListener('DOMContentLoaded',wFORMS.onLoadHandler,false);
+
 // Attach JS only stylesheet.
 wFORMS.helpers.activateStylesheet('wforms-jsonly.css');
+
+
+
+
+

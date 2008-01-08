@@ -176,6 +176,8 @@ _b.applyTo = function(f) {
 	var _self = this;
 	var b = new Array();
 	
+	if(!f.querySelectorAll) base2.DOM.bind(f);
+	
 	f.querySelectorAll(this.SELECTOR_REPEAT).forEach(
 		function(elem){
 			if(_self.isHandled(elem)){
@@ -346,6 +348,8 @@ _i.prototype.duplicateSection = function(elem){
 	wFORMS.applyBehaviors(newElem);
 	// Calls custom function
 	this.behavior.onRepeat(newElem);
+	
+	wFORMS.helpers.spotlight(newElem);
 }
 
 /**
