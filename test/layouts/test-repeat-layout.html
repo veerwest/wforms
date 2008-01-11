@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>wForms Layout Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<link href="../../css/abstract-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-blue theme"  />
+    <link href="../../css/abstract-brown/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-brown theme"  />
+    <link href="../../css/abstract-green/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-green theme"  />
+    <link href="../../css/antique/wforms.css" type="text/css" rel="alternate stylesheet" title="antique theme"  />
+    <link href="../../css/antique-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="antique-blue theme"  />
+    <link href="../../css/black/wforms.css" type="text/css" rel="alternate stylesheet" title="black theme"  />
+    <link href="../../css/bureaucrat/wforms.css" type="text/css" rel="alternate stylesheet" title="bureaucrat theme"  />
+    <link href="../../css/vhgdesign/wforms.css" type="text/css" rel="alternate stylesheet" title="vhgdesign theme"  />
+    <link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  />
+     
+	<script type="text/javascript" src="../../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../../wforms_core.js"></script>
+	<script type="text/javascript" src="../../wforms_repeat.js"></script>	
+
+	<script type="text/javascript" src="test-layout.js"></script>
+	
+	<!-- Test workaround for field-hint layout bug with inline sections in Firefox (bug #90) -->
+	<style type="text/css">
+		form .inlineSection, x:-moz-any-link {
+			overflow: inherit !important;
+		}
+		.inlineSection:after, x:-moz-any-link{ content: "."; display: block; height: 0; clear: both; visibility:hidden; }
+	</style> 
+</head>
+<body>
+	Test Pages:
+	<script type="text/javascript">
+		listTestPages();		
+	</script>
+	<br/>
+	Stylesheets:
+	<script type="text/javascript">
+		listAlternateStyleSheets();		
+	</script>
+	
+	
+	<div class="wForm">
+		<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" class="labelsLeftAligned">
+			
+			<div class="oneField labelsAbove">
+				<p>Non-Repeated Field</p>	
+				<label for="textInput1" class="preField">Text Input 1: </label>
+				<input type="text" id="textInput1" name="textInput1" size="15" />
+			</div>
+			<div class="repeat">
+				<div class="oneField labelsAbove">
+					<p>Repeated Div</p>	
+					<label for="textInput1" class="preField">Text Input 1: </label>
+					<input type="text" id="textInput1" name="textInput1" size="15" />
+				</div>
+			</div>
+			<div class="removeable" id="removeable2">
+				<div class="oneField labelsAbove">
+					<p>Repeated Div</p>	
+					<label for="textInput1" class="preField">Text Input 1: </label>
+					<input type="text" id="textInput1" name="textInput1" size="15" />
+				</div>
+			</div>
+			<br/>
+			<fieldset class="repeat"><legend>Repeated Fieldset</legend>
+				<div class="inlineSection">
+					<label class="preField">Mixed field types:</label>
+					<div class="oneField labelsAbove">
+						<label for="textInput1" class="inlineLabel">Text Input 1: </label>
+						<input type="text" id="textInput1" name="textInput1" size="15" />
+					</div>
+					<div class="oneField labelsAbove">
+						<label for="textInput2" class="inlineLabel">Long Label for Text Input 2: </label>
+						<input type="text" id="textInput2" name="textInput2" size="15" />
+					</div>
+					<div class="oneField labelsAbove">
+						<label for="textarea1" class="inlineLabel">TextArea: </label>
+						<textarea type="text" id="textarea1" name="textarea1" rows="3" cols="20"></textarea>
+					</div>
+					<div class="oneField labelsAbove">
+						<label for="selectInput" class="inlineLabel">Select: </label>
+						<select id="selectInput">
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>							
+					</div>
+					<div class="oneField labelsAbove">
+						<label for="selectInput" class="inlineLabel">Select Multiple: </label>
+						<select id="selectInput" multiple="multiple">
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>							
+					</div>
+				</div>
+		
+			
+				<div class="inlineSection repeat" id="repeatableDiv">
+					<label class="preField">Nested Repeteatable Div</label>
+					<div class="oneField labelsAbove">
+						<label for="textInput3" class="inlineLabel">Text Input 3: </label>
+						<input type="text" id="textInput3" name="textInput3" size="12" />							
+					</div>
+					<div class="oneField labelsAbove">
+						<label class="preField">Multiple-choices on the same line:</label>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice1" id="multipleChoice1" name="multipleChoice1"/>
+							<label for="multipleChoice1" class="postField">Option A</label>
+						</span>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice2" class="" id="multipleChoice2" name="multipleChoice2"/>
+							<label for="multipleChoice2" class="postField">Option B</label>
+						</span>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice3" class="" id="multipleChoice3" name="multipleChoice3"/>
+							<label for="multipleChoice3" class="postField">Option C</label>
+						</span>
+						<br/>												
+					</div>
+					<div class="oneField labelsAbove">
+						<label class="preField">Multiple-choices listed vertically:</label>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice4" class="" id="multipleChoice4" name="multipleChoice4"/>
+							<label for="multipleChoice4" class="postField">Option A</label>
+						</span>
+						<br/>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice5" class="" id="multipleChoice5" name="multipleChoice5"/>
+							<label for="multipleChoice5" class="postField">Option B</label>
+						</span>
+						<br/>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice6" class="" id="multipleChoice6" name="multipleChoice6"/>
+							<label for="multipleChoice6" class="postField">Option C</label>
+						</span>
+						<br/><br/>							
+					</div>
+				</div>
+				
+				<div class="inlineSection removeable" id="removeableDiv">
+					<label class="preField">Nested Repeteatable Div</label>
+					<div class="oneField labelsAbove">
+						<label for="textInput3" class="inlineLabel">Text Input 3: </label>
+						<input type="text" id="textInput3" name="textInput3" size="12" />							
+					</div>
+					<div class="oneField labelsAbove">
+						<label class="preField">Multiple-choices on the same line:</label>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice1" id="multipleChoice1" name="multipleChoice1"/>
+							<label for="multipleChoice1" class="postField">Option A</label>
+						</span>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice2" class="" id="multipleChoice2" name="multipleChoice2"/>
+							<label for="multipleChoice2" class="postField">Option B</label>
+						</span>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice3" class="" id="multipleChoice3" name="multipleChoice3"/>
+							<label for="multipleChoice3" class="postField">Option C</label>
+						</span>
+						<br/>												
+					</div>
+					<div class="oneField labelsAbove">
+						<label class="preField">Multiple-choices listed vertically:</label>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice4" class="" id="multipleChoice4" name="multipleChoice4"/>
+							<label for="multipleChoice4" class="postField">Option A</label>
+						</span>
+						<br/>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice5" class="" id="multipleChoice5" name="multipleChoice5"/>
+							<label for="multipleChoice5" class="postField">Option B</label>
+						</span>
+						<br/>
+						<span class="oneChoice">
+							<input type="checkbox" value="multipleChoice6" class="" id="multipleChoice6" name="multipleChoice6"/>
+							<label for="multipleChoice6" class="postField">Option C</label>
+						</span>
+						<br/><br/>							
+					</div>
+				</div>
+				
+			
+			</fieldset>	
+			
+			<div class="actions">
+				<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="5871" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="5bdfed095fe123104093459112828666" name="tfa_dbControl" id="tfa_dbControl">
+			</div>
+		</form>
+	</div>
+</body>
+</html>

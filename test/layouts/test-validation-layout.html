@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>wForms Layout Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<link href="../../css/abstract-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-blue theme"  />
+    <link href="../../css/abstract-brown/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-brown theme"  />
+    <link href="../../css/abstract-green/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-green theme"  />
+    <link href="../../css/antique/wforms.css" type="text/css" rel="alternate stylesheet" title="antique theme"  />
+    <link href="../../css/antique-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="antique-blue theme"  />
+    <link href="../../css/black/wforms.css" type="text/css" rel="alternate stylesheet" title="black theme"  />
+    <link href="../../css/bureaucrat/wforms.css" type="text/css" rel="alternate stylesheet" title="bureaucrat theme"  />
+    <link href="../../css/vhgdesign/wforms.css" type="text/css" rel="alternate stylesheet" title="vhgdesign theme"  />
+    <link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  />
+     
+	
+	<script type="text/javascript" src="../../js/lib/wforms.js"></script> 
+	<!-- 
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/lib/base2-dom-fp.js" ></script>  	
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_core.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_switch.js"></script>	
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_hint.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_calculation.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_repeat.js"></script>	
+    <script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_paging.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_validation.js"></script>
+	-->
+	<script type="text/javascript" src="test-layout.js"></script>
+	
+	<!-- Test workaround for field-hint layout bug with inline sections in Firefox (bug #90) -->
+	<style type="text/css">
+		form .inlineSection, x:-moz-any-link {
+			overflow: inherit !important;
+		}
+		.inlineSection:after, x:-moz-any-link{ content: "."; display: block; height: 0; clear: both; visibility:hidden; }
+	</style> 
+</head>
+<body>
+	Test Pages:
+	<script type="text/javascript">
+		listTestPages();		
+	</script>
+	<br/>
+	Stylesheets:
+	<script type="text/javascript">
+		listAlternateStyleSheets();		
+	</script>
+	
+	<div class="wForm">
+
+<div class="codesection" id="code-"></div>
+<form method="post" action="http://app.formassembly.com/responses/processor" id="id2391076" class="labelsLeftAligned">
+<div class="oneField">
+<label for="tfa_TextInput" class="preField">Text Input
+				&nbsp;<span class="reqMark">*</span></label><input type="text" id="tfa_TextInput" name="tfa_TextInput" value="" size="20" class="validate-alpha required"><br><span class="errMsg" id="tfa_TextInput-E"></span>
+</div>
+<div class="oneField required">
+<label for="tfa_Test11" class="inlineLabel">Test</label>
+<span class="oneChoice"><input type="radio" value="tfa_a1" class="" id="tfa_a1" name="tfa_Test11">
+<label for="tfa_a1" class="postField">a</label></span>
+<span class="oneChoice"><input type="radio" value="tfa_b1" class="" id="tfa_b1" name="tfa_Test11">
+<label for="tfa_b1" class="postField">b</label></span>
+<span class="oneChoice"><input type="radio" value="tfa_c1" class="" id="tfa_c1" name="tfa_Test11">
+<label for="tfa_c1" class="postField">c</label></span><span class="errMsg" id="tfa_Test1-E"></span>
+</div>
+<div id="tfa_OneRequiredDivSe" class="required"><div class="oneField">
+<label for="tfa_TestField3" class="preField">Test Field 3:</label><input type="text" id="tfa_TestField3" name="tfa_TestField3" value="" size="20" class=""><br><span class="errMsg" id="tfa_TestField3-E"></span>
+</div></div>
+<div id="tfa_OneRequiredInlin" class="inlineSection required">
+<label class="preField">'One Required' Inline Section
+					&nbsp;<span class="reqMark">*</span></label><div class="oneField">
+<label for="tfa_TestField4" class="inlineLabel">Test Field 4</label><input type="text" id="tfa_TestField4" name="tfa_TestField4" value="" size="20" class=""><span class="errMsg" id="tfa_TestField4-E"></span>
+
+</div>
+</div>
+<fieldset id="tfa_OneRequiredField" class="required">
+<legend>'One Required' Fieldset</legend>
+<div class="oneField">
+<label for="tfa_TestField" class="preField">Test Field:</label><input type="text" id="tfa_TestField" name="tfa_TestField" value="" size="20" class=""><br><span class="errMsg" id="tfa_TestField-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_TestField2" class="preField">Test Field 2:</label><input type="text" id="tfa_TestField2" name="tfa_TestField2" value="" size="20" class=""><br><span class="errMsg" id="tfa_TestField2-E"></span>
+</div>
+</fieldset>
+<div id="tfa_InlineSection" class="inlineSection">
+<label class="preField">Inline Section</label><div class="oneField">
+
+<label for="tfa_Test" class="inlineLabel">Test </label><input type="text" id="tfa_Test" name="tfa_Test" value="!@#" size="12" class="validate-alphanum"><span class="errMsg" id="tfa_Test-E"></span>
+</div>
+<div class="oneField required">
+<label for="tfa_Test1" class="inlineLabel">Test</label><span class="oneChoice"><input type="radio" value="tfa_a" class="" id="tfa_a" name="tfa_Test1"><label for="tfa_a" class="postField">a</label></span><span class="oneChoice"><input type="radio" value="tfa_b" class="" id="tfa_b" name="tfa_Test1"><label for="tfa_b" class="postField">b</label></span><span class="oneChoice"><input type="radio" value="tfa_c" class="" id="tfa_c" name="tfa_Test1"><label for="tfa_c" class="postField">c</label></span><span class="errMsg" id="tfa_Test1-E"></span>
+</div>
+</div>
+
+
+
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="6026" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="91232e78accb2e4b222678560a6e7574" name="tfa_dbControl" id="tfa_dbControl">
+</div>
+</form>
+</div>
+
+
+</body>
+</html>

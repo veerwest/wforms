@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>wForms Layout Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<link href="../../css/abstract-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-blue theme"  />
+    <link href="../../css/abstract-brown/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-brown theme"  />
+    <link href="../../css/abstract-green/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-green theme"  />
+    <link href="../../css/antique/wforms.css" type="text/css" rel="alternate stylesheet" title="antique theme"  />
+    <link href="../../css/antique-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="antique-blue theme"  />
+    <link href="../../css/black/wforms.css" type="text/css" rel="alternate stylesheet" title="black theme"  />
+    <link href="../../css/bureaucrat/wforms.css" type="text/css" rel="alternate stylesheet" title="bureaucrat theme"  />
+    <link href="../../css/vhgdesign/wforms.css" type="text/css" rel="alternate stylesheet" title="vhgdesign theme"  />
+  	<link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  />
+        
+	<!-- 
+	<script type="text/javascript" src="../../js/lib/wforms.js"></script> 
+	-->
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/lib/base2-dom-fp.js" ></script>  	
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_core.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_switch.js"></script>	
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_hint.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_calculation.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_repeat.js"></script>	
+    <script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_paging.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_validation.js"></script>
+	
+	<script type="text/javascript" src="test-layout.js"></script>
+	
+	<!-- Test workaround for field-hint layout bug with inline sections in Firefox (bug #90) -->
+	<style type="text/css">
+		form .inlineSection, x:-moz-any-link {
+			overflow: inherit !important;
+		}
+		.inlineSection:after, x:-moz-any-link{ content: "."; display: block; height: 0; clear: both; visibility:hidden; }
+	</style> 
+</head>
+<body>
+	Test Pages:
+	<script type="text/javascript">
+		listTestPages();		
+	</script>
+	<br/>
+	Stylesheets:
+	<script type="text/javascript">
+		listAlternateStyleSheets();		
+	</script>
+	
+	<div class="wForm">
+<div class="codesection" id="code-"></div>
+<form method="post" action="http://app.formassembly.com/responses/processor" id="id2388958" class="labelsAbove">
+
+<div class="wfPage " id="wfPgIndex-1">
+<h3>Page 1</h3>
+<fieldset id="tfa_4365656717851" class="">
+<div class="oneField">
+<label for="tfa_2871062667240" class="preField"></label><span class="oneChoice"><input type="checkbox" value="tfa_Showconditionals" class="switch-c" id="tfa_Showconditionals" name="tfa_Showconditionals"><label for="tfa_Showconditionals" class="postField">Show conditional section on page 2.</label></span><br><span class="errMsg" id="tfa_2871062667240-E"></span>
+
+</div>
+<div class="oneField">
+<label for="tfa_2871062499298" class="preField"></label><span class="oneChoice"><input type="checkbox" value="tfa-SkipPage21" class="switch-a" id="tfa-SkipPage21" name="tfa-SkipPage21" checked="checked"><label for="tfa-SkipPage21" class="postField">Fill out Page 2</label></span><span class="oneChoice"><input type="checkbox" value="tfa-SkipPage3" class="switch-b" id="tfa-SkipPage3" name="tfa-SkipPage3"><label for="tfa-SkipPage3" class="postField">Fill out Page 3</label></span><br><span class="errMsg" id="tfa_2871062499298-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Question1" class="preField">Question #1:</label><textarea cols="45" rows="5" id="tfa_Question1" name="tfa_Question1" class=""></textarea><br><span class="errMsg" id="tfa_Question1-E"></span>
+</div>
+</fieldset>
+</div>
+<div class="wfPage offstate-a" id="wfPgIndex-2">
+<h3>Page 2</h3>
+<fieldset id="tfa_4413859433442" class="">
+
+<fieldset id="tfa_ConditionalSecti" class="offstate-c">
+<legend>Conditional Section</legend>
+<div class="htmlsection" id="html-tmp-2820796262394">This text should appears only if &#39;show conditional section&#39; on page 1 is checked.</div>
+</fieldset>
+<div class="oneField">
+<label for="tfa_Question2" class="preField">Question #2:</label><textarea cols="45" rows="5" id="tfa_Question2" name="tfa_Question2" class=""></textarea><br><span class="errMsg" id="tfa_Question2-E"></span>
+</div>
+</fieldset>
+</div>
+<div class="wfPage offstate-b" id="wfPgIndex-3">
+
+<h3>Page 3</h3>
+<div class="oneField">
+<label for="tfa_Question3" class="preField">Question #3:</label><textarea cols="45" rows="5" id="tfa_Question3" name="tfa_Question3" class=""></textarea><br><span class="errMsg" id="tfa_Question3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_5874279559326" class="preField"></label><span class="oneChoice"><input type="radio" value="tfa_a" class="" id="tfa_a" name="tfa_5874279559326"><label for="tfa_a" class="postField">a</label></span><span class="oneChoice"><input type="radio" value="tfa_b" class="" id="tfa_b" name="tfa_5874279559326"><label for="tfa_b" class="postField">b</label></span><span class="oneChoice"><input type="radio" value="tfa_orc" class="" id="tfa_orc" name="tfa_5874279559326"><label for="tfa_orc" class="postField">or c</label></span><br><span class="errMsg" id="tfa_5874279559326-E"></span>
+</div>
+</div>
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="Send"><input type="hidden" value="95" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="6cd7c2ef702b48da435446f00c381a96" name="tfa_dbControl" id="tfa_dbControl">
+</div>
+
+</form>
+</div>
+</body>
+</html>

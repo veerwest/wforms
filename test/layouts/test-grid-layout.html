@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>wForms Layout Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<link href="../../css/abstract-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-blue theme"  />
+    <link href="../../css/abstract-brown/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-brown theme"  />
+    <link href="../../css/abstract-green/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-green theme"  />
+    <link href="../../css/antique/wforms.css" type="text/css" rel="alternate stylesheet" title="antique theme"  />
+    <link href="../../css/antique-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="antique-blue theme"  />
+    <link href="../../css/black/wforms.css" type="text/css" rel="alternate stylesheet" title="black theme"  />
+    <link href="../../css/bureaucrat/wforms.css" type="text/css" rel="alternate stylesheet" title="bureaucrat theme"  />
+    <link href="../../css/vhgdesign/wforms.css" type="text/css" rel="alternate stylesheet" title="vhgdesign theme"  />
+  	<link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  />
+        
+   
+   
+	
+	<script type="text/javascript" src="../../js/lib/wforms.js"></script> 
+	<!-- 
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/lib/base2-dom-fp.js" ></script>  	
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_core.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_switch.js"></script>	
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_hint.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_calculation.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_repeat.js"></script>	
+    <script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_paging.js"></script>
+	<script type="text/javascript" src="../../../wForms 3.0 (googlecode)/trunk/wforms_validation.js"></script>
+	-->
+	<script type="text/javascript" src="test-layout.js"></script>
+	
+	<!-- Test workaround for field-hint layout bug with inline sections in Firefox (bug #90) -->
+	<style type="text/css">
+		form .inlineSection, x:-moz-any-link {
+			overflow: inherit !important;
+		}
+		.inlineSection:after, x:-moz-any-link{ content: "."; display: block; height: 0; clear: both; visibility:hidden; }
+	</style> 
+</head>
+<body>
+	Test Pages:
+	<script type="text/javascript">
+		listTestPages();		
+	</script>
+	<br/>
+	Stylesheets:
+	<script type="text/javascript">
+		listAlternateStyleSheets();		
+	</script>
+	
+	
+	<div class="wForm">
+
+<div class="codesection" id="code-"></div>
+<form method="post" action="http://app1.formassembly.com/responses/processor" id="id1904857" class="labelsLeftAligned">
+<div class="htmlsection" id="html-tfa_nullInstr">
+Here's a demonstration of the different kind of grid layouts that you can obtain with the Form Builder.
+      </div>
+<fieldset id="wf_Example1" class="">
+<legend>Example #1</legend>
+<div class="htmlsection" id="html-tfa_wfExample1Instr">
+To reproduce this table layout: 
+(1) add a section, (2) set its type to 'table row', give it a name and press 'Ok', (3) Add as many question as you need (one per column). 
+
+Then use the 'duplicate this section' link in the section properties to add more rows.
+        </div>
+<table>
+<tr class="headerRow">
+<th>&nbsp;</th>
+<th>
+Column 1
+            &nbsp;
+
+			</th>
+<th>
+Column 2
+            &nbsp;
+			</th>
+<th>
+Column 3
+            &nbsp;
+			</th>
+</tr>
+<tr id="wf_Row1" class="alternate-0">
+<th>Row 1&nbsp;	
+		</th>
+
+<td><div class="oneField"><input type="text" id="wf_Column1" name="wf_Column1" value="" size="" class=""><span class="errMsg" id="wf_Column1-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="wf_Column2" name="wf_Column2" value="" size="" class=""><span class="errMsg" id="wf_Column2-E"></span>
+</div></td>
+<td><div class="oneField"><select id="wf_Column3" name="wf_Column3" class=""><option value="">Please select...</option>
+<option value="wf_Option1" class="">
+                  
+Option 1
+                  
+                </option>
+<option value="wf_Option2" class="">
+                  
+Option 2
+                  
+                </option>
+<option value="wf_Option3" class="">
+                  
+Option 3
+                  
+                </option></select><span class="errMsg" id="wf_Column3-E"></span>
+
+</div></td>
+</tr>
+<tr id="wf_id-5150030280129" class="alternate-1">
+<th>Row 2&nbsp;	
+		</th>
+<td><div class="oneField"><input type="text" id="wf_Column11" name="wf_Column11" value="" size="" class=""><span class="errMsg" id="wf_Column11-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="wf_Column21" name="wf_Column21" value="" size="" class=""><span class="errMsg" id="wf_Column21-E"></span>
+</div></td>
+<td><div class="oneField"><select id="wf_Column31" name="wf_Column31" class=""><option value="">Please select...</option>
+<option value="wf_Option11" class="">
+                  
+Option 1
+                  
+                </option>
+<option value="wf_Option21" class="">
+
+                  
+Option 2
+                  
+                </option>
+<option value="wf_Option31" class="">
+                  
+Option 3
+                  
+                </option></select><span class="errMsg" id="wf_Column31-E"></span>
+</div></td>
+</tr>
+<tr id="wf_id-51500302801291" class="alternate-0">
+<th>Row 3&nbsp;	
+		</th>
+<td><div class="oneField"><input type="text" id="wf_Column12" name="wf_Column12" value="" size="" class=""><span class="errMsg" id="wf_Column12-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="wf_Column22" name="wf_Column22" value="" size="" class=""><span class="errMsg" id="wf_Column22-E"></span>
+</div></td>
+
+<td><div class="oneField"><select id="wf_Column32" name="wf_Column32" class=""><option value="">Please select...</option>
+<option value="wf_Option12" class="">
+                  
+Option 1
+                  
+                </option>
+<option value="wf_Option22" class="">
+                  
+Option 2
+                  
+                </option>
+<option value="wf_Option32" class="">
+                  
+Option 3
+                  
+                </option></select><span class="errMsg" id="wf_Column32-E"></span>
+</div></td>
+</tr>
+</table>
+
+</fieldset>
+<fieldset id="wf_Example2" class="">
+<legend>Example #2</legend>
+<div class="htmlsection" id="html-tfa_wfExample2Instr">
+Here we create only the first row and set it to be repeatable (in the advanced properties of the section).
+        </div>
+<table>
+<tr class="headerRow">
+<th>&nbsp;</th>
+<th>
+Column 1
+            &nbsp;
+			</th>
+<th>
+Column 2
+            &nbsp;
+
+			</th>
+<th>
+Column 3
+            &nbsp;
+			</th>
+</tr>
+<tr id="wf_Row" class="repeat alternate-0">
+<th>Row &nbsp;	
+		</th>
+<td><div class="oneField"><input type="text" id="wf_Column13" name="wf_Column13" value="" size="12" class=""><span class="errMsg" id="wf_Column13-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="wf_Column23" name="wf_Column23" value="" size="16" class=""><span class="errMsg" id="wf_Column23-E"></span>
+</div></td>
+<td><div class="oneField"><select id="wf_Column33" name="wf_Column33" class=""><option value="">Please select...</option>
+
+<option value="wf_Option13" class="">
+                  
+Option 1
+                  
+                </option>
+<option value="wf_Option23" class="">
+                  
+Option 2
+                  
+                </option>
+<option value="wf_Option33" class="">
+                  
+Option 3
+                  
+                </option></select><span class="errMsg" id="wf_Column33-E"></span>
+</div></td>
+<td>&nbsp;</td>
+</tr>
+</table>
+</fieldset>
+
+<fieldset id="wf_Example3" class="">
+<legend>Example #3</legend>
+<div class="htmlsection" id="html-tfa_wfExample3Instr">
+In this example no title were given for the sections, leaving the left column empty. Also you'll notice that you can use any type of field in a table.
+        </div>
+<table>
+<tr class="headerRow">
+<th>&nbsp;</th>
+<th>
+Col. 1
+            &nbsp;
+			</th>
+<th>
+Col. 2
+            &nbsp;
+
+			</th>
+<th>
+Col. 3
+            &nbsp;
+			</th>
+</tr>
+<tr id="wf_id-5979443397493" class="alternate-0">
+<th>&nbsp;	
+		</th>
+<td><div class="oneField"><span class="oneChoice"><input type="checkbox" value="wf_" class="" id="wf_" name="wf_"><label for="wf_" class="postField">
+                  
+                </label></span><span class="errMsg" id="wf_Col1-E"></span>
+</div></td>
+<td><div class="oneField"><span class="oneChoice"><input type="checkbox" value="wf_Yes" class="" id="wf_Yes" name="wf_Yes"><label for="wf_Yes" class="postField">
+                  
+
+Yes
+                  
+                </label></span><span class="errMsg" id="wf_Col2-E"></span>
+</div></td>
+<td><div class="oneField"><span class="oneChoice"><input type="radio" value="wf_Yes1" class="" id="wf_Yes1" name="wf_Col3"><label for="wf_Yes1" class="postField">
+                  
+Yes
+                  
+                </label></span><span class="oneChoice"><input type="radio" value="wf_No" class="" id="wf_No" name="wf_Col3"><label for="wf_No" class="postField">
+                  
+No
+                  
+                </label></span><span class="errMsg" id="wf_Col3-E"></span>
+</div></td>
+</tr>
+<tr id="id-5979443397493" class="alternate-1">
+<th>&nbsp;	
+		</th>
+<td><div class="oneField"><span class="oneChoice"><input type="checkbox" value="wf_1" class="" id="wf_1" name="wf_1"><label for="wf_1" class="postField">
+                  
+                </label></span><span class="errMsg" id="wf_Col11-E"></span>
+
+</div></td>
+<td><div class="oneField"><span class="oneChoice"><input type="checkbox" value="wf_Yes2" class="" id="wf_Yes2" name="wf_Yes2"><label for="wf_Yes2" class="postField">
+                  
+Yes
+                  
+                </label></span><span class="errMsg" id="wf_Col21-E"></span>
+</div></td>
+<td><div class="oneField"><span class="oneChoice"><input type="radio" value="wf_Yes3" class="" id="wf_Yes3" name="wf_Col31"><label for="wf_Yes3" class="postField">
+                  
+Yes
+                  
+                </label></span><span class="oneChoice"><input type="radio" value="wf_No1" class="" id="wf_No1" name="wf_Col31"><label for="wf_No1" class="postField">
+                  
+No
+                  
+                </label></span><span class="oneChoice"><input type="radio" value="wf_Maybe" class="" id="wf_Maybe" name="wf_Col31"><label for="wf_Maybe" class="postField">
+                  
+Maybe
+                  
+                </label></span><span class="errMsg" id="wf_Col31-E"></span>
+</div></td>
+
+</tr>
+<tr id="wf_id-59794433974931" class="alternate-0">
+<th>&nbsp;	
+		</th>
+<td><div class="oneField"><span class="oneChoice"><input type="checkbox" value="wf_2" class="" id="wf_2" name="wf_2"><label for="wf_2" class="postField">
+                  
+                </label></span><span class="errMsg" id="wf_Col12-E"></span>
+</div></td>
+<td><div class="oneField"><span class="oneChoice"><input type="checkbox" value="wf_Yes4" class="" id="wf_Yes4" name="wf_Yes4"><label for="wf_Yes4" class="postField">
+                  
+Yes
+                  
+                </label></span><span class="errMsg" id="wf_Col22-E"></span>
+</div></td>
+<td><div class="oneField"><span class="oneChoice"><input type="radio" value="wf_Yes5" class="" id="wf_Yes5" name="wf_Col32"><label for="wf_Yes5" class="postField">
+                  
+Yes
+                  
+                </label></span><span class="oneChoice"><input type="radio" value="wf_No2" class="" id="wf_No2" name="wf_Col32"><label for="wf_No2" class="postField">
+
+                  
+No
+                  
+                </label></span><span class="errMsg" id="wf_Col32-E"></span>
+</div></td>
+</tr>
+</table>
+</fieldset>
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="button" class="secondaryAction" onclick="history.go(-1)" value="cancel"><input type="hidden" value="3216" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="db22b5c24a88482b2588675fbf71092c" name="tfa_dbControl" id="tfa_dbControl">
+</div>
+</form>
+</div>
+</body>
+</html>
