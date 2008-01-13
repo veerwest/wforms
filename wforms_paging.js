@@ -354,6 +354,14 @@ wFORMS.behaviors.paging.instance.prototype.activatePage = function(index){
 				_self.behavior.showPage(p);
 				var  _currentPageIndex = _self.currentPageIndex;
 				_self.currentPageIndex = index;
+				
+				// go to top of the page
+				if(p.scrollIntoView) {
+					p.scrollIntoView();
+				} else {
+					location.hash="#" + wFORMS.behaviors.paging.ID_PAGE_PREFIX + index;
+				}
+				
 				// run page change event handlers
 				_self.behavior.onPageChange(p);
 				if(index > _currentPageIndex){
