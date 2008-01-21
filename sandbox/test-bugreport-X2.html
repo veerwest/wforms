@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>TEST BUG REPORT X2</title>
+
+        <link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+        <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+		<!--
+		<script type="text/javascript" src="../lib/src/base2.js"></script>
+		<script type="text/javascript" src="../lib/src/base2-dom.js"></script>
+		-->
+		<script type="text/javascript" src="../lib/base2-p.js"></script>
+		<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+		
+		<script type="text/javascript" src="../wforms_core.js"></script>
+		<script type="text/javascript" src="../wforms_switch.js"></script>
+		<script type="text/javascript" >
+			wFORMS.behaviors['switch'].onSwitchOff = function(e) {
+				console.log(e);
+			}
+		</script>
+
+</head>
+<body>
+
+	
+<div class="wForm">
+	
+	<form method="post" action="">
+	
+	
+		<div>
+			<label>A or B?</label>
+			<input type="radio" value="A" class="switch-a" id="A" name="AB"/>
+			<label for="A">A</label>
+			<input type="radio" value="B" class="switch-b" id="B" name="AB"/>
+			<label for="B">B</label>
+		</div>
+		
+		<div class="offstate-a">
+			<label>C or D?</label>
+			
+			<span class="oneChoice">
+				<input type="radio" value="C" class="switch-c" id="C" name="CD"/>
+				<label for="C">C</label>
+			</span>
+			<span class="oneChoice">
+				<input type="radio" value="D" class="switch-d" id="D" name="CD"/>
+				<label for="D">D</label>
+			</span>
+			
+		</div>
+	
+	
+		<div class="offstate-c offstate-b">
+			<fieldset id="tfa_BC" class="">
+				<legend>B or C</legend>
+			</fieldset>
+		</div>
+			
+		<div class="offstate-b offstate-d">
+			<fieldset id="tfa_BD" class="">
+				<legend>B or D</legend>
+			</fieldset>
+		</div>
+	
+	</form>
+</div>
+
+</body>
+</html>

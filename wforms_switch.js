@@ -481,10 +481,10 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 	base2.forEach(triggers.OFF, function(switchName){
 		var targets = clazz.getTargetsBySwitchName(switchName, 'ON');
 		base2.forEach(targets, function(elem){
+			elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
+			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
 			var _triggers = clazz.getTriggersByTarget(elem);
-			if(_triggers.ON.length == 0){
-				elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
-				elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
+			if(_triggers.ON.length == 0){				
 				clazz.behavior.onSwitchOff(elem);
 			}
 		})
