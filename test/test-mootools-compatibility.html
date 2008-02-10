@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Mootools Compatibility Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	<style type="text/css">
+		/* .wForm .wfPage { display: block !important } */
+	</style>
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_repeat.js"></script>	
+	<script type="text/javascript" src="../wforms_hint.js"></script>	
+	<script type="text/javascript" src="../wforms_validation.js"></script>	
+	<script type="text/javascript" src="../wforms_paging.js"></script>	
+	<script type="text/javascript" src="../wforms_switch.js"></script>	
+	<script type="text/javascript" src="../wforms_calculation.js"></script>	
+		
+	<script type="text/javascript" src="compatibility/mootools.js"></script>
+	  
+	<script type="text/javascript">
+		
+		wFORMS.behaviors.onApplyAll = function() {
+			setUpPageStatus = 'complete';
+		} 
+		
+		function setUpPage() {
+		}
+	  
+	  	function setUp() {
+		}
+		
+		function tearDown() {
+			wFORMS.removeBehavior(document.getElementById('testForm'), 'paging');
+		}
+
+		function testApplyTo() {
+			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'validation');
+			assertNotNull('instance should exist',bInstance);
+		}		
+					
+	
+
+	</script>
+	</head>
+	<body class="wForm" style="padding:5px; margin:10px;" >
+        <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
+   
+            <div class="oneField" id="testDiv">
+                <label for="testField" class="preField">Test Field Page 1
+                	<span class="reqMark">*</span>
+                </label>
+              	<input type="text" id="testField"  name="testField"  class="" value="" />
+               	<br/>
+            </div>
+		
+		</form>
+		
+		<a href="#" onclick="testRevealSubmit()">click</a>
+
+		
+    </body>
+	
+</html>
+
