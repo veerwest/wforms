@@ -98,33 +98,33 @@
 		
 		document.getElementById('swA').checked=true;
 		bInstance.run(null, document.getElementById('swA'));
-		assertEquals('onstate-a', document.getElementById('target1').className);
-		assertEquals('1st','offstate-c offstate-b', document.getElementById('target2').className);
-		assertEquals('1st','offstate-d offstate-b', document.getElementById('target3').className);
+		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
+		assertEquals('1st','offstate-c offstate-b', document.getElementById('target2').className.replace(/^\s+/,''));
+		assertEquals('1st','offstate-d offstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
 		
 		document.getElementById('swC').checked=true;	
 		bInstance.run(null, document.getElementById('swC'));
-		assertEquals('onstate-a', document.getElementById('target1').className);
-		assertEquals('2nd','offstate-b onstate-c', document.getElementById('target2').className);
-		assertEquals('2nd','offstate-d offstate-b', document.getElementById('target3').className);
+		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
+		assertEquals('2nd','offstate-b onstate-c', document.getElementById('target2').className.replace(/^\s+/,''));
+		assertEquals('2nd','offstate-d offstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
 		
 		document.getElementById('swB').checked=true;	
 		bInstance.run(null, document.getElementById('swB'));
-		assertEquals('offstate-a', document.getElementById('target1').className);
-		assertEquals('3rd','onstate-c onstate-b', document.getElementById('target2').className);
-		assertEquals('3rd','offstate-d onstate-b', document.getElementById('target3').className);
+		assertEquals('offstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
+		assertEquals('3rd','onstate-c onstate-b', document.getElementById('target2').className.replace(/^\s+/,''));
+		assertEquals('3rd','offstate-d onstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
 			
 		document.getElementById('swA').checked=true;	
 		bInstance.run(null, document.getElementById('swA'));
-		assertEquals('onstate-a', document.getElementById('target1').className);
-		assertEquals('4th','onstate-c offstate-b', document.getElementById('target2').className);
-		assertEquals('4th','offstate-d offstate-b', document.getElementById('target3').className);
+		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
+		assertEquals('4th','onstate-c offstate-b', document.getElementById('target2').className.replace(/^\s+/,''));
+		assertEquals('4th','offstate-d offstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
 	
 		document.getElementById('swD').checked=true;	
 		bInstance.run(null, document.getElementById('swD'));
-		assertEquals('onstate-a', document.getElementById('target1').className);
-		assertEquals('5th','offstate-b offstate-c', document.getElementById('target2').className);
-		assertEquals('5th','offstate-b onstate-d', document.getElementById('target3').className);
+		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
+		assertEquals('5th','offstate-b offstate-c', document.getElementById('target2').className.replace(/^\s+/,''));
+		assertEquals('5th','offstate-b onstate-d', document.getElementById('target3').className.replace(/^\s+/,''));
 		
 	}
 	</script>

@@ -9,9 +9,13 @@
 	
 	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
     <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+
 	
-	<script type="text/javascript" src="../lib/base2-p.js"></script>
-	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	
+
+	
+	<script type="text/javascript" src="../lib/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/src/base2-dom.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../wforms_hint.js"></script>	
@@ -19,8 +23,8 @@
 	<script type="text/javascript" src="../wforms_paging.js"></script>	
 	<script type="text/javascript" src="../wforms_switch.js"></script>	
 	<script type="text/javascript" src="../wforms_calculation.js"></script>	
-		
 	<script type="text/javascript" src="compatibility/mootools-release-1.11.js"></script>
+		
 	  
 	<script type="text/javascript">
 		
@@ -39,8 +43,18 @@
 		}
 
 		function testApplyTo() {
-			var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'validation');
+			var f = document.getElementById('testform1');
+			var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
 			assertNotNull('instance should exist',bInstance);
+			
+			assertEquals('onstate-z', document.getElementById('casez').className);
+			
+		
+			assertEquals('offstate-a', document.getElementById('casea').className);
+			document.getElementById('switcha').checked=true;
+			bInstance.run(null, document.getElementById('switcha'));
+			assertEquals('onstate-a', document.getElementById('casea').className.replace(/^\s+/,''));
+			assertEquals('offstate-b', document.getElementById('caseb').className);
 		}		
 					
 	
@@ -48,22 +62,31 @@
 	</script>
 	</head>
 	<body class="wForm" style="padding:5px; margin:10px;" >
-        <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
-   
-            <div class="oneField" id="testDiv">
-                <label for="testField" class="preField">Test Field Page 1
-                	<span class="reqMark">*</span>
-                </label>
-              	<input type="text" id="testField"  name="testField"  class="" value="" />
-               	<br/>
-            </div>
+        	<form id="testform1">
+		<input name="fooz" type="checkbox" class="switch-z" id="switchz" checked="checked" />Z Switch <br/>
+		<div id="casez" class="offstate-z">This is A state</div>
 		
-		</form>
 		
-		<a href="#" onclick="testRevealSubmit()">click</a>
+		<input name="foo" type="radio" class="switch-a" id="switcha" />A Switch <br/>
+		<input name="foo" type="radio" class="switch-b" id="switchb"  />B Switch <br/>	
+		<a href="#" class="switch-c swtchIsOff" id="switchc" >C Switch</a> <br/>
+	
+		<select id="selectTest">
+			<option class="switch-d switch-e">D &amp; E</option>
+			<option class="switch-f">F</option>
+			<option class="switch-g">G</option>
+			<option>Test 4</option>
+		</select>
 
+		<div id="casea" class="offstate-a">This is A state</div>
+		<div id="caseb" class="offstate-b">This is B state</div>
+		<div id="casec" class="offstate-c">This is C state</div>
+		<div id="cased" class="offstate-d">This is D state</div>
+		<div id="casee" class="offstate-e">This is E state</div>
+		<div id="casef" class="offstate-f">This is F state</div>
+		<div id="caseg" class="offstate-g">This is F state</div>
+	</form>
 		
     </body>
 	
 </html>
-
