@@ -204,24 +204,30 @@ wFORMS.applyBehaviors = function(f) {
 	for(var behaviorName in wFORMS.behaviors) {
 		if(behaviorName == 'switch'){
 			continue;
-		}
-		
-		var b = wFORMS.behaviors[behaviorName].applyTo(f);
-		
-		// behaviors may create several instances
-		// if single instance returned, convert it to an array
-		if(b && b.constructor != Array) {
-			b=[b];			
-		} 
-		
-		for(var i=0;b && i<b.length;i++) {
-			if(!wFORMS.instances[behaviorName]) {
-				wFORMS.instances[behaviorName] = [b[i]];
-			} else {
-				wFORMS.removeBehavior(f, behaviorName);
-				wFORMS.instances[behaviorName].push(b[i]);
+		}		
+		if(wFORMS.behaviors[behaviorName].applyTo) {
+			// It is a behavior.
+			
+			var b = wFORMS.behaviors[behaviorName].applyTo(f);
+			
+			// behaviors may create several instances
+			// if single instance returned, convert it to an array
+			if(b && b.constructor != Array) {
+				b=[b];			
+			} 
+			
+			for(var i=0;b && i<b.length;i++) {
+				if(!wFORMS.instances[behaviorName]) {
+					wFORMS.instances[behaviorName] = [b[i]];
+				} else {
+					wFORMS.removeBehavior(f, behaviorName);
+					wFORMS.instances[behaviorName].push(b[i]);
+				}
 			}
 		}
+	}
+	if(wFORMS.behaviors.onApplyAll) {
+		wFORMS.behaviors.onApplyAll(f);
 	}
 }
 
