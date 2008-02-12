@@ -281,13 +281,13 @@ wFORMS.behaviors.paging.createPreviousPageButton = function(){
  * @return	{HTMLElement}
  */
 wFORMS.behaviors.paging.instance.prototype.getOrCreatePlaceHolder = function(pageElem){
-	var id = pageElem.id + this.ID_PLACEHOLDER_SUFFIX;
+	var id = pageElem.id + this.behavior.ID_PLACEHOLDER_SUFFIX;
 	var elem = document.getElementById(id);
 
 	if(!elem){
 		elem = pageElem.appendChild(document.createElement('div'));
 		elem.id = id;
-		elem.className = this.CSS_BUTTON_PLACEHOLDER;
+		elem.className = this.behavior.CSS_BUTTON_PLACEHOLDER;
 	}	
 
 	return elem;

@@ -58,6 +58,10 @@
 			assertEquals('wfPage',page3.className);
 			
 			// Check page next/previous buttons
+			var div = document.getElementById('wfPgIndex-1'+ bInstance.behavior.ID_PLACEHOLDER_SUFFIX);
+			assertNotNull('button div',div);
+			assertEquals('button div class',bInstance.behavior.CSS_BUTTON_PLACEHOLDER,div.className);
+			
 			assertNotNull('next button on first page',document.getElementById('wfPageNextId1'));
 			assertNull('No previous button on first page',document.getElementById('wfPagePreviousId1'));
 			assertNotNull('next button on second page',document.getElementById('wfPageNextId2'));
