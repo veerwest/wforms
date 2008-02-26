@@ -15,18 +15,13 @@ if (typeof(wFORMS.behaviors['validation']) == "undefined") {
 	throw new Error("wFORMS validation behavior not found. This behavior depends on the wFORMS validation behavior.");
 }
 
-/**
- * Handler for the 'switchOff' event.
- */
-new function(_) {
 
-	wFORMS.behaviors.validation.rules.isDateInTheFuture    = { selector: "#tfa_EstimatedConvers", check: 'validateDateInTheFuture' }
-	wFORMS.behaviors.validation.messages.isDateInTheFuture = "This date cannot be in the past.";
-	
-	
-	wFORMS.behaviors.validation.instance.prototype.validateDateInTheFuture = function(element, value) {			
-		var testDate = new Date(value);
-		var today = new Date();
-		return (testDate.getTime() > today.getTime());
-	}
-}();
+wFORMS.behaviors.validation.rules.isDateInTheFuture    = { selector: "#tfa_EstimatedConvers", check: 'validateDateInTheFuture' }
+wFORMS.behaviors.validation.messages.isDateInTheFuture = "This date cannot be in the past.";
+
+
+wFORMS.behaviors.validation.instance.prototype.validateDateInTheFuture = function(element, value) {			
+	var testDate = new Date(value);
+	var today = new Date();
+	return (testDate.getTime() > today.getTime());
+}
