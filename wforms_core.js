@@ -1,3 +1,9 @@
+//This should be removed when base2 becomes safari compatable. 
+if( navigator.appVersion.search(/3.1 Safari/) != -1)
+{
+NodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
+} 
+//
 
 if (typeof(base2) == "undefined") {
 	throw new Error("Base2 not found. wForms 3.0 depends on the base2 library.");

@@ -193,6 +193,7 @@ _b.applyTo = function(f) {
 		}
 	);
 	
+	f = base2.DOM.bind(f);
 	if(f.hasClass(this.CSS_REMOVEABLE)){
 		var m  = this.getMasterSection(f);		
 		var _i = wFORMS.getBehaviorInstance(m, 'repeat');
