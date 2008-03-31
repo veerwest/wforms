@@ -77,6 +77,7 @@
 	display: block;
 	padding: 2px 0;
 	margin-bottom: 0.75em; 	
+	width: 100%
 }
 
 /* Radio/checkbox + label wrapper */
@@ -98,15 +99,15 @@
 	overflow: hidden;
 	padding: 2px 0;
 }
-.wForm form .inlineSection .preField {
-	margin-right: 4px;
-}
-
 /* Label+Field when inside an inline section */
 .wForm form .inlineSection .oneField {			
 	float: left; 
 	margin-right: 4px;
 	padding: 0;
+	width: auto;
+}
+.wForm form .inlineSection .preField {
+	margin-right: 4px;
 }
 .wForm form .inlineSection .inlineLabel,
 .wForm .labelsLeftAligned  .inlineSection .inlineLabel,
@@ -185,6 +186,7 @@
 	color: #333;
 	border: 1px solid #ffc20d;	
 }
+
 .wForm .hintsTooltip .field-hint span {
 	display: block;
  }
@@ -310,5 +312,6 @@
 * html .wForm label.preField,
 * html .wForm .labelsLeftAligned  label.preField,
 * html .wForm .labelsRightAligned label.preField {
-	width: 13em;	
+	
+
 }

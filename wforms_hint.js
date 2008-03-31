@@ -118,7 +118,7 @@ wFORMS.behaviors.hint.instance.prototype.getElementByHintId = function(hintId){
  */
 wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
 	var e = document.getElementById(element.id + this.behavior.HINT_SUFFIX);
-	if(e){base2.DOM.bind(e);}
+	if(e && !e.hasClass){base2.DOM.bind(e);}
 	return e && e != '' ? e : null;
 }
 

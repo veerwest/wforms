@@ -1,0 +1,1525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+     <head>
+		<meta name="generator" content="HTML Tidy, see www.w3.org" />
+		<title>wForms 3.0 - Paging Behavior Example</title>
+		<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+		<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+		<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+		<link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+		<script src="../../build/wforms.js"></script>
+		
+     </head>
+
+     <body class="wForm">
+          <h2>Paging Behavior Test Suite</h2>
+
+          <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="id2659417" class="labelsLeftAligned">
+               <div class="wfPage" id="wfPgIndex-1">
+                  <div class="oneField">
+                         <label for="wf_Howmanydiabeticwa" class="preField">How many diabetic waiting areas are at this address?<span class="reqMark">*</span></label> <select id="wf_Howmanydiabeticwa" name="wf_Howmanydiabeticwa" class="">
+                              <option value="">
+                                   Please select...
+                              </option>
+
+                              <option value="tfa_1" class="switch-a">
+                                   one
+                              </option>
+
+                              <option value="tfa_8201281754319" class="switch-b">
+                                   two
+                              </option>
+
+                              <option value="tfa_8201281756300" class="switch-c">
+                                   three
+                              </option>
+
+                              <option value="tfa_8201281605594" class="switch-d">
+                                   four
+                              </option>
+
+                              <option value="tfa_8201281681076" class="switch-e">
+                                   five
+                              </option>
+                         </select><br>
+                          <span class="errMsg" id="wf_Howmanydiabeticwa-E"></span>
+                    </div>
+
+                    <div class="oneField">
+                         <label for="wf_Nameofofficeorcli" class="preField">Name of office or clinic<span class="reqMark">*</span></label><input type="text" id="wf_Nameofofficeorcli" name="wf_Nameofofficeorcli" value="" size="" class=""><br>
+                          <span class="errMsg" id="wf_Nameofofficeorcli-E"></span>
+                    </div>
+
+                    <div class="oneField">
+                         <label for="wf_Contactnameandtit" class="preField">Contact name and title<span class="reqMark">*</span></label><input type="text" id="wf_Contactnameandtit" name="wf_Contactnameandtit" value="" size="" class=""><br>
+                          <span class="errMsg" id="wf_Contactnameandtit-E"></span>
+                    </div>
+
+                    <div id="tfa_Phone" class="inlineSection ">
+                         <label class="preField">Phone #: <span class="reqMark">*</span></label> 
+
+                         <div class="oneField">
+                              (<input type="text" id="" name="" value="" size="3" class="">)<span class="errMsg" id="-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <input type="text" id="" name="" value="" size="3" class=""> -<span class="errMsg" id="-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <input type="text" id="" name="" value="" size="4" class=""><span class="errMsg" id="-E"></span>
+                         </div>
+                    </div>
+
+                    <div id="tfa_Fax" class="inlineSection ">
+                         <label class="preField">Fax #: <span class="reqMark">*</span></label> 
+
+                         <div class="oneField">
+                              (<input type="text" id="" name="" value="" size="3" class="">)<span class="errMsg" id="-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <input type="text" id="" name="" value="" size="3" class=""> -<span class="errMsg" id="-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <input type="text" id="" name="" value="" size="4" class=""><span class="errMsg" id="-E"></span>
+                         </div>
+                    </div>
+
+                    <div class="oneField">
+                         <label for="wf_Email" class="preField">Email<span class="reqMark">*</span></label><input type="text" id="wf_Email" name="wf_Email" value="" size="" class="validate-email "><br>
+                          <span class="errMsg" id="wf_Email-E"></span>
+                    </div>
+
+                    <div class="oneField">
+                         <label for="wf_SecondaryContact" class="preField">Secondary Contact<span class="reqMark">*</span></label><input type="text" id="wf_SecondaryContact" name="wf_SecondaryContact" value="" size="" class=""><br>
+                          <span class="errMsg" id="wf_SecondaryContact-E"></span>
+                    </div>
+
+                    <div id="tfa_Address" class="">
+                         <div class="oneField">
+                              <label for="" class="preField">Street Address</label><input type="text" id="" name="" value="" size="50" class=""><br>
+                               <span class="errMsg" id="-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="" class="preField">Address continued</label><input type="text" id="" name="" value="" size="50" class=""><br>
+                               <span class="errMsg" id="-E"></span>
+                         </div>
+
+                         <div id="id-1250047472446" class="inlineSection">
+                              <div class="oneField">
+                                   <label for="" class="inlineLabel">City</label><input type="text" id="" name="" value="" size="" class=""><span class="errMsg" id="-E"></span>
+                              </div>
+
+                              <div class="oneField">
+                                   <label for="" class="inlineLabel">State</label><select id="" name="" class="">
+                                        <option value="">
+                                             Please select...
+                                        </option>
+
+                                        <option value="" class="" selected>
+                                             Please select
+                                        </option>
+
+                                        <option value="AL" class="">
+                                             Alabama
+                                        </option>
+
+                                        <option value="AK" class="">
+                                             Alaska
+                                        </option>
+
+                                        <option value="AZ" class="">
+                                             Arizona
+                                        </option>
+
+                                        <option value="AR" class="">
+                                             Arkansas
+                                        </option>
+
+                                        <option value="CA" class="">
+                                             California
+                                        </option>
+
+                                        <option value="CO" class="">
+                                             Colorado
+                                        </option>
+
+                                        <option value="CT" class="">
+                                             Connecticut
+                                        </option>
+
+                                        <option value="DE" class="">
+                                             Delaware
+                                        </option>
+
+                                        <option value="DC" class="">
+                                             District Of Columbia
+                                        </option>
+
+                                        <option value="FL" class="">
+                                             Florida
+                                        </option>
+
+                                        <option value="GA" class="">
+                                             Georgia
+                                        </option>
+
+                                        <option value="HI" class="">
+                                             Hawaii
+                                        </option>
+
+                                        <option value="ID" class="">
+                                             Idaho
+                                        </option>
+
+                                        <option value="IL" class="">
+                                             Illinois
+                                        </option>
+
+                                        <option value="IN" class="">
+                                             Indiana
+                                        </option>
+
+                                        <option value="IA" class="">
+                                             Iowa
+                                        </option>
+
+                                        <option value="KS" class="">
+                                             Kansas
+                                        </option>
+
+                                        <option value="KY" class="">
+                                             Kentucky
+                                        </option>
+
+                                        <option value="LA" class="">
+                                             Louisiana
+                                        </option>
+
+                                        <option value="ME" class="">
+                                             Maine
+                                        </option>
+
+                                        <option value="MD" class="">
+                                             Maryland
+                                        </option>
+
+                                        <option value="MA" class="">
+                                             Massachusetts
+                                        </option>
+
+                                        <option value="MI" class="">
+                                             Michigan
+                                        </option>
+
+                                        <option value="MN" class="">
+                                             Minnesota
+                                        </option>
+
+                                        <option value="MS" class="">
+                                             Mississippi
+                                        </option>
+
+                                        <option value="MO" class="">
+                                             Missouri
+                                        </option>
+
+                                        <option value="MT" class="">
+                                             Montana
+                                        </option>
+
+                                        <option value="NE" class="">
+                                             Nebraska
+                                        </option>
+
+                                        <option value="NV" class="">
+                                             Nevada
+                                        </option>
+
+                                        <option value="NH" class="">
+                                             New Hampshire
+                                        </option>
+
+                                        <option value="NJ" class="">
+                                             New Jersey
+                                        </option>
+
+                                        <option value="NM" class="">
+                                             New Mexico
+                                        </option>
+
+                                        <option value="NY" class="">
+                                             New York
+                                        </option>
+
+                                        <option value="NC" class="">
+                                             North Carolina
+                                        </option>
+
+                                        <option value="ND" class="">
+                                             North Dakota
+                                        </option>
+
+                                        <option value="OH" class="">
+                                             Ohio
+                                        </option>
+
+                                        <option value="OK" class="">
+                                             Oklahoma
+                                        </option>
+
+                                        <option value="OR" class="">
+                                             Oregon
+                                        </option>
+
+                                        <option value="PA" class="">
+                                             Pennsylvania
+                                        </option>
+
+                                        <option value="RI" class="">
+                                             Rhode Island
+                                        </option>
+
+                                        <option value="SC" class="">
+                                             South Carolina
+                                        </option>
+
+                                        <option value="SD" class="">
+                                             South Dakota
+                                        </option>
+
+                                        <option value="TN" class="">
+                                             Tennessee
+                                        </option>
+
+                                        <option value="TX" class="">
+                                             Texas
+                                        </option>
+
+                                        <option value="UT" class="">
+                                             Utah
+                                        </option>
+
+                                        <option value="VT" class="">
+                                             Vermont
+                                        </option>
+
+                                        <option value="VA" class="">
+                                             Virginia
+                                        </option>
+
+                                        <option value="WA" class="">
+                                             Washington
+                                        </option>
+
+                                        <option value="WV" class="">
+                                             West Virginia
+                                        </option>
+
+                                        <option value="WI" class="">
+                                             Wisconsin
+                                        </option>
+
+                                        <option value="WY" class="">
+                                             Wyoming
+                                        </option>
+
+                                        <option value="PR" class="">
+                                             Puerto Rico
+                                        </option>
+
+                                        <option value="VI" class="">
+                                             Virgin Island
+                                        </option>
+
+                                        <option value="MP" class="">
+                                             Northern Mariana Islands
+                                        </option>
+
+                                        <option value="GU" class="">
+                                             Guam
+                                        </option>
+
+                                        <option value="AS" class="">
+                                             American Samoa
+                                        </option>
+
+                                        <option value="PW" class="">
+                                             Palau
+                                        </option>
+                                   </select><span class="errMsg" id="-E"></span>
+                              </div>
+
+                              <div class="oneField">
+                                   <label for="" class="inlineLabel">Zip</label><input type="text" id="" name="" value="" size="6" class=""><span class="errMsg" id="-E"></span>
+                              </div>
+                         </div>
+                    </div>
+
+                    <fieldset id="wf_Pleaseenterallful" class="repeat">
+                         <legend>Please enter all full and part time healthcare professionals that see patients from these waiting areas.</legend> 
+
+                         <div class="oneField">
+                              <label for="wf_id-9642250576440" class="preField">First Name</label><input type="text" id="wf_id-9642250576440" name="wf_id-9642250576440" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_id-9642250576440-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_LastName" class="preField">Last Name</label><input type="text" id="tfa_LastName" name="tfa_LastName" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_LastName-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Specialty" class="preField">Specialty</label> <select id="tfa_Specialty" name="tfa_Specialty" class="">
+                                   <option value="">
+                                        Please select...
+                                   </option>
+
+                                   <option value="tfa_Endocrinologist" class="">
+                                        Endocrinologist
+                                   </option>
+
+                                   <option value="tfa_Nutritionist" class="">
+                                        Nutritionist
+                                   </option>
+
+                                   <option value="tfa_DiabetesEducator" class="">
+                                        Diabetes Educator
+                                   </option>
+
+                                   <option value="tfa_NursePractitione" class="">
+                                        Nurse Practitioner
+                                   </option>
+
+                                   <option value="tfa_Other" class="">
+                                        Other
+                                   </option>
+                              </select><br>
+                               <span class="errMsg" id="tfa_Specialty-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_FullTimeorPartTi" class="preField">Full Time or Part Time<span class="reqMark">*</span></label><span class=""><span class="oneChoice"><input type="checkbox" value="tfa_Fulltime" class="" id="tfa_Fulltime" name="tfa_Fulltime"><label for="tfa_Fulltime" class="postField">Full time</label></span><span class="oneChoice"><input type="checkbox" value="tfa_Parttime" class="" id="tfa_Parttime" name="tfa_Parttime"><label for="tfa_Parttime" class="postField">Part time</label></span></span><br>
+                               <span class="errMsg" id="tfa_FullTimeorPartTi-E"></span>
+                         </div>
+                    </fieldset>
+
+                   
+               </div>
+
+               <div class="wfPage" id="wfPgIndex-2">
+                    <h3>Audience data</h3>
+
+                    <div class=" " id="">
+                         <h3>Please complete the following survey for your waiting room to the best of your knowledge.</h3>
+
+                         <div class="oneField">
+                              <label for="wf_Averagewaittime" class="preField">Average wait time<span class="reqMark">*</span></label><input type="text" id="wf_Averagewaittime" name="wf_Averagewaittime" value="In minutes" size="" class=""><br>
+                               <span class="errMsg" id="wf_Averagewaittime-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Averagenumberofpa" class="preField">Average number of patients per week<span class="reqMark">*</span></label><input type="text" id="wf_Averagenumberofpa" name="wf_Averagenumberofpa" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Averagenumberofpa-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Whatofpatientscom" class="preField">What % of patients come with someone else(ex. Caregiver or family member)<span class="reqMark">*</span></label><input type="text" id="wf_Whatofpatientscom" name="wf_Whatofpatientscom" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Whatofpatientscom-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Whatofpatientscom1" class="preField">What % of patients comes with more than one caregiver?<span class="reqMark">*</span></label><input type="text" id="wf_Whatofpatientscom1" name="wf_Whatofpatientscom1" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Whatofpatientscom1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Numberofphysician" class="preField">Number of physicians at office<span class="reqMark">*</span></label><select id="wf_Numberofphysician" name="wf_Numberofphysician" class="">
+                                   <option value="">
+                                        Please select...
+                                   </option>
+
+                                   <option value="tfa_one1" class="">
+                                        one
+                                   </option>
+
+                                   <option value="tfa_two1" class="">
+                                        two
+                                   </option>
+
+                                   <option value="tfa_three1" class="">
+                                        three
+                                   </option>
+
+                                   <option value="tfa_four1" class="">
+                                        four
+                                   </option>
+
+                                   <option value="tfa_five1" class="">
+                                        five
+                                   </option>
+
+                                   <option value="tfa_six1" class="">
+                                        six
+                                   </option>
+
+                                   <option value="tfa_seven1" class="">
+                                        seven
+                                   </option>
+
+                                   <option value="tfa_eight1" class="">
+                                        eight
+                                   </option>
+
+                                   <option value="tfa_nine1" class="">
+                                        nine
+                                   </option>
+
+                                   <option value="tfa_ten1" class="">
+                                        ten
+                                   </option>
+                              </select><br>
+                               <span class="errMsg" id="wf_Numberofphysician-E"></span>
+                         </div>
+                    </div>
+
+                    <fieldset id="tfa_Whatofpatientsha" class="">
+                         <legend>What % of patients have :</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Diabetes" class="preField">% Diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Diabetes" name="tfa_Diabetes" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Diabetes-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Osteoporosis" class="preField">% Osteoporosis<span class="reqMark">*</span></label><input type="text" id="tfa_Osteoporosis" name="tfa_Osteoporosis" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Osteoporosis-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Thyroid" class="preField">% Thyroid<span class="reqMark">*</span></label><input type="text" id="tfa_Thyroid" name="tfa_Thyroid" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Thyroid-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Other1" class="preField">% Other<span class="reqMark">*</span></label><input type="text" id="tfa_Other1" name="tfa_Other1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Other1-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Gendertotaling101" class="">
+                         <legend>Gender(totaling 100%)</legend> 
+
+                         <div class="oneField">
+                              <label for="wf_Male" class="preField">% Male<span class="reqMark">*</span></label><input type="text" id="wf_Male" name="wf_Male" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Male-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Female" class="preField">% Female<span class="reqMark">*</span></label><input type="text" id="wf_Female" name="wf_Female" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Female-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsar1" class="">
+                         <legend>What % of patients are</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_17andUnder1" class="preField">17 and Under<span class="reqMark">*</span></label><input type="text" id="tfa_17andUnder1" name="tfa_17andUnder1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_17andUnder1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_1834" class="preField">18-34<span class="reqMark">*</span></label><input type="text" id="tfa_1834" name="tfa_1834" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_1834-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_3554" class="preField">35-54<span class="reqMark">*</span></label><input type="text" id="tfa_3554" name="tfa_3554" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_3554-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_5565" class="preField">55-65<span class="reqMark">*</span></label><input type="text" id="tfa_5565" name="tfa_5565" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_5565-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_65" class="preField">65+<span class="reqMark">*</span></label><input type="text" id="tfa_65" name="tfa_65" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_65-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="wf_Whatofdiabeticsar" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="wf_Type1" class="preField">Type 1 diabetes <span class="reqMark">*</span></label><input type="text" id="wf_Type1" name="wf_Type1" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Type1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Type2" class="preField">Type 2 diabetes<span class="reqMark">*</span></label><input type="text" id="wf_Type2" name="wf_Type2" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Type2-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_4792820748191" class="">
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsre" class="preField">What % of patients receives regular care from this office after the first visit?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsre" name="tfa_Whatofpatientsre" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsre-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="wf_Whatofpatientshav1" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="wf_Medicare" class="preField">% Medicare<span class="reqMark">*</span></label><input type="text" id="wf_Medicare" name="wf_Medicare" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Medicare-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Medicaid" class="preField">% Medicaid<span class="reqMark">*</span></label><input type="text" id="wf_Medicaid" name="wf_Medicaid" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Medicaid-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Privateinsurance" class="preField">% Private insurance<span class="reqMark">*</span></label><input type="text" id="wf_Privateinsurance" name="wf_Privateinsurance" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Privateinsurance-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Selfpay" class="preField">% Self pay</label><input type="text" id="wf_Selfpay" name="wf_Selfpay" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Selfpay-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="wf_EthnicComposition" class="">
+                         <legend>Ethnic composition:</legend> 
+
+                         <div class="oneField">
+                              <label for="wf_Hispanic" class="preField">% Hispanic <span class="reqMark">*</span></label><input type="text" id="wf_Hispanic" name="wf_Hispanic" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Hispanic-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_AfricanAmerican" class="preField">% African American<span class="reqMark">*</span></label><input type="text" id="wf_AfricanAmerican" name="wf_AfricanAmerican" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_AfricanAmerican-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_AsianAmerican" class="preField">% Asian American<span class="reqMark">*</span></label><input type="text" id="wf_AsianAmerican" name="wf_AsianAmerican" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_AsianAmerican-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_Caucasian" class="preField">% Caucasian<span class="reqMark">*</span></label><input type="text" id="wf_Caucasian" name="wf_Caucasian" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_Caucasian-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="wf_NativeAmerican" class="preField">% Native American<span class="reqMark">*</span></label><input type="text" id="wf_NativeAmerican" name="wf_NativeAmerican" value="" size="" class=""><br>
+                               <span class="errMsg" id="wf_NativeAmerican-E"></span>
+                         </div>
+                    </fieldset>
+
+               </div>
+
+               <div class="wfPage" id="wfPgIndex-3">
+                    <h3>Audience data - second waiting room</h3>
+
+                    <div class="" id="">
+                         <h3>Please complete the following survey for your second waiting room to the best of your knowledge.</h3>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagewaittime" class="preField">Average wait time<span class="reqMark">*</span></label><input type="text" id="tfa_Averagewaittime" name="tfa_Averagewaittime" value="In minutes" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagewaittime-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagenumberofp" class="preField">Average number of patients per week<span class="reqMark">*</span></label><input type="text" id="tfa_Averagenumberofp" name="tfa_Averagenumberofp" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagenumberofp-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco" class="preField">What % of patients come with someone else(ex. Caregiver or family member)<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco" name="tfa_Whatofpatientsco" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco1" class="preField">What % of patients comes with more than one caregiver?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco1" name="tfa_Whatofpatientsco1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Numberofphysicia" class="preField">Number of physicians at office<span class="reqMark">*</span></label><select id="tfa_Numberofphysicia" name="tfa_Numberofphysicia" class="">
+                                   <option value="">
+                                        Please select...
+                                   </option>
+
+                                   <option value="tfa_one" class="">
+                                        one
+                                   </option>
+
+                                   <option value="tfa_two" class="">
+                                        two
+                                   </option>
+
+                                   <option value="tfa_three" class="">
+                                        three
+                                   </option>
+
+                                   <option value="tfa_four" class="">
+                                        four
+                                   </option>
+
+                                   <option value="tfa_five" class="">
+                                        five
+                                   </option>
+
+                                   <option value="tfa_six" class="">
+                                        six
+                                   </option>
+
+                                   <option value="tfa_seven" class="">
+                                        seven
+                                   </option>
+
+                                   <option value="tfa_eight" class="">
+                                        eight
+                                   </option>
+
+                                   <option value="tfa_nine" class="">
+                                        nine
+                                   </option>
+
+                                   <option value="tfa_ten" class="">
+                                        ten
+                                   </option>
+                              </select><br>
+                               <span class="errMsg" id="tfa_Numberofphysicia-E"></span>
+                         </div>
+                    </div>
+
+                    <fieldset id="tfa_Whatofpatientsha1" class="">
+                         <legend>What % of patients have :</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Diabetes1" class="preField">% Diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Diabetes1" name="tfa_Diabetes1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Diabetes1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Osteoporosis1" class="preField">% Osteoporosis<span class="reqMark">*</span></label><input type="text" id="tfa_Osteoporosis1" name="tfa_Osteoporosis1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Osteoporosis1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Thyroid1" class="preField">% Thyroid<span class="reqMark">*</span></label><input type="text" id="tfa_Thyroid1" name="tfa_Thyroid1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Thyroid1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Other3" class="preField">% Other<span class="reqMark">*</span></label><input type="text" id="tfa_Other3" name="tfa_Other3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Other3-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Gendertotaling10" class="">
+                         <legend>Gender(totaling 100%)</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Male" class="preField">% Male<span class="reqMark">*</span></label><input type="text" id="tfa_Male" name="tfa_Male" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Male-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Female" class="preField">% Female<span class="reqMark">*</span></label><input type="text" id="tfa_Female" name="tfa_Female" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Female-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsar" class="">
+                         <legend>What % of patients are</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_17andUnder" class="preField">17 and Under<span class="reqMark">*</span></label><input type="text" id="tfa_17andUnder" name="tfa_17andUnder" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_17andUnder-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_18341" class="preField">18-34<span class="reqMark">*</span></label><input type="text" id="tfa_18341" name="tfa_18341" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_18341-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_35541" class="preField">35-54<span class="reqMark">*</span></label><input type="text" id="tfa_35541" name="tfa_35541" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_35541-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_55651" class="preField">55-65<span class="reqMark">*</span></label><input type="text" id="tfa_55651" name="tfa_55651" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_55651-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_651" class="preField">65+<span class="reqMark">*</span></label><input type="text" id="tfa_651" name="tfa_651" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_651-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha2" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Type1diabetes" class="preField">Type 1 diabetes <span class="reqMark">*</span></label><input type="text" id="tfa_Type1diabetes" name="tfa_Type1diabetes" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type1diabetes-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Type2diabetes" class="preField">Type 2 diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Type2diabetes" name="tfa_Type2diabetes" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type2diabetes-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_5130484810102" class="">
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsre1" class="preField">What % of patients receives regular care from this office after the first visit?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsre1" name="tfa_Whatofpatientsre1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsre1-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha3" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Medicare" class="preField">% Medicare<span class="reqMark">*</span></label><input type="text" id="tfa_Medicare" name="tfa_Medicare" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicare-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Medicaid" class="preField">% Medicaid<span class="reqMark">*</span></label><input type="text" id="tfa_Medicaid" name="tfa_Medicaid" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicaid-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Privateinsurance" class="preField">% Private insurance<span class="reqMark">*</span></label><input type="text" id="tfa_Privateinsurance" name="tfa_Privateinsurance" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Privateinsurance-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Selfpay" class="preField">% Self pay<span class="reqMark">*</span></label><input type="text" id="tfa_Selfpay" name="tfa_Selfpay" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Selfpay-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Ethniccompositio" class="">
+                         <legend>Ethnic composition:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Hispanic" class="preField">% Hispanic <span class="reqMark">*</span></label><input type="text" id="tfa_Hispanic" name="tfa_Hispanic" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Hispanic-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AfricanAmerican" class="preField">% African American<span class="reqMark">*</span></label><input type="text" id="tfa_AfricanAmerican" name="tfa_AfricanAmerican" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AfricanAmerican-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AsianAmerican" class="preField">% Asian American<span class="reqMark">*</span></label><input type="text" id="tfa_AsianAmerican" name="tfa_AsianAmerican" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AsianAmerican-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Caucasian" class="preField">% Caucasian<span class="reqMark">*</span></label><input type="text" id="tfa_Caucasian" name="tfa_Caucasian" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Caucasian-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_NativeAmerican" class="preField">% Native American<span class="reqMark">*</span></label><input type="text" id="tfa_NativeAmerican" name="tfa_NativeAmerican" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_NativeAmerican-E"></span>
+                         </div>
+                    </fieldset>
+
+                 
+               </div>
+
+               <div class="wfPage" id="wfPgIndex-4">
+                    <h3>Audience data - third waiting room</h3>
+
+                    <div class="" id="">
+                         <h3>Please complete the following survey for your third waiting room to the best of your knowledge.</h3>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagewaittime1" class="preField">Average wait time<span class="reqMark">*</span></label><input type="text" id="tfa_Averagewaittime1" name="tfa_Averagewaittime1" value="In minutes" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagewaittime1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagenumberofp1" class="preField">Average number of patients per week<span class="reqMark">*</span></label><input type="text" id="tfa_Averagenumberofp1" name="tfa_Averagenumberofp1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagenumberofp1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco2" class="preField">What % of patients come with someone else(ex. Caregiver or family member)<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco2" name="tfa_Whatofpatientsco2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco3" class="preField">What % of patients comes with more than one caregiver?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco3" name="tfa_Whatofpatientsco3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Numberofphysicia1" class="preField">Number of physicians at office<span class="reqMark">*</span></label><select id="tfa_Numberofphysicia1" name="tfa_Numberofphysicia1" class="">
+                                   <option value="">
+                                        Please select...
+                                   </option>
+
+                                   <option value="tfa_one5" class="">
+                                        one
+                                   </option>
+
+                                   <option value="tfa_two5" class="">
+                                        two
+                                   </option>
+
+                                   <option value="tfa_three5" class="">
+                                        three
+                                   </option>
+
+                                   <option value="tfa_four5" class="">
+                                        four
+                                   </option>
+
+                                   <option value="tfa_five5" class="">
+                                        five
+                                   </option>
+
+                                   <option value="tfa_six5" class="">
+                                        six
+                                   </option>
+
+                                   <option value="tfa_seven5" class="">
+                                        seven
+                                   </option>
+
+                                   <option value="tfa_eight5" class="">
+                                        eight
+                                   </option>
+
+                                   <option value="tfa_nine5" class="">
+                                        nine
+                                   </option>
+
+                                   <option value="tfa_ten5" class="">
+                                        ten
+                                   </option>
+                              </select><br>
+                               <span class="errMsg" id="tfa_Numberofphysicia1-E"></span>
+                         </div>
+                    </div>
+
+                    <fieldset id="tfa_Whatofpatientsha4" class="">
+                         <legend>What % of patients have :</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Diabetes2" class="preField">% Diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Diabetes2" name="tfa_Diabetes2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Diabetes2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Osteoporosis2" class="preField">% Osteoporosis<span class="reqMark">*</span></label><input type="text" id="tfa_Osteoporosis2" name="tfa_Osteoporosis2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Osteoporosis2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Thyroid2" class="preField">% Thyroid<span class="reqMark">*</span></label><input type="text" id="tfa_Thyroid2" name="tfa_Thyroid2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Thyroid2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Other5" class="preField">% Other<span class="reqMark">*</span></label><input type="text" id="tfa_Other5" name="tfa_Other5" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Other5-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Gendertotaling102" class="">
+                         <legend>Gender(totaling 100%)</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Male1" class="preField">% Male<span class="reqMark">*</span></label><input type="text" id="tfa_Male1" name="tfa_Male1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Male1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Female1" class="preField">% Female<span class="reqMark">*</span></label><input type="text" id="tfa_Female1" name="tfa_Female1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Female1-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsar2" class="">
+                         <legend>What % of patients are</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_17andUnder2" class="preField">17 and Under<span class="reqMark">*</span></label><input type="text" id="tfa_17andUnder2" name="tfa_17andUnder2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_17andUnder2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_18342" class="preField">18-34<span class="reqMark">*</span></label><input type="text" id="tfa_18342" name="tfa_18342" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_18342-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_35542" class="preField">35-54<span class="reqMark">*</span></label><input type="text" id="tfa_35542" name="tfa_35542" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_35542-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_55652" class="preField">55-65<span class="reqMark">*</span></label><input type="text" id="tfa_55652" name="tfa_55652" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_55652-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_652" class="preField">65+<span class="reqMark">*</span></label><input type="text" id="tfa_652" name="tfa_652" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_652-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha5" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Type1diabetes1" class="preField">Type 1 diabetes <span class="reqMark">*</span></label><input type="text" id="tfa_Type1diabetes1" name="tfa_Type1diabetes1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type1diabetes1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Type2diabetes1" class="preField">Type 2 diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Type2diabetes1" name="tfa_Type2diabetes1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type2diabetes1-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_5131437295127" class="">
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsre2" class="preField">What % of patients receives regular care from this office after the first visit?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsre2" name="tfa_Whatofpatientsre2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsre2-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha6" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Medicare1" class="preField">% Medicare<span class="reqMark">*</span></label><input type="text" id="tfa_Medicare1" name="tfa_Medicare1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicare1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Medicaid1" class="preField">% Medicaid<span class="reqMark">*</span></label><input type="text" id="tfa_Medicaid1" name="tfa_Medicaid1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicaid1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Privateinsurance1" class="preField">% Private insurance<span class="reqMark">*</span></label><input type="text" id="tfa_Privateinsurance1" name="tfa_Privateinsurance1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Privateinsurance1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Selfpay1" class="preField">% Self pay</label><input type="text" id="tfa_Selfpay1" name="tfa_Selfpay1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Selfpay1-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Ethniccompositio1" class="">
+                         <legend>Ethnic composition:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Hispanic1" class="preField">% Hispanic <span class="reqMark">*</span></label><input type="text" id="tfa_Hispanic1" name="tfa_Hispanic1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Hispanic1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AfricanAmerican1" class="preField">% African American<span class="reqMark">*</span></label><input type="text" id="tfa_AfricanAmerican1" name="tfa_AfricanAmerican1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AfricanAmerican1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AsianAmerican1" class="preField">% Asian American<span class="reqMark">*</span></label><input type="text" id="tfa_AsianAmerican1" name="tfa_AsianAmerican1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AsianAmerican1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Caucasian1" class="preField">% Caucasian<span class="reqMark">*</span></label><input type="text" id="tfa_Caucasian1" name="tfa_Caucasian1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Caucasian1-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_NativeAmerican1" class="preField">% Native American<span class="reqMark">*</span></label><input type="text" id="tfa_NativeAmerican1" name="tfa_NativeAmerican1" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_NativeAmerican1-E"></span>
+                         </div>
+                    </fieldset>
+
+               </div>
+
+               <div class="wfPage" id="wfPgIndex-5">
+                    <h3>Audience data - fourth waiting room</h3>
+
+                    <div class="" id="">
+                         <h3>Please complete the following survey for your fourth waiting room to the best of your knowledge.</h3>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagewaittime4" class="preField">Average wait time</label><input type="text" id="tfa_Averagewaittime4" name="tfa_Averagewaittime4" value="In minutes" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagewaittime4-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagenumberofp4" class="preField">Average number of patients per week<span class="reqMark">*</span></label><input type="text" id="tfa_Averagenumberofp4" name="tfa_Averagenumberofp4" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagenumberofp4-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco8" class="preField">What % of patients come with someone else(ex. Caregiver or family member)<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco8" name="tfa_Whatofpatientsco8" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco8-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco9" class="preField">What % of patients comes with more than one caregiver?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco9" name="tfa_Whatofpatientsco9" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco9-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Numberofphysicia4" class="preField">Number of physicians at office<span class="reqMark">*</span></label><select id="tfa_Numberofphysicia4" name="tfa_Numberofphysicia4" class="">
+                                   <option value="">
+                                        Please select...
+                                   </option>
+
+                                   <option value="tfa_one2" class="">
+                                        one
+                                   </option>
+
+                                   <option value="tfa_two2" class="">
+                                        two
+                                   </option>
+
+                                   <option value="tfa_three2" class="">
+                                        three
+                                   </option>
+
+                                   <option value="tfa_four2" class="">
+                                        four
+                                   </option>
+
+                                   <option value="tfa_five2" class="">
+                                        five
+                                   </option>
+
+                                   <option value="tfa_six2" class="">
+                                        six
+                                   </option>
+
+                                   <option value="tfa_seven2" class="">
+                                        seven
+                                   </option>
+
+                                   <option value="tfa_eight2" class="">
+                                        eight
+                                   </option>
+
+                                   <option value="tfa_nine2" class="">
+                                        nine
+                                   </option>
+
+                                   <option value="tfa_ten2" class="">
+                                        ten
+                                   </option>
+                              </select><br>
+                               <span class="errMsg" id="tfa_Numberofphysicia4-E"></span>
+                         </div>
+                    </div>
+
+                    <fieldset id="tfa_Whatofpatientsha7" class="">
+                         <legend>What % of patients have :</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Diabetes3" class="preField">% Diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Diabetes3" name="tfa_Diabetes3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Diabetes3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Osteoporosis3" class="preField">% Osteoporosis<span class="reqMark">*</span></label><input type="text" id="tfa_Osteoporosis3" name="tfa_Osteoporosis3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Osteoporosis3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Thyroid3" class="preField">% Thyroid<span class="reqMark">*</span></label><input type="text" id="tfa_Thyroid3" name="tfa_Thyroid3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Thyroid3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Other7" class="preField">% Other<span class="reqMark">*</span></label><input type="text" id="tfa_Other7" name="tfa_Other7" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Other7-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Gendertotaling103" class="">
+                         <legend>Gender(totaling 100%)</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Male2" class="preField">% Male<span class="reqMark">*</span></label><input type="text" id="tfa_Male2" name="tfa_Male2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Male2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Female2" class="preField">% Female<span class="reqMark">*</span></label><input type="text" id="tfa_Female2" name="tfa_Female2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Female2-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsar3" class="">
+                         <legend>What % of patients are</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_17andUnder3" class="preField">17 and Under<span class="reqMark">*</span></label><input type="text" id="tfa_17andUnder3" name="tfa_17andUnder3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_17andUnder3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_18343" class="preField">18-34<span class="reqMark">*</span></label><input type="text" id="tfa_18343" name="tfa_18343" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_18343-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_35543" class="preField">35-54<span class="reqMark">*</span></label><input type="text" id="tfa_35543" name="tfa_35543" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_35543-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_55653" class="preField">55-65<span class="reqMark">*</span></label><input type="text" id="tfa_55653" name="tfa_55653" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_55653-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_653" class="preField">65+<span class="reqMark">*</span></label><input type="text" id="tfa_653" name="tfa_653" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_653-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha8" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Type1diabetes2" class="preField">Type 1 diabetes <span class="reqMark">*</span></label><input type="text" id="tfa_Type1diabetes2" name="tfa_Type1diabetes2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type1diabetes2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Type2diabetes2" class="preField">Type 2 diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Type2diabetes2" name="tfa_Type2diabetes2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type2diabetes2-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_5493515311793" class="">
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsre3" class="preField">What % of patients receives regular care from this office after the first visit?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsre3" name="tfa_Whatofpatientsre3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsre3-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha9" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Medicare2" class="preField">% Medicare<span class="reqMark">*</span></label><input type="text" id="tfa_Medicare2" name="tfa_Medicare2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicare2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Medicaid2" class="preField">% Medicaid<span class="reqMark">*</span></label><input type="text" id="tfa_Medicaid2" name="tfa_Medicaid2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicaid2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Privateinsurance2" class="preField">% Private insurance<span class="reqMark">*</span></label><input type="text" id="tfa_Privateinsurance2" name="tfa_Privateinsurance2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Privateinsurance2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Selfpay2" class="preField">% Self pay</label><input type="text" id="tfa_Selfpay2" name="tfa_Selfpay2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Selfpay2-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Ethniccompositio2" class="">
+                         <legend>Ethnic composition:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Hispanic2" class="preField">% Hispanic <span class="reqMark">*</span></label><input type="text" id="tfa_Hispanic2" name="tfa_Hispanic2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Hispanic2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AfricanAmerican2" class="preField">% African American<span class="reqMark">*</span></label><input type="text" id="tfa_AfricanAmerican2" name="tfa_AfricanAmerican2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AfricanAmerican2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AsianAmerican2" class="preField">% Asian American<span class="reqMark">*</span></label><input type="text" id="tfa_AsianAmerican2" name="tfa_AsianAmerican2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AsianAmerican2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Caucasian2" class="preField">% Caucasian<span class="reqMark">*</span></label><input type="text" id="tfa_Caucasian2" name="tfa_Caucasian2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Caucasian2-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_NativeAmerican2" class="preField">% Native American<span class="reqMark">*</span></label><input type="text" id="tfa_NativeAmerican2" name="tfa_NativeAmerican2" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_NativeAmerican2-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_5494234196463" class="">
+                    </fieldset>
+
+                   
+               </div>
+
+               <div class="wfPage" id="wfPgIndex-6">
+                    <h3>Audience data - fifth waiting room</h3>
+
+                    <div class="" id="">
+                         <h3>Please complete the following survey for your fifth waiting room to the best of your knowledge.</h3>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagewaittime3" class="preField">Average wait time</label><input type="text" id="tfa_Averagewaittime3" name="tfa_Averagewaittime3" value="In minutes" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagewaittime3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Averagenumberofp3" class="preField">Average number of patients per week<span class="reqMark">*</span></label><input type="text" id="tfa_Averagenumberofp3" name="tfa_Averagenumberofp3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Averagenumberofp3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco6" class="preField">What % of patients come with someone else(ex. Caregiver or family member)<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco6" name="tfa_Whatofpatientsco6" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco6-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsco7" class="preField">What % of patients comes with more than one caregiver?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsco7" name="tfa_Whatofpatientsco7" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsco7-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Numberofphysicia3" class="preField">Number of physicians at office<span class="reqMark">*</span></label><select id="tfa_Numberofphysicia3" name="tfa_Numberofphysicia3" class="">
+                                   <option value="">
+                                        Please select...
+                                   </option>
+
+                                   <option value="tfa_one9" class="">
+                                        one
+                                   </option>
+
+                                   <option value="tfa_two9" class="">
+                                        two
+                                   </option>
+
+                                   <option value="tfa_three9" class="">
+                                        three
+                                   </option>
+
+                                   <option value="tfa_four9" class="">
+                                        four
+                                   </option>
+
+                                   <option value="tfa_five9" class="">
+                                        five
+                                   </option>
+
+                                   <option value="tfa_six9" class="">
+                                        six
+                                   </option>
+
+                                   <option value="tfa_seven9" class="">
+                                        seven
+                                   </option>
+
+                                   <option value="tfa_eight9" class="">
+                                        eight
+                                   </option>
+
+                                   <option value="tfa_nine9" class="">
+                                        nine
+                                   </option>
+
+                                   <option value="tfa_ten9" class="">
+                                        ten
+                                   </option>
+                              </select><br>
+                               <span class="errMsg" id="tfa_Numberofphysicia3-E"></span>
+                         </div>
+                    </div>
+
+                    <fieldset id="tfa_Whatofpatientsha10" class="">
+                         <legend>What % of patients have :</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Diabetes4" class="preField">% Diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Diabetes4" name="tfa_Diabetes4" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Diabetes4-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Osteoporosis4" class="preField">% Osteoporosis<span class="reqMark">*</span></label><input type="text" id="tfa_Osteoporosis4" name="tfa_Osteoporosis4" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Osteoporosis4-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Thyroid4" class="preField">% Thyroid<span class="reqMark">*</span></label><input type="text" id="tfa_Thyroid4" name="tfa_Thyroid4" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Thyroid4-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Other9" class="preField">% Other<span class="reqMark">*</span></label><input type="text" id="tfa_Other9" name="tfa_Other9" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Other9-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Gendertotaling104" class="">
+                         <legend>Gender(totaling 100%)</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Male3" class="preField">% Male<span class="reqMark">*</span></label><input type="text" id="tfa_Male3" name="tfa_Male3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Male3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Female3" class="preField">% Female<span class="reqMark">*</span></label><input type="text" id="tfa_Female3" name="tfa_Female3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Female3-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsar4" class="">
+                         <legend>What % of patients are</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_17andUnder4" class="preField">17 and Under<span class="reqMark">*</span></label><input type="text" id="tfa_17andUnder4" name="tfa_17andUnder4" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_17andUnder4-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_18344" class="preField">18-34<span class="reqMark">*</span></label><input type="text" id="tfa_18344" name="tfa_18344" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_18344-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_35544" class="preField">35-54<span class="reqMark">*</span></label><input type="text" id="tfa_35544" name="tfa_35544" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_35544-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_55654" class="preField">55-65<span class="reqMark">*</span></label><input type="text" id="tfa_55654" name="tfa_55654" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_55654-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_654" class="preField">65+<span class="reqMark">*</span></label><input type="text" id="tfa_654" name="tfa_654" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_654-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha11" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Type1diabetes3" class="preField">Type 1 diabetes <span class="reqMark">*</span></label><input type="text" id="tfa_Type1diabetes3" name="tfa_Type1diabetes3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type1diabetes3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Type2diabetes3" class="preField">Type 2 diabetes<span class="reqMark">*</span></label><input type="text" id="tfa_Type2diabetes3" name="tfa_Type2diabetes3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Type2diabetes3-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_5495796044268" class="">
+                         <div class="oneField">
+                              <label for="tfa_Whatofpatientsre4" class="preField">What % of patients receives regular care from this office after the first visit?<span class="reqMark">*</span></label><input type="text" id="tfa_Whatofpatientsre4" name="tfa_Whatofpatientsre4" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Whatofpatientsre4-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Whatofpatientsha12" class="">
+                         <legend>What % of patients have:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Medicare3" class="preField">% Medicare<span class="reqMark">*</span></label><input type="text" id="tfa_Medicare3" name="tfa_Medicare3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicare3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Medicaid3" class="preField">% Medicaid<span class="reqMark">*</span></label><input type="text" id="tfa_Medicaid3" name="tfa_Medicaid3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Medicaid3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Privateinsurance3" class="preField">% Private insurance<span class="reqMark">*</span></label><input type="text" id="tfa_Privateinsurance3" name="tfa_Privateinsurance3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Privateinsurance3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Selfpay3" class="preField">% Self pay</label><input type="text" id="tfa_Selfpay3" name="tfa_Selfpay3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Selfpay3-E"></span>
+                         </div>
+                    </fieldset>
+
+                    <fieldset id="tfa_Ethniccompositio3" class="">
+                         <legend>Ethnic composition:</legend> 
+
+                         <div class="oneField">
+                              <label for="tfa_Hispanic3" class="preField">% Hispanic <span class="reqMark">*</span></label><input type="text" id="tfa_Hispanic3" name="tfa_Hispanic3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Hispanic3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AfricanAmerican3" class="preField">% African American<span class="reqMark">*</span></label><input type="text" id="tfa_AfricanAmerican3" name="tfa_AfricanAmerican3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AfricanAmerican3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_AsianAmerican3" class="preField">% Asian American<span class="reqMark">*</span></label><input type="text" id="tfa_AsianAmerican3" name="tfa_AsianAmerican3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_AsianAmerican3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_Caucasian3" class="preField">% Caucasian<span class="reqMark">*</span></label><input type="text" id="tfa_Caucasian3" name="tfa_Caucasian3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_Caucasian3-E"></span>
+                         </div>
+
+                         <div class="oneField">
+                              <label for="tfa_NativeAmerican3" class="preField">% Native American<span class="reqMark">*</span></label><input type="text" id="tfa_NativeAmerican3" name="tfa_NativeAmerican3" value="" size="" class=""><br>
+                               <span class="errMsg" id="tfa_NativeAmerican3-E"></span>
+                         </div>
+                    </fieldset>
+
+                   
+               </div>
+
+       
+
+               <div class="actions">
+                    <input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="882-6b7123960ba9f681db61c3c4722bef8b" name="tfa_dbCounters" id="tfa_dbCounters"><input type="hidden" value="290" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="375414b9c3157279a79e0f3da248b2ad" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="1191597789" name="tfa_dbTimeStarted" id="tfa_dbTimeStarted">
+               </div>
+          </form>
+     </body>
+</html>
+

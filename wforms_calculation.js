@@ -140,6 +140,22 @@ wFORMS.behaviors.calculation.instance.prototype.run = function(event, element) {
 		}
 	}
 } 
+
+/**
+ * Can be used to update a calculated field if the run method is not triggered. 
+ * @param {event} event
+ * @param {domElement} elem
+ */
+wFORMS.behaviors.calculation.instance.prototype.refresh = function(event, element) { 
+	
+	for(var i=0; i<this.calculations.length;i++) {		
+		var calc = this.calculations[i];
+					
+		if(element==calc.field) {
+			this.compute(calc);
+		}
+	}
+} 
  
 wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) {
 	var f = this.target;
@@ -221,7 +237,7 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 	}
 	calculation.field.value = result;
 	
-	// If the calcualted field is also a variable, recursively update dependant calculations
+	// If the calculated field is also a variable, recursively update dependant calculations
 	if(calculation.field.className && (calculation.field.className.indexOf(this.behavior.VARIABLE_SELECTOR_PREFIX)!=-1)) {
 		// TODO: Check for infinite loops?
 		this.run(null,calculation.field);

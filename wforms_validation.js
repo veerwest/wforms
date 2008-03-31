@@ -166,10 +166,10 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  		if(e) {
  			e.preventDefault?e.preventDefault():e.returnValue = false;
  		}
- 		if(this.behavior.onFail) this.behavior.onFail();
+ 		if(this.behavior.onFail) this.behavior.onFail(this);
  		return false;
  	}
- 	if(this.behavior.onPass) this.behavior.onPass();
+ 	if(this.behavior.onPass) this.behavior.onPass(this);
  	return true; 
 }
 /**

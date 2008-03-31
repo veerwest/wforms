@@ -124,16 +124,17 @@ wFORMS.behaviors.repeat = {
 	
 	/**
 	 * Custom function that could be overridden. 
-	 * Evaluates when section is duplicated
+	 * Evaluates after section is duplicated
      * @param	{HTMLElement}	elem	Duplicated section
 	 */
 	onRepeat : function(elem){},
 
 	/**
 	 * Custom function that could be overridden. 
-	 * Evaluates when section is removed
+	 * Evaluates after the section is removed
+	 * @param	{HTMLElement}	elem	a copy of the removed section - detached from the document
 	 */
-	onRemove : function(){},
+	onRemove : function(elem){},
 
 	/**
 	 * Custom function that could be overridden. 
@@ -193,7 +194,10 @@ _b.applyTo = function(f) {
 		}
 	);
 	
-	f = base2.DOM.bind(f);
+	if(!f.hasClass) {
+		f = base2.DOM.bind(f);	
+	}
+	
 	if(f.hasClass(this.CSS_REMOVEABLE)){
 		var m  = this.getMasterSection(f);		
 		var _i = wFORMS.getBehaviorInstance(m, 'repeat');
@@ -360,9 +364,9 @@ _i.prototype.duplicateSection = function(elem){
 _i.prototype.removeSection = function(elem){
 	if(elem){
 		// Removes section
-		elem.parentNode.removeChild(elem);
+		var elem = elem.parentNode.removeChild(elem);
 		// Calls custom function
-		this.behavior.onRemove();
+		this.behavior.onRemove(elem);
 	}
 }
 /**

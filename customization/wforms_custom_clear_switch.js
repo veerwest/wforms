@@ -30,6 +30,47 @@ new function(_) {
 		// run any other existing handler
 		if (_onSwitchOff) _onSwitchOff(element);
 	}
+	
+	if(wFORMS.behaviors['switch'].onSwitchOn)
+		var _onSwitchOn = wFORMS.behaviors['switch'].onSwitchOn;
+		
+	wFORMS.behaviors['switch'].onSwitchOn = function(element) {
+		
+		// Get form element, necessary to retrieve calculation instance.
+		if(element.form) {
+			var f = element.form;
+		} else {
+			var f=element;		
+			while(f && f.tagName!='FORM') {
+				f = f.parentNode;
+			}
+		}
+		
+		if(f) {
+			// If calculation behavior is set, run it to update dependant formulas			
+			var b = wFORMS.getBehaviorInstance(f,"calculation");
+			if(b) {
+				if(element.form) {
+					// Update formula for the switch target.				
+					b.refresh(null,element);	
+				} else {
+					// Update formula for nested elements.
+					var cn = element.getElementsByTagName('*');
+					
+					for(i=0,l=cn.length;i<l;i++) {
+						var n=cn[i];
+						if(n.tagName=='INPUT' || n.tagName=='SELECT' || n.tagName=='TEXTAREA') {
+							b.refresh(null,n);
+						}
+					}
+				}
+			}
+		}	
+		// run any other existing handler
+		if (_onSwitchOn) _onSwitchOn(element);
+	}
+	
+	
 }();
 
 /**
@@ -73,3 +114,19 @@ wFORMS.helpers.clearFieldValues = function(element) {
 		}
 	}		
 }
+
+/**
+ * Can be used to update a calculated field if the run method is not triggered. 
+ * @param {event} event
+ * @param {domElement} elem
+ */
+wFORMS.behaviors.calculation.instance.prototype.refresh = function(event, element) { 
+	
+	for(var i=0; i<this.calculations.length;i++) {		
+		var calc = this.calculations[i];
+					
+		if(element==calc.field) {
+			this.compute(calc);
+		}
+	}
+} 
