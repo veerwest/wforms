@@ -188,7 +188,7 @@ _b.applyTo = function(f) {
 			
 			var _b = new _self.instance(elem);
 			var e = _b.getOrCreateRepeatLink(elem);
-			e.addEventListener('click', function(event) { _b.run(event, e) }, false);
+			e.addEventListener('click', function(event) { _b.run(event, e)}, false);
 			_b.setElementHandled(elem);
 			b.push(_b);							
 		}
@@ -351,6 +351,17 @@ _i.prototype.duplicateSection = function(elem){
 
 	this.updateDuplicatedSection(newElem);	
 	wFORMS.applyBehaviors(newElem);
+	// Associates repeated input sections with thier calculations.
+	if(wFORMS.behaviors.calculation)
+	{
+	_c = wFORMS.behaviors.calculation;
+	inputItem = newElem.querySelector('input');
+		if(inputItem)
+		{
+		if(inputItem.className.search(_c.VARIABLE_SELECTOR_PREFIX) != -1) 
+			_c.applyTo(inputItem.form);
+		}
+	}
 	// Calls custom function
 	this.behavior.onRepeat(newElem);
 	
