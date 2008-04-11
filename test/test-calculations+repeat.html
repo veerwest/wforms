@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>wForms 3.0 - Calculation Behavior Test Suite</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+   
+<script type="text/javascript" src="../lib/base2-p.js"></script>
+<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+<script type="text/javascript" src="../wforms_core.js"></script>
+<script type="text/javascript" src="../wforms_calculation.js"></script>
+<script type="text/javascript" src="../wforms_repeat.js"></script>
+<script type="text/javascript">
+
+	wFORMS.behaviors.calculation.instance.prototype.onApply = function() {
+		bInstance = this;
+		setUpPageStatus = 'complete';
+	} 
+  	
+	function setUpPage() {}
+  
+  	function setUp() {
+		document.getElementById('testInputField').value = '10';	
+		document.getElementById('testTextarea').value = '40';	
+		document.getElementById('totalAB').className = 'formula=A+B';
+		wFORMS.behaviors.calculation.applyTo(document.getElementById('testForm'));	
+	}
+	
+	function tearDown() {}
+	
+	function testApplyTo() {}
+	
+	
+	
+
+</script>
+
+
+</head>
+<body>
+
+	<form id="testForm">
+	<table>
+		<tr class="headerRow">
+		<th>&nbsp;</th>
+		<th>Size&nbsp;
+					</th>
+		<th>Quantity&nbsp;
+		
+					</th>
+		</tr>
+		<tr id="tfa_TShirts" class="repeat alternate-0">
+		<th>T-Shirt:&nbsp;</th>
+		<td><div class="oneField"><select id="tfa_Size" name="tfa_Size" class="calc-SIZE"><option value="">Please select...</option>
+		<option value="tfa_XXL1" class="calcval-14">XXL</option>
+		<option value="tfa_XL" class="calcval-14">XL</option>
+		<option value="tfa_L" class="calcval-12">L</option>
+		<option value="tfa_M" class="calcval-12">M</option>
+		<option value="tfa_S" class="calcval-12">S</option>
+		
+		<option value="tfa_XS" class="calcval-12">XS</option></select><span class="errMsg" id="tfa_Size-E"></span>
+		</div></td>
+		<td><div class="oneField"><input type="text" id="tfa_Quantity1" name="tfa_Quantity1" value="" size="3" class="validate-integer calc-QTY"><span class="errMsg" id="tfa_Quantity1-E"></span>
+		</div></td>
+		<td>&nbsp;
+						<span class="duplicateSpan"><a id="tfa_TShirts-wfDL" class="duplicateLink" href="#">add another t-shirt</a></span>
+		</td>
+		</tr>
+		<tr id="tfa_3152937421805" class="alternate-1">
+		<th>Total:&nbsp;</th>
+		<td></td>
+		<td><div class="oneField"><input type="text" id="tfa_Total1" name="tfa_Total1" value="" size="3" readonly class="formula=SIZE*QTY"><span class="errMsg" id="tfa_Total1-E"></span>
+		</div></td>
+		
+		<td><div id="tfa_3152937742718" class=""></div></td>
+		</tr>
+		</table>
+	
+	
+	</form>
+</body>
+</html>
