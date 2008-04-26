@@ -351,6 +351,12 @@ _i.prototype.duplicateSection = function(elem){
 
 	this.updateDuplicatedSection(newElem);	
 	wFORMS.applyBehaviors(newElem);
+		//Added by dbuschho to fix value of new element not being displayed.
+		newElem.querySelectorAll('input').forEach(function(i){
+			if(i.attributes['value'])
+				i.value = i.attributes['value'].nodeValue;
+			});
+		//
 	// Associates repeated input sections with thier calculations.
 	if(wFORMS.behaviors.calculation)
 	{
