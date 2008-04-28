@@ -1,61 +1,48 @@
-// Localization for wForms v3.0 - a javascript extension to web forms.
-// Turkish - July 19th 2006 - Thanks to AUTHOR_HERE
-
+﻿// Localization for wForms - a javascript extension to web forms.
+// Ukrainian v1.0 - April 16th 2008
+// Translation by Vyacheslav Dzhura <www.dimensionforce.com.ua> (hoaxer@ukr.net)
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
-//
-// See http://formassembly.com/blog/how-to-localize-wforms/
-// Example: 
+
+// Більше про локалізацю тут: http://formassembly.com/blog/how-to-localize-wforms/
+// Цей файл повинен бути підключений *ПІСЛЯ* wforms.js 
+// Приклад: 
 // <head>...
 // <script type="text/javascript" src="wforms.js" ></script>
-// <script type="text/javascript" src="localization-tr.js" ></script>
+// <script type="text/javascript" src="localization-ua.js" ></script>
 // </head>
 
 wFORMS.behaviors.validation.messages = {
-	isRequired 		: "Bu alan zorunludur.",
-	isAlpha 		: "Metin sadece alfabetik karakterleri (a-z, A-Z) kullanmalıdır. Rakamlar kullanılamaz. ",
-	isEmail 		: "Geçerli bir e-mail adresi olarak görünmüyor.",
-	isInteger 		: "Lütfen bir tamsayı giriniz.",
-	isFloat 		: "Lütfen bir sayı giriniz (Ör: 1.9).",
-	isAlphanum 		: "Lütfen sadece alfanümerik karakterler kullanınız (a-z 0-9).	",
-	isDate 			: "Geçerli bir tarih olarak görünmüyor.",
+	isRequired 		: "Це поле обов'язкове для заповнення. ",
+	isAlpha 		: "В цьому полі повинні знаходитись лише літери (а-я, А-Я). Цифри не припустимі. ",
+	isEmail 		: "Невірний формат адреси.",
+	isInteger 		: "Будь-ласка, введіть ціле число.",
+	isFloat 		: "Будь-ласка, введіть дробове число (наприклад, 1.9).",
+	isAlphanum 		: "Будь-ласка, використовуйте лише цифро-буквенні символи [а-я 0-9].",
+	isDate 			: "Невірний формат дати.",
 	isCustom		: "",
-	notification	: "%% hata bulundu. Formunuz henüz gönderilmedi.\nLütfen girdiğiniz bilgiyi kontrol ediniz."
+	notification	: "Знайдено %% помилок! Форма не була відправлена.\nБудь-ласка, перевірте введену інформацію."
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
-	ADD_CAPTION 	: "Bir satır ekle",
-	ADD_TITLE 		: "Önceki alanı veya alan grubunu tekrarlar.",
-	REMOVE_CAPTION 	: "Çıkar",
-	REMOVE_TITLE 	: "Önceki alan veya alan grubunu çıkarır."	
+	ADD_CAPTION 	: "Додати рядок",
+	ADD_TITLE 		: "Скопіює це поле або секцію.",
+	REMOVE_CAPTION 	: "Видалити",
+	REMOVE_TITLE 	: "Видалить це поле або секцію."	
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Sonraki Sayfa',
-	CAPTION_PREVIOUS : 'Önceki Sayfa'
+	CAPTION_NEXT 	 : 'Наступна сторінка',
+	CAPTION_PREVIOUS : 'Попередня сторінка'
 }
 
 
 // Alpha & Alphanumeric Input Validation: 
 wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element, value) {
-	// Basic Latin
-	var reg =  /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// Latin-1
-	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF]+$/;
-	// Latin Extended-A
-	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// See unicode range below for other languages
-	
+	var reg = /^[\u0400-\u04FF]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
 wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(element, value) {
-	// Basic Latin
-	var reg =  /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// Latin-1
-	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
-	// Latin Extended-A
-	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// See unicode range below for other languages
-	
+	var reg = /^[\u0030-\u0039\u0400-\u04FF]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
 
