@@ -339,6 +339,12 @@ _i.prototype.createRemoveLink = function(id){
  * @param	{HTMLElement}	elem	Element to duplicate
  */
 _i.prototype.duplicateSection = function(elem){
+			//Temporary - Generate list of checked values (needed because these values are lost in parent element on repeating)
+			var _inputs = elem.querySelectorAll('input');
+			var inputValues = Array();
+			_inputs.forEach(function(i){if(typeof(i.checked != "undefined")){inputValues.push(i.checked);}});
+			//Temporary
+
 	// Call custom function. By default return true
 	if(!this.behavior.allowRepeat(elem, this)){
 		return false;
@@ -348,7 +354,7 @@ _i.prototype.duplicateSection = function(elem){
 	// Creates clone of the group
 	var newElem = elem.cloneNode(true);	
 	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
-
+		//Problem with non-persistent radio button occurs in one of these two lines (up/down) - dbuschho
 	this.updateDuplicatedSection(newElem);	
 	wFORMS.applyBehaviors(newElem);
 		//Added by dbuschho to fix value of new element not being displayed.
@@ -372,6 +378,10 @@ _i.prototype.duplicateSection = function(elem){
 	this.behavior.onRepeat(newElem);
 	
 	wFORMS.helpers.spotlight(newElem);
+	
+		//Temporary
+		_inputs.forEach(function(i){if(typeof(i.checked != "undefined")){i.checked = inputValues.shift();}});
+		//Temporary
 }
 
 /**
@@ -577,8 +587,7 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 		}
    		if(e.parentNode) e.parentNode.removeChild(e);
    	}
-   	
-	
+   
 }
 
 /**
