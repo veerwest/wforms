@@ -1,0 +1,41 @@
+<html>
+<head>
+<link href="http://app.formassembly.com/wForms/3.0/css/antique/wforms.css" rel="stylesheet" type="text/css"></link>
+
+        <title>Test Bug Report #152</title>
+       	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+       	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+        <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="../lib/base2-p.js"></script>
+		<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+		<script type="text/javascript" src="../wforms_core.js"></script>
+		<script type="text/javascript" src="../wforms_repeat.js"></script>
+		<script type="text/javascript" src="../wforms_hint.js"></script>
+		<script type="text/javascript" src="../wforms_validation.js"></script>
+
+<style>
+	.errorMessage {
+		color:red;
+		background-color:white;
+		padding:5px;
+		border:1px solid #F77;
+		font-family:sans-serif;
+	}
+</style>
+</head>
+
+<body>
+<div class="wForm">
+<div class="codesection" id="code-"></div>
+<form method="post" action="http://app.formassembly.com/responses/processor" id="id2353865" class="labelsLeftAligned">
+
+<div>Selection in first field should remain no matter how many new copies are added. <em>Fails after two new children are made.</em></div><br /><br />
+
+<div class="repeat oneField" id="tfa_Repeatingoptions">
+<label for="tfa_Repeatingoptions" class="preField">Repeating options</label><span class="oneChoice"><input type="radio" value="tfa_one" class="" id="tfa_one" name="tfa_Repeatingoptions"><label for="tfa_one" class="postField">one</label></span><span class="oneChoice"><input type="radio" value="tfa_two" class="" id="tfa_two" name="tfa_Repeatingoptions"><label for="tfa_two" class="postField">two</label></span><span class="oneChoice"><input type="radio" value="tfa_three" class="" id="tfa_three" name="tfa_Repeatingoptions"><label for="tfa_three" class="postField">three</label></span><br><span class="errMsg" id="tfa_Repeatingoptions-E"></span>
+</div>
+</form>
+</div>
+
+</body>
+</html>
