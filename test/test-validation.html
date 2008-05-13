@@ -179,6 +179,11 @@
 			testField.value='test_9999+test@test.test.uk';
 			// Test validation rule
 			assertTrue('test_9999+test@test.test.uk should pass email validation', bInstance.run(null, testForm)); 
+			
+			testField.value='test@abc.e.mail.co.jp';
+			// Test validation rule
+			assertTrue('test@abc.e.mail.co.jp should pass email validation', bInstance.run(null, testForm)); 
+			
 		}
 		
 		function testValidateInteger() {
