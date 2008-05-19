@@ -127,7 +127,9 @@
 	</script>
 	</head>
 	<body class="wForm" style="padding:5px; margin:10px;" >
-        <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
+		<h2>Multi-page test form</h2>
+		
+        <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" style="margin:10em 0 800px 0;">
         	<div class="wfPage" id="wfPgIndex-1">
 	            <div class="oneField" id="testDiv">
 	                <label for="testField" class="preField">Test Field Page 1
@@ -161,9 +163,11 @@
 			<div class="actions">
 				<input type="submit" value="submit" class="primaryAction" id="submitButton" />
 			</div>
+			
+			<a href="#" onclick="testRevealSubmit()">show sumbit button</a>
 		</form>
 		
-		<a href="#" onclick="testRevealSubmit()">click</a>
+		<p>&nbsp;</p>
 
 		
     </body>

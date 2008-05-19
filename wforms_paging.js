@@ -188,7 +188,7 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 	if(isPagingApplied){		
 		p = b.findNextPage(0);
 		b.currentPageIndex = 0;
-		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p));
+		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
 		b.onApply();		
 	}	
 	return b;
@@ -217,6 +217,26 @@ wFORMS.behaviors.paging.getPageIndex = function(elem){
 	}
 
 	return false;
+}
+
+/**
+ * Check if the given element is in the visible page.
+ * @param	{DOMElement}	an element (such as a field to be validated)
+ * @return	{boolean}
+ */
+wFORMS.behaviors.paging.isElementVisible = function(element){	
+	while(element && element.tagName != 'BODY'){
+		if(element.className) {
+			if(element.className.indexOf(this.CSS_CURRENT_PAGE) != -1) {
+				return true;
+			}
+			if(element.className.indexOf(this.CSS_PAGE) != -1 ) {
+				return false;
+			}
+		} 
+		element = element.parentNode;
+	}	
+	return true;
 }
 
 /**
@@ -330,9 +350,16 @@ wFORMS.behaviors.paging.showPage = function(e){
 /**
  * Activates page by index
  * @param	{Integer}	index	
+ * @param	{Boolean}	[optional] scroll to the top of the page (default to true)
  */
-wFORMS.behaviors.paging.instance.prototype.activatePage = function(index){
-
+wFORMS.behaviors.paging.instance.prototype.activatePage = function(index /*, scrollIntoView*/){
+	
+	if(arguments.length>1) {
+		var scrollIntoView = arguments[1];
+	} else {
+		var scrollIntoView = true;
+	}
+	
 	if(index == this.currentPageIndex){
 		return false;
 	}
@@ -356,10 +383,13 @@ wFORMS.behaviors.paging.instance.prototype.activatePage = function(index){
 				_self.currentPageIndex = index;
 				
 				// go to top of the page
-				if(p.scrollIntoView) {
-					p.scrollIntoView();
-				} else {
-					location.hash="#" + wFORMS.behaviors.paging.ID_PAGE_PREFIX + index;
+				if (scrollIntoView) {
+					if (p.scrollIntoView) {
+						p.scrollIntoView();
+					}
+					else {
+						location.hash = "#" + wFORMS.behaviors.paging.ID_PAGE_PREFIX + index;
+					}
 				}
 				
 				// run page change event handlers
@@ -544,6 +574,8 @@ wFORMS.behaviors.paging.instance.prototype.findPreviousPage = function(index){
 
 	return p ? p : false;
 }
+
+
 
 
 

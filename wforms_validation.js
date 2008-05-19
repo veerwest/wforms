@@ -121,7 +121,11 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 		
  		element.querySelectorAll(rule.selector).forEach(function(element) { 
 									
-			// TODO: Check if the element is in a multi-page form
+			// Workaround for apparent bug in querySelectorAll not being limited to descendants of 'element':
+			// See bug #172 - Check if the element is not on the current page of a multi-page form			
+			if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(element)) {
+				return;	
+			}
 			
 			// Do not validate elements that are switched off by the switch behavior
 			if(_self.isSwitchedOff(element))
