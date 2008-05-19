@@ -3,7 +3,7 @@
  See http://www.formassembly.com/wForms
 
  To be used along with wforms-jsonly.css
- This stylesheet and the associated images are Copyright (c) 2007 Veer West LLC (http://www.veerwest.com)	
+ This stylesheet and the associated images are Copyright (c) 2007-2008 Veer West LLC (http://www.veerwest.com)	
  and licensed under the Creative Commons Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/) 
 */
  
@@ -155,7 +155,15 @@
 }
 /* Field with a validation error */
 .wForm form .errFld {							
-	border: 1px solid #F00;
+	border: 1px solid #FBB;
+}
+.wForm form div.errFld {
+	background-color: #FEE;
+	margin: 0 -3px;
+	padding: 0 3px;
+}
+.wForm form span.errFld {
+	background-color: #FEE;	
 }
 /* Styling for message associated with a validation error. */
 .wForm form .errMsg {							
@@ -169,10 +177,12 @@
 .wForm form .field-hint {						
 	display: inline;	
 	color: #333;
+	white-space: normal !important;
 }
 .wForm form .field-hint-inactive {
 	display: inline;	
 	color: #CCC;
+	white-space: normal !important;
 }
 /* Field Hint with focus (displayed as a tooltip)*/
 .wForm .hintsTooltip .field-hint {		

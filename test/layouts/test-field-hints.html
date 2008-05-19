@@ -20,17 +20,31 @@
   	<script type="text/javascript" src="../../lib/base2-p.js"></script>
 	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
 	<script type="text/javascript" src="../../wforms_core.js"></script>
-	<script type="text/javascript" src="../../wforms_paging.js"></script>	
+	<script type="text/javascript" src="../../wforms_hint.js"></script>	
  
 	
 	<script type="text/javascript" src="test-layout.js"></script>
-	<!-- Test workaround for field-hint layout bug with inline sections in Firefox (bug #90) -->
+	
 	<style type="text/css">
-		form .inlineSection, x:-moz-any-link {
-			overflow: inherit !important;
+		.wForm .hintsTooltip .field-hint  {
+			background-image:url(http://app.formassembly.com/images/hint_topborder.gif);
+			background-position:left top;
+			background-repeat:no-repeat;
+			background-color:transparent;
+			margin:2px 0pt 0pt 10px;
+			padding:14px 0pt 0pt;
+			border: none;
 		}
-		.inlineSection:after, x:-moz-any-link{ content: "."; display: block; height: 0; clear: both; visibility:hidden; }
-	</style> 
+			
+		.wForm .hintsTooltip .field-hint div {
+			background-color:#FFFBB8;
+			border-bottom:1px solid #FFC20D;
+			border-left:1px solid #FFC20D;
+			border-right:1px solid #FFC20D;
+			padding:4px;
+		}
+
+	</style>
 </head>
 <body>
 	Test Pages:

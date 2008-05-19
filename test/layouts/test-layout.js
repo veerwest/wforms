@@ -16,7 +16,8 @@ function listAlternateStyleSheets() {
 }
 function listTestPages() {
 	
-	var pages = new Array(	'test-field-hints.html',
+	var pages = new Array(	'test-label-alignment.html',
+							'test-field-hints.html',
 							'test-inline-layout.html',
 							'test-repeat-layout.html',
 							'test-grid-layout.html',

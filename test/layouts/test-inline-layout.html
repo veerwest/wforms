@@ -18,7 +18,7 @@
      
    
    
-	<script type="text/javascript" src="../../js/lib/wforms.js"></script>
+	<script type="text/javascript" src="../../build/wforms.js"></script>
 	<script type="text/javascript" src="test-layout.js"></script>
 	<!-- Test workaround for field-hint layout bug with inline sections in Firefox (bug #90) -->
 	<style type="text/css">
@@ -160,6 +160,20 @@
 							<br/><br/>							
 						</div>
 					</div>
+					
+					
+					<div class="inlineSection">
+						
+						<div class="oneField labelsAbove">
+							<label for="textInput111" class="inlineLabel">(no Prefield) Label: </label>
+							<input type="text" id="textInput111" name="textInput111" size="15" />
+						</div>
+						<div class="oneField labelsAbove">
+							<label for="textInput1112" class="inlineLabel">Label: </label>
+							<input type="text" id="textInput112" name="textInput112" size="15" />
+						</div>
+					</div>
+					
 				</fieldset>
 				
 				<fieldset><legend>Labels on the side</legend>
@@ -303,6 +317,18 @@
 								<label for="multipleChoice12" class="postField">Option C</label>
 							</span>
 							<br/><br/>							
+						</div>
+					</div>
+					
+					<div class="inlineSection">
+						
+						<div class="oneField">
+							<label for="textInput111" class="inlineLabel">(no prefield) Label: </label>
+							<input type="text" id="textInput111" name="textInput111" size="15" />
+						</div>
+						<div class="oneField">
+							<label for="textInput1112" class="inlineLabel">Label: </label>
+							<input type="text" id="textInput112" name="textInput112" size="15" />
 						</div>
 					</div>
 				</fieldset>
