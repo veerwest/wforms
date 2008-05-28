@@ -221,7 +221,6 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 		}
 	} catch(x) {		
 		result = 'error';	
-		console.log(calculation.formula, formula);	
 	} 
 	// Check if validation behavior is available. Then flag field if error.
 	var validationBehavior = wFORMS.getBehaviorInstance(this.target,'validation');	
