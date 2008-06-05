@@ -1,5 +1,5 @@
 // Localization for wForms v3.0 - a javascript extension to web forms.
-// LANGUAGE_HERE - July 19th 2006 - Thanks to AUTHOR_HERE
+// Deutsch - July 19th 2006 - Thanks to Steffen Gransow and Dalila Zazo
 
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 //
@@ -11,26 +11,26 @@
 // </head>
 
 wFORMS.behaviors.validation.messages = {
-	isRequired 		: "Diese Eingabe ist Pflicht.",
-	isAlpha 		: "Geben Sie bitte nur Buchstaben (a-z, A-Z) ein. Zahlen sind nicht erlaubt.",
-	isEmail 		: "Geben Sie bitte eine gltige Emailadresse ein.",
-	isInteger 		: "Geben Sie bitte eine ganze Zahl ein.",
-	isFloat 		: "Geben Sie bitte eine Zahl ein (z.B 1.9).",
-	isAlphanum 		: "Geben Sie bitte alphanumerische Zeichen ein (a-z, 0-9).",
-	isDate 			: "Geben Sie bitte ein gltiges Datum ein.",
+	isRequired 		: "Dies ist ein Pflichtfeld.",
+	isAlpha 		: "Der Text muss aus alphabetischen Zeichen (a-z, A-Z) bestehen. Nummern sind nicht erlaubt.",
+	isEmail 		: "Dies darf nicht als gültige eMailadresse erscheinen.",
+	isInteger 		: "Bitte geben Sie eine Nummer ein (ohne Dezimalstelle).",
+	isFloat 		: "Bitte geben Sie eine Nummer ein (z.B. 1.9).",
+	isAlphanum 		: "Bitte nur alphanumerische Zeichen benutzen (a-z, 0-9).",
+	isDate 			: "Dies darf nicht als gültiges Datum erscheinen.",
 	isCustom		: "",
-	notification	: "%% Fehler entdeckt. Das Formular wurde noch nicht abgeschickt.\nBitte prfen Sie ihre Eingaben."
+	notification	: "%% Fehler entdeckt. Ihr Formular wurde bisher nicht eingereicht.\nBitte prüfen Sie die Eingaben."
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
-	ADD_CAPTION 	: "Zeile hinzufgen",
-	ADD_TITLE 		: "Wiederholt das vorherige Feld oder die Gruppe von Feldern.",
+	ADD_CAPTION 	: "Eine andere Antwort hinzufügen",
+	ADD_TITLE 		: "",
 	REMOVE_CAPTION 	: "Entfernen",
-	REMOVE_TITLE 	: "Entfernen des vorstehenden Felds bzw. der vorstehenden Gruppe von Feldern."	
+	REMOVE_TITLE 	: ""	
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Nchste Seite',
+	CAPTION_NEXT 	 : 'Nächste Seite',
 	CAPTION_PREVIOUS : 'Vorherige Seite'
 }
 
