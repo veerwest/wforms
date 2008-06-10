@@ -1,405 +1,3134 @@
-var base2={name:"base2",version:"1.0 (beta 3)",exports:"Base,Package,Abstract,Module,Enumerable,Map,Collection,RegGrp,"+"Undefined,Null,This,True,False,assignID,detect,global",namespace:"",global:this};new function(_no_shrink_){var _namespace="var global=base2.global;eval('var base2=global.base2;');";eval(_namespace);var Undefined=K(),Null=K(null),True=K(true),False=K(false),This=function(){return this};var _FORMAT=/%([1-9])/g;var _LTRIM=/^\s\s*/;var _RTRIM=/\s\s*$/;var _RESCAPE=/([\/()[\]{}|*+-.,^$?\\])/g;var _BASE=/eval/.test(detect)?/\bbase\b/:/.*/;var _HIDDEN=["constructor","toString","valueOf"];var _MSIE_NATIVE_FUNCTION=detect("(jscript)")?new RegExp("^"+rescape(isNaN).replace(/isNaN/,"\\w+")+"$"):{test:False};var _counter=1;var _slice=Array.prototype.slice;_Function_forEach();function assignID(object){if(!object.base2ID)object.base2ID="b2_"+_counter++;return object.base2ID;};var _subclass=function(_instance,_static){base2.__prototyping=this.prototype;var _prototype=new this;if(_instance)extend(_prototype,_instance);delete base2.__prototyping;var _constructor=_prototype.constructor;function _class(){if(!base2.__prototyping){if(this.constructor==arguments.callee||this.__constructing){this.__constructing=true;_constructor.apply(this,arguments);delete this.__constructing;}else{return extend(arguments[0],_prototype);}}
-return this;};_prototype.constructor=_class;for(var i in Base)_class[i]=this[i];_class.ancestor=this;_class.base=Undefined;if(_static)extend(_class,_static);_class.prototype=_prototype;if(_class.init)_class.init();;;;_class.toString=K(String(_constructor));;;;_class["#implements"]=[];;;;_class["#implemented_by"]=[];return _class;};var Base=_subclass.call(Object,{constructor:function(){if(arguments.length>0){this.extend(arguments[0]);}},base:function(){},extend:delegate(extend)},Base={ancestorOf:function(klass){return _ancestorOf(this,klass);},extend:_subclass,forEach:function(object,block,context){_Function_forEach(this,object,block,context);},implement:function(source){if(typeof source=="function"){;;;if(_ancestorOf(Base,source)){;;;this["#implements"].push(source);;;;source["#implemented_by"].push(this);;;;}
-source=source.prototype;}
-extend(this.prototype,source);return this;}});var Package=Base.extend({constructor:function(_private,_public){this.extend(_public);if(this.init)this.init();if(this.name!="base2"){if(!this.parent)this.parent=base2;this.parent.addName(this.name,this);this.namespace=format("var %1=%2;",this.name,String2.slice(this,1,-1));}
-if(_private){_private.imports=Array2.reduce(csv(this.imports),function(namespace,name){eval(format("var ns=(base2.%1||JavaScript.%1)",name));;;;assert(ns,format("Package not found: '%1'.",name),ReferenceError);return namespace+=ns.namespace;},_namespace+base2.namespace+JavaScript.namespace)+lang.namespace;_private.exports=Array2.reduce(csv(this.exports),function(namespace,name){var fullName=this.name+"."+name;this.namespace+="var "+name+"="+fullName+";";return namespace+="if(!"+fullName+")"+fullName+"="+name+";";},"",this);}},exports:"",imports:"",name:"",namespace:"",parent:null,addName:function(name,value){if(!this[name]){this[name]=value;this.exports+=","+name;this.namespace+=format("var %1=%2.%1;",name,this.name);}},addPackage:function(name){this.addName(name,new Package(null,{name:name,parent:this}));},toString:function(){return format("[%1]",this.parent?String2.slice(this.parent,1,-1)+"."+this.name:this.name);}});var Abstract=Base.extend({constructor:function(){throw new TypeError("Abstract class cannot be instantiated.");}});var _moduleCount=0;var Module=Abstract.extend(null,{namespace:"",extend:function(_interface,_static){var module=this.base();var index=_moduleCount++;module.namespace="";module.partial=this.partial;module.toString=function(hint){return hint=="index"?index:"[module]";};Module[index]=module;module.implement(this);if(_interface)module.implement(_interface);if(_static){extend(module,_static);if(module.init)module.init();}
-return module;},forEach:function(block,context){_Function_forEach(Module,this.prototype,function(method,name){if(typeOf(method)=="function"){block.call(context,this[name],name,this);}},this);},implement:function(_interface){var module=this;var index=module.toString("index");if(typeof _interface=="function"){if(!_ancestorOf(_interface,module)){this.base(_interface);}
-if(_ancestorOf(Module,_interface)){for(var name in _interface){if(module[name]===undefined){var property=_interface[name];if(typeof property=="function"&&property.call&&_interface.prototype[name]){property=_staticModuleMethod(_interface,name);}
-module[name]=property;}}
-module.namespace+=_interface.namespace.replace(/\b\d+\b/g,index);}}else{extend(module,_interface);_extendModule(module,_interface,index);}
-return module;},partial:function(){var module=Module.extend();var index=module.toString("index");module.namespace=this.namespace.replace(/(\w+)=b[^\)]+\)/g,"$1=base2.Module["+index+"].$1");this.forEach(function(method,name){module[name]=partial(bind(method,module));});return module;}});function _extendModule(module,_interface,index){var proto=module.prototype;for(var name in _interface){var property=_interface[name],namespace="";if(name.charAt(0)=="@"){if(detect(name.slice(1)))_extendModule(module,property,index);}else if(!proto[name]){if(name==name.toUpperCase()){namespace="var "+name+"=base2.Module["+index+"]."+name+";";}else if(typeof property=="function"&&property.call){namespace="var "+name+"=base2.lang.bind('"+name+"',base2.Module["+index+"]);";proto[name]=_moduleMethod(module,name);;;;proto[name]._module=module;}
-if(module.namespace.indexOf(namespace)==-1){module.namespace+=namespace;}}}};function _staticModuleMethod(module,name){return function _staticModuleMethod(){return module[name].apply(this,arguments);};};function _moduleMethod(module,name){return function _moduleMethod(){var args=_slice.call(arguments);args.unshift(this);return module[name].apply(this,args);};};var Enumerable=Module.extend({every:function(object,test,context){var result=true;try{forEach(object,function(value,key){result=test.call(context,value,key,object);if(!result)throw StopIteration;});}catch(error){if(error!=StopIteration)throw error;}
-return!!result;},filter:function(object,test,context){var i=0;return this.reduce(object,function(result,value,key){if(test.call(context,value,key,object)){result[i++]=value;}
-return result;},[]);},invoke:function(object,method){var args=_slice.call(arguments,2);return this.map(object,(typeof method=="function")?function(item){return item==null?undefined:method.apply(item,args);}:function(item){return item==null?undefined:item[method].apply(item,args);});},map:function(object,block,context){var result=[],i=0;forEach(object,function(value,key){result[i++]=block.call(context,value,key,object);});return result;},pluck:function(object,key){return this.map(object,function(item){return item==null?undefined:item[key];});},reduce:function(object,block,result,context){var initialised=arguments.length>2;forEach(object,function(value,key){if(initialised){result=block.call(context,result,value,key,object);}else{result=value;initialised=true;}});return result;},some:function(object,test,context){return!this.every(object,not(test),context);}});var _HASH="#";var Map=Base.extend({constructor:function(values){if(values)this.merge(values);},clear:function(){for(var key in this)if(key.charAt(0)==_HASH){delete this[key];}},copy:delegate(copy),forEach:function(block,context){for(var key in this)if(key.charAt(0)==_HASH){block.call(context,this[key],key.slice(1),this);}},get:function(key){return this[_HASH+key];},getKeys:function(){return this.map(II);},getValues:function(){return this.map(I);},has:function(key){return _HASH+key in this;},merge:function(values){var put=flip(this.put);forEach(arguments,function(values){forEach(values,put,this);},this);return this;},put:function(key,value){if(arguments.length==1)value=key;this[_HASH+key]=value;},remove:function(key){delete this[_HASH+key];},size:function(){var size=0;for(var key in this)if(key.charAt(0)==_HASH)size++;return size;},union:function(values){return this.merge.apply(this.copy(),arguments);}});Map.implement(Enumerable);var _KEYS="~";var Collection=Map.extend({constructor:function(values){this[_KEYS]=new Array2;this.base(values);},add:function(key,item){assert(!this.has(key),"Duplicate key '"+key+"'.");this.put.apply(this,arguments);},clear:function(){this.base();this[_KEYS].length=0;},copy:function(){var copy=this.base();copy[_KEYS]=this[_KEYS].copy();return copy;},forEach:function(block,context){var keys=this[_KEYS];var length=keys.length;for(var i=0;i<length;i++){block.call(context,this[_HASH+keys[i]],keys[i],this);}},getAt:function(index){if(index<0)index+=this[_KEYS].length;var key=this[_KEYS][index];return(key===undefined)?undefined:this[_HASH+key];},getKeys:function(){return this[_KEYS].concat();},indexOf:function(key){return this[_KEYS].indexOf(String(key));},insertAt:function(index,key,item){assert(Math.abs(index)<this[_KEYS].length,"Index out of bounds.");assert(!this.has(key),"Duplicate key '"+key+"'.");this[_KEYS].insertAt(index,String(key));this[_HASH+key]==null;this.put.apply(this,_slice.call(arguments,1));},item:function(keyOrIndex){return this[typeof keyOrIndex=="number"?"getAt":"get"](keyOrIndex);},put:function(key,item){if(arguments.length==1)item=key;if(!this.has(key)){this[_KEYS].push(String(key));}
-var klass=this.constructor;if(klass.Item&&!instanceOf(item,klass.Item)){item=klass.create.apply(klass,arguments);}
-this[_HASH+key]=item;},putAt:function(index,item){assert(Math.abs(index)<this[_KEYS].length,"Index out of bounds.");arguments[0]=this[_KEYS].item(index);this.put.apply(this,arguments);},remove:function(key){if(this.has(key)){this[_KEYS].remove(String(key));delete this[_HASH+key];}},removeAt:function(index){var key=this[_KEYS].removeAt(index);delete this[_HASH+key];},reverse:function(){this[_KEYS].reverse();return this;},size:function(){return this[_KEYS].length;},sort:function(compare){if(compare){var self=this;this[_KEYS].sort(function(key1,key2){return compare(self[_HASH+key1],self[_HASH+key2],key1,key2);});}else this[_KEYS].sort();return this;},toString:function(){return"("+String(this[_KEYS])+")";}},{Item:null,create:function(key,item){return this.Item?new this.Item(key,item):item;},extend:function(_instance,_static){var klass=this.base(_instance);klass.create=this.create;if(_static)extend(klass,_static);if(!klass.Item){klass.Item=this.Item;}else if(typeof klass.Item!="function"){klass.Item=(this.Item||Base).extend(klass.Item);}
-if(klass.init)klass.init();return klass;}});var _RG_BACK_REF=/\\(\d+)/g,_RG_ESCAPE_CHARS=/\\./g,_RG_ESCAPE_BRACKETS=/\(\?[:=!]|\[[^\]]+\]/g,_RG_BRACKETS=/\(/g,_RG_LOOKUP=/\$(\d+)/,_RG_LOOKUP_SIMPLE=/^\$\d+$/;var RegGrp=Collection.extend({constructor:function(values,ignoreCase){this.base(values);this.ignoreCase=!!ignoreCase;},ignoreCase:false,exec:function(string,override){string+="";var items=this,keys=this[_KEYS];if(!keys.length)return string;if(override==RegGrp.IGNORE)override=0;return string.replace(new RegExp(this,this.ignoreCase?"gi":"g"),function(match){var item,offset=1,i=0;while((item=items[_HASH+keys[i++]])){var next=offset+item.length+1;if(arguments[offset]){var replacement=override==null?item.replacement:override;switch(typeof replacement){case"function":return replacement.apply(items,_slice.call(arguments,offset,next));case"number":return arguments[offset+replacement];default:return replacement;}}
-offset=next;}
-return match;});},insertAt:function(index,expression,replacement){if(instanceOf(expression,RegExp)){arguments[1]=expression.source;}
-return base(this,arguments);},test:function(string){return this.exec(string)!=string;},toString:function(){var offset=1;return"("+this.map(function(item){var expression=(item+"").replace(_RG_BACK_REF,function(match,index){return"\\"+(offset+Number(index));});offset+=item.length+1;return expression;}).join(")|(")+")";}},{IGNORE:"$0",init:function(){forEach("add,get,has,put,remove".split(","),function(name){_override(this,name,function(expression){if(instanceOf(expression,RegExp)){arguments[0]=expression.source;}
-return base(this,arguments);});},this.prototype);},Item:{constructor:function(expression,replacement){if(replacement==null)replacement=RegGrp.IGNORE;else if(typeof replacement!="function")replacement=String(replacement);if(typeof replacement=="string"&&_RG_LOOKUP.test(replacement)){if(_RG_LOOKUP_SIMPLE.test(replacement)){replacement=parseInt(replacement.slice(1));}else{var Q='"';replacement=replacement.replace(/\\/g,"\\\\").replace(/"/g,"\\x22").replace(/\n/g,"\\n").replace(/\r/g,"\\r").replace(/\$(\d+)/g,Q+"+(arguments[$1]||"+Q+Q+")+"+Q).replace(/(['"])\1\+(.*)\+\1\1$/,"$1");replacement=new Function("return "+Q+replacement+Q);}}
-this.length=RegGrp.count(expression);this.replacement=replacement;this.toString=K(expression+"");},length:0,replacement:""},count:function(expression){expression=(expression+"").replace(_RG_ESCAPE_CHARS,"").replace(_RG_ESCAPE_BRACKETS,"");return match(expression,_RG_BRACKETS).length;}});var lang={name:"lang",version:base2.version,exports:"assert,assertArity,assertType,base,bind,copy,extend,forEach,format,instanceOf,match,rescape,trim,typeOf",namespace:""};function assert(condition,message,ErrorClass){if(!condition){throw new(ErrorClass||Error)(message||"Assertion failed.");}};function assertArity(args,arity,message){if(arity==null)arity=args.callee.length;if(args.length<arity){throw new SyntaxError(message||"Not enough arguments.");}};function assertType(object,type,message){if(type&&(typeof type=="function"?!instanceOf(object,type):typeOf(object)!=type)){throw new TypeError(message||"Invalid type.");}};function copy(object){var fn=function(){};fn.prototype=object;return new fn;};function base(object,args){return object.base.apply(object,args);};function extend(object,source){if(object&&source){if(arguments.length>2){var key=source;source={};source[key]=arguments[2];}
-var proto=(typeof source=="function"?Function:Object).prototype;if(base2.__prototyping){var i=_HIDDEN.length,key;while((key=_HIDDEN[--i])){var value=source[key];if(value!=proto[key]){if(_BASE.test(value)){_override(object,key,value)}else{object[key]=value;}}}}
-for(key in source){if(proto[key]===undefined){var value=source[key];if(key.charAt(0)=="@"){if(detect(key.slice(1)))extend(object,value);continue;}
-var ancestor=object[key];if(ancestor&&typeof value=="function"){if(value!=ancestor){if(_BASE.test(value)){_override(object,key,value);}else{value.ancestor=ancestor;object[key]=value;}}}else{object[key]=value;}}}}
-return object;};function _ancestorOf(ancestor,fn){while(fn){if(!fn.ancestor)return false;fn=fn.ancestor;if(fn==ancestor)return true;}
-return false;};function _override(object,name,method){var ancestor=object[name];var superObject=base2.__prototyping;if(superObject&&ancestor!=superObject[name])superObject=null;function _base(){var previous=this.base;this.base=superObject?superObject[name]:ancestor;var returnValue=method.apply(this,arguments);this.base=previous;return returnValue;};_base.method=method;_base.ancestor=ancestor;object[name]=_base;;;;_base.toString=K(method+"");};if(typeof StopIteration=="undefined"){StopIteration=new Error("StopIteration");}
-function forEach(object,block,context,fn){if(object==null)return;if(!fn){if(typeof object=="function"&&object.call){fn=Function;}else if(typeof object.forEach=="function"&&object.forEach!=arguments.callee){object.forEach(block,context);return;}else if(typeof object.length=="number"){_Array_forEach(object,block,context);return;}}
-_Function_forEach(fn||Object,object,block,context);};forEach.csv=function(string,block,context){forEach(csv(string),block,context);};forEach.detect=function(object,block,context){forEach(object,function(value,key){if(key.charAt(0)=="@"){if(detect(key.slice(1)))forEach(value,arguments.callee);}else block.call(context,value,key,object);});};function _Array_forEach(array,block,context){if(array==null)array=global;var length=array.length||0,i;if(typeof array=="string"){for(i=0;i<length;i++){block.call(context,array.charAt(i),i,array);}}else{for(i=0;i<length;i++){if(i in array)
-block.call(context,array[i],i,array);}}};function _Function_forEach(fn,object,block,context){var Temp=function(){this.i=1};Temp.prototype={i:1};var count=0;for(var i in new Temp)count++;_Function_forEach=(count>1)?function(fn,object,block,context){var processed={};for(var key in object){if(!processed[key]&&fn.prototype[key]===undefined){processed[key]=true;block.call(context,object[key],key,object);}}}:function(fn,object,block,context){for(var key in object){if(fn.prototype[key]===undefined){block.call(context,object[key],key,object);}}};_Function_forEach(fn,object,block,context);};function instanceOf(object,klass){if(typeof klass!="function"){throw new TypeError("Invalid 'instanceOf' operand.");}
-if(object==null)return false;if(object instanceof klass)return true;if(Base.ancestorOf==klass.ancestorOf)return false;if(Base.ancestorOf==object.constructor.ancestorOf)return klass==Object;switch(klass){case Array:return!!(typeof object=="object"&&object.join&&object.splice);case Function:return typeOf(object)=="function";case RegExp:return typeof object.constructor.$1=="string";case Date:return!!object.getTimezoneOffset;case String:case Number:case Boolean:return typeOf(object)==typeof klass.prototype.valueOf();case Object:return true;}
-return false;};function typeOf(object){var type=typeof object;switch(type){case"object":return object==null?"null":typeof object.constructor=="undefined"?_MSIE_NATIVE_FUNCTION.test(object)?"function":type:typeof object.constructor.prototype.valueOf();case"function":return typeof object.call=="function"?type:"object";default:return type;}};var JavaScript={name:"JavaScript",version:base2.version,exports:"Array2,Date2,Function2,String2",namespace:"",bind:function(host){forEach.csv(this.exports,function(name2){var name=name2.slice(0,-1);extend(host[name],this[name2]);this[name2](host[name].prototype);},this);return this;}};function _createObject2(Native,constructor,generics,extensions){var INative=Module.extend();var index=INative.toString("index");forEach.csv(generics,function(name){INative[name]=unbind(Native.prototype[name]);INative.namespace+=format("var %1=base2.Module[%2].%1;",name,index);});forEach(_slice.call(arguments,3),INative.implement,INative);var Native2=function(){return INative(this.constructor==INative?constructor.apply(null,arguments):arguments[0]);};Native2.prototype=INative.prototype;for(var name in INative){if(name!="prototype"&&Native[name]){INative[name]=Native[name];delete INative.prototype[name];}
-Native2[name]=INative[name];}
-Native2.ancestor=Object;delete Native2.extend;Native2.namespace=Native2.namespace.replace(/(var (\w+)=)[^,;]+,([^\)]+)\)/g,"$1$3.$2");return Native2;};if((new Date).getYear()>1900){Date.prototype.getYear=function(){return this.getFullYear()-1900;};Date.prototype.setYear=function(year){return this.setFullYear(year+1900);};}
-Function.prototype.prototype={};if("".replace(/^/,K("$$"))=="$"){extend(String.prototype,"replace",function(expression,replacement){if(typeof replacement=="function"){var fn=replacement;replacement=function(){return String(fn.apply(null,arguments)).split("$").join("$$");};}
-return this.base(expression,replacement);});}
-var Array2=_createObject2(Array,Array,"concat,join,pop,push,reverse,shift,slice,sort,splice,unshift",Enumerable,{combine:function(keys,values){if(!values)values=keys;return Array2.reduce(keys,function(hash,key,index){hash[key]=values[index];return hash;},{});},contains:function(array,item){return Array2.indexOf(array,item)!=-1;},copy:function(array){var copy=_slice.call(array);if(!copy.swap)Array2(copy);return copy;},flatten:function(array){var length=0;return Array2.reduce(array,function(result,item){if(Array2.like(item)){Array2.reduce(item,arguments.callee,result);}else{result[length++]=item;}
-return result;},[]);},forEach:_Array_forEach,indexOf:function(array,item,fromIndex){var length=array.length;if(fromIndex==null){fromIndex=0;}else if(fromIndex<0){fromIndex=Math.max(0,length+fromIndex);}
-for(var i=fromIndex;i<length;i++){if(array[i]===item)return i;}
-return-1;},insertAt:function(array,index,item){Array2.splice(array,index,0,item);return item;},item:function(array,index){if(index<0)index+=array.length;return array[index];},lastIndexOf:function(array,item,fromIndex){var length=array.length;if(fromIndex==null){fromIndex=length-1;}else if(fromIndex<0){fromIndex=Math.max(0,length+fromIndex);}
-for(var i=fromIndex;i>=0;i--){if(array[i]===item)return i;}
-return-1;},map:function(array,block,context){var result=[];Array2.forEach(array,function(item,index){result[index]=block.call(context,item,index,array);});return result;},remove:function(array,item){var index=Array2.indexOf(array,item);if(index!=-1)Array2.removeAt(array,index);return item;},removeAt:function(array,index){return Array2.splice(array,index,1);},swap:function(array,index1,index2){if(index1<0)index1+=array.length;if(index2<0)index2+=array.length;var temp=array[index1];array[index1]=array[index2];array[index2]=temp;return array;}});Array2.reduce=Enumerable.reduce;Array2.like=function(object){return!!(object&&typeof object=="object"&&typeof object.length=="number");};var _DATE_PATTERN=/^((-\d+|\d{4,})(-(\d{2})(-(\d{2}))?)?)?T((\d{2})(:(\d{2})(:(\d{2})(\.(\d{1,3})(\d)?\d*)?)?)?)?(([+-])(\d{2})(:(\d{2}))?|Z)?$/;var _DATE_PARTS={FullYear:2,Month:4,Date:6,Hours:8,Minutes:10,Seconds:12,Milliseconds:14};var _TIMEZONE_PARTS={Hectomicroseconds:15,UTC:16,Sign:17,Hours:18,Minutes:20};var _TRIM_ZEROES=/(((00)?:0+)?:0+)?\.0+$/;var _TRIM_TIMEZONE=/(T[0-9:.]+)$/;var Date2=_createObject2(Date,function(yy,mm,dd,h,m,s,ms){switch(arguments.length){case 0:return new Date;case 1:return typeof yy=="number"?new Date(yy):Date2.parse(yy);default:return new Date(yy,mm,arguments.length==2?1:dd,h||0,m||0,s||0,ms||0);}},"",{toISOString:function(date){var string="####-##-##T##:##:##.###";for(var part in _DATE_PARTS){string=string.replace(/#+/,function(digits){var value=date["getUTC"+part]();if(part=="Month")value++;return("000"+value).slice(-digits.length);});}
-return string.replace(_TRIM_ZEROES,"").replace(_TRIM_TIMEZONE,"$1Z");}});delete Date2.forEach;Date2.now=function(){return(new Date).valueOf();};Date2.parse=function(string,defaultDate){if(arguments.length>1){assertType(defaultDate,"number","default date should be of type 'number'.")}
-var parts=match(string,_DATE_PATTERN);if(parts.length){if(parts[_DATE_PARTS.Month])parts[_DATE_PARTS.Month]--;if(parts[_TIMEZONE_PARTS.Hectomicroseconds]>=5)parts[_DATE_PARTS.Milliseconds]++;var date=new Date(defaultDate||0);var prefix=parts[_TIMEZONE_PARTS.UTC]||parts[_TIMEZONE_PARTS.Hours]?"UTC":"";for(var part in _DATE_PARTS){var value=parts[_DATE_PARTS[part]];if(!value)continue;date["set"+prefix+part](value);if(date["get"+prefix+part]()!=parts[_DATE_PARTS[part]]){return NaN;}}
-if(parts[_TIMEZONE_PARTS.Hours]){var hours=Number(parts[_TIMEZONE_PARTS.Sign]+parts[_TIMEZONE_PARTS.Hours]);var minutes=Number(parts[_TIMEZONE_PARTS.Sign]+(parts[_TIMEZONE_PARTS.Minutes]||0));date.setUTCMinutes(date.getUTCMinutes()+(hours*60)+minutes);}
-return date.valueOf();}else{return Date.parse(string);}};var String2=_createObject2(String,function(string){return new String(arguments.length==0?"":string);},"charAt,charCodeAt,concat,indexOf,lastIndexOf,match,replace,search,slice,split,substr,substring,toLowerCase,toUpperCase",{csv:csv,format:format,rescape:rescape,trim:trim});delete String2.forEach;function trim(string){return String(string).replace(_LTRIM,"").replace(_RTRIM,"");};function csv(string){return string?String(string).split(/\s*,\s*/):[];};function format(string){var args=arguments;var pattern=new RegExp("%([1-"+(arguments.length-1)+"])","g");return String(string).replace(pattern,function(match,index){return args[index];});};function match(string,expression){return String(string).match(expression)||[];};function rescape(string){return String(string).replace(_RESCAPE,"\\$1");};var Function2=_createObject2(Function,Function,"",{I:I,II:II,K:K,bind:bind,compose:compose,delegate:delegate,flip:flip,not:not,partial:partial,unbind:unbind,unshift:unshift});Function2.apply=function(fn,context,args){return fn.apply(context,args);};Function2.call=function(fn,context){return fn.apply(context,_slice.call(arguments,2));};Function2.namespace+="var apply=base2.JavaScript.Function2.apply,call=base2.JavaScript.Function2.call;";function I(i){return i;};function II(i,ii){return ii;};function K(k){return function(){return k;};};function bind(fn,context){var args=_slice.call(arguments,2);var lateBound=typeof fn!="function";return args.length==0?function(){return(lateBound?context[fn]:fn).apply(context,arguments);}:function(){return(lateBound?context[fn]:fn).apply(context,args.concat.apply(args,arguments));};};function compose(){var fns=_slice.call(arguments);return function(){var i=fns.length,result=fns[--i].apply(this,arguments);while(i--)result=fns[i].call(this,result);return result;};};function delegate(fn,context){return function(){var args=_slice.call(arguments);args.unshift(this);return fn.apply(context,args);};};function flip(fn){return function(){return fn.apply(this,Array2.swap(arguments,0,1));};};function not(fn){return function(){return!fn.apply(this,arguments);};};function partial(fn){var args=_slice.call(arguments,1);return function(){var specialised=args.concat(),i=0,j=0;while(i<args.length&&j<arguments.length){if(specialised[i]===undefined)specialised[i]=arguments[j++];i++;}
-while(j<arguments.length){specialised[i++]=arguments[j++];}
-if(Array2.contains(specialised,undefined)){specialised.unshift(fn);return partial.apply(null,specialised);}
-return fn.apply(this,specialised);};};function unbind(fn){return function(context){return fn.apply(context,_slice.call(arguments,1));};};function unshift(fn){var args=_slice.call(arguments,1);return function(){return fn.apply(this,args.concat.apply(args,arguments));};};function detect(_no_shrink_){var jscript=NaN;var java=global.java?true:false;var _lookup={};if(global.navigator){var MSIE=/MSIE[\d.]+/g;_lookup.document=document;var element=_lookup.element=document.createElement("span");var userAgent=navigator.userAgent.replace(/([a-z])[\s\/](\d)/gi,"$1$2");if(!jscript)userAgent=userAgent.replace(MSIE,"");if(MSIE.test(userAgent))userAgent=userAgent.match(MSIE)[0]+" "+userAgent.replace(MSIE,"");base2.userAgent=navigator.platform+" "+userAgent.replace(/like \w+/gi,"");java&=navigator.javaEnabled();}
-var _cache={};detect=function(expression){if(_cache[expression]==null){var returnValue=false,test=expression;var not=test.charAt(0)=="!";if(not)test=test.slice(1);if(test.charAt(0)=="("){if(/^\((element|document)\.\w+\)$/.test(test)){test=test.slice(1,-1).split(".");returnValue=!!_lookup[test[0]][test[1]];}else{try{eval("var _returnValue=!!"+test);returnValue=_returnValue;}catch(x){}}}else{returnValue=new RegExp("("+test+")","i").test(base2.userAgent);}
-_cache[expression]=!!(not^returnValue);}
-return _cache[expression];};return detect(arguments[0]);};base2=global.base2=new Package(this,base2);var exports=this.exports;lang=new Package(this,lang);exports+=this.exports;JavaScript=new Package(this,JavaScript);eval(exports+this.exports);lang.base=base;lang.extend=extend;};new function(_no_shrink_){var DOM=new base2.Package(this,{name:"DOM",version:"1.0 (beta 3)",imports:"Function2",exports:"Interface,Binding,Node,Document,Element,AbstractView,HTMLDocument,HTMLElement,"+"Selector,Traversal,CSSParser,XPathParser,NodeSelector,DocumentSelector,ElementSelector,"+"StaticNodeList,Event,EventTarget,DocumentEvent,ViewCSS,CSSStyleDeclaration,ClassList",bind:function(node){if(node&&node.nodeType){var base2ID=assignID(node);if(!DOM.bind[base2ID]){switch(node.nodeType){case 1:if(typeof node.className=="string"){(HTMLElement.bindings[node.tagName]||HTMLElement).bind(node);}else{Element.bind(node);}
-break;case 9:if(node.writeln){HTMLDocument.bind(node);}else{Document.bind(node);}
-break;default:Node.bind(node);}
-DOM.bind[base2ID]=true;}}
-return node;},"@MSIE5.+win":{bind:function(node){if(node&&node.writeln){node.nodeType=9;}
-return this.base(node);}}});eval(this.imports);var _MSIE=detect("MSIE");var _MSIE5=detect("MSIE5");var Interface=Module.extend(null,{forEach:function(block,context){forEach(this,function(method,name){if(typeOf(method)=="function"&&(this.prototype[name]||method._delegate)){block.call(context,method,name,this);}},this,Module);},implement:function(_interface){if(typeof _interface=="object"){_extendModule(this,_interface);}else if(Interface.ancestorOf(_interface)){for(var name in _interface){if(_interface[name]&&_interface[name]._delegate){this[name]=bind(name,_interface);this[name]._delegate=name;}}}
-return this.base(_interface);}});function _extendModule(module,_interface){for(var name in _interface){var property=_interface[name];if(name.charAt(0)=="@"){_extendModule(module,property);}else if(!module[name]&&typeof property=="function"&&property.call){var fn=_createDelegate(name,property.length);fn._delegate=name;module[name]=fn;module.namespace+="var "+name+"=base2.lang.bind('"+name+"',base2.Module["+module.toString("index")+"]);";}}};var _createDelegate=_MSIE?function(name,length){var FN="function _staticModuleMethod(%2){%3.base=%3.%1.ancestor;var m=%3.base?'base':'%1';return %3[m](%4)}";var args="abcdefghij".slice(-length).split("");eval(format(FN,name,args,args[0],args.slice(1)));return _staticModuleMethod;}:function(name){return function _staticModuleMethod(object){object.base=object[name].ancestor;var method=object.base?'base':name;return object[method].apply(object,Array2.slice(arguments,1));};};var Binding=Interface.extend(null,{bind:function(object){return extend(object,this.prototype);}});var Node=Binding.extend({"@!(element.compareDocumentPosition)":{compareDocumentPosition:function(node,other){if(Traversal.contains(node,other)){return 4|16;}else if(Traversal.contains(other,node)){return 2|8;}
-var nodeIndex=_getSourceIndex(node);var otherIndex=_getSourceIndex(other);if(nodeIndex<otherIndex){return 4;}else if(nodeIndex>otherIndex){return 2;}
-return 0;}}});var _getSourceIndex=document.documentElement.sourceIndex?function(node){return node.sourceIndex;}:function(node){var key=0;while(node){key=Traversal.getNodeIndex(node)+"."+key;node=node.parentNode;}
-return key;};var Document=Node.extend(null,{bind:function(document){extend(document,"createElement",function(tagName){return DOM.bind(this.base(tagName));});AbstractView.bind(document.defaultView);if(document!=window.document)
-new DOMContentLoadedEvent(document);return this.base(document);},"@!(document.defaultView)":{bind:function(document){document.defaultView=Traversal.getDefaultView(document);return this.base(document);}}});var _EVALUATED=/^(href|src)$/;var _ATTRIBUTES={"class":"className","for":"htmlFor"};var Element=Node.extend({"@^Win.+MSIE[5-7]":{getAttribute:function(element,name){if(element.className===undefined){return this.base(element,name);}
-var attribute=_getAttributeNode(element,name);if(attribute&&(attribute.specified||name=="value")){if(_EVALUATED.test(name)){return this.base(element,name,2);}else if(name=="style"){return element.style.cssText;}else{return attribute.nodeValue;}}else if(name=="type"&&element.nodeName=="INPUT"){var outerHTML=element.outerHTML;with(outerHTML)outerHTML=slice(0,indexOf(">")+1);return match(outerHTML,/type="?([^\s">]*)"?/i)[1]||null;}
-return null;},removeAttribute:function(element,name){if(element.className!==undefined){name=_ATTRIBUTES[name.toLowerCase()]||name;}
-this.base(element,name);},setAttribute:function(element,name,value){if(element.className===undefined){this.base(element,name,value);}else if(name=="style"){element.style.cssText=value;}else{value=String(value);var attribute=_getAttributeNode(element,name);if(attribute){attribute.nodeValue=value;}else{this.base(element,_ATTRIBUTES[name.toLowerCase()]||name,value);}}}},"@!(element.hasAttribute)":{hasAttribute:function(element,name){if(element.className===undefined){return this.base(element,name);}
-return this.getAttribute(element,name)!=null;}}});extend(Element.prototype,"cloneNode",function(deep){var clone=this.base(deep||false);clone.base2ID=undefined;return clone;});var _HTML_ATTRIBUTES="colSpan,rowSpan,vAlign,dateTime,accessKey,tabIndex,encType,maxLength,readOnly,longDesc";extend(_ATTRIBUTES,Array2.combine(_HTML_ATTRIBUTES.toLowerCase().split(","),_HTML_ATTRIBUTES.split(",")));var _getAttributeNode=document.documentElement.getAttributeNode?function(element,name){return element.getAttributeNode(name);}:function(element,name){return element.attributes[name]||element.attributes[_ATTRIBUTES[name.toLowerCase()]];};var TEXT=_MSIE?"innerText":"textContent";var Traversal=Module.extend({getDefaultView:function(node){return this.getDocument(node).defaultView;},getNextElementSibling:function(node){while(node&&(node=node.nextSibling)&&!this.isElement(node))continue;return node;},getNodeIndex:function(node){var index=0;while(node&&(node=node.previousSibling))index++;return index;},getOwnerDocument:function(node){return node.ownerDocument;},getPreviousElementSibling:function(node){while(node&&(node=node.previousSibling)&&!this.isElement(node))continue;return node;},getTextContent:function(node,isHTML){return node[isHTML?"innerHTML":TEXT];},isEmpty:function(node){node=node.firstChild;while(node){if(node.nodeType==3||this.isElement(node))return false;node=node.nextSibling;}
-return true;},setTextContent:function(node,text,isHTML){return node[isHTML?"innerHTML":TEXT]=text;},"@!MSIE":{setTextContent:function(node,text,isHTML){with(node)while(lastChild)parentNode.removeChild(lastChild);return this.base(node,text,isHTML);}},"@MSIE":{getDefaultView:function(node){return(node.document||node).parentWindow;},"@MSIE5":{getOwnerDocument:function(node){return node.ownerDocument||node.document;}}}},{contains:function(node,target){node.nodeType;while(target&&(target=target.parentNode)&&node!=target)continue;return!!target;},getDocument:function(node){return this.isDocument(node)?node:node.ownerDocument||node.document;},isDocument:function(node){return!!(node&&node.documentElement);},isElement:function(node){return!!(node&&node.nodeType==1);},"@(element.contains)":{contains:function(node,target){return node!=target&&(this.isDocument(node)?node==this.getOwnerDocument(target):node.contains(target));}},"@MSIE5":{isElement:function(node){return!!(node&&node.nodeType==1&&node.nodeName!="!");}}});var AbstractView=Binding.extend();var _CAPTURE_TYPE={};var _CAPTURING_PHASE=1,_AT_TARGET=2,_BUBBLING_PHASE=3;var _MOUSE_BUTTON=/^mouse(up|down)|click$/,_MOUSE_CLICK=/click$/,_BUBBLES="abort|error|select|change|resize|scroll|",_CANCELABLE="(dbl)?click|mouse(down|up|over|move|out|wheel)|key(down|up)|submit|reset";_BUBBLES=new RegExp("^("+_BUBBLES+_CANCELABLE+")$");_CANCELABLE=new RegExp("^("+_CANCELABLE+")$");if(_MSIE){var _W3C_EVENT_TYPE={focusin:"focus",focusout:"blur"};_CAPTURE_TYPE={focus:"focusin",blur:"focusout"};}
-var _CAN_DELEGATE=/^(blur|submit|reset|change)$|^(mouse|key|focus)|click$/;var Event=Binding.extend({"@!(document.createEvent)":{initEvent:function(event,type,bubbles,cancelable){event.type=String(type);event.bubbles=!!bubbles;event.cancelable=!!cancelable;},preventDefault:function(event){if(event.cancelable!==false){event.returnValue=false;}},stopPropagation:function(event){event.cancelBubble=true;},"@MSIE":{preventDefault:function(event){this.base(event);if(event.type=="mousedown"){var type="onbeforedeactivate";var document=Traversal.getDocument(event.target);document.attachEvent(type,function(event){event.returnValue=false;document.detachEvent(type,arguments.callee);});}}}}},{"@!(document.createEvent)":{"@MSIE":{bind:function(event){var type=event.type;if(!event.timeStamp){event.bubbles=_BUBBLES.test(type);event.cancelable=_CANCELABLE.test(type);event.timeStamp=new Date().valueOf();}
-event.relatedTarget=event[(event.target==event.fromElement?"to":"from")+"Element"];return this.base(event);}}}});var EventDispatcher=Base.extend({constructor:function(state){this.state=state;this.events=state.events;},dispatch:function(nodes,event,phase){event.eventPhase=phase;var map=this.events[event.type][phase];if(map){var i=nodes.length;while(i--){var target=nodes[i];var listeners=map[target.base2ID];if(listeners){listeners=copy(listeners);event.eventPhase=target==event.target?_AT_TARGET:phase;event.currentTarget=target;for(var listenerID in listeners){var listener=listeners[listenerID];if(typeof listener=="function"){listener.call(target,event);}else{listener.handleEvent(event);}}}}}},handleEvent:function(event,fixed){if(!fixed&&event.type=="scroll"){setTimeout(bind(arguments.callee,this,extend({},event),true),0);return true;}
-Event.bind(event);var type=event.type;var w3cType=_W3C_EVENT_TYPE[type];if(w3cType){event=extend({},event);type=event.type=w3cType;}
-if(this.events[type]){if(_MOUSE_BUTTON.test(type)){var button=_MOUSE_CLICK.test(type)?this.state._button:event.button;if(button!=2)button=button==4?1:0;if(event.button!=button){event=extend({},event);event.button=button;}}
-var target=event.target;var nodes=[],i=0;while(target){nodes[i++]=target;target=target.parentNode;}
-this.dispatch(nodes,event,_CAPTURING_PHASE);if(!event.bubbles)nodes.length=1;nodes.reverse();this.dispatch(nodes,event,_BUBBLING_PHASE);}
-return event.returnValue;}});var EventTarget=Interface.extend({"@!(element.addEventListener)":{addEventListener:function(target,type,listener,useCapture){var documentState=DocumentState.getInstance(target);var targetID=assignID(target);var listenerID=assignID(listener);var phase=useCapture?_CAPTURING_PHASE:_BUBBLING_PHASE;var typeMap=documentState.registerEvent(type,target);var phaseMap=typeMap[phase];if(!phaseMap)phaseMap=typeMap[phase]={};if(useCapture)type=_CAPTURE_TYPE[type]||type;var listeners=phaseMap[targetID];if(!listeners)listeners=phaseMap[targetID]={};listeners[listenerID]=listener;},dispatchEvent:function(target,event){return DocumentState.getInstance(target).handleEvent(event);},removeEventListener:function(target,type,listener,useCapture){var events=DocumentState.getInstance(target).events;var typeMap=events[type];if(typeMap){var phaseMap=typeMap[useCapture?_CAPTURING_PHASE:_BUBBLING_PHASE];if(phaseMap){var listeners=phaseMap[target.base2ID];if(listeners)delete listeners[listener.base2ID];}}},"@(element.fireEvent)":{dispatchEvent:function(target,event){event.target=target;return this.base(target,event);}}},"@Gecko":{addEventListener:function(target,type,listener,useCapture){if(type=="mousewheel"){var onmousewheel=DocumentState[assignID(listener)]=listener;listener=function(event){event=copy(event);event.__defineGetter__("type",K("mousewheel"));event.wheelDelta=(-event.detail*40)||0;if(typeof onmousewheel=="function"){onmousewheel.call(event.target,event);}else{onmousewheel.handleEvent(event);}};type="DOMMouseScroll";}
-this.base(target,type,listener,useCapture);}},"@Linux|Mac|opera":{addEventListener:function(target,type,listener,useCapture){if(type=="keydown"){var onkeydown=DocumentState[assignID(listener)]=listener;listener=function(keydown){var firedCount=0,cancelled=false;extend(keydown,"preventDefault",function(){this.base();cancelled=true;});function handleEvent(event){if(cancelled)event.preventDefault();if(event==keydown||firedCount>1){if(typeof onkeydown=="function"){onkeydown.call(target,keydown);}else{onkeydown.handleEvent(keydown);}}
-firedCount++;};handleEvent(keydown);target.addEventListener("keyup",function(){target.removeEventListener("keypress",handleEvent,true);target.removeEventListener("keyup",arguments.callee,true);},true);target.addEventListener("keypress",handleEvent,true);};}
-this.base(target,type,listener,useCapture);},removeEventListener:function(target,type,listener,useCapture){this.base(target,type,DocumentState[listener.base2ID]||listener,useCapture);}}});var DocumentEvent=Interface.extend({"@!(document.createEvent)":{createEvent:function(){return Event.bind({});},"@(document.createEventObject)":{createEvent:function(document){return Event.bind(document.createEventObject());}},createEvent:function(document,type){var event=this.base(document);event.bubbles=false;event.cancelable=false;event.eventPhase=0;event.target=document;event.currentTarget=null;event.relatedTarget=null;event.timeStamp=new Date().valueOf();return event;}},"@(document.createEvent)":{"@!(document.createEvent('Events'))":{createEvent:function(document,type){return this.base(document,type=="Events"?"UIEvents":type);}}}});var DOMContentLoadedEvent=Base.extend({constructor:function(document){var fired=false;this.fire=function(){if(!fired){fired=true;setTimeout(function(){var event=DocumentEvent.createEvent(document,"Events");Event.initEvent(event,"DOMContentLoaded",true,false);EventTarget.dispatchEvent(document,event);},1);}};EventTarget.addEventListener(document,"DOMContentLoaded",function(){fired=true;},false);this.listen(document);},listen:Undefined,"@!Gecko|Webkit(4[2-9]|5-9)|Opera[19]":{listen:function(document){EventTarget.addEventListener(Traversal.getDefaultView(document),"load",this.fire,false);},"@MSIE.+win":{listen:function(document){try{document.body.doScroll("left");if(!this.__constructing)this.fire();}catch(e){setTimeout(bind(this.listen,this,document),10);}}},"@KHTML":{listen:function(document){if(/loaded|complete/.test(document.readyState)){if(!this.__constructing)this.fire();}else{setTimeout(bind(this.listen,this,document),10);}}}}});Document.implement(DocumentEvent);Document.implement(EventTarget);Element.implement(EventTarget);var _PIXEL=/^\d+(px)?$/i;var _METRICS=/(width|height|top|bottom|left|right|fontSize)$/;var _COLOR=/^(color|backgroundColor)$/;var _RUBY=/^ruby/;var ViewCSS=Interface.extend({"@!(document.defaultView.getComputedStyle)":{"@MSIE":{getComputedStyle:function(view,element,pseudoElement){var currentStyle=element.currentStyle;var computedStyle={};for(var i in currentStyle){if(_METRICS.test(i)||_COLOR.test(i)){computedStyle[i]=this.getComputedPropertyValue(view,element,i);}else if(!_RUBY.test(i)){computedStyle[i]=currentStyle[i];}}
-return computedStyle;}}},getComputedStyle:function(view,element,pseudoElement){return _CSSStyleDeclaration_ReadOnly.bind(this.base(view,element,pseudoElement));}},{getComputedPropertyValue:function(view,element,propertyName){return CSSStyleDeclaration.getPropertyValue(this.getComputedStyle(view,element,null),propertyName);},"@MSIE":{getComputedPropertyValue:function(view,element,propertyName){propertyName=this.toCamelCase(propertyName);if(_METRICS.test(propertyName))
-return _MSIE_getPixelValue(element,element.currentStyle[propertyName])+"px";if(_COLOR.test(propertyName))
-return _MSIE_getColorValue(element,propertyName=="color"?"ForeColor":"BackColor");return element.currentStyle[propertyName];}},toCamelCase:function(string){return string.replace(/\-([a-z])/g,flip(String2.toUpperCase));}});function _MSIE_getPixelValue(element,value){if(_PIXEL.test(value))return parseInt(value);var styleLeft=element.style.left;var runtimeStyleLeft=element.runtimeStyle.left;element.runtimeStyle.left=element.currentStyle.left;element.style.left=value||0;value=element.style.pixelLeft;element.style.left=styleLeft;element.runtimeStyle.left=runtimeStyleLeft;return value;};function _MSIE_getColorValue(element,value){if(element.createTextRange){var range=element.createTextRange();}else{element.document.body.createTextRange();range.moveToElementText(element);}
-var color=range.queryCommandValue(value);return format("rgb(%1, %2, %3)",color&0xff,(color&0xff00)>>8,(color&0xff0000)>>16);};var _CSSStyleDeclaration_ReadOnly=Binding.extend({getPropertyValue:function(style,propertyName){return this.base(style,_CSSPropertyNameMap[propertyName]||propertyName);},"@MSIE.+win":{getPropertyValue:function(style,propertyName){return propertyName=="float"?style.styleFloat:style[ViewCSS.toCamelCase(propertyName)];}}});var CSSStyleDeclaration=_CSSStyleDeclaration_ReadOnly.extend({setProperty:function(style,propertyName,value,priority){return this.base(style,_CSSPropertyNameMap[propertyName]||propertyName,value,priority);},"@MSIE.+win":{setProperty:function(style,propertyName,value,priority){if(propertyName=="opacity"){value*=100;style.opacity=value;style.zoom=1;style.filter="Alpha(opacity="+value+")";}else{if(priority=="important"){style.cssText+=format(";%1:%2!important;",propertyName,value);}else{style.setAttribute(propertyName,value);}}}}},{"@MSIE":{bind:function(style){style.getPropertyValue=this.prototype.getPropertyValue;style.setProperty=this.prototype.setProperty;return style;}}});var _CSSPropertyNameMap=new Base({"@Gecko":{opacity:"-moz-opacity"},"@KHTML":{opacity:"-khtml-opacity"}});with(CSSStyleDeclaration.prototype)getPropertyValue.toString=setProperty.toString=K("[base2]");AbstractView.implement(ViewCSS);var NodeSelector=Interface.extend({"@(element.querySelector)":{querySelector:function(node,selector){try{var element=this.base(node,trim(selector));if(element)return element;}catch(x){}
-return new Selector(selector).exec(node,1);},querySelectorAll:function(node,selector){try{var nodeList=this.base(node,trim(selector));if(nodeList)return new StaticNodeList(nodeList);}catch(x){}
-return new Selector(selector).exec(node);}},"@!(element.querySelector)":{querySelector:function(node,selector){return new Selector(selector).exec(node,1);},querySelectorAll:function(node,selector){return new Selector(selector).exec(node);}}});extend(NodeSelector.prototype,{querySelector:function(selector){return DOM.bind(this.base(selector));},querySelectorAll:function(selector){return extend(this.base(selector),"item",function(index){return DOM.bind(this.base(index));});}});var DocumentSelector=NodeSelector.extend();var ElementSelector=NodeSelector.extend({"@!(element.matchesSelector)":{matchesSelector:function(element,selector){return new Selector(selector).test(element);}}});var _CSS_ESCAPE=/'(\\.|[^'\\])*'|"(\\.|[^"\\])*"/g,_CSS_IMPLIED_ASTERISK=/([\s>+~,]|[^(]\+|^)([#.:\[])/g,_CSS_IMPLIED_SPACE=/(^|,)([^\s>+~])/g,_CSS_WHITESPACE=/\s*([\s>+~(),]|^|$)\s*/g,_CSS_WILD_CARD=/\s\*\s/g,_CSS_UNESCAPE=/\x01(\d+)/g,_QUOTE=/'/g;var CSSParser=RegGrp.extend({constructor:function(items){this.base(items);this.cache={};this.sorter=new RegGrp;this.sorter.add(/:not\([^)]*\)/,RegGrp.IGNORE);this.sorter.add(/([ >](\*|[\w-]+))([^: >+~]*)(:\w+-child(\([^)]+\))?)([^: >+~]*)/,"$1$3$6$4");},cache:null,ignoreCase:true,escape:function(selector,simple){var strings=this._strings=[];selector=this.optimise(this.format(String(selector).replace(_CSS_ESCAPE,function(string){return"\x01"+strings.push(string.slice(1,-1).replace(_QUOTE,"\\'"));})));if(simple)selector=selector.replace(/^ \*?/,"");return selector;},format:function(selector){return selector.replace(_CSS_WHITESPACE,"$1").replace(_CSS_IMPLIED_SPACE,"$1 $2").replace(_CSS_IMPLIED_ASTERISK,"$1*$2");},optimise:function(selector){return this.sorter.exec(selector.replace(_CSS_WILD_CARD,">* "));},parse:function(selector,simple){return this.cache[selector]||(this.cache[selector]=this.unescape(this.exec(this.escape(selector,simple))));},unescape:function(selector){var strings=this._strings;return selector.replace(_CSS_UNESCAPE,function(match,index){return strings[index-1];});}});function _nthChild(match,args,position,last,not,and,mod,equals){last=/last/i.test(match)?last+"+1-":"";if(!isNaN(args))args="0n+"+args;else if(args=="even")args="2n";else if(args=="odd")args="2n+1";args=args.split("n");var a=args[0]?(args[0]=="-")?-1:parseInt(args[0]):1;var b=parseInt(args[1])||0;var negate=a<0;if(negate){a=-a;if(a==1)b++;}
-var query=format(a==0?"%3%7"+(last+b):"(%4%3-%2)%6%1%70%5%4%3>=%2",a,b,position,last,and,mod,equals);if(negate)query=not+"("+query+")";return query;};var XPathParser=CSSParser.extend({constructor:function(){this.base(XPathParser.build());this.sorter.putAt(1,"$1$4$3$6");},escape:function(selector,simple){return this.base(selector,simple).replace(/,/g,"\x02");},unescape:function(selector){return this.base(selector.replace(/\[self::\*\]/g,"").replace(/(^|\x02)\//g,"$1./").replace(/\x02/g," | ")).replace(/'[^'\\]*\\'(\\.|[^'\\])*'/g,function(match){return"concat("+match.split("\\'").join("',\"'\",'")+")";});}},{build:function(){this.values.attributes[""]="[@$1]";forEach(this.types,function(add,type){forEach(this.values[type],add,this.rules);},this);this.build=K(this.rules);return this.rules;},optimised:{pseudoClasses:{"first-child":"[1]","last-child":"[last()]","only-child":"[last()=1]"}},rules:extend({},{"@!KHTML|opera":{"(^|\\x02) (\\*|[\\w-]+)#([\\w-]+)":"$1id('$3')[self::$2]"},"@!KHTML":{"([ >])(\\*|[\\w-]+):([\\w-]+-child(\\(([^)]+)\\))?)":function(match,token,tagName,pseudoClass,$4,args){var replacement=(token==" ")?"//*":"/*";if(/^nth/i.test(pseudoClass)){replacement+=_xpath_nthChild(pseudoClass,args,"position()");}else{replacement+=XPathParser.optimised.pseudoClasses[pseudoClass];}
-return replacement+"[self::"+tagName+"]";}}}),types:{identifiers:function(replacement,token){this[rescape(token)+"([\\w-]+)"]=replacement;},combinators:function(replacement,combinator){this[rescape(combinator)+"(\\*|[\\w-]+)"]=replacement;},attributes:function(replacement,operator){this["\\[([\\w-]+)\\s*"+rescape(operator)+"\\s*([^\\]]*)\\]"]=replacement;},pseudoClasses:function(replacement,pseudoClass){this[":"+pseudoClass.replace(/\(\)$/,"\\(([^)]+)\\)")]=replacement;}},values:{identifiers:{"#":"[@id='$1'][1]",".":"[contains(concat(' ',@class,' '),' $1 ')]"},combinators:{" ":"/descendant::$1",">":"/child::$1","+":"/following-sibling::*[1][self::$1]","~":"/following-sibling::$1"},attributes:{"*=":"[contains(@$1,'$2')]","^=":"[starts-with(@$1,'$2')]","$=":"[substring(@$1,string-length(@$1)-string-length('$2')+1)='$2']","~=":"[contains(concat(' ',@$1,' '),' $2 ')]","|=":"[contains(concat('-',@$1,'-'),'-$2-')]","!=":"[not(@$1='$2')]","=":"[@$1='$2']"},pseudoClasses:{"empty":"[not(child::*) and not(text())]","first-child":"[not(preceding-sibling::*)]","last-child":"[not(following-sibling::*)]","not()":_xpath_not,"nth-child()":_xpath_nthChild,"nth-last-child()":_xpath_nthChild,"only-child":"[not(preceding-sibling::*) and not(following-sibling::*)]","root":"[not(parent::*)]"}},"@opera(7|8|9\\.[1-4])":{build:function(){this.optimised.pseudoClasses["last-child"]=this.values.pseudoClasses["last-child"];this.optimised.pseudoClasses["only-child"]=this.values.pseudoClasses["only-child"];return this.base();}}});var _notParser;function _xpath_not(match,args){if(!_notParser)_notParser=new XPathParser;return"[not("+_notParser.exec(trim(args)).replace(/\[1\]/g,"").replace(/^(\*|[\w-]+)/,"[self::$1]").replace(/\]\[/g," and ").slice(1,-1)
-+")]";};function _xpath_nthChild(match,args,position){return"["+_nthChild(match,args,position||"count(preceding-sibling::*)+1","last()","not"," and "," mod ","=")+"]";};var Selector=Base.extend({constructor:function(selector){this.toString=K(trim(selector));},exec:function(context,count,simple){return Selector.parse(this,simple)(context,count);},isSimple:function(){if(!_parser.exec)_parser=new CSSParser(_parser);return!_COMBINATOR.test(trim(_parser.escape(this)));},test:function(element){if(this.isSimple()){return Selector.parse(this,true)(element,1);}else{element.setAttribute("b2-test",true);var result=new Selector(this+"[b2-test]").exec(Traversal.getOwnerDocument(element),1);element.removeAttribute("b2-test");return result==element;}},toXPath:function(simple){return Selector.toXPath(this,simple);},"@(XPathResult)":{exec:function(context,count,simple){if(_NOT_XPATH.test(this)){return this.base(context,count,simple);}
-var document=Traversal.getDocument(context);var type=count==1?9:7;var result=document.evaluate(this.toXPath(simple),context,null,type,null);return count==1?result.singleNodeValue:result;}},"@MSIE":{exec:function(context,count,simple){if(typeof context.selectNodes!="undefined"&&!_NOT_XPATH.test(this)){var method=single?"selectSingleNode":"selectNodes";return context[method](this.toXPath(simple));}
-return this.base(context,count,simple);}},"@(true)":{exec:function(context,count,simple){try{var result=this.base(context||document,count,simple);}catch(error){throw new SyntaxError(format("'%1' is not a valid CSS selector.",this));}
-return count==1?result:new StaticNodeList(result);}}},{toXPath:function(selector,simple){if(!_xpathParser)_xpathParser=new XPathParser;return _xpathParser.parse(selector,simple);}});var _COMBINATOR=/[\s+>~]/;var _NOT_XPATH=":(checked|disabled|enabled|contains|hover|active|focus)|^(#[\\w-]+\\s*)?\\w+$";if(detect("KHTML")){if(detect("WebKit5")){_NOT_XPATH+="|nth\\-|,";}else{_NOT_XPATH=".";}}
-_NOT_XPATH=new RegExp(_NOT_XPATH);Selector.operators={"=":"%1=='%2'","~=":/(^| )%1( |$)/,"|=":/^%1(-|$)/,"^=":/^%1/,"$=":/%1$/,"*=":/%1/};Selector.operators[""]="%1!=null";Selector.pseudoClasses={"checked":"e%1.checked","contains":"e%1[TEXT].indexOf('%2')!=-1","disabled":"e%1.disabled","empty":"Traversal.isEmpty(e%1)","enabled":"e%1.disabled===false","first-child":"!Traversal.getPreviousElementSibling(e%1)","last-child":"!Traversal.getNextElementSibling(e%1)","only-child":"!Traversal.getPreviousElementSibling(e%1)&&!Traversal.getNextElementSibling(e%1)","root":"e%1==Traversal.getDocument(e%1).documentElement","target":"e%1.id&&e%1.id==location.hash.slice(1)","hover":"DocumentState.getInstance(d).isHover(e%1)","active":"DocumentState.getInstance(d).isActive(e%1)","focus":"DocumentState.getInstance(d).hasFocus(e%1)"};var _INDEXED=detect("(element.sourceIndex)"),_VAR="var p%2=0,i%2,e%3,n%2=e%1.",_ID=_INDEXED?"e%1.sourceIndex":"assignID(e%1)",_TEST="var g="+_ID+";if(!p[g]){p[g]=1;",_STORE="r[k++]=e%1;if(s==1)return e%1;if(k===s){_query.state=[%2];_query.complete=%3;return r;",_FN="var _query=function(e0,s%1){_indexed++;var r=[],p={},reg=[%4],d=Traversal.getDocument(e0),c=d.writeln?'toUpperCase':'toString',k=0;";var _xpathParser;var _reg,_index,_wild,_list,_group,_listAll,_duplicate,_cache={};function sum(list){var total=0;for(var i=0;i<list.length;i++){total+=list[i];}
-return total;};var _parser={"^(\\*|[\\w-]+)":function(match,tagName){return tagName=="*"?"":format("if(e0.nodeName=='%1'[c]()){",tagName);},"^ \\*:root":function(match){_wild=false;var replacement="e%2=d.documentElement;if(Traversal.contains(e%1,e%2)){";return format(replacement,_index++,_index);}," (\\*|[\\w-]+)#([\\w-]+)":function(match,tagName,id){_wild=false;var replacement="var e%2=_byId(d,'%4');if(e%2&&";if(tagName!="*")replacement+="e%2.nodeName=='%3'[c]()&&";replacement+="Traversal.contains(e%1,e%2)){";if(_list[_group])replacement+=format("i%1=n%1.length;",sum(_list));return format(replacement,_index++,_index,tagName,id);}," (\\*|[\\w-]+)":function(match,tagName){_duplicate++;_wild=tagName=="*";var replacement=format(_VAR,_index++,"%2",_index);replacement+=(_wild&&_MSIE5)?"all":"getElementsByTagName('%3')";replacement+=";for(i%2=a%2||0;(e%1=n%2[i%2]);i%2++){";_list[_group]++;return format(replacement,_index,sum(_list),tagName);},">(\\*|[\\w-]+)":function(match,tagName){var children=document.documentElement.children&&_index;_wild=tagName=="*";var replacement=_VAR+(children?"children":"childNodes");replacement=format(replacement,_index++,"%2",_index);if(!_wild&&_MSIE&&children)replacement+=".tags('%3')";replacement+=";for(i%2=a%2||0;(e%1=n%2[i%2]);i%2++){";if(_wild){replacement+="if(e%1.nodeType==1){";_wild=_MSIE5;}else{if(!_MSIE||!children)replacement+="if(e%1.nodeName=='%3'[c]()){";}
-_list[_group]++;return format(replacement,_index,sum(_list),tagName);},"\\+(\\*|[\\w-]+)":function(match,tagName){var replacement="";if(_wild&&_MSIE)replacement+="if(e%1.nodeName!='!'){";_wild=false;replacement+="e%1=Traversal.getNextElementSibling(e%1);if(e%1";if(tagName!="*")replacement+="&&e%1.nodeName=='%2'[c]()";replacement+="){";return format(replacement,_index,tagName);},"~(\\*|[\\w-]+)":function(match,tagName){var replacement="";if(_wild&&_MSIE)replacement+="if(e%1.nodeName!='!'){";_wild=false;_duplicate=2;replacement+="while(e%1=e%1.nextSibling){if(e%1.b2_adjacent==_indexed)break;if(";if(tagName=="*"){replacement+="e%1.nodeType==1";if(_MSIE5)replacement+="&&e%1.nodeName!='!'";}else replacement+="e%1.nodeName=='%2'[c]()";replacement+="){e%1.b2_adjacent=_indexed;";return format(replacement,_index,tagName);},"#([\\w-]+)":function(match,id){_wild=false;var replacement="if(e%1.id=='%2'){";if(_list[_group])replacement+=format("i%1=n%1.length;",sum(_list));return format(replacement,_index,id);},"\\.([\\w-]+)":function(match,className){_wild=false;_reg.push(new RegExp("(^|\\s)"+rescape(className)+"(\\s|$)"));return format("if(e%1.className&&reg[%2].test(e%1.className)){",_index,_reg.length-1);},":not\\((\\*|[\\w-]+)?([^)]*)\\)":function(match,tagName,filters){var replacement=(tagName&&tagName!="*")?format("if(e%1.nodeName=='%2'[c]()){",_index,tagName):"";replacement+=_parser.exec(filters);return"if(!"+replacement.slice(2,-1).replace(/\)\{if\(/g,"&&")+"){";},":nth(-last)?-child\\(([^)]+)\\)":function(match,last,args){_wild=false;last=format("e%1.parentNode.b2_length",_index);var replacement="if(p%1!==e%1.parentNode)p%1=_register(e%1.parentNode);";replacement+="var i=e%1[p%1.b2_lookup];if(p%1.b2_lookup!='b2_index')i++;if(";return format(replacement,_index)+_nthChild(match,args,"i",last,"!","&&","%","==")+"){";},":([\\w-]+)(\\(([^)]+)\\))?":function(match,pseudoClass,$2,args){return"if("+format(Selector.pseudoClasses[pseudoClass]||"throw",_index,args||"")+"){";},"\\[([\\w-]+)\\s*([^=]?=)?\\s*([^\\]]*)\\]":function(match,attr,operator,value){var alias=_ATTRIBUTES[attr]||attr;var getAttribute="e%1.getAttribute('%2',2)";if(operator){if(!_EVALUATED.test(attr)){getAttribute="e%1.%3||"+getAttribute;}}else{getAttribute="Element.getAttribute(e%1,'%2')";}
-getAttribute=format(getAttribute,_index,attr,alias);var replacement=Selector.operators[operator||""];if(instanceOf(replacement,RegExp)){_reg.push(new RegExp(format(replacement.source,rescape(_parser.unescape(value)))));replacement="reg[%2].test(%1)";value=_reg.length-1;}
-return"if("+format(replacement,getAttribute,value)+"){";}};(function(_no_shrink_){var _byId=detect("MSIE[5-7]")?function(document,id){var result=document.all[id]||null;if(!result||result.id==id)return result;for(var i=0;i<result.length;i++){if(result[i].id==id)return result[i];}
-return null;}:function(document,id){return document.getElementById(id);};var _indexed=1;function _register(element){if(element.rows){element.b2_length=element.rows.length;element.b2_lookup="rowIndex";}else if(element.cells){element.b2_length=element.cells.length;element.b2_lookup="cellIndex";}else if(element.b2_indexed!=_indexed){var index=0;var child=element.firstChild;while(child){if(child.nodeType==1&&child.nodeName!="!"){child.b2_index=++index;}
-child=child.nextSibling;}
-element.b2_length=index;element.b2_lookup="b2_index";}
-element.b2_indexed=_indexed;return element;};Selector.parse=function(selector,simple){if(!_cache[selector]){if(!_parser.exec)_parser=new CSSParser(_parser);_reg=[];_list=[];var fn="";var selectors=_parser.escape(selector,simple).split(",");for(_group=0;_group<selectors.length;_group++){_wild=_index=_list[_group]=0;_duplicate=selectors.length>1?2:0;var block=_parser.exec(selectors[_group])||"throw;";if(_wild&&_MSIE){block+=format("if(e%1.nodeName!='!'){",_index);}
-var store=(_duplicate>1)?_TEST:"";block+=format(store+_STORE,_index,"%2");block+=Array(match(block,/\{/g).length+1).join("}");fn+=block;}
-fn=_parser.unescape(fn);if(selectors.length>1)fn+="r.unsorted=1;";var args="";var state=[];var total=sum(_list);for(var i=1;i<=total;i++){args+=",a"+i;state.push("i"+i);}
-if(total){var complete=[],k=0;for(var i=0;i<_group;i++){k+=_list[i];if(_list[i])complete.push(format("n%1&&i%1==n%1.length",k));}}
-fn+="_query.state=[%2];_query.complete=%3;return s==1?null:r}";eval(format(_FN+fn,args,state.join(","),total?complete.join("&&"):true,_reg));_cache[selector]=_query;}
-return _cache[selector];};})();var StaticNodeList=Base.extend({constructor:function(nodes){nodes=nodes||[];this.length=nodes.length;this.item=function(index){return nodes[index];};},length:0,forEach:function(block,context){for(var i=0;i<this.length;i++){block.call(context,this.item(i),i,this);}},item:Undefined,"@(XPathResult)":{constructor:function(nodes){if(nodes&&nodes.snapshotItem){this.length=nodes.snapshotLength;this.item=function(index){return nodes.snapshotItem(index);};}else this.base(nodes);}}});StaticNodeList.implement(Enumerable);Document.implement(DocumentSelector);Element.implement(ElementSelector);var HTMLDocument=Document.extend(null,{bind:function(document){DocumentState.createState(document);return this.base(document);}});var HTMLElement=Element.extend(null,{bindings:{},tags:"*",bind:function(element){if(!element.classList){element.classList=new _ElementClassList(element);}
-if(!element.ownerDocument){element.ownerDocument=Traversal.getOwnerDocument(element);}
-return this.base(element);},extend:function(){var binding=base(this,arguments);forEach.csv(binding.tags,function(tagName){HTMLElement.bindings[tagName]=binding;});return binding;}});HTMLElement.extend(null,{tags:"APPLET,EMBED",bind:I});var ClassList=Module.extend({add:function(element,token){if(!this.has(element,token)){element.className+=(element.className?" ":"")+token;}},has:function(element,token){var regexp=new RegExp("(^|\\s)"+token+"(\\s|$)");return regexp.test(element.className);},remove:function(element,token){var regexp=new RegExp("(^|\\s)"+token+"(\\s|$)","g");element.className=trim(element.className.replace(regexp,"$2"));},toggle:function(element,token){this[this.has(element,token)?"remove":"add"](element,token);}});function _ElementClassList(element){this.add=function(token){ClassList.add(element,token);};this.has=function(token){return ClassList.has(element,token);};this.remove=function(token){ClassList.remove(element,token);};};_ElementClassList.prototype.toggle=function(token){this[this.has(token)?"remove":"add"](token);};var DocumentState=Base.extend({constructor:function(document){this.document=document;this.events={};this._hoverElement=document.documentElement;this.isBound=function(){return!!DOM.bind[document.base2ID];};forEach(this,function(method,name,documentState){if(/^on((DOM)?\w+|[a-z]+)$/.test(name)){documentState.registerEvent(name.slice(2));}});},includes:function(element,target){return target&&(element==target||Traversal.contains(element,target));},hasFocus:function(element){return element==this._focusElement;},isActive:function(element){return this.includes(element,this._activeElement);},isHover:function(element){return this.includes(element,this._hoverElement);},handleEvent:function(event){return this["on"+event.type](event);},onblur:function(event){delete this._focusElement;},onmouseover:function(event){this._hoverElement=event.target;},onmouseout:function(event){delete this._hoverElement;},onmousedown:function(event){this._activeElement=event.target;},onfocus:function(event){this._focusElement=event.target;},onmouseup:function(event){delete this._activeElement;},registerEvent:function(type){this.document.addEventListener(type,this,true);this.events[type]=true;},"@(document.activeElement===undefined)":{constructor:function(document){this.base(document);if(this.isBound()){document.activeElement=document.body;}},onfocus:function(event){this.base(event);if(this.isBound()){this.document.activeElement=this._focusElement;}},onblur:function(event){this.base(event);if(this.isBound()){this.document.activeElement=this.document.body;}}},"@!(element.addEventListener)":{constructor:function(document){this.base(document);var dispatcher=new EventDispatcher(this);this._dispatch=function(event){event.target=event.target||event.srcElement||document;dispatcher.handleEvent(event);};this.handleEvent=function(event){if(this["on"+event.type]){this["on"+event.type](event);}
-return dispatcher.handleEvent(event);};},registerEvent:function(type,target){var events=this.events[type];var canDelegate=_CAN_DELEGATE.test(type);if(!events||!canDelegate){if(!events)events=this.events[type]={};if(canDelegate||!target)target=this.document;var state=this;target["on"+type]=function(event){if(!event){event=Traveral.getDefaultiew(this).event;}
-if(event)state.handleEvent(event);};}
-return events;}},"@MSIE":{constructor:function(document){this.base(document);var forms={};this._registerForm=function(form){var formID=assignID(form);if(!forms[formID]){forms[formID]=true;form.attachEvent("onsubmit",this._dispatch);form.attachEvent("onreset",this._dispatch);}};},registerEvent:function(type,target){var events=this.events[type];var canDelegate=_CAN_DELEGATE.test(type);if(!events||!canDelegate){if(!events)events=this.events[type]={};if(canDelegate||!target)target=this.document;var state=this;target.attachEvent("on"+type,function(event){event.target=event.srcElement||state.document;state.handleEvent(event);});}
-return events;},onDOMContentLoaded:function(event){forEach(event.target.forms,this._registerForm,this);},onmousedown:function(event){this.base(event);this._button=event.button;},onmouseup:function(event){this.base(event);if(this._button==null){event.target.fireEvent("onmousedown",event);}
-delete this._button;},onfocusin:function(event){var target=event.target,dispatch=this._dispatch;if(this.events.change&&target.form!==undefined){target.attachEvent("onchange",dispatch);target.attachEvent("onblur",function(){target.detachEvent("onblur",arguments.callee);target.detachEvent("onchange",dispatch);});}
-this.onfocus(event);},onfocusout:function(event){this.onblur(event);},onclick:function(event){var target=event.target;if(target.form)this._registerForm(target.form);},ondblclick:function(event){event.target.fireEvent("onclick",event);}}},{init:function(){assignID(document);DocumentState=this;this.createState(document);new DOMContentLoadedEvent(document);},createState:function(document){var base2ID=document.base2ID;if(!this[base2ID]){this[base2ID]=new this(document);}
-return this[base2ID];},getInstance:function(target){return this[Traversal.getDocument(target).base2ID];}});eval(this.exports);};if(navigator.appVersion.search(/Safari/)!=-1)
-{NodeList.prototype.forEach=function(a,b){for(var i=0;i<this.length;i++){a.call(b,this.item(i),i,this);}};}
-if(typeof(base2)=="undefined"){throw new Error("Base2 not found. wForms 3.0 depends on the base2 library.");}
-if(typeof(wFORMS)=="undefined"){wFORMS={};}
-wFORMS.NAME="wFORMS";wFORMS.VERSION="3.0";wFORMS.__repr__=function(){return"["+this.NAME+" "+this.VERSION+"]";};wFORMS.toString=function(){return this.__repr__();};wFORMS.behaviors={};wFORMS.helpers={}
-wFORMS.instances=[];wFORMS.helpers.randomId=function(){var seed=(new Date()).getTime();seed=seed.toString().substr(6);for(var i=0;i<6;i++)
-seed+=String.fromCharCode(48+Math.floor((Math.random()*10)));return"id_"+seed;}
-wFORMS.helpers.getFieldValue=function(element){switch(element.tagName){case"INPUT":if(element.type=='checkbox')
-return element.checked?element.value:null;if(element.type=='radio')
-return element.checked?element.value:null;return element.value;break;case"SELECT":if(element.selectedIndex==-1){return null;}
-if(element.getAttribute('multiple')){var v=[];for(var i=0;i<element.options.length;i++){if(element.options[i].selected){v.push(element.options[i].value);}}
-return v;}
-return element.options[element.selectedIndex].value;break;case"TEXTAREA":return element.value;break;default:return null;break;}}
-wFORMS.helpers.getComputedStyle=function(element,styleName){return document.defaultView.getComputedStyle(element,"").getPropertyValue(styleName);}
-wFORMS.helpers.getLeft=function(elem){var pos=0;while(elem.offsetParent){try{if(document.defaultView.getComputedStyle(elem,"").getPropertyValue('position')=='relative'){return pos;}
-if(pos>0&&document.defaultView.getComputedStyle(elem,"").getPropertyValue('position')=='absolute'){return pos;}}catch(x){}
-pos+=elem.offsetLeft;elem=elem.offsetParent;}
-if(!window.opera&&document.all&&document.compatMode&&document.compatMode!="BackCompat"){pos+=parseInt(document.body.currentStyle.marginTop);}
-return pos;}
-wFORMS.helpers.getTop=function(elem){var pos=0;while(elem.offsetParent){try{if(document.defaultView.getComputedStyle(elem,"").getPropertyValue('position')=='relative'){return pos;}
-if(pos>0&&document.defaultView.getComputedStyle(elem,"").getPropertyValue('position')=='absolute'){return pos;}}catch(x){}
-pos+=elem.offsetTop;elem=elem.offsetParent;}
-if(!window.opera&&document.all&&document.compatMode&&document.compatMode!="BackCompat"){pos+=parseInt(document.body.currentStyle.marginLeft)+1;}
-return pos;}
-wFORMS.helpers.useSpotlight=false;wFORMS.helpers.spotlight=function(target){}
-wFORMS.helpers.activateStylesheet=function(sheetref){if(document.getElementsByTagName){var ss=document.getElementsByTagName('link');}else if(document.styleSheets){var ss=document.styleSheets;}
-for(var i=0;ss[i];i++){if(ss[i].href.indexOf(sheetref)!=-1){ss[i].disabled=true;ss[i].disabled=false;}}}
-wFORMS.helpers.contains=function(array,needle){var l=array.length;for(var i=0;i<l;i++){if(array[i]===needle){return true;}}
-return false;}
-wFORMS.onLoadHandler=function(){var forms=document.getElementsByTagName("FORM");for(var i=0;i<forms.length;i++){if(forms[i].getAttribute('rel')!='no-behavior')
-wFORMS.applyBehaviors(forms[i]);}}
-wFORMS.applyBehaviors=function(f){if(!f.querySelectorAll){base2.DOM.bind(f);}
-if(wFORMS.behaviors['switch']){var b=wFORMS.behaviors['switch'].applyTo(f);if(!wFORMS.instances['switch']){wFORMS.instances['switch']=[b];}else{wFORMS.removeBehavior(f,'switch');wFORMS.instances['switch'].push(b);}}
-for(var behaviorName in wFORMS.behaviors){if(behaviorName=='switch'){continue;}
-if(wFORMS.behaviors[behaviorName].applyTo){var b=wFORMS.behaviors[behaviorName].applyTo(f);if(b&&b.constructor!=Array){b=[b];}
-for(var i=0;b&&i<b.length;i++){if(!wFORMS.instances[behaviorName]){wFORMS.instances[behaviorName]=[b[i]];}else{wFORMS.removeBehavior(f,behaviorName);wFORMS.instances[behaviorName].push(b[i]);}}}}
-if(wFORMS.behaviors.onApplyAll){wFORMS.behaviors.onApplyAll(f);}}
-wFORMS.removeBehavior=function(f,behaviorName){return null;if(!wFORMS.instances[behaviorName])
-return null;for(var i=0;i<wFORMS.instances[behaviorName].length;i++){if(wFORMS.instances[behaviorName][i].target==f){wFORMS.instances[behaviorName][i]=null;}}
-return null;}
-wFORMS.getBehaviorInstance=function(f,behaviorName){if(!f||!wFORMS.instances[behaviorName])
-return null;for(var i=0;i<wFORMS.instances[behaviorName].length;i++){if(wFORMS.instances[behaviorName][i].target==f){return wFORMS.instances[behaviorName][i];}}
-return null;}
-base2.DOM.Element.addEventListener(document,'DOMContentLoaded',wFORMS.onLoadHandler,false);wFORMS.helpers.activateStylesheet('wforms-jsonly.css');if(typeof(wFORMS)=="undefined"){throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");}
-wFORMS.behaviors.hint={CSS_INACTIVE:'field-hint-inactive',CSS_ACTIVE:'field-hint',HINT_SELECTOR:'*[id$="-H"]',HINT_SUFFIX:'-H',instance:function(f){this.behavior=wFORMS.behaviors.hint;this.target=f;}}
-wFORMS.behaviors.hint.applyTo=function(f){var b=new wFORMS.behaviors.hint.instance(f);f.querySelectorAll(wFORMS.behaviors.hint.HINT_SELECTOR).forEach(function(elem){var e=b.getElementByHintId(elem.id);if(e){if(!e.addEventListener)base2.DOM.bind(e);if(e.tagName=="SELECT"||e.tagName=="TEXTAREA"||(e.tagName=="INPUT"&&e.type!="radio"&&e.type!="checkbox")){e.addEventListener('focus',function(event){b.run(event,this)},false);e.addEventListener('blur',function(event){b.run(event,this)},false);}else{e.addEventListener('mouseover',function(event){b.run(event,e)},false);e.addEventListener('mouseout',function(event){b.run(event,e)},false);}}});b.onApply();return b;}
-wFORMS.behaviors.hint.instance.prototype.onApply=function(){}
-wFORMS.behaviors.hint.instance.prototype.run=function(event,element){var hint=this.getHintElement(element);if(!hint)return;if(event.type=='focus'||event.type=='mouseover'){hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
-hint.addClass(wFORMS.behaviors.hint.CSS_ACTIVE);this.setup(hint,element);}else{hint.addClass(wFORMS.behaviors.hint.CSS_INACTIVE);hint.removeClass(wFORMS.behaviors.hint.CSS_ACTIVE);}}
-wFORMS.behaviors.hint.instance.prototype.getElementByHintId=function(hintId){var id=hintId.substr(0,hintId.length-wFORMS.behaviors.hint.HINT_SUFFIX.length);var e=document.getElementById(id);return e;}
-wFORMS.behaviors.hint.instance.prototype.getHintElement=function(element){var e=document.getElementById(element.id+this.behavior.HINT_SUFFIX);if(e&&!e.hasClass){base2.DOM.bind(e);}
-return e&&e!=''?e:null;}
-wFORMS.behaviors.hint.instance.prototype.setup=function(hint,source){var l=((source.tagName=='SELECT'?+source.offsetWidth:0)+wFORMS.helpers.getLeft(source));var t=(wFORMS.helpers.getTop(source)+source.offsetHeight);hint.style.left=l+"px";hint.style.top=t+"px";}
-wFORMS.behaviors.hint.isHintId=function(id){return id.match(new RegExp(wFORMS.behaviors.hint.HINT_SUFFIX+'$'))!=null;}
-if(typeof(wFORMS)=="undefined"){throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");}
-wFORMS.behaviors.paging={SELECTOR:'.wfPage',CSS_PAGE:'wfPage',CSS_CURRENT_PAGE:'wfCurrentPage',CSS_BUTTON_NEXT:'wfPageNextButton',CSS_BUTTON_PREVIOUS:'wfPagePreviousButton',CSS_BUTTON_PLACEHOLDER:'wfPagingButtons',ID_BUTTON_NEXT_PREFIX:'wfPageNextId',ID_BUTTON_PREVIOUS_PREFIX:'wfPagePreviousId',CSS_SUBMIT_HIDDEN:'wfHideSubmit',ID_PAGE_PREFIX:'wfPgIndex-',ID_PLACEHOLDER_SUFFIX:'-buttons',ATTR_INDEX:'wfPageIndex_activate',MESSAGES:{CAPTION_NEXT:'Next Page',CAPTION_PREVIOUS:'Previous Page'},runValidationOnPageNext:true,onPageNext:function(){},onPagePrevious:function(){},onPageChange:function(){},instance:function(f){this.behavior=wFORMS.behaviors.paging;this.target=f;this.currentPageIndex=1;}}
-wFORMS.behaviors.paging.applyTo=function(f){var b=new wFORMS.behaviors.paging.instance(f)
-var behavior=wFORMS.behaviors.paging;var isValidationAccepted=(wFORMS.behaviors.validation&&wFORMS.behaviors.paging.runValidationOnPageNext);var isPagingApplied=false;f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR).forEach(function(elem){isPagingApplied=true;var ph=b.getOrCreatePlaceHolder(elem);var index=wFORMS.behaviors.paging.getPageIndex(elem);if(index==1){var ctrl=base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));if(isValidationAccepted){ctrl.addEventListener('click',function(event){var v=wFORMS.getBehaviorInstance(b.target,'validation');if(v.run(event,elem)){b.run(event,ctrl);}},false);}else{ctrl.addEventListener('click',function(event){b.run(event,ctrl);},false);}
-wFORMS.behaviors.paging.showPage(elem);}else{var ctrl=base2.DOM.bind(behavior._createPreviousPageButton(index));ph.insertBefore(ctrl,ph.firstChild);ctrl.addEventListener('click',function(event){b.run(event,ctrl)},false);if(!wFORMS.behaviors.paging.isLastPageIndex(index,true)){var _ctrl=base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));if(isValidationAccepted){_ctrl.addEventListener('click',function(event){var v=wFORMS.getBehaviorInstance(b.target,'validation');if(v.run(event,elem)){b.run(event,_ctrl);}},false);}else{_ctrl.addEventListener('click',function(event){b.run(event,_ctrl);},false);}}}});if(isPagingApplied){p=b.findNextPage(0);b.currentPageIndex=0;b.activatePage(wFORMS.behaviors.paging.getPageIndex(p),false);b.onApply();}
-return b;}
-wFORMS.behaviors.paging.instance.prototype.onApply=function(){}
-wFORMS.behaviors.paging.getPageIndex=function(elem){if(elem&&elem.id){var index=elem.id.replace(new RegExp(wFORMS.behaviors.paging.ID_PAGE_PREFIX+'(\\d+)'),"$1");index=parseInt(index);return!isNaN(index)?index:false;}
-return false;}
-wFORMS.behaviors.paging.isElementVisible=function(element){while(element&&element.tagName!='BODY'){if(element.className){if(element.className.indexOf(this.CSS_CURRENT_PAGE)!=-1){return true;}
-if(element.className.indexOf(this.CSS_PAGE)!=-1){return false;}}
-element=element.parentNode;}
-return true;}
-wFORMS.behaviors.paging._createNextPageButton=function(index){var elem=this.createNextPageButton();elem.setAttribute(this.ATTR_INDEX,index+1);elem.id=this.ID_BUTTON_NEXT_PREFIX+index;return elem;}
-wFORMS.behaviors.paging.createNextPageButton=function(){var elem=document.createElement('input');elem.setAttribute('value',this.MESSAGES.CAPTION_NEXT);elem.type='button';elem.className=this.CSS_BUTTON_NEXT;return elem;}
-wFORMS.behaviors.paging._createPreviousPageButton=function(index){var elem=this.createPreviousPageButton();elem.setAttribute(this.ATTR_INDEX,index-1);elem.id=this.ID_BUTTON_PREVIOUS_PREFIX+index;;return elem;}
-wFORMS.behaviors.paging.createPreviousPageButton=function(){var elem=document.createElement('input');elem.setAttribute('value',this.MESSAGES.CAPTION_PREVIOUS);elem.type='button';elem.className=this.CSS_BUTTON_PREVIOUS;return elem;}
-wFORMS.behaviors.paging.instance.prototype.getOrCreatePlaceHolder=function(pageElem){var id=pageElem.id+this.behavior.ID_PLACEHOLDER_SUFFIX;var elem=document.getElementById(id);if(!elem){elem=pageElem.appendChild(document.createElement('div'));elem.id=id;elem.className=this.behavior.CSS_BUTTON_PLACEHOLDER;}
-return elem;}
-wFORMS.behaviors.paging.hidePage=function(e){if(e){if(!e.removeClass){e.removeClass=function(className){return base2.DOM.HTMLElement.removeClass(this,className)};}
-if(!e.addClass){e.addClass=function(className){return base2.DOM.HTMLElement.addClass(this,className)};}
-e.removeClass(wFORMS.behaviors.paging.CSS_CURRENT_PAGE);e.addClass(wFORMS.behaviors.paging.CSS_PAGE);}}
-wFORMS.behaviors.paging.showPage=function(e){if(e){if(!e.removeClass){e.removeClass=function(className){return base2.DOM.HTMLElement.removeClass(this,className)};}
-e.removeClass(wFORMS.behaviors.paging.CSS_PAGE);if(!e.addClass){e.addClass=function(className){return base2.DOM.HTMLElement.addClass(this,className)};}
-e.addClass(wFORMS.behaviors.paging.CSS_CURRENT_PAGE);}}
-wFORMS.behaviors.paging.instance.prototype.activatePage=function(index){if(arguments.length>1){var scrollIntoView=arguments[1];}else{var scrollIntoView=true;}
-if(index==this.currentPageIndex){return false;}
-index=parseInt(index);if(index>this.currentPageIndex){var p=this.findNextPage(this.currentPageIndex);}else{var p=this.findPreviousPage(this.currentPageIndex);}
-if(p){var _self=this;var index=_self.behavior.getPageIndex(p);_self.setupManagedControls(index);_self.behavior.hidePage(_self.behavior.getPageByIndex(_self.currentPageIndex));_self.behavior.showPage(p);var _currentPageIndex=_self.currentPageIndex;_self.currentPageIndex=index;if(scrollIntoView){if(p.scrollIntoView){p.scrollIntoView();}
-else{location.hash="#"+wFORMS.behaviors.paging.ID_PAGE_PREFIX+index;}}
-_self.behavior.onPageChange(p);if(index>_currentPageIndex){_self.behavior.onPageNext(p);}else{_self.behavior.onPagePrevious(p);}}}
-wFORMS.behaviors.paging.instance.prototype.setupManagedControls=function(index){if(!index){index=this.currentPageIndex;}
-var b=wFORMS.behaviors.paging;if(b.isFirstPageIndex(index)){if(ctrl=b.getPreviousButton(index)){ctrl.style.visibility='hidden';}}else{if(ctrl=b.getPreviousButton(index)){ctrl.style.visibility='visible';}}
-if(b.isLastPageIndex(index)){if(ctrl=b.getNextButton(index)){ctrl.style.visibility='hidden';}
-this.showSubmitButtons();}else{if(ctrl=b.getNextButton(index)){ctrl.style.visibility='visible';}
-this.hideSubmitButtons();}}
-wFORMS.behaviors.paging.instance.prototype.showSubmitButtons=function(){var nl=this.target.getElementsByTagName('input');for(var i=0;i<nl.length;i++){if(nl[i].type=='submit'){nl[i].className=nl[i].className.replace(new RegExp("(^|\\s)"+this.behavior.CSS_SUBMIT_HIDDEN+"(\\s|$)","g"),"$2");}}}
-wFORMS.behaviors.paging.instance.prototype.hideSubmitButtons=function(){var nl=this.target.getElementsByTagName('input');for(var i=0;i<nl.length;i++){if(nl[i].type=='submit'){if(!(new RegExp("(^|\\s)"+this.behavior.CSS_SUBMIT_HIDDEN+"(\\s|$)")).test(nl[i].className)){nl[i].className+=' '+this.behavior.CSS_SUBMIT_HIDDEN;}}}}
-wFORMS.behaviors.paging.getPageByIndex=function(index){var page=document.getElementById(wFORMS.behaviors.paging.ID_PAGE_PREFIX+index);return page?base2.DOM.bind(page):false;}
-wFORMS.behaviors.paging.getNextButton=function(index){return document.getElementById(wFORMS.behaviors.paging.ID_BUTTON_NEXT_PREFIX+index);}
-wFORMS.behaviors.paging.getPreviousButton=function(index){return document.getElementById(wFORMS.behaviors.paging.ID_BUTTON_PREVIOUS_PREFIX+index);}
-wFORMS.behaviors.paging.isLastPageIndex=function(index,ignoreSwitch){index=parseInt(index)+1;var b=wFORMS.behaviors.paging;var p=b.getPageByIndex(index);if((_b=wFORMS.behaviors['switch'])&&!ignoreSwitch){while(p&&_b.isSwitchedOff(p)){index++;p=b.getPageByIndex(index);}}
-return p?false:true;}
-wFORMS.behaviors.paging.isFirstPageIndex=function(index,ignoreSwitch){index=parseInt(index)-1;var b=wFORMS.behaviors.paging;var p=b.getPageByIndex(index);if((_b=wFORMS.behaviors['switch'])&&!ignoreSwitch){while(p&&_b.isSwitchedOff(p)){index--;p=b.getPageByIndex(index);}}
-return p?false:true;}
-wFORMS.behaviors.paging.instance.prototype.findNextPage=function(index){index=parseInt(index)+1;var b=wFORMS.behaviors.paging;var p=b.getPageByIndex(index);if(_b=wFORMS.behaviors['switch']){while(p&&_b.isSwitchedOff(p)){index++;p=b.getPageByIndex(index);}}
-return p;}
-wFORMS.behaviors.paging.instance.prototype.findPreviousPage=function(index){index=parseInt(index)-1;var b=wFORMS.behaviors.paging;var p=b.getPageByIndex(index);if(_b=wFORMS.behaviors['switch']){while(p&&_b.isSwitchedOff(p)){index--;p=b.getPageByIndex(index);}}
-return p?p:false;}
-wFORMS.behaviors.paging.instance.prototype.run=function(e,element){this.activatePage(element.getAttribute(wFORMS.behaviors.paging.ATTR_INDEX));}
-if(typeof(wFORMS)=="undefined"){throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");}
-wFORMS.behaviors.repeat={SELECTOR_REPEAT:'*[class~="repeat"]',SELECTOR_REMOVEABLE:'*[class~="removeable"]',ID_SUFFIX_DUPLICATE_LINK:'-wfDL',ID_SUFFIX_COUNTER:'-RC',CSS_DUPLICATE_LINK:'duplicateLink',CSS_DUPLICATE_SPAN:'duplicateSpan',CSS_DELETE_LINK:'removeLink',CSS_DELETE_SPAN:'removeSpan',CSS_REMOVEABLE:'removeable',CSS_REPEATABLE:'repeat',ATTR_DUPLICATE:'wfr__dup',ATTR_DUPLICATE_ELEM:'wfr__dup_elem',ATTR_HANDLED:'wfr_handled',ATTR_MASTER_SECTION:'wfr__master_sec',ATTR_LINK_SECTION_ID:'wfr_sec_id',MESSAGES:{ADD_CAPTION:"Add another response",ADD_TITLE:"Will duplicate this question or section.",REMOVE_CAPTION:"Remove",REMOVE_TITLE:"Will remove this question or section"},UPDATEABLE_ATTR_ARRAY:['id','name','for'],preserveRadioName:false,CSS_PRESERVE_RADIO_NAME:"preserveRadioName",onRepeat:function(elem){},onRemove:function(elem){},allowRepeat:function(elem,b){return true;},instance:function(f){this.behavior=wFORMS.behaviors.repeat;this.target=f;}}
-var _b=wFORMS.behaviors.repeat;var _i=wFORMS.behaviors.repeat.instance;_b.applyTo=function(f){var _self=this;var b=new Array();if(!f.querySelectorAll)base2.DOM.bind(f);f.querySelectorAll(this.SELECTOR_REPEAT).forEach(function(elem){if(_self.isHandled(elem)){return;}
-if(!elem.id)elem.id=wFORMS.helpers.randomId();var _b=new _self.instance(elem);var e=_b.getOrCreateRepeatLink(elem);e.addEventListener('click',function(event){_b.run(event,e)},false);_b.setElementHandled(elem);b.push(_b);});if(!f.hasClass){f=base2.DOM.bind(f);}
-if(f.hasClass(this.CSS_REMOVEABLE)){var m=this.getMasterSection(f);var _i=wFORMS.getBehaviorInstance(m,'repeat');if(_i){_i.getOrCreateRemoveLink(f);}else if(b[0]){b[0].getOrCreateRemoveLink(f);}}
-f.querySelectorAll(this.SELECTOR_REMOVEABLE).forEach(function(e){var m=wFORMS.behaviors.repeat.getMasterSection(e);var _i=wFORMS.getBehaviorInstance(m,'repeat');if(_i){_i.getOrCreateRemoveLink(e);}else if(b[0]){b[0].getOrCreateRemoveLink(e);}});for(var i=0;i<b.length;i++){b[i].onApply();}
-return b;}
-_i.prototype.onApply=function(){}
-_i.prototype.getOrCreateRepeatLink=function(elem){var id=elem.id+this.behavior.ID_SUFFIX_DUPLICATE_LINK;var e=document.getElementById(id);if(!e||e==''){e=this.createRepeatLink(id);var spanElem=document.createElement('span');spanElem.className=this.behavior.CSS_DUPLICATE_SPAN;e=spanElem.appendChild(e);if(elem.tagName.toUpperCase()=='TR'){var tdElem=elem.getElementsByTagName('TD');if(!tdElem){tdElem=elem.appendChild(document.createElement('TD'));}else{tdElem=tdElem[tdElem.length-1];}
-tdElem.appendChild(spanElem);}else{elem.appendChild(spanElem)}}
-return base2.DOM.bind(e);}
-_i.prototype.createRepeatLink=function(id){var linkElem=document.createElement("A");linkElem.id=id;linkElem.setAttribute('href','#');linkElem.className=this.behavior.CSS_DUPLICATE_LINK;linkElem.setAttribute('title',this.behavior.MESSAGES.ADD_TITLE);linkElem.appendChild(document.createElement('span').appendChild(document.createTextNode(this.behavior.MESSAGES.ADD_CAPTION)));return linkElem;}
-_i.prototype.getOrCreateRemoveLink=function(elem){var e=this.createRemoveLink(elem.id);if(elem.tagName=='TR'){var tds=elem.getElementsByTagName('TD');var tdElem=tds[tds.length-1];tdElem.appendChild(e);}else{elem.appendChild(e)}}
-_i.prototype.createRemoveLink=function(id){var linkElem=document.createElement("a");linkElem.id=id+this.behavior.ID_SUFFIX_DUPLICATE_LINK;linkElem.setAttribute('href','#');linkElem.className=this.behavior.CSS_DELETE_LINK;linkElem.setAttribute('title',this.behavior.MESSAGES.REMOVE_TITLE);linkElem.setAttribute(this.behavior.ATTR_LINK_SECTION_ID,id);var spanElem=document.createElement('span');spanElem.appendChild(document.createTextNode(this.behavior.MESSAGES.REMOVE_CAPTION));linkElem.appendChild(spanElem);var _self=this;linkElem.onclick=function(event){_self.onRemoveLinkClick(event,linkElem);};var spanElem=document.createElement('span');spanElem.className=this.behavior.CSS_DELETE_SPAN;spanElem.appendChild(linkElem);return spanElem;}
-_i.prototype.duplicateSection=function(elem){if(!this.behavior.allowRepeat(elem,this)){return false;}
-this.updateMasterSection(elem);var newElem=elem.cloneNode(true);newElem=elem.parentNode.insertBefore(newElem,this.getInsertNode(elem));this.updateDuplicatedSection(newElem);wFORMS.applyBehaviors(newElem);newElem.querySelectorAll('input').forEach(function(i){if(i.attributes['value'])
-i.value=i.attributes['value'].nodeValue;});if(wFORMS.behaviors.calculation)
-{_c=wFORMS.behaviors.calculation;inputItem=newElem.querySelector('input');if(inputItem)
-{if(inputItem.className.search(_c.VARIABLE_SELECTOR_PREFIX)!=-1)
-_c.applyTo(inputItem.form);}}
-this.behavior.onRepeat(newElem);wFORMS.helpers.spotlight(newElem);}
-_i.prototype.removeSection=function(elem){if(elem){var elem=elem.parentNode.removeChild(elem);this.behavior.onRemove(elem);}}
-_i.prototype.getInsertNode=function(elem){var insertNode=elem.nextSibling;if(insertNode&&insertNode.nodeType==1&&!insertNode.hasClass){insertNode=base2.DOM.bind(insertNode);}
-while(insertNode&&(insertNode.nodeType==3||insertNode.hasClass(this.behavior.CSS_REMOVEABLE))){insertNode=insertNode.nextSibling;if(insertNode&&insertNode.nodeType==1&&!insertNode.hasClass){insertNode=base2.DOM.bind(insertNode);}}
-return insertNode;}
-_i.prototype.onRemoveLinkClick=function(event,link){var e=document.getElementById(link.getAttribute(this.behavior.ATTR_LINK_SECTION_ID));this.removeSection(e);if(event)event.preventDefault();}
-_i.prototype.updateMasterSection=function(elem){if(elem.doItOnce==true)
-return true;else
-elem.doItOnce=true;var suffix=this.createSuffix(elem);elem.id=this.clearSuffix(elem.id)+suffix;this.updateMasterElements(elem,suffix);}
-_i.prototype.updateMasterElements=function(elem,suffix){if(!elem||elem.nodeType!=1)
-return;var cn=elem.childNodes;for(var i=0;i<cn.length;i++){var n=cn[i];if(n.nodeType!=1)continue;if(!n.hasClass){n.hasClass=function(className){return base2.DOM.HTMLElement.hasClass(this,className)};}
-var siblingSuffix=suffix;if(n.hasClass(this.behavior.CSS_REPEATABLE)){suffix+="[0]";}
-if(!n.hasClass(this.behavior.CSS_REMOVEABLE)){for(var j=0;j<this.behavior.UPDATEABLE_ATTR_ARRAY.length;j++){var attrName=this.behavior.UPDATEABLE_ATTR_ARRAY[j];var value=this.clearSuffix(n.getAttribute(attrName));if(!value){continue;}
-if(attrName=='id'&&wFORMS.behaviors.hint&&wFORMS.behaviors.hint.isHintId(n.id)){n.id=value.replace(new RegExp("(.*)("+wFORMS.behaviors.hint.HINT_SUFFIX+')$'),"$1"+suffix+"$2");}else if(attrName=='id'&&wFORMS.behaviors.validation&&wFORMS.behaviors.validation.isErrorPlaceholderId(n.id)){n.id=value.replace(new RegExp("(.*)("+wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX+')$'),"$1"+suffix+"$2");}else if(attrName=='id'&&n.id.indexOf(this.behavior.ID_SUFFIX_DUPLICATE_LINK)!=-1){n.id=value.replace(new RegExp("(.*)("+this.behavior.ID_SUFFIX_DUPLICATE_LINK+')$'),"$1"+suffix+"$2");}else if(attrName=='id'){n.id=value+suffix;}else if(attrName=='name'){n.name=value+suffix;}else{n.setAttribute(attrName,value+suffix);}}
-this.updateMasterElements(n,suffix);}
-suffix=siblingSuffix;}}
-_i.prototype.updateDuplicatedSection=function(elem){var index=this.getNextDuplicateIndex(this.target);var suffix=this.createSuffix(elem,index);elem[this.behavior.ATTR_MASTER_SECTION]=elem.id;elem.id=this.clearSuffix(elem.id)+suffix;elem.className=elem.className.replace(this.behavior.CSS_REPEATABLE,this.behavior.CSS_REMOVEABLE);if(!elem.hasClass){elem.hasClass=function(className){return base2.DOM.HTMLElement.hasClass(this,className)};}
-if(elem.hasClass(this.behavior.CSS_PRESERVE_RADIO_NAME))
-var _preserveRadioName=true;else
-var _preserveRadioName=this.behavior.preserveRadioName;this.updateSectionChildNodes(elem,suffix,_preserveRadioName);}
-_i.prototype.updateSectionChildNodes=function(elem,suffix,preserveRadioName){var removeStack=new Array();var i=0;while(elem&&elem.childNodes&&elem.childNodes[i]){var e=elem.childNodes[i];i++;if(e.nodeType!=1){continue;}
-if(!e.hasClass){e.hasClass=function(className){return base2.DOM.HTMLElement.hasClass(this,className)};}
-if(this.behavior.isDuplicate(e)){removeStack.push(e);continue;}
-if(e.hasClass(this.behavior.CSS_DUPLICATE_SPAN)){removeStack.push(e);continue;}
-if(e.hasClass(this.behavior.CSS_DUPLICATE_LINK)){removeStack.push(e);continue;}
-if(e.tagName=='INPUT'||e.tagName=='TEXTAREA'){if(e.type!='radio'&&e.type!='checkbox'){e.value='';}else{e.checked=false;}}
-this.updateAttributes(e,suffix,preserveRadioName);if(e.hasClass(this.behavior.CSS_REPEATABLE)){this.updateSectionChildNodes(e,this.createSuffix(e),preserveRadioName);}else{this.updateSectionChildNodes(e,suffix,preserveRadioName);}}
-for(var i=0;i<removeStack.length;i++){var e=removeStack[i];if(e.clearAttributes){e.clearAttributes(false);}
-if(e.parentNode)e.parentNode.removeChild(e);}}
-_i.prototype.createSuffix=function(e,index){var suffix='['+(index?index:'0')+']';var reg=/\[(\d+)\]$/;e=e.parentNode;while(e){if(e.hasClass&&(e.hasClass(this.behavior.CSS_REPEATABLE)||e.hasClass(this.behavior.CSS_REMOVEABLE))){var idx=reg.exec(e.id);if(idx)idx=idx[1];suffix='['+(idx?idx:'0')+']'+suffix;}
-e=e.parentNode;}
-return suffix;}
-_i.prototype.clearSuffix=function(value){if(!value){return;}
-if(value.indexOf('[')!=-1){return value.substring(0,value.indexOf('['));}
-return value;}
-_i.prototype.updateAttributes=function(e,idSuffix,preserveRadioName){var isHint=wFORMS.behaviors.hint&&wFORMS.behaviors.hint.isHintId(e.id);var isErrorPlaceholder=wFORMS.behaviors.validation&&wFORMS.behaviors.validation.isErrorPlaceholderId(e.id);var isDuplicateLink=e.id.indexOf(this.behavior.ID_SUFFIX_DUPLICATE_LINK)!=-1;this.setInDuplicateGroup(e);if(this.behavior.isHandled(e)){this.removeHandled(e)}
-if(wFORMS.behaviors['switch']&&wFORMS.behaviors['switch'].isHandled(e)){wFORMS.behaviors['switch'].removeHandle(e);}
-var l=this.behavior.UPDATEABLE_ATTR_ARRAY.length;for(var i=0;i<l;i++){var attrName=this.behavior.UPDATEABLE_ATTR_ARRAY[i];var value=this.clearSuffix(e.getAttribute(attrName));if(!value){continue;}
-if(attrName=='name'&&e.tagName=='INPUT'&&preserveRadioName){continue;}else if(isErrorPlaceholder&&attrName=='id'){e.id=value+idSuffix+wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX;}else if(isHint&&attrName=='id'){e.id=value+idSuffix+wFORMS.behaviors.hint.HINT_SUFFIX;}else if(isDuplicateLink&&attrName=='id'){e.id=value.replace(new RegExp("(.*)("+this.behavior.ID_SUFFIX_DUPLICATE_LINK+')$'),"$1"+idSuffix+"$2");}else if(attrName=='id'){e.id=value+idSuffix;}else if(attrName=='name'){e.name=value+idSuffix;}else{e.setAttribute(attrName,value+idSuffix);}}}
-_i.prototype.getNextDuplicateIndex=function(elem){var c=this.getOrCreateCounterField(elem);var newValue=parseInt(c.value)+1;c.value=newValue;return newValue;}
-_i.prototype.getOrCreateCounterField=function(elem){var cId=elem.id+this.behavior.ID_SUFFIX_COUNTER;var cElem=document.getElementById(cId);if(!cElem||cElem==''){cElem=this.createCounterField(cId);var formElem=elem.parentNode;while(formElem&&formElem.tagName.toUpperCase()!='FORM'){formElem=formElem.parentNode;}
-formElem.appendChild(cElem);}
-return cElem;}
-_i.prototype.createCounterField=function(id){cElem=document.createElement('input');cElem.id=id;cElem.setAttribute('type','hidden');cElem.setAttribute('name',id);cElem.value='0';return cElem;}
-_i.prototype.getSectionsCount=function(){if(this.behavior.isDuplicate(this.target)){return false;}
-return parseInt(this.getOrCreateCounterField(this.target).value)+1;}
-_i.prototype.setInDuplicateGroup=function(elem){return elem.setAttribute(this.behavior.ATTR_DUPLICATE_ELEM,true);}
-_i.prototype.setElementHandled=function(elem){return elem.setAttribute(this.behavior.ATTR_HANDLED,true);}
-_i.prototype.removeHandled=function(elem){return elem.removeAttribute(this.behavior.ATTR_HANDLED);}
-_b.isDuplicate=function(elem){return elem.hasClass(this.CSS_REMOVEABLE);}
-_b.isInDuplicateGroup=function(elem){return elem.getAttribute(this.ATTR_DUPLICATE_ELEM)?true:false;}
-_b.isHandled=function(elem){return elem.getAttribute(this.ATTR_HANDLED);}
-_b.getMasterSection=function(elem){if(!this.isDuplicate(elem))return false;return document.getElementById(elem[this.ATTR_MASTER_SECTION]);}
-_i.prototype.run=function(e,element){this.duplicateSection(this.target);if(e)e.preventDefault();}
-if(typeof(wFORMS)=="undefined"){throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");}
-wFORMS.behaviors['switch']={SELECTOR:'*[class*="switch-"]',CSS_PREFIX:'switch-',CSS_OFFSTATE_PREFIX:'offstate-',CSS_ONSTATE_PREFIX:'onstate-',CSS_ONSTATE_FLAG:'swtchIsOn',CSS_OFFSTATE_FLAG:'swtchIsOff',onSwitchOn:function(elem){},onSwitchOff:function(elem){},onSwitch:function(form){},instance:function(f){this.behavior=wFORMS.behaviors['switch'];this.target=f;}}
-wFORMS.behaviors['switch'].applyTo=function(f){var b=new wFORMS.behaviors['switch'].instance(f);f.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR).forEach(function(elem){if(!elem.id){elem.id=wFORMS.helpers.randomId()}
-switch(elem.tagName.toUpperCase()){case'OPTION':var sNode=elem.parentNode;while(sNode&&sNode.tagName!='SELECT'){sNode=sNode.parentNode;}
-if(!sNode.addEventListener)
-base2.DOM.bind(sNode);if(sNode&&!wFORMS.behaviors['switch'].isHandled(sNode)){sNode.addEventListener('change',function(event){b.run(event,sNode)},false);b.setupTargets(sNode);wFORMS.behaviors['switch'].handleElement(sNode);}
-break;case'INPUT':if(elem.type&&elem.type.toUpperCase()=='RADIO'){if(!wFORMS.behaviors['switch'].isHandled(elem)){b.setupTargets(elem);}
-var radioGroup=elem.form[elem.name];for(var i=radioGroup.length-1;i>=0;i--){var _elem=base2.DOM.bind(radioGroup[i]);if(!wFORMS.behaviors['switch'].isHandled(_elem)){_elem.addEventListener('click',function(event){b.run(event,_elem)},false);wFORMS.behaviors['switch'].handleElement(_elem);}}}else{elem.addEventListener('click',function(event){b.run(event,elem)},false);b.setupTargets(elem);}
-break;default:elem.addEventListener('click',function(event){b.run(event,elem)},false);break;}});b.onApply();return b;}
-wFORMS.behaviors['switch'].instance.prototype.onApply=function(){}
-wFORMS.behaviors['switch'].isHandled=function(elem){return elem.getAttribute('rel')&&elem.getAttribute('rel').indexOf('wfHandled')>-1;}
-wFORMS.behaviors['switch'].handleElement=function(elem){return elem.setAttribute('rel',(elem.getAttribute('rel')||"")+' wfHandled');}
-wFORMS.behaviors['switch'].removeHandle=function(elem){if(attr=elem.getAttribute('rel')){if(attr=='wfHandled'){elem.removeAttribute('rel');}else if(attr.indexOf('wfHandled')!=-1){elem.setAttribute('rel',attr.replace(/(.*)( wfHandled)(.*)/,"$1$3"));}}}
-wFORMS.behaviors['switch'].instance.prototype.getTriggersByElements=function(elems,includeSwitches){var o={ON:new Array(),OFF:new Array(),toString:function(){return"ON: "+this.ON+"\nOFF: "+this.OFF}};for(var i=0;i<elems.length;i++){var elem=elems[i];switch(elem.tagName.toUpperCase()){case'OPTION':if(elem.selected){o.ON=o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem,includeSwitches));}else{o.OFF=o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem,includeSwitches));}
-break;case'SELECT':for(var j=0;j<elem.options.length;j++){var opt=elem.options.item(j);if(opt.selected){o.ON=o.ON.concat(this.behavior.getSwitchNamesFromTrigger(opt,includeSwitches));}else{o.OFF=o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(opt,includeSwitches));}}
-break;case'INPUT':if(elem.type&&elem.type.toUpperCase()=='RADIO'){var radioGroup=elem.form[elem.name];if(!radioGroup)break;for(var j=radioGroup.length-1;j>=0;j--){var _elem=radioGroup[j];if(_elem==elem||!wFORMS.helpers.contains(elems,_elem)){if(_elem.checked){o.ON=o.ON.concat(this.behavior.getSwitchNamesFromTrigger(_elem,includeSwitches));}else{o.OFF=o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(_elem,includeSwitches));}}}}else{if(elem.checked){o.ON=o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem,includeSwitches));}else{o.OFF=o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem,includeSwitches));}}
-break;default:if(elem.hasClass(this.behavior.CSS_ONSTATE_FLAG)){o.ON=o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem,includeSwitches));}else{o.OFF=o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem,includeSwitches));}
-break;}}
-var _ON=new Array();for(var i=0;i<o.ON.length;i++){if(!wFORMS.helpers.contains(_ON,o.ON[i])){_ON.push(o.ON[i]);}}
-var _OFF=new Array();for(var i=0;i<o.OFF.length;i++){if(!wFORMS.helpers.contains(_OFF,o.OFF[i])){_OFF.push(o.OFF[i]);}}
-o.ON=_ON;o.OFF=_OFF;return o;}
-wFORMS.behaviors['switch'].getSwitchNamesFromTrigger=function(elem,includeSwitches){return wFORMS.behaviors['switch'].getSwitchNames(elem.className,"trigger",includeSwitches);}
-wFORMS.behaviors['switch'].getSwitchNamesFromTarget=function(elem,includeSwitches){return wFORMS.behaviors['switch'].getSwitchNames(elem.className,"target",includeSwitches);}
-wFORMS.behaviors['switch'].getSwitchNames=function(className,switchPart,includeSwitches){if(!className||className=='')return[];var names=className.split(" ");var _names=new Array();if(switchPart=='trigger')
-var doTriggers=true;else
-var doTriggers=false;for(var i=names.length-1;i>=0;i--){var cn=names[i];if(doTriggers){if(cn.indexOf(this.CSS_PREFIX)==0)
-var sn=cn.substring(this.CSS_PREFIX.length);}else{if(cn.indexOf(this.CSS_ONSTATE_PREFIX)==0)
-var sn=cn.substring(this.CSS_ONSTATE_PREFIX.length);else if(cn.indexOf(this.CSS_OFFSTATE_PREFIX)==0)
-var sn=cn.substring(this.CSS_OFFSTATE_PREFIX.length);}
-if(sn&&(!includeSwitches||wFORMS.helpers.contains(includeSwitches,sn))){_names.push(sn);}}
-return _names;}
-wFORMS.behaviors['switch'].instance.prototype.getTargetsBySwitchName=function(sName,state){var res=new Array();var clazz=this;var b=wFORMS.behaviors.repeat;if(arguments[1]=='ON')
-var className=[wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX+sName];else{var className=[wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX+sName];}
-this.target.querySelectorAll("."+className).forEach(function(elem){if(b&&b.isInDuplicateGroup(elem)&&!(b.isDuplicate(clazz.target)||b.isInDuplicateGroup(clazz.target))){return;}
-res.push(base2.DOM.bind(elem));});return res;}
-wFORMS.behaviors['switch'].instance.prototype.getTriggersByTarget=function(target){var res=new Array();var clazz=this;var names=wFORMS.behaviors['switch'].getSwitchNamesFromTarget(target);var b=wFORMS.behaviors.repeat;base2.forEach(names,function(name){clazz.target.querySelectorAll("."+wFORMS.behaviors['switch'].CSS_PREFIX+name).forEach(function(elem){if(b&&b.isInDuplicateGroup(elem)&&!(b.isDuplicate(target)||b.isInDuplicateGroup(target))){return;}
-res.push(base2.DOM.bind(elem));});});return this.getTriggersByElements(res,names);}
-wFORMS.behaviors['switch'].instance.prototype.setupTargets=function(elem){this.run(null,elem)}
-wFORMS.behaviors['switch'].isSwitchedOff=function(elem){return(elem.className.match(new RegExp(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX+"[^ ]*"))?true:false)&&(elem.className.match(new RegExp(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX+"[^ ]*"))?false:true);}
-wFORMS.behaviors['switch'].instance.prototype.run=function(e,element){if(!element.hasClass)base2.DOM.bind(element);if(element.hasClass(this.behavior.CSS_ONSTATE_FLAG)){element.removeClass(this.behavior.CSS_ONSTATE_FLAG);element.addClass(this.behavior.CSS_OFFSTATE_FLAG);if(e)e.preventDefault();}else if(element.hasClass(this.behavior.CSS_OFFSTATE_FLAG)){element.removeClass(this.behavior.CSS_OFFSTATE_FLAG);element.addClass(this.behavior.CSS_ONSTATE_FLAG);if(e)e.preventDefault();}
-var triggers=this.getTriggersByElements(new Array(element));var clazz=this;base2.forEach(triggers.OFF,function(switchName){var targets=clazz.getTargetsBySwitchName(switchName,'ON');base2.forEach(targets,function(elem){elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX+switchName);elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX+switchName);var _triggers=clazz.getTriggersByTarget(elem);if(_triggers.ON.length==0){clazz.behavior.onSwitchOff(elem);}})});base2.forEach(triggers.ON,function(switchName){var targets=clazz.getTargetsBySwitchName(switchName,'OFF');base2.forEach(targets,function(elem){elem.removeClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX+switchName);elem.addClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX+switchName);clazz.behavior.onSwitchOn(elem);})});if(b=wFORMS.getBehaviorInstance(this.target,'paging')){b.setupManagedControls();}
-this.behavior.onSwitch(this.target);}
-if(typeof(wFORMS)=="undefined"){throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");}
-wFORMS.behaviors.validation={ERROR_PLACEHOLDER_SUFFIX:'-E',rules:{isRequired:{selector:".required",check:'validateRequired'},isAlpha:{selector:".validate-alpha",check:'validateAlpha'},isAlphanum:{selector:".validate-alphanum",check:'validateAlphanum'},isDate:{selector:".validate-date",check:'validateDate'},isTime:{selector:".validate-time",check:'validateTime'},isEmail:{selector:".validate-email",check:'validateEmail'},isInteger:{selector:".validate-integer",check:'validateInteger'},isFloat:{selector:".validate-float",check:'validateFloat'},isCustom:{selector:".validate-custom",check:'validateCustom'}},styling:{fieldError:"errFld",errorMessage:"errMsg"},messages:{isRequired:"This field is required. ",isAlpha:"The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",isEmail:"This does not appear to be a valid email address.",isInteger:"Please enter an integer.",isFloat:"Please enter a number (ex. 1.9).",isAlphanum:"Please use alpha-numeric characters only [a-z 0-9].",isDate:"This does not appear to be a valid date.",isCustom:"Please enter a valid value.",notification:"%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."},instance:function(f){this.behavior=wFORMS.behaviors.validation;this.target=f;},onPass:function(f){},onFail:function(f){}}
-wFORMS.behaviors.validation.applyTo=function(f){if(!f||!f.tagName){throw new Error("Can't apply behavior to "+f);}
-if(f.tagName!="FORM"){if(f.form)
-f=f.form;else{var _f=f;for(f=f.parentNode;f&&f.tagName!="FORM";f=f.parentNode)continue;if(!f||f.tagName!="FORM"){f=_f.getElementsByTagName('form');}}}
-if(!f.tagName&&f.length>0){var v=new Array();for(var i=0;i<f.length;i++){var _v=new wFORMS.behaviors.validation.instance(f[i]);if(!f[i].addEventListener)base2.DOM.bind(f[i]);f[i].addEventListener('submit',function(e){return _v.run(e,this)},false);v.push(_v);_v.onApply();}}else{var v=new wFORMS.behaviors.validation.instance(f);if(!f.addEventListener)base2.DOM.bind(f);f.addEventListener('submit',function(e){return v.run(e,this)},false);v.onApply();}
-return v;}
-wFORMS.behaviors.validation.instance.prototype.onApply=function(){}
-wFORMS.behaviors.validation.instance.prototype.run=function(e,element){var errorCount=0;this.elementsInError={};for(var ruleName in this.behavior.rules){var rule=this.behavior.rules[ruleName];var _self=this;if(!element.querySelectorAll)
-base2.DOM.bind(element);element.querySelectorAll(rule.selector).forEach(function(element){if(wFORMS.behaviors.paging&&!wFORMS.behaviors.paging.isElementVisible(element)){return;}
-if(_self.isSwitchedOff(element))
-return;var value=wFORMS.helpers.getFieldValue(element);if(rule.check.call){var passed=rule.check.call(_self,element,value);}else{var passed=_self[rule.check].call(_self,element,value);}
-if(!passed){if(!element.id)element.id=wFORMS.helpers.randomId();_self.elementsInError[element.id]={id:element.id,rule:ruleName};_self.removeErrorMessage(element);if(rule.fail){rule.fail.call(_self,element,ruleName);}else{_self.fail.call(_self,element,ruleName);}
-errorCount++;}else{if(!_self.elementsInError[element.id])
-_self.removeErrorMessage(element);if(rule.pass){rule.pass.call(_self,element);}else{_self.pass.call(_self,element);}}});}
-if(errorCount>0){if(e){e.preventDefault?e.preventDefault():e.returnValue=false;}
-if(this.behavior.onFail)this.behavior.onFail(this);return false;}
-if(this.behavior.onPass)this.behavior.onPass(this);return true;}
-wFORMS.behaviors.validation.instance.prototype.fail=function(element,ruleName){element.addClass(this.behavior.styling.fieldError);this.addErrorMessage(element,this.behavior.messages[ruleName]);},wFORMS.behaviors.validation.instance.prototype.pass=function(element){}
-wFORMS.behaviors.validation.instance.prototype.addErrorMessage=function(element,message){if(!element.id)element.id=wFORMS.helpers.randomId();var txtNode=document.createTextNode(message);var p=document.getElementById(element.id+this.behavior.ERROR_PLACEHOLDER_SUFFIX);if(!p){p=document.createElement("div");p.setAttribute('id',element.id+this.behavior.ERROR_PLACEHOLDER_SUFFIX);if(element.tagName=="TR"){p=(element.getElementsByTagName('TD')[0]).appendChild(p);}else{p=element.parentNode.insertBefore(p,element.nextSibling);}}
-p.appendChild(txtNode);base2.DOM.bind(p);p.addClass(this.behavior.styling.errorMessage);}
-wFORMS.behaviors.validation.instance.prototype.removeErrorMessage=function(element){if(!element.hasClass)base2.DOM.bind(element);if(element.hasClass(this.behavior.styling.fieldError)){element.removeClass(this.behavior.styling.fieldError);var errorMessage=document.getElementById(element.id+this.behavior.ERROR_PLACEHOLDER_SUFFIX);if(errorMessage){errorMessage.parentNode.removeChild(errorMessage);}}}
-wFORMS.behaviors.validation.instance.prototype.isSwitchedOff=function(element){var sb=wFORMS.getBehaviorInstance(this.target,'switch');if(sb){var parentElement=element;while(parentElement&&parentElement.tagName!='BODY'){if(parentElement.className&&parentElement.className.indexOf(sb.behavior.CSS_OFFSTATE_PREFIX)!=-1&&parentElement.className.indexOf(sb.behavior.CSS_ONSTATE_PREFIX)==-1){return true;}
-parentElement=parentElement.parentNode;}}
-return false;}
-wFORMS.behaviors.validation.isErrorPlaceholderId=function(id){return id.match(new RegExp(wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX+'$'))!=null;}
-wFORMS.behaviors.validation.instance.prototype.isEmpty=function(s){var regexpWhitespace=/^\s+$/;return((s==null)||(s.length==0)||regexpWhitespace.test(s));}
-wFORMS.behaviors.validation.instance.prototype.validateRequired=function(element,value){switch(element.tagName){case"INPUT":var inputType=element.getAttribute("type");if(!inputType)inputType='text';switch(inputType.toLowerCase()){case"checkbox":case"radio":return element.checked;break;default:return!this.isEmpty(value);}
-break;case"SELECT":return!this.isEmpty(value);break;case"TEXTAREA":return!this.isEmpty(value);break;default:return this.validateOneRequired(element);break;}
-return false};wFORMS.behaviors.validation.instance.prototype.validateOneRequired=function(element){if(element.nodeType!=1)return false;if(this.isSwitchedOff(element))
-return false;switch(element.tagName){case"INPUT":var inputType=element.getAttribute("type");if(!inputType)inputType='text';switch(inputType.toLowerCase()){case"checkbox":case"radio":return element.checked;break;default:return!this.isEmpty(wFORMS.helpers.getFieldValue(element));}
-break;case"SELECT":return!this.isEmpty(wFORMS.helpers.getFieldValue(element));break;case"TEXTAREA":return!this.isEmpty(wFORMS.helpers.getFieldValue(element));break;default:for(var i=0;i<element.childNodes.length;i++){if(this.validateOneRequired(element.childNodes[i]))return true;}
-break;}
-return false}
-wFORMS.behaviors.validation.instance.prototype.validateAlpha=function(element,value){var regexp=/^[a-zA-Z\s]+$/;return this.isEmpty(value)||regexp.test(value);}
-wFORMS.behaviors.validation.instance.prototype.validateAlphanum=function(element,value){var regexp=/^[\w\s]+$/;return this.isEmpty(value)||regexp.test(value);}
-wFORMS.behaviors.validation.instance.prototype.validateDate=function(element,value){var testDate=new Date(value);return this.isEmpty(value)||!isNaN(testDate);}
-wFORMS.behaviors.validation.instance.prototype.validateTime=function(element,value){return true;}
-wFORMS.behaviors.validation.instance.prototype.validateEmail=function(element,value){var regexpEmail=/\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,}$/;return this.isEmpty(value)||regexpEmail.test(value);}
-wFORMS.behaviors.validation.instance.prototype.validateInteger=function(element,value){var regexp=/^[+]?\d+$/;return this.isEmpty(value)||regexp.test(value);}
-wFORMS.behaviors.validation.instance.prototype.validateFloat=function(element,value){return this.isEmpty(value)||!isNaN(parseFloat(value));}
-wFORMS.behaviors.validation.instance.prototype.validateCustom=function(element,value){var pattern=new RegExp("\/(.*)\/([gi]*)");var matches=element.className.match(pattern);if(matches&&matches[0]){var validationPattern=new RegExp(matches[1],matches[2]);if(!value.match(validationPattern)){return false}}
-return true;}
-if(typeof(wFORMS)=="undefined"){throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");}
-wFORMS.behaviors.calculation={VARIABLE_SELECTOR_PREFIX:"calc-",CHOICE_VALUE_SELECTOR_PREFIX:"calcval-",CALCULATION_SELECTOR:'*[class*="formula="]',CALCULATION_ERROR_MESSAGE:"There was an error computing this field.",instance:function(f){this.behavior=wFORMS.behaviors.calculation;this.target=f;this.calculations=[];}}
-wFORMS.behaviors.calculation.applyTo=function(f){var b=new wFORMS.behaviors.calculation.instance(f);f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR).forEach(function(elem){var formula=elem.className.substr(elem.className.indexOf('formula=')+8).split(' ')[0];var variables=formula.split(/[^a-zA-Z]+/g);b.varFields=[];for(var i=0;i<variables.length;i++){if(variables[i]!=''){f.querySelectorAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+"\"]").forEach(function(variable){var exactMatch=((' '+variable.className+' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+' ')!=-1);if(!exactMatch)return;switch(variable.tagName+":"+variable.getAttribute('type')){case'INPUT:':case'INPUT:null':case'INPUT:text':case'INPUT:hidden':case'INPUT:password':case'TEXTAREA:null':if(!variable._wforms_calc_handled){variable.addEventListener('blur',function(e){return b.run(e,this)},false);variable._wforms_calc_handled=true;}
-break;case'INPUT:radio':case'INPUT:checkbox':if(!variable._wforms_calc_handled){variable.addEventListener('click',function(e){return b.run(e,this)},false);variable._wforms_calc_handled=true;}
-break;case'SELECT:null':if(!variable._wforms_calc_handled){variable.addEventListener('change',function(e){return b.run(e,this)},false);variable._wforms_calc_handled=true;}
-break;default:return;break;}
-b.varFields.push({name:variables[i],field:variable});});}}
-var calc={field:elem,formula:formula,variables:b.varFields};b.calculations.push(calc);b.compute(calc);});b.onApply();return b;}
-wFORMS.behaviors.calculation.instance.prototype.onApply=function(){}
-wFORMS.behaviors.calculation.instance.prototype.run=function(event,element){for(var i=0;i<this.calculations.length;i++){var calc=this.calculations[i];for(var j=0;j<calc.variables.length;j++){if(element==calc.variables[j].field){this.compute(calc);}}}}
-wFORMS.behaviors.calculation.instance.prototype.refresh=function(event,element){for(var i=0;i<this.calculations.length;i++){var calc=this.calculations[i];if(element==calc.field){this.compute(calc);}}}
-wFORMS.behaviors.calculation.instance.prototype.compute=function(calculation){var f=this.target;var formula=calculation.formula;var _processedVariables=new Array();for(var i=0;i<calculation.variables.length;i++){var v=calculation.variables[i];var varval=0;var _self=this;if(wFORMS.helpers.contains(_processedVariables,v.name)){continue;}else{_processedVariables.push(v.name);}
-f.querySelectorAll("*[class*=\""+_self.behavior.VARIABLE_SELECTOR_PREFIX+v.name+"\"]").forEach(function(f){var exactMatch=((' '+f.className+' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+v.name+' ')!=-1);if(!exactMatch)return;if(_self.hasValueInClassName(f)){var value=_self.getValueFromClassName(f);}else{var value=wFORMS.helpers.getFieldValue(f);}
-if(!value)value=0;if(value.constructor==Array){for(var j=0;j<value.length;j++){varval+=parseFloat(value[j]);}}else{varval+=parseFloat(value);}});var rgx=new RegExp("([^a-z])("+v.name+")([^a-z])","gi");while((' '+formula+' ').match(rgx)){formula=(' '+formula+' ').replace(rgx,"$1"+varval+"$3");}}
-try{var result=eval(formula);if(result=='Infinity'||result=='NaN'||isNaN(result)){result='error';}}catch(x){result='error';}
-var validationBehavior=wFORMS.getBehaviorInstance(this.target,'validation');if(validationBehavior){if(!wFORMS.behaviors.validation.messages['calculation']){wFORMS.behaviors.validation.messages['calculation']=this.behavior.CALCULATION_ERROR_MESSAGE;}
-validationBehavior.removeErrorMessage(calculation.field);if(result=='error'){validationBehavior.fail(calculation.field,'calculation');}}
-calculation.field.value=result;if(calculation.field.className&&(calculation.field.className.indexOf(this.behavior.VARIABLE_SELECTOR_PREFIX)!=-1)){this.run(null,calculation.field);}}
-wFORMS.behaviors.calculation.instance.prototype.hasValueInClassName=function(element){switch(element.tagName){case"SELECT":for(var i=0;i<element.options.length;i++){if(element.options[i].className&&element.options[i].className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)!=-1){return true;}}
-return false;break;default:if(!element.className||(' '+element.className).indexOf(' '+this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1)
-return false;break;}
-return true;}
-wFORMS.behaviors.calculation.instance.prototype.getValueFromClassName=function(element){switch(element.tagName){case"INPUT":if(!element.className||element.className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1)
-return null;var value=element.className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];if(element.type=='checkbox')
-return element.checked?value:null;if(element.type=='radio')
-return element.checked?value:null;return value;break;case"SELECT":if(element.selectedIndex==-1){return null;}
-if(element.getAttribute('multiple')){var v=[];for(var i=0;i<element.options.length;i++){if(element.options[i].selected){if(element.options[i].className&&element.options[i].className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)!=-1){var value=element.options[i].className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];v.push(value);}}}
-if(v.length==0)return null;return v;}
-if(element.options[element.selectedIndex].className&&element.options[element.selectedIndex].className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)!=-1){var value=element.options[element.selectedIndex].className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];return value;}
-break;case"TEXTAREA":if(!element.className||element.className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1)
-return null;var value=element.className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];return value;break;default:return null;break;}
-return null;}
+/***
+
+    wForms 3.0
+    a javascript extension to web forms. 
+
+    Build $Tue, 10 Jun 2008 21:51:37 UTC$
+
+    THIS FILE IS AUTOMATICALLY GENERATED.  If creating patches, please
+    diff against the source tree, not this file.
+
+    Copyright (c) 2005-2007 Cedric Savarese <cedric@veerwest.com> and contributors.
+    This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
+    For more information, visit: http://www.formassembly.com/wForms 
+
+    Build script by Troels Knak-Nielsen <troelskn@gmail.com>
+    wForms version 3.0 by Demid Nikitin and Cedric Savarese.
+    wForms 3.0 requires base2 - copyright 2007, Dean Edwards. 
+***/
+
+var base2={name:"base2",version:"1.0 (beta 3)",exports:"Base,Package,Abstract,Module,Enumerable,Map,Collection,RegGrp,"+"Undefined,Null,This,True,False,assignID,detect,global",namespace:"",global:this};new function(_x){var _f="var global=base2.global;eval('var base2=global.base2;');";eval(_f);var Undefined=K(),Null=K(null),True=K(true),False=K(false),This=function(){return this};var _A=/%([1-9])/g;var _i=/^\s\s*/;var _r=/\s\s*$/;var _k=/([\/()[\]{}|*+-.,^$?\\])/g;var _c=/eval/.test(detect)?/\bbase\b/:/.*/;var _d=["constructor","toString","valueOf"];var _j=detect("(jscript)")?new RegExp("^"+rescape(isNaN).replace(/isNaN/,"\\w+")+"$"):{test:False};var _u=1;var _2=Array.prototype.slice;_5();function assignID(a){if(!a.base2ID)a.base2ID="b2_"+_u++;return a.base2ID};var _g=function(a,b){base2.__prototyping=this.prototype;var c=new this;if(a)extend(c,a);delete base2.__prototyping;var e=c.constructor;function d(){if(!base2.__prototyping){if(this.constructor==arguments.callee||this.__constructing){this.__constructing=true;e.apply(this,arguments);delete this.__constructing}else{return extend(arguments[0],c)}}return this};c.constructor=d;for(var f in Base)d[f]=this[f];d.ancestor=this;d.base=Undefined;if(b)extend(d,b);d.prototype=c;if(d.init)d.init();return d};var Base=_g.call(Object,{constructor:function(){if(arguments.length>0){this.extend(arguments[0])}},base:function(){},extend:delegate(extend)},Base={ancestorOf:function(a){return _7(this,a)},extend:_g,forEach:function(a,b,c){_5(this,a,b,c)},implement:function(a){if(typeof a=="function"){a=a.prototype}extend(this.prototype,a);return this}});var Package=Base.extend({constructor:function(e,d){this.extend(d);if(this.init)this.init();if(this.name!="base2"){if(!this.parent)this.parent=base2;this.parent.addName(this.name,this);this.namespace=format("var %1=%2;",this.name,String2.slice(this,1,-1))}if(e){e.imports=Array2.reduce(csv(this.imports),function(a,b){eval(format("var ns=(base2.%1||JavaScript.%1)",b));return a+=ns.namespace},_f+base2.namespace+JavaScript.namespace)+lang.namespace;e.exports=Array2.reduce(csv(this.exports),function(a,b){var c=this.name+"."+b;this.namespace+="var "+b+"="+c+";";return a+="if(!"+c+")"+c+"="+b+";"},"",this)}},exports:"",imports:"",name:"",namespace:"",parent:null,addName:function(a,b){if(!this[a]){this[a]=b;this.exports+=","+a;this.namespace+=format("var %1=%2.%1;",a,this.name)}},addPackage:function(a){this.addName(a,new Package(null,{name:a,parent:this}))},toString:function(){return format("[%1]",this.parent?String2.slice(this.parent,1,-1)+"."+this.name:this.name)}});var Abstract=Base.extend({constructor:function(){throw new TypeError("Abstract class cannot be instantiated.");}});var _v=0;var Module=Abstract.extend(null,{namespace:"",extend:function(b,c){var e=this.base();var d=_v++;e.namespace="";e.partial=this.partial;e.toString=function(a){return a=="index"?d:"[module]"};Module[d]=e;e.implement(this);if(b)e.implement(b);if(c){extend(e,c);if(e.init)e.init()}return e},forEach:function(c,e){_5(Module,this.prototype,function(a,b){if(typeOf(a)=="function"){c.call(e,this[b],b,this)}},this)},implement:function(a){var b=this;var c=b.toString("index");if(typeof a=="function"){if(!_7(a,b)){this.base(a)}if(_7(Module,a)){for(var e in a){if(b[e]===undefined){var d=a[e];if(typeof d=="function"&&d.call&&a.prototype[e]){d=_z(a,e)}b[e]=d}}b.namespace+=a.namespace.replace(/\b\d+\b/g,c)}}else{extend(b,a);_e(b,a,c)}return b},partial:function(){var c=Module.extend();var e=c.toString("index");c.namespace=this.namespace.replace(/(\w+)=b[^\)]+\)/g,"$1=base2.Module["+e+"].$1");this.forEach(function(a,b){c[b]=partial(bind(a,c))});return c}});function _e(a,b,c){var e=a.prototype;for(var d in b){var f=b[d],g="";if(d.charAt(0)=="@"){if(detect(d.slice(1)))_e(a,f,c)}else if(!e[d]){if(d==d.toUpperCase()){g="var "+d+"=base2.Module["+c+"]."+d+";"}else if(typeof f=="function"&&f.call){g="var "+d+"=base2.lang.bind('"+d+"',base2.Module["+c+"]);";e[d]=_w(a,d)}if(a.namespace.indexOf(g)==-1){a.namespace+=g}}}};function _z(a,b){return function c(){return a[b].apply(this,arguments)}};function _w(b,c){return function e(){var a=_2.call(arguments);a.unshift(this);return b[c].apply(this,a)}};var Enumerable=Module.extend({every:function(c,e,d){var f=true;try{forEach(c,function(a,b){f=e.call(d,a,b,c);if(!f)throw StopIteration;})}catch(error){if(error!=StopIteration)throw error;}return!!f},filter:function(e,d,f){var g=0;return this.reduce(e,function(a,b,c){if(d.call(f,b,c,e)){a[g++]=b}return a},[])},invoke:function(b,c){var e=_2.call(arguments,2);return this.map(b,(typeof c=="function")?function(a){return a==null?undefined:c.apply(a,e)}:function(a){return a==null?undefined:a[c].apply(a,e)})},map:function(c,e,d){var f=[],g=0;forEach(c,function(a,b){f[g++]=e.call(d,a,b,c)});return f},pluck:function(b,c){return this.map(b,function(a){return a==null?undefined:a[c]})},reduce:function(c,e,d,f){var g=arguments.length>2;forEach(c,function(a,b){if(g){d=e.call(f,d,a,b,c)}else{d=a;g=true}});return d},some:function(a,b,c){return!this.every(a,not(b),c)}});var _1="#";var Map=Base.extend({constructor:function(a){if(a)this.merge(a)},clear:function(){for(var a in this)if(a.charAt(0)==_1){delete this[a]}},copy:delegate(copy),forEach:function(a,b){for(var c in this)if(c.charAt(0)==_1){a.call(b,this[c],c.slice(1),this)}},get:function(a){return this[_1+a]},getKeys:function(){return this.map(II)},getValues:function(){return this.map(I)},has:function(a){/*@cc_on @*//*@if(@_jscript_version<5.5)return $Legacy.has(this,_1+a);@else @*/return _1+a in this;/*@end @*/},merge:function(b){var c=flip(this.put);forEach(arguments,function(a){forEach(a,c,this)},this);return this},put:function(a,b){if(arguments.length==1)b=a;this[_1+a]=b},remove:function(a){delete this[_1+a]},size:function(){var a=0;for(var b in this)if(b.charAt(0)==_1)a++;return a},union:function(a){return this.merge.apply(this.copy(),arguments)}});Map.implement(Enumerable);var _0="~";var Collection=Map.extend({constructor:function(a){this[_0]=new Array2;this.base(a)},add:function(a,b){assert(!this.has(a),"Duplicate key '"+a+"'.");this.put.apply(this,arguments)},clear:function(){this.base();this[_0].length=0},copy:function(){var a=this.base();a[_0]=this[_0].copy();return a},forEach:function(a,b){var c=this[_0];var e=c.length;for(var d=0;d<e;d++){a.call(b,this[_1+c[d]],c[d],this)}},getAt:function(a){if(a<0)a+=this[_0].length;var b=this[_0][a];return(b===undefined)?undefined:this[_1+b]},getKeys:function(){return this[_0].concat()},indexOf:function(a){return this[_0].indexOf(String(a))},insertAt:function(a,b,c){assert(Math.abs(a)<this[_0].length,"Index out of bounds.");assert(!this.has(b),"Duplicate key '"+b+"'.");this[_0].insertAt(a,String(b));this[_1+b]==null;this.put.apply(this,_2.call(arguments,1))},item:function(a){return this[typeof a=="number"?"getAt":"get"](a)},put:function(a,b){if(arguments.length==1)b=a;if(!this.has(a)){this[_0].push(String(a))}var c=this.constructor;if(c.Item&&!instanceOf(b,c.Item)){b=c.create.apply(c,arguments)}this[_1+a]=b},putAt:function(a,b){assert(Math.abs(a)<this[_0].length,"Index out of bounds.");arguments[0]=this[_0].item(a);this.put.apply(this,arguments)},remove:function(a){if(this.has(a)){this[_0].remove(String(a));delete this[_1+a]}},removeAt:function(a){var b=this[_0].removeAt(a);delete this[_1+b]},reverse:function(){this[_0].reverse();return this},size:function(){return this[_0].length},sort:function(c){if(c){var e=this;this[_0].sort(function(a,b){return c(e[_1+a],e[_1+b],a,b)})}else this[_0].sort();return this},toString:function(){return"("+String(this[_0])+")"}},{Item:null,create:function(a,b){return this.Item?new this.Item(a,b):b},extend:function(a,b){var c=this.base(a);c.create=this.create;if(b)extend(c,b);if(!c.Item){c.Item=this.Item}else if(typeof c.Item!="function"){c.Item=(this.Item||Base).extend(c.Item)}if(c.init)c.init();return c}});var _l=/\\(\d+)/g,_o=/\\./g,_n=/\(\?[:=!]|\[[^\]]+\]/g,_m=/\(/g,_p=/\$(\d+)/,_q=/^\$\d+$/;var RegGrp=Collection.extend({constructor:function(a,b){this.base(a);this.ignoreCase=!!b},ignoreCase:false,exec:function(g,h){g+="";var i=this,j=this[_0];if(!j.length)return g;if(h==RegGrp.IGNORE)h=0;return g.replace(new RegExp(this,this.ignoreCase?"gi":"g"),function(a){var b,c=1,e=0;while((b=i[_1+j[e++]])){var d=c+b.length+1;if(arguments[c]){var f=h==null?b.replacement:h;switch(typeof f){case"function":return f.apply(i,_2.call(arguments,c,d));case"number":return arguments[c+f];default:return f}}c=d}return a})},insertAt:function(a,b,c){if(instanceOf(b,RegExp)){arguments[1]=b.source}return base(this,arguments)},test:function(a){return this.exec(a)!=a},toString:function(){var d=1;return"("+this.map(function(c){var e=(c+"").replace(_l,function(a,b){return"\\"+(d+Number(b))});d+=c.length+1;return e}).join(")|(")+")"}},{IGNORE:"$0",init:function(){forEach("add,get,has,put,remove".split(","),function(b){_a(this,b,function(a){if(instanceOf(a,RegExp)){arguments[0]=a.source}return base(this,arguments)})},this.prototype)},Item:{constructor:function(a,b){if(b==null)b=RegGrp.IGNORE;else if(typeof b!="function")b=String(b);if(typeof b=="string"&&_p.test(b)){if(_q.test(b)){b=parseInt(b.slice(1))}else{var c='"';b=b.replace(/\\/g,"\\\\").replace(/"/g,"\\x22").replace(/\n/g,"\\n").replace(/\r/g,"\\r").replace(/\$(\d+)/g,c+"+(arguments[$1]||"+c+c+")+"+c).replace(/(['"])\1\+(.*)\+\1\1$/,"$1");b=new Function("return "+c+b+c)}}this.length=RegGrp.count(a);this.replacement=b;this.toString=K(a+"")},length:0,replacement:""},count:function(a){a=(a+"").replace(_o,"").replace(_n,"");return match(a,_m).length}});var lang={name:"lang",version:base2.version,exports:"assert,assertArity,assertType,base,bind,copy,extend,forEach,format,instanceOf,match,rescape,trim,typeOf",namespace:""};function assert(a,b,c){if(!a){throw new(c||Error)(b||"Assertion failed.");}};function assertArity(a,b,c){if(b==null)b=a.callee.length;if(a.length<b){throw new SyntaxError(c||"Not enough arguments.");}};function assertType(a,b,c){if(b&&(typeof b=="function"?!instanceOf(a,b):typeOf(a)!=b)){throw new TypeError(c||"Invalid type.");}};function copy(a){var b=function(){};b.prototype=a;return new b};function base(a,b){return a.base.apply(a,b)};function extend(a,b){if(a&&b){if(arguments.length>2){var c=b;b={};b[c]=arguments[2]}var e=(typeof b=="function"?Function:Object).prototype;if(base2.__prototyping){var d=_d.length,c;while((c=_d[--d])){var f=b[c];if(f!=e[c]){if(_c.test(f)){_a(a,c,f)}else{a[c]=f}}}}for(c in b){if(e[c]===undefined){var f=b[c];if(c.charAt(0)=="@"){if(detect(c.slice(1)))extend(a,f);continue}var g=a[c];if(g&&typeof f=="function"){if(f!=g){if(_c.test(f)){_a(a,c,f)}else{f.ancestor=g;a[c]=f}}}else{a[c]=f}}}}return a};function _7(a,b){while(b){if(!b.ancestor)return false;b=b.ancestor;if(b==a)return true}return false};function _a(c,e,d){var f=c[e];var g=base2.__prototyping;if(g&&f!=g[e])g=null;function h(){var a=this.base;this.base=g?g[e]:f;var b=d.apply(this,arguments);this.base=a;return b};h.method=d;h.ancestor=f;c[e]=h};if(typeof StopIteration=="undefined"){StopIteration=new Error("StopIteration")}function forEach(a,b,c,e){if(a==null)return;if(!e){if(typeof a=="function"&&a.call){e=Function}else if(typeof a.forEach=="function"&&a.forEach!=arguments.callee){a.forEach(b,c);return}else if(typeof a.length=="number"){_b(a,b,c);return}}_5(e||Object,a,b,c)};forEach.csv=function(a,b,c){forEach(csv(a),b,c)};forEach.detect=function(c,e,d){forEach(c,function(a,b){if(b.charAt(0)=="@"){if(detect(b.slice(1)))forEach(a,arguments.callee)}else e.call(d,a,b,c)})};function _b(a,b,c){if(a==null)a=global;var e=a.length||0,d;if(typeof a=="string"){for(d=0;d<e;d++){b.call(c,a.charAt(d),d,a)}}else{for(d=0;d<e;d++){/*@cc_on @*//*@if(@_jscript_version<5.2)if($Legacy.has(a,d))@else @*/if(d in a)/*@end @*/b.call(c,a[d],d,a)}}};function _5(g,h,i,j){var k=function(){this.i=1};k.prototype={i:1};var l=0;for(var m in new k)l++;_5=(l>1)?function(a,b,c,e){var d={};for(var f in b){if(!d[f]&&a.prototype[f]===undefined){d[f]=true;c.call(e,b[f],f,b)}}}:function(a,b,c,e){for(var d in b){if(a.prototype[d]===undefined){c.call(e,b[d],d,b)}}};_5(g,h,i,j)};function instanceOf(a,b){if(typeof b!="function"){throw new TypeError("Invalid 'instanceOf' operand.");}if(a==null)return false;/*@cc_on if(typeof a.constructor!="function"){return typeOf(a)==typeof b.prototype.valueOf()}@*//*@if(@_jscript_version<5.1)if($Legacy.instanceOf(a,b))return true;@else @*/if(a instanceof b)return true;/*@end @*/if(Base.ancestorOf==b.ancestorOf)return false;if(Base.ancestorOf==a.constructor.ancestorOf)return b==Object;switch(b){case Array:return!!(typeof a=="object"&&a.join&&a.splice);case Function:return typeOf(a)=="function";case RegExp:return typeof a.constructor.$1=="string";case Date:return!!a.getTimezoneOffset;case String:case Number:case Boolean:return typeOf(a)==typeof b.prototype.valueOf();case Object:return true}return false};function typeOf(a){var b=typeof a;switch(b){case"object":return a==null?"null":typeof a.constructor=="undefined"?_j.test(a)?"function":b:typeof a.constructor.prototype.valueOf();case"function":return typeof a.call=="function"?b:"object";default:return b}};var JavaScript={name:"JavaScript",version:base2.version,exports:"Array2,Date2,Function2,String2",namespace:"",bind:function(c){forEach.csv(this.exports,function(a){var b=a.slice(0,-1);extend(c[b],this[a]);this[a](c[b].prototype)},this);return this}};function _6(b,constructor,c,e){var d=Module.extend();var f=d.toString("index");forEach.csv(c,function(a){d[a]=unbind(b.prototype[a]);d.namespace+=format("var %1=base2.Module[%2].%1;",a,f)});forEach(_2.call(arguments,3),d.implement,d);var g=function(){return d(this.constructor==d?constructor.apply(null,arguments):arguments[0])};g.prototype=d.prototype;for(var h in d){if(h!="prototype"&&b[h]){d[h]=b[h];delete d.prototype[h]}g[h]=d[h]}g.ancestor=Object;delete g.extend;g.namespace=g.namespace.replace(/(var (\w+)=)[^,;]+,([^\)]+)\)/g,"$1$3.$2");return g};if((new Date).getYear()>1900){Date.prototype.getYear=function(){return this.getFullYear()-1900};Date.prototype.setYear=function(a){return this.setFullYear(a+1900)}}Function.prototype.prototype={};if("".replace(/^/,K("$$"))=="$"){extend(String.prototype,"replace",function(a,b){if(typeof b=="function"){var c=b;b=function(){return String(c.apply(null,arguments)).split("$").join("$$")}}return this.base(a,b)})}var Array2=_6(Array,Array,"concat,join,pop,push,reverse,shift,slice,sort,splice,unshift",Enumerable,{combine:function(e,d){if(!d)d=e;return Array2.reduce(e,function(a,b,c){a[b]=d[c];return a},{})},contains:function(a,b){return Array2.indexOf(a,b)!=-1},copy:function(a){var b=_2.call(a);if(!b.swap)Array2(b);return b},flatten:function(c){var e=0;return Array2.reduce(c,function(a,b){if(Array2.like(b)){Array2.reduce(b,arguments.callee,a)}else{a[e++]=b}return a},[])},forEach:_b,indexOf:function(a,b,c){var e=a.length;if(c==null){c=0}else if(c<0){c=Math.max(0,e+c)}for(var d=c;d<e;d++){if(a[d]===b)return d}return-1},insertAt:function(a,b,c){Array2.splice(a,b,0,c);return c},item:function(a,b){if(b<0)b+=a.length;return a[b]},lastIndexOf:function(a,b,c){var e=a.length;if(c==null){c=e-1}else if(c<0){c=Math.max(0,e+c)}for(var d=c;d>=0;d--){if(a[d]===b)return d}return-1},map:function(c,e,d){var f=[];Array2.forEach(c,function(a,b){f[b]=e.call(d,a,b,c)});return f},remove:function(a,b){var c=Array2.indexOf(a,b);if(c!=-1)Array2.removeAt(a,c);return b},removeAt:function(a,b){return Array2.splice(a,b,1)},swap:function(a,b,c){if(b<0)b+=a.length;if(c<0)c+=a.length;var e=a[b];a[b]=a[c];a[c]=e;return a}});Array2.reduce=Enumerable.reduce;Array2.like=function(a){return!!(a&&typeof a=="object"&&typeof a.length=="number")};var _h=/^((-\d+|\d{4,})(-(\d{2})(-(\d{2}))?)?)?T((\d{2})(:(\d{2})(:(\d{2})(\.(\d{1,3})(\d)?\d*)?)?)?)?(([+-])(\d{2})(:(\d{2}))?|Z)?$/;var _4={FullYear:2,Month:4,Date:6,Hours:8,Minutes:10,Seconds:12,Milliseconds:14};var _3={Hectomicroseconds:15,UTC:16,Sign:17,Hours:18,Minutes:20};var _t=/(((00)?:0+)?:0+)?\.0+$/;var _s=/(T[0-9:.]+)$/;var Date2=_6(Date,function(a,b,c,e,d,f,g){switch(arguments.length){case 0:return new Date;case 1:return typeof a=="number"?new Date(a):Date2.parse(a);default:return new Date(a,b,arguments.length==2?1:c,e||0,d||0,f||0,g||0)}},"",{toISOString:function(c){var e="####-##-##T##:##:##.###";for(var d in _4){e=e.replace(/#+/,function(a){var b=c["getUTC"+d]();if(d=="Month")b++;return("000"+b).slice(-a.length)})}return e.replace(_t,"").replace(_s,"$1Z")}});delete Date2.forEach;Date2.now=function(){return(new Date).valueOf()};Date2.parse=function(a,b){if(arguments.length>1){assertType(b,"number","default date should be of type 'number'.")}var c=match(a,_h);if(c.length){if(c[_4.Month])c[_4.Month]--;if(c[_3.Hectomicroseconds]>=5)c[_4.Milliseconds]++;var e=new Date(b||0);var d=c[_3.UTC]||c[_3.Hours]?"UTC":"";for(var f in _4){var g=c[_4[f]];if(!g)continue;e["set"+d+f](g);if(e["get"+d+f]()!=c[_4[f]]){return NaN}}if(c[_3.Hours]){var h=Number(c[_3.Sign]+c[_3.Hours]);var i=Number(c[_3.Sign]+(c[_3.Minutes]||0));e.setUTCMinutes(e.getUTCMinutes()+(h*60)+i)}return e.valueOf()}else{return Date.parse(a)}};var String2=_6(String,function(a){return new String(arguments.length==0?"":a)},"charAt,charCodeAt,concat,indexOf,lastIndexOf,match,replace,search,slice,split,substr,substring,toLowerCase,toUpperCase",{csv:csv,format:format,rescape:rescape,trim:trim});delete String2.forEach;function trim(a){return String(a).replace(_i,"").replace(_r,"")};function csv(a){return a?String(a).split(/\s*,\s*/):[]};function format(c){var e=arguments;var d=new RegExp("%([1-"+(arguments.length-1)+"])","g");return String(c).replace(d,function(a,b){return e[b]})};function match(a,b){return String(a).match(b)||[]};function rescape(a){return String(a).replace(_k,"\\$1")};var Function2=_6(Function,Function,"",{I:I,II:II,K:K,bind:bind,compose:compose,delegate:delegate,flip:flip,not:not,partial:partial,unbind:unbind,unshift:unshift});Function2.apply=function(a,b,c){return a.apply(b,c)};Function2.call=function(a,b){return a.apply(b,_2.call(arguments,2))};Function2.namespace+="var apply=base2.JavaScript.Function2.apply,call=base2.JavaScript.Function2.call;";function I(a){return a};function II(a,b){return b};function K(a){return function(){return a}};function bind(a,b){var c=_2.call(arguments,2);var e=typeof a!="function";return c.length==0?function(){return(e?b[a]:a).apply(b,arguments)}:function(){return(e?b[a]:a).apply(b,c.concat.apply(c,arguments))}};function compose(){var c=_2.call(arguments);return function(){var a=c.length,b=c[--a].apply(this,arguments);while(a--)b=c[a].call(this,b);return b}};function delegate(b,c){return function(){var a=_2.call(arguments);a.unshift(this);return b.apply(c,a)}};function flip(a){return function(){return a.apply(this,Array2.swap(arguments,0,1))}};function not(a){return function(){return!a.apply(this,arguments)}};function partial(e){var d=_2.call(arguments,1);return function(){var a=d.concat(),b=0,c=0;while(b<d.length&&c<arguments.length){if(a[b]===undefined)a[b]=arguments[c++];b++}while(c<arguments.length){a[b++]=arguments[c++]}if(Array2.contains(a,undefined)){a.unshift(e);return partial.apply(null,a)}return e.apply(this,a)}};function unbind(b){return function(a){return b.apply(a,_2.call(arguments,1))}};function unshift(a){var b=_2.call(arguments,1);return function(){return a.apply(this,b.concat.apply(b,arguments))}};function detect(_x){var jscript=NaN/*@cc_on||@_jscript_version@*/;var java=global.java?true:false;var _9={};if(global.navigator){var MSIE=/MSIE[\d.]+/g;_9.document=document;var element=_9.element=document.createElement("span");var userAgent=navigator.userAgent.replace(/([a-z])[\s\/](\d)/gi,"$1$2");if(!jscript)userAgent=userAgent.replace(MSIE,"");if(MSIE.test(userAgent))userAgent=userAgent.match(MSIE)[0]+" "+userAgent.replace(MSIE,"");base2.userAgent=navigator.platform+" "+userAgent.replace(/like \w+/gi,"");java&=navigator.javaEnabled()}var _8={};detect=function(a){if(_8[a]==null){var b=false,c=a;var e=c.charAt(0)=="!";if(e)c=c.slice(1);if(c.charAt(0)=="("){if(/^\((element|document)\.\w+\)$/.test(c)){c=c.slice(1,-1).split(".");b=!!_9[c[0]][c[1]]}else{try{eval("var _y=!!"+c);b=_y}catch(x){}}}else{b=new RegExp("("+c+")","i").test(base2.userAgent)}_8[a]=!!(e^b)}return _8[a]};return detect(arguments[0])};base2=global.base2=new Package(this,base2);var exports=this.exports;lang=new Package(this,lang);exports+=this.exports;JavaScript=new Package(this,JavaScript);eval(exports+this.exports);lang.base=base;lang.extend=extend};
+new function(_13){var DOM=new base2.Package(this,{name:"DOM",version:"1.0 (beta 3)",imports:"Function2",exports:"Interface,Binding,Node,Document,Element,AbstractView,HTMLDocument,HTMLElement,"+"Selector,Traversal,CSSParser,XPathParser,NodeSelector,DocumentSelector,ElementSelector,"+"StaticNodeList,Event,EventTarget,DocumentEvent,ViewCSS,CSSStyleDeclaration,ClassList",bind:function(a){if(a&&a.nodeType){var b=assignID(a);if(!DOM.bind[b]){switch(a.nodeType){case 1:if(typeof a.className=="string"){(HTMLElement.bindings[a.tagName]||HTMLElement).bind(a)}else{Element.bind(a)}break;case 9:if(a.writeln){HTMLDocument.bind(a)}else{Document.bind(a)}break;default:Node.bind(a)}DOM.bind[b]=true}}return a},"@MSIE5.+win":{bind:function(a){if(a&&a.writeln){a.nodeType=9}return this.base(a)}}});eval(this.imports);var _5=detect("MSIE");var _g=detect("MSIE5");var Interface=Module.extend(null,{forEach:function(c,d){forEach(this,function(a,b){if(typeOf(a)=="function"&&(this.prototype[b]||a._j)){c.call(d,a,b,this)}},this,Module)},implement:function(a){if(typeof a=="object"){_B(this,a)}else if(Interface.ancestorOf(a)){for(var b in a){if(a[b]&&a[b]._j){this[b]=bind(b,a);this[b]._j=b}}}return this.base(a)}});function _B(a,b){for(var c in b){var d=b[c];if(c.charAt(0)=="@"){_B(a,d)}else if(!a[c]&&typeof d=="function"&&d.call){var g=_12(c,d.length);g._j=c;a[c]=g;a.namespace+="var "+c+"=base2.lang.bind('"+c+"',base2.Module["+a.toString("index")+"]);"}}};var _12=_5?function(a,b){var c="function _15(%2){%3.base=%3.%1.ancestor;var m=%3.base?'base':'%1';return %3[m](%4)}";var d="abcdefghij".slice(-b).split("");eval(format(c,a,d,d[0],d.slice(1)));return _15}:function(c){return function d(a){a.base=a[c].ancestor;var b=a.base?'base':c;return a[b].apply(a,Array2.slice(arguments,1))}};var Binding=Interface.extend(null,{bind:function(a){return extend(a,this.prototype)}});var Node=Binding.extend({"@!(element.compareDocumentPosition)":{compareDocumentPosition:function(a,b){if(Traversal.contains(a,b)){return 4|16}else if(Traversal.contains(b,a)){return 2|8}var c=_D(a);var d=_D(b);if(c<d){return 4}else if(c>d){return 2}return 0}}});var _D=document.documentElement.sourceIndex?function(a){return a.sourceIndex}:function(a){var b=0;while(a){b=Traversal.getNodeIndex(a)+"."+b;a=a.parentNode}return b};var Document=Node.extend(null,{bind:function(b){extend(b,"createElement",function(a){return DOM.bind(this.base(a))});AbstractView.bind(b.defaultView);if(b!=window.document)new DOMContentLoadedEvent(b);return this.base(b)},"@!(document.defaultView)":{bind:function(a){a.defaultView=Traversal.getDefaultView(a);return this.base(a)}}});var _v=/^(href|src)$/;var _8={"class":"className","for":"htmlFor"};var Element=Node.extend({"@^Win.+MSIE[5-7]":{getAttribute:function(a,b){if(a.className===undefined){return this.base(a,b)}var c=_C(a,b);if(c&&(c.specified||b=="value")){if(_v.test(b)){return this.base(a,b,2)}else if(b=="style"){return a.style.cssText}else{return c.nodeValue}}else if(b=="type"&&a.nodeName=="INPUT"){var d=a.outerHTML;with(d)d=slice(0,indexOf(">")+1);return match(d,/type="?([^\s">]*)"?/i)[1]||null}return null},removeAttribute:function(a,b){if(a.className!==undefined){b=_8[b.toLowerCase()]||b}this.base(a,b)},setAttribute:function(a,b,c){if(a.className===undefined){this.base(a,b,c)}else if(b=="style"){a.style.cssText=c}else{c=String(c);var d=_C(a,b);if(d){d.nodeValue=c}else{this.base(a,_8[b.toLowerCase()]||b,c)}}}},"@!(element.hasAttribute)":{hasAttribute:function(a,b){if(a.className===undefined){return this.base(a,b)}return this.getAttribute(a,b)!=null}}});extend(Element.prototype,"cloneNode",function(a){var b=this.base(a||false);b.base2ID=undefined;return b});var _x="colSpan,rowSpan,vAlign,dateTime,accessKey,tabIndex,encType,maxLength,readOnly,longDesc";extend(_8,Array2.combine(_x.toLowerCase().split(","),_x.split(",")));var _C=document.documentElement.getAttributeNode?function(a,b){return a.getAttributeNode(b)}:function(a,b){return a.attributes[b]||a.attributes[_8[b.toLowerCase()]]};var TEXT=_5?"innerText":"textContent";var Traversal=Module.extend({getDefaultView:function(a){return this.getDocument(a).defaultView},getNextElementSibling:function(a){while(a&&(a=a.nextSibling)&&!this.isElement(a))continue;return a},getNodeIndex:function(a){var b=0;while(a&&(a=a.previousSibling))b++;return b},getOwnerDocument:function(a){return a.ownerDocument},getPreviousElementSibling:function(a){while(a&&(a=a.previousSibling)&&!this.isElement(a))continue;return a},getTextContent:function(a,b){return a[b?"innerHTML":TEXT]},isEmpty:function(a){a=a.firstChild;while(a){if(a.nodeType==3||this.isElement(a))return false;a=a.nextSibling}return true},setTextContent:function(a,b,c){return a[c?"innerHTML":TEXT]=b},"@!MSIE":{setTextContent:function(a,b,c){with(a)while(lastChild)parentNode.removeChild(lastChild);return this.base(a,b,c)}},"@MSIE":{getDefaultView:function(a){return(a.document||a).parentWindow},"@MSIE5":{getOwnerDocument:function(a){return a.ownerDocument||a.document}}}},{contains:function(a,b){a.nodeType;while(b&&(b=b.parentNode)&&a!=b)continue;return!!b},getDocument:function(a){return this.isDocument(a)?a:a.ownerDocument||a.document},isDocument:function(a){return!!(a&&a.documentElement)},isElement:function(a){return!!(a&&a.nodeType==1)},"@(element.contains)":{contains:function(a,b){return a!=b&&(this.isDocument(a)?a==this.getOwnerDocument(b):a.contains(b))}},"@MSIE5":{isElement:function(a){return!!(a&&a.nodeType==1&&a.nodeName!="!")}}});var AbstractView=Binding.extend();var _r={};var _f=1,_G=2,_e=3;var _R=/^mouse(up|down)|click$/,_S=/click$/,_d="abort|error|select|change|resize|scroll|",_b="(dbl)?click|mouse(down|up|over|move|out|wheel)|key(down|up)|submit|reset";_d=new RegExp("^("+_d+_b+")$");_b=new RegExp("^("+_b+")$");if(_5){var _10={focusin:"focus",focusout:"blur"};_r={focus:"focusin",blur:"focusout"}}var _q=/^(blur|submit|reset|change)$|^(mouse|key|focus)|click$/;var Event=Binding.extend({"@!(document.createEvent)":{initEvent:function(a,b,c,d){a.type=String(b);a.bubbles=!!c;a.cancelable=!!d},preventDefault:function(a){if(a.cancelable!==false){a.returnValue=false}},stopPropagation:function(a){a.cancelBubble=true},"@MSIE":{preventDefault:function(b){this.base(b);if(b.type=="mousedown"){var c="onbeforedeactivate";var d=Traversal.getDocument(b.target);d.attachEvent(c,function(a){a.returnValue=false;d.detachEvent(c,arguments.callee)})}}}}},{"@!(document.createEvent)":{"@MSIE":{bind:function(a){var b=a.type;if(!a.timeStamp){a.bubbles=_d.test(b);a.cancelable=_b.test(b);a.timeStamp=new Date().valueOf()}a.relatedTarget=a[(a.target==a.fromElement?"to":"from")+"Element"];return this.base(a)}}}});var EventDispatcher=Base.extend({constructor:function(a){this.state=a;this.events=a.events},dispatch:function(a,b,c){b.eventPhase=c;var d=this.events[b.type][c];if(d){var g=a.length;while(g--){var f=a[g];var h=d[f.base2ID];if(h){h=copy(h);b.eventPhase=f==b.target?_G:c;b.currentTarget=f;for(var j in h){var k=h[j];if(typeof k=="function"){k.call(f,b)}else{k.handleEvent(b)}}}}}},handleEvent:function(a,b){if(!b&&a.type=="scroll"){setTimeout(bind(arguments.callee,this,extend({},a),true),0);return true}Event.bind(a);var c=a.type;var d=_10[c];if(d){a=extend({},a);c=a.type=d}if(this.events[c]){if(_R.test(c)){var g=_S.test(c)?this.state._h:a.button;if(g!=2)g=g==4?1:0;if(a.button!=g){a=extend({},a);a.button=g}}var f=a.target;var h=[],j=0;while(f){h[j++]=f;f=f.parentNode}this.dispatch(h,a,_f);if(!a.bubbles)h.length=1;h.reverse();this.dispatch(h,a,_e)}return a.returnValue}});var EventTarget=Interface.extend({"@!(element.addEventListener)":{addEventListener:function(a,b,c,d){var g=DocumentState.getInstance(a);var f=assignID(a);var h=assignID(c);var j=d?_f:_e;var k=g.registerEvent(b,a);var i=k[j];if(!i)i=k[j]={};if(d)b=_r[b]||b;var l=i[f];if(!l)l=i[f]={};l[h]=c},dispatchEvent:function(a,b){return DocumentState.getInstance(a).handleEvent(b)},removeEventListener:function(a,b,c,d){var g=DocumentState.getInstance(a).events;var f=g[b];if(f){var h=f[d?_f:_e];if(h){var j=h[a.base2ID];if(j)delete j[c.base2ID]}}},"@(element.fireEvent)":{dispatchEvent:function(a,b){b.target=a;return this.base(a,b)}}},"@Gecko":{addEventListener:function(b,c,d,g){if(c=="mousewheel"){var f=DocumentState[assignID(d)]=d;d=function(a){a=copy(a);a.__defineGetter__("type",K("mousewheel"));a.wheelDelta=(-a.detail*40)||0;if(typeof f=="function"){f.call(a.target,a)}else{f.handleEvent(a)}};c="DOMMouseScroll"}this.base(b,c,d,g)}},"@Linux|Mac|opera":{addEventListener:function(f,h,j,k){if(h=="keydown"){var i=DocumentState[assignID(j)]=j;j=function(b){var c=0,d=false;extend(b,"preventDefault",function(){this.base();d=true});function g(a){if(d)a.preventDefault();if(a==b||c>1){if(typeof i=="function"){i.call(f,b)}else{i.handleEvent(b)}}c++};g(b);f.addEventListener("keyup",function(){f.removeEventListener("keypress",g,true);f.removeEventListener("keyup",arguments.callee,true)},true);f.addEventListener("keypress",g,true)}}this.base(f,h,j,k)},removeEventListener:function(a,b,c,d){this.base(a,b,DocumentState[c.base2ID]||c,d)}}});var DocumentEvent=Interface.extend({"@!(document.createEvent)":{createEvent:function(){return Event.bind({})},"@(document.createEventObject)":{createEvent:function(a){return Event.bind(a.createEventObject())}},createEvent:function(a,b){var c=this.base(a);c.bubbles=false;c.cancelable=false;c.eventPhase=0;c.target=a;c.currentTarget=null;c.relatedTarget=null;c.timeStamp=new Date().valueOf();return c}},"@(document.createEvent)":{"@!(document.createEvent('Events'))":{createEvent:function(a,b){return this.base(a,b=="Events"?"UIEvents":b)}}}});var DOMContentLoadedEvent=Base.extend({constructor:function(b){var c=false;this.fire=function(){if(!c){c=true;setTimeout(function(){var a=DocumentEvent.createEvent(b,"Events");Event.initEvent(a,"DOMContentLoaded",true,false);EventTarget.dispatchEvent(b,a)},1)}};EventTarget.addEventListener(b,"DOMContentLoaded",function(){c=true},false);this.listen(b)},listen:Undefined,"@!Gecko|Webkit(4[2-9]|5-9)|Opera[19]":{listen:function(a){EventTarget.addEventListener(Traversal.getDefaultView(a),"load",this.fire,false)},"@MSIE.+win":{listen:function(a){try{a.body.doScroll("left");if(!this.__constructing)this.fire()}catch(e){setTimeout(bind(this.listen,this,a),10)}}},"@KHTML":{listen:function(a){if(/loaded|complete/.test(a.readyState)){if(!this.__constructing)this.fire()}else{setTimeout(bind(this.listen,this,a),10)}}}}});Document.implement(DocumentEvent);Document.implement(EventTarget);Element.implement(EventTarget);var _V=/^\d+(px)?$/i;var _y=/(width|height|top|bottom|left|right|fontSize)$/;var _s=/^(color|backgroundColor)$/;var _X=/^ruby/;var ViewCSS=Interface.extend({"@!(document.defaultView.getComputedStyle)":{"@MSIE":{getComputedStyle:function(a,b,c){var d=b.currentStyle;var g={};for(var f in d){if(_y.test(f)||_s.test(f)){g[f]=this.getComputedPropertyValue(a,b,f)}else if(!_X.test(f)){g[f]=d[f]}}return g}}},getComputedStyle:function(a,b,c){return _u.bind(this.base(a,b,c))}},{getComputedPropertyValue:function(a,b,c){return CSSStyleDeclaration.getPropertyValue(this.getComputedStyle(a,b,null),c)},"@MSIE":{getComputedPropertyValue:function(a,b,c){c=this.toCamelCase(c);if(_y.test(c))return _U(b,b.currentStyle[c])+"px";if(_s.test(c))return _T(b,c=="color"?"ForeColor":"BackColor");return b.currentStyle[c]}},toCamelCase:function(a){return a.replace(/\-([a-z])/g,flip(String2.toUpperCase))}});function _U(a,b){if(_V.test(b))return parseInt(b);var c=a.style.left;var d=a.runtimeStyle.left;a.runtimeStyle.left=a.currentStyle.left;a.style.left=b||0;b=a.style.pixelLeft;a.style.left=c;a.runtimeStyle.left=d;return b};function _T(a,b){if(a.createTextRange){var c=a.createTextRange()}else{a.document.body.createTextRange();c.moveToElementText(a)}var d=c.queryCommandValue(b);return format("rgb(%1, %2, %3)",d&0xff,(d&0xff00)>>8,(d&0xff0000)>>16)};var _u=Binding.extend({getPropertyValue:function(a,b){return this.base(a,_t[b]||b)},"@MSIE.+win":{getPropertyValue:function(a,b){return b=="float"?a.styleFloat:a[ViewCSS.toCamelCase(b)]}}});var CSSStyleDeclaration=_u.extend({setProperty:function(a,b,c,d){return this.base(a,_t[b]||b,c,d)},"@MSIE.+win":{setProperty:function(a,b,c,d){if(b=="opacity"){c*=100;a.opacity=c;a.zoom=1;a.filter="Alpha(opacity="+c+")"}else{if(d=="important"){a.cssText+=format(";%1:%2!important;",b,c)}else{a.setAttribute(b,c)}}}}},{"@MSIE":{bind:function(a){a.getPropertyValue=this.prototype.getPropertyValue;a.setProperty=this.prototype.setProperty;return a}}});var _t=new Base({"@Gecko":{opacity:"-moz-opacity"},"@KHTML":{opacity:"-khtml-opacity"}});with(CSSStyleDeclaration.prototype)getPropertyValue.toString=setProperty.toString=K("[base2]");AbstractView.implement(ViewCSS);var NodeSelector=Interface.extend({"@(element.querySelector)":{querySelector:function(a,b){try{var c=this.base(a,trim(b));if(c)return c}catch(x){}return new Selector(b).exec(a,1)},querySelectorAll:function(a,b){try{var c=this.base(a,trim(b));if(c)return new StaticNodeList(c)}catch(x){}return new Selector(b).exec(a)}},"@!(element.querySelector)":{querySelector:function(a,b){return new Selector(b).exec(a,1)},querySelectorAll:function(a,b){return new Selector(b).exec(a)}}});extend(NodeSelector.prototype,{querySelector:function(a){return DOM.bind(this.base(a))},querySelectorAll:function(b){return extend(this.base(b),"item",function(a){return DOM.bind(this.base(a))})}});var DocumentSelector=NodeSelector.extend();var ElementSelector=NodeSelector.extend({"@!(element.matchesSelector)":{matchesSelector:function(a,b){return new Selector(b).test(a)}}});var _I=/'(\\.|[^'\\])*'|"(\\.|[^"\\])*"/g,_J=/([\s>+~,]|[^(]\+|^)([#.:\[])/g,_K=/(^|,)([^\s>+~])/g,_M=/\s*([\s>+~(),]|^|$)\s*/g,_N=/\s\*\s/g,_L=/\x01(\d+)/g,_W=/'/g;var CSSParser=RegGrp.extend({constructor:function(a){this.base(a);this.cache={};this.sorter=new RegGrp;this.sorter.add(/:not\([^)]*\)/,RegGrp.IGNORE);this.sorter.add(/([ >](\*|[\w-]+))([^: >+~]*)(:\w+-child(\([^)]+\))?)([^: >+~]*)/,"$1$3$6$4")},cache:null,ignoreCase:true,escape:function(b,c){var d=this._16=[];b=this.optimise(this.format(String(b).replace(_I,function(a){return"\x01"+d.push(a.slice(1,-1).replace(_W,"\\'"))})));if(c)b=b.replace(/^ \*?/,"");return b},format:function(a){return a.replace(_M,"$1").replace(_K,"$1 $2").replace(_J,"$1*$2")},optimise:function(a){return this.sorter.exec(a.replace(_N,">* "))},parse:function(a,b){return this.cache[a]||(this.cache[a]=this.unescape(this.exec(this.escape(a,b))))},unescape:function(c){var d=this._16;return c.replace(_L,function(a,b){return d[b-1]})}});function _E(a,b,c,d,g,f,h,j){d=/last/i.test(a)?d+"+1-":"";if(!isNaN(b))b="0n+"+b;else if(b=="even")b="2n";else if(b=="odd")b="2n+1";b=b.split("n");var k=b[0]?(b[0]=="-")?-1:parseInt(b[0]):1;var i=parseInt(b[1])||0;var l=k<0;if(l){k=-k;if(k==1)i++}var m=format(k==0?"%3%7"+(d+i):"(%4%3-%2)%6%1%70%5%4%3>=%2",k,i,c,d,f,h,j);if(l)m=g+"("+m+")";return m};var XPathParser=CSSParser.extend({constructor:function(){this.base(XPathParser.build());this.sorter.putAt(1,"$1$4$3$6")},escape:function(a,b){return this.base(a,b).replace(/,/g,"\x02")},unescape:function(b){return this.base(b.replace(/\[self::\*\]/g,"").replace(/(^|\x02)\//g,"$1./").replace(/\x02/g," | ")).replace(/'[^'\\]*\\'(\\.|[^'\\])*'/g,function(a){return"concat("+a.split("\\'").join("',\"'\",'")+")"})}},{build:function(){this.values.attributes[""]="[@$1]";forEach(this.types,function(a,b){forEach(this.values[b],a,this.rules)},this);this.build=K(this.rules);return this.rules},optimised:{pseudoClasses:{"first-child":"[1]","last-child":"[last()]","only-child":"[last()=1]"}},rules:extend({},{"@!KHTML|opera":{"(^|\\x02) (\\*|[\\w-]+)#([\\w-]+)":"$1id('$3')[self::$2]"},"@!KHTML":{"([ >])(\\*|[\\w-]+):([\\w-]+-child(\\(([^)]+)\\))?)":function(a,b,c,d,g,f){var h=(b==" ")?"//*":"/*";if(/^nth/i.test(d)){h+=_p(d,f,"position()")}else{h+=XPathParser.optimised.pseudoClasses[d]}return h+"[self::"+c+"]"}}}),types:{identifiers:function(a,b){this[rescape(b)+"([\\w-]+)"]=a},combinators:function(a,b){this[rescape(b)+"(\\*|[\\w-]+)"]=a},attributes:function(a,b){this["\\[([\\w-]+)\\s*"+rescape(b)+"\\s*([^\\]]*)\\]"]=a},pseudoClasses:function(a,b){this[":"+b.replace(/\(\)$/,"\\(([^)]+)\\)")]=a}},values:{identifiers:{"#":"[@id='$1'][1]",".":"[contains(concat(' ',@class,' '),' $1 ')]"},combinators:{" ":"/descendant::$1",">":"/child::$1","+":"/following-sibling::*[1][self::$1]","~":"/following-sibling::$1"},attributes:{"*=":"[contains(@$1,'$2')]","^=":"[starts-with(@$1,'$2')]","$=":"[substring(@$1,string-length(@$1)-string-length('$2')+1)='$2']","~=":"[contains(concat(' ',@$1,' '),' $2 ')]","|=":"[contains(concat('-',@$1,'-'),'-$2-')]","!=":"[not(@$1='$2')]","=":"[@$1='$2']"},pseudoClasses:{"empty":"[not(child::*) and not(text())]","first-child":"[not(preceding-sibling::*)]","last-child":"[not(following-sibling::*)]","not()":_17,"nth-child()":_p,"nth-last-child()":_p,"only-child":"[not(preceding-sibling::*) and not(following-sibling::*)]","root":"[not(parent::*)]"}},"@opera(7|8|9\\.[1-4])":{build:function(){this.optimised.pseudoClasses["last-child"]=this.values.pseudoClasses["last-child"];this.optimised.pseudoClasses["only-child"]=this.values.pseudoClasses["only-child"];return this.base()}}});var _n;function _17(a,b){if(!_n)_n=new XPathParser;return"[not("+_n.exec(trim(b)).replace(/\[1\]/g,"").replace(/^(\*|[\w-]+)/,"[self::$1]").replace(/\]\[/g," and ").slice(1,-1)+")]"};function _p(a,b,c){return"["+_E(a,b,c||"count(preceding-sibling::*)+1","last()","not"," and "," mod ","=")+"]"};var Selector=Base.extend({constructor:function(a){this.toString=K(trim(a))},exec:function(a,b,c){return Selector.parse(this,c)(a,b)},isSimple:function(){if(!_3.exec)_3=new CSSParser(_3);return!_H.test(trim(_3.escape(this)))},test:function(a){if(this.isSimple()){return Selector.parse(this,true)(a,1)}else{a.setAttribute("b2-test",true);var b=new Selector(this+"[b2-test]").exec(Traversal.getOwnerDocument(a),1);a.removeAttribute("b2-test");return b==a}},toXPath:function(a){return Selector.toXPath(this,a)},"@(XPathResult)":{exec:function(a,b,c){if(_6.test(this)){return this.base(a,b,c)}var d=Traversal.getDocument(a);var g=b==1?9:7;var f=d.evaluate(this.toXPath(c),a,null,g,null);return b==1?f.singleNodeValue:f}},"@MSIE":{exec:function(a,b,c){if(typeof a.selectNodes!="undefined"&&!_6.test(this)){var d=single?"selectSingleNode":"selectNodes";return a[d](this.toXPath(c))}return this.base(a,b,c)}},"@(true)":{exec:function(a,b,c){try{var d=this.base(a||document,b,c)}catch(error){throw new SyntaxError(format("'%1' is not a valid CSS selector.",this));}return b==1?d:new StaticNodeList(d)}}},{toXPath:function(a,b){if(!_o)_o=new XPathParser;return _o.parse(a,b)}});var _H=/[\s+>~]/;var _6=":(checked|disabled|enabled|contains|hover|active|focus)|^(#[\\w-]+\\s*)?\\w+$";if(detect("KHTML")){if(detect("WebKit5")){_6+="|nth\\-|,"}else{_6="."}}_6=new RegExp(_6);Selector.operators={"=":"%1=='%2'","~=":/(^| )%1( |$)/,"|=":/^%1(-|$)/,"^=":/^%1/,"$=":/%1$/,"*=":/%1/};Selector.operators[""]="%1!=null";Selector.pseudoClasses={"checked":"e%1.checked","contains":"e%1[TEXT].indexOf('%2')!=-1","disabled":"e%1.disabled","empty":"Traversal.isEmpty(e%1)","enabled":"e%1.disabled===false","first-child":"!Traversal.getPreviousElementSibling(e%1)","last-child":"!Traversal.getNextElementSibling(e%1)","only-child":"!Traversal.getPreviousElementSibling(e%1)&&!Traversal.getNextElementSibling(e%1)","root":"e%1==Traversal.getDocument(e%1).documentElement","target":"e%1.id&&e%1.id==location.hash.slice(1)","hover":"DocumentState.getInstance(d).isHover(e%1)","active":"DocumentState.getInstance(d).isActive(e%1)","focus":"DocumentState.getInstance(d).hasFocus(e%1)"};var _Q=detect("(element.sourceIndex)"),_z="var p%2=0,i%2,e%3,n%2=e%1.",_P=_Q?"e%1.sourceIndex":"assignID(e%1)",_Z="var g="+_P+";if(!p[g]){p[g]=1;",_Y="r[k++]=e%1;if(s==1)return e%1;if(k===s){_a.state=[%2];_a.complete=%3;return r;",_O="var _a=function(e0,s%1){_9++;var r=[],p={},reg=[%4],d=Traversal.getDocument(e0),c=d.writeln?'toUpperCase':'toString',k=0;";var _o;var _7,_0,_1,_2,_4,_18,_c,_i={};function sum(a){var b=0;for(var c=0;c<a.length;c++){b+=a[c]}return b};var _3={"^(\\*|[\\w-]+)":function(a,b){return b=="*"?"":format("if(e0.nodeName=='%1'[c]()){",b)},"^ \\*:root":function(a){_1=false;var b="e%2=d.documentElement;if(Traversal.contains(e%1,e%2)){";return format(b,_0++,_0)}," (\\*|[\\w-]+)#([\\w-]+)":function(a,b,c){_1=false;var d="var e%2=_11(d,'%4');if(e%2&&";if(b!="*")d+="e%2.nodeName=='%3'[c]()&&";d+="Traversal.contains(e%1,e%2)){";if(_2[_4])d+=format("i%1=n%1.length;",sum(_2));return format(d,_0++,_0,b,c)}," (\\*|[\\w-]+)":function(a,b){_c++;_1=b=="*";var c=format(_z,_0++,"%2",_0);c+=(_1&&_g)?"all":"getElementsByTagName('%3')";c+=";for(i%2=a%2||0;(e%1=n%2[i%2]);i%2++){";_2[_4]++;return format(c,_0,sum(_2),b)},">(\\*|[\\w-]+)":function(a,b){var c=document.documentElement.children&&_0;_1=b=="*";var d=_z+(c?"children":"childNodes");d=format(d,_0++,"%2",_0);if(!_1&&_5&&c)d+=".tags('%3')";d+=";for(i%2=a%2||0;(e%1=n%2[i%2]);i%2++){";if(_1){d+="if(e%1.nodeType==1){";_1=_g}else{if(!_5||!c)d+="if(e%1.nodeName=='%3'[c]()){"}_2[_4]++;return format(d,_0,sum(_2),b)},"\\+(\\*|[\\w-]+)":function(a,b){var c="";if(_1&&_5)c+="if(e%1.nodeName!='!'){";_1=false;c+="e%1=Traversal.getNextElementSibling(e%1);if(e%1";if(b!="*")c+="&&e%1.nodeName=='%2'[c]()";c+="){";return format(c,_0,b)},"~(\\*|[\\w-]+)":function(a,b){var c="";if(_1&&_5)c+="if(e%1.nodeName!='!'){";_1=false;_c=2;c+="while(e%1=e%1.nextSibling){if(e%1.b2_adjacent==_9)break;if(";if(b=="*"){c+="e%1.nodeType==1";if(_g)c+="&&e%1.nodeName!='!'"}else c+="e%1.nodeName=='%2'[c]()";c+="){e%1.b2_adjacent=_9;";return format(c,_0,b)},"#([\\w-]+)":function(a,b){_1=false;var c="if(e%1.id=='%2'){";if(_2[_4])c+=format("i%1=n%1.length;",sum(_2));return format(c,_0,b)},"\\.([\\w-]+)":function(a,b){_1=false;_7.push(new RegExp("(^|\\s)"+rescape(b)+"(\\s|$)"));return format("if(e%1.className&&reg[%2].test(e%1.className)){",_0,_7.length-1)},":not\\((\\*|[\\w-]+)?([^)]*)\\)":function(a,b,c){var d=(b&&b!="*")?format("if(e%1.nodeName=='%2'[c]()){",_0,b):"";d+=_3.exec(c);return"if(!"+d.slice(2,-1).replace(/\)\{if\(/g,"&&")+"){"},":nth(-last)?-child\\(([^)]+)\\)":function(a,b,c){_1=false;b=format("e%1.parentNode.b2_length",_0);var d="if(p%1!==e%1.parentNode)p%1=_14(e%1.parentNode);";d+="var i=e%1[p%1.b2_lookup];if(p%1.b2_lookup!='b2_index')i++;if(";return format(d,_0)+_E(a,c,"i",b,"!","&&","%","==")+"){"},":([\\w-]+)(\\(([^)]+)\\))?":function(a,b,c,d){return"if("+format(Selector.pseudoClasses[b]||"throw",_0,d||"")+"){"},"\\[([\\w-]+)\\s*([^=]?=)?\\s*([^\\]]*)\\]":function(a,b,c,d){var g=_8[b]||b;var f="e%1.getAttribute('%2',2)";if(c){if(!_v.test(b)){f="e%1.%3||"+f}}else{f="Element.getAttribute(e%1,'%2')"}f=format(f,_0,b,g);var h=Selector.operators[c||""];if(instanceOf(h,RegExp)){_7.push(new RegExp(format(h.source,rescape(_3.unescape(d)))));h="reg[%2].test(%1)";d=_7.length-1}return"if("+format(h,f,d)+"){"}};(function(_13){var _11=detect("MSIE[5-7]")?function(a,b){var c=a.all[b]||null;if(!c||c.id==b)return c;for(var d=0;d<c.length;d++){if(c[d].id==b)return c[d]}return null}:function(a,b){return a.getElementById(b)};var _9=1;function _14(a){if(a.rows){a.b2_length=a.rows.length;a.b2_lookup="rowIndex"}else if(a.cells){a.b2_length=a.cells.length;a.b2_lookup="cellIndex"}else if(a.b2_indexed!=_9){var b=0;var c=a.firstChild;while(c){if(c.nodeType==1&&c.nodeName!="!"){c.b2_index=++b}c=c.nextSibling}a.b2_length=b;a.b2_lookup="b2_index"}a.b2_indexed=_9;return a};Selector.parse=function(a,b){if(!_i[a]){if(!_3.exec)_3=new CSSParser(_3);_7=[];_2=[];var c="";var d=_3.escape(a,b).split(",");for(_4=0;_4<d.length;_4++){_1=_0=_2[_4]=0;_c=d.length>1?2:0;var g=_3.exec(d[_4])||"throw;";if(_1&&_5){g+=format("if(e%1.nodeName!='!'){",_0)}var f=(_c>1)?_Z:"";g+=format(f+_Y,_0,"%2");g+=Array(match(g,/\{/g).length+1).join("}");c+=g}c=_3.unescape(c);if(d.length>1)c+="r.unsorted=1;";var h="";var j=[];var k=sum(_2);for(var i=1;i<=k;i++){h+=",a"+i;j.push("i"+i)}if(k){var l=[],m=0;for(var i=0;i<_4;i++){m+=_2[i];if(_2[i])l.push(format("n%1&&i%1==n%1.length",m))}}c+="_a.state=[%2];_a.complete=%3;return s==1?null:r}";eval(format(_O+c,h,j.join(","),k?l.join("&&"):true,_7));_i[a]=_a}return _i[a]}})();var StaticNodeList=Base.extend({constructor:function(b){b=b||[];this.length=b.length;this.item=function(a){return b[a]}},length:0,forEach:function(a,b){for(var c=0;c<this.length;c++){a.call(b,this.item(c),c,this)}},item:Undefined,"@(XPathResult)":{constructor:function(b){if(b&&b.snapshotItem){this.length=b.snapshotLength;this.item=function(a){return b.snapshotItem(a)}}else this.base(b)}}});StaticNodeList.implement(Enumerable);Document.implement(DocumentSelector);Element.implement(ElementSelector);var HTMLDocument=Document.extend(null,{bind:function(a){DocumentState.createState(a);return this.base(a)}});var HTMLElement=Element.extend(null,{bindings:{},tags:"*",bind:function(a){if(!a.classList){a.classList=new _w(a)}if(!a.ownerDocument){a.ownerDocument=Traversal.getOwnerDocument(a)}return this.base(a)},extend:function(){var b=base(this,arguments);forEach.csv(b.tags,function(a){HTMLElement.bindings[a]=b});return b}});HTMLElement.extend(null,{tags:"APPLET,EMBED",bind:I});var ClassList=Module.extend({add:function(a,b){if(!this.has(a,b)){a.className+=(a.className?" ":"")+b}},has:function(a,b){var c=new RegExp("(^|\\s)"+b+"(\\s|$)");return c.test(a.className)},remove:function(a,b){var c=new RegExp("(^|\\s)"+b+"(\\s|$)","g");a.className=trim(a.className.replace(c,"$2"))},toggle:function(a,b){this[this.has(a,b)?"remove":"add"](a,b)}});function _w(b){this.add=function(a){ClassList.add(b,a)};this.has=function(a){return ClassList.has(b,a)};this.remove=function(a){ClassList.remove(b,a)}};_w.prototype.toggle=function(a){this[this.has(a)?"remove":"add"](a)};var DocumentState=Base.extend({constructor:function(d){this.document=d;this.events={};this._m=d.documentElement;this.isBound=function(){return!!DOM.bind[d.base2ID]};forEach(this,function(a,b,c){if(/^on((DOM)?\w+|[a-z]+)$/.test(b)){c.registerEvent(b.slice(2))}})},includes:function(a,b){return b&&(a==b||Traversal.contains(a,b))},hasFocus:function(a){return a==this._l},isActive:function(a){return this.includes(a,this._A)},isHover:function(a){return this.includes(a,this._m)},handleEvent:function(a){return this["on"+a.type](a)},onblur:function(a){delete this._l},onmouseover:function(a){this._m=a.target},onmouseout:function(a){delete this._m},onmousedown:function(a){this._A=a.target},onfocus:function(a){this._l=a.target},onmouseup:function(a){delete this._A},registerEvent:function(a){this.document.addEventListener(a,this,true);this.events[a]=true},"@(document.activeElement===undefined)":{constructor:function(a){this.base(a);if(this.isBound()){a.activeElement=a.body}},onfocus:function(a){this.base(a);if(this.isBound()){this.document.activeElement=this._l}},onblur:function(a){this.base(a);if(this.isBound()){this.document.activeElement=this.document.body}}},"@!(element.addEventListener)":{constructor:function(b){this.base(b);var c=new EventDispatcher(this);this._k=function(a){a.target=a.target||a.srcElement||b;c.handleEvent(a)};this.handleEvent=function(a){if(this["on"+a.type]){this["on"+a.type](a)}return c.handleEvent(a)}},registerEvent:function(b,c){var d=this.events[b];var g=_q.test(b);if(!d||!g){if(!d)d=this.events[b]={};if(g||!c)c=this.document;var f=this;c["on"+b]=function(a){if(!a){a=Traveral.getDefaultiew(this).event}if(a)f.handleEvent(a)}}return d}},"@MSIE":{constructor:function(c){this.base(c);var d={};this._F=function(a){var b=assignID(a);if(!d[b]){d[b]=true;a.attachEvent("onsubmit",this._k);a.attachEvent("onreset",this._k)}}},registerEvent:function(b,c){var d=this.events[b];var g=_q.test(b);if(!d||!g){if(!d)d=this.events[b]={};if(g||!c)c=this.document;var f=this;c.attachEvent("on"+b,function(a){a.target=a.srcElement||f.document;f.handleEvent(a)})}return d},onDOMContentLoaded:function(a){forEach(a.target.forms,this._F,this)},onmousedown:function(a){this.base(a);this._h=a.button},onmouseup:function(a){this.base(a);if(this._h==null){a.target.fireEvent("onmousedown",a)}delete this._h},onfocusin:function(a){var b=a.target,c=this._k;if(this.events.change&&b.form!==undefined){b.attachEvent("onchange",c);b.attachEvent("onblur",function(){b.detachEvent("onblur",arguments.callee);b.detachEvent("onchange",c)})}this.onfocus(a)},onfocusout:function(a){this.onblur(a)},onclick:function(a){var b=a.target;if(b.form)this._F(b.form)},ondblclick:function(a){a.target.fireEvent("onclick",a)}}},{init:function(){assignID(document);DocumentState=this;this.createState(document);new DOMContentLoadedEvent(document)},createState:function(a){var b=a.base2ID;if(!this[b]){this[b]=new this(a)}return this[b]},getInstance:function(a){return this[Traversal.getDocument(a).base2ID]}});eval(this.exports)};
+//This should be removed when base2 becomes safari compatable. 
+if( navigator.appVersion.search(/Safari/) != -1)
+{
+NodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
+} 
+//
+
+if (typeof(base2) == "undefined") {
+	throw new Error("Base2 not found. wForms 3.0 depends on the base2 library.");
+}
+
+if (typeof(wFORMS) == "undefined") {
+	wFORMS = {};
+}
+wFORMS.NAME 	= "wFORMS";
+wFORMS.VERSION 	= "3.0";
+wFORMS.__repr__ = function () {
+	return "[" + this.NAME + " " + this.VERSION + "]";
+};
+wFORMS.toString = function () {
+	return this.__repr__();
+};
+
+wFORMS.behaviors = {};
+wFORMS.helpers   = {}
+wFORMS.instances = []; // keeps track of behavior instances
+
+/**
+ * Helper method.
+ * @return {string} A randomly generated id (with very high probability of uniqueness). 
+ */	
+wFORMS.helpers.randomId = function () {
+	var seed = (new Date()).getTime();
+	seed = seed.toString().substr(6);
+	for (var i=0; i<6;i++)
+		seed += String.fromCharCode(48 + Math.floor((Math.random()*10)));
+	return "id_" + seed;
+}
+
+/**
+ * getFieldValue 
+ * @param {domElement} element 
+ * @returns {string} the value of the field. 
+ */
+wFORMS.helpers.getFieldValue = function(element) {
+	switch(element.tagName) {
+		case "INPUT":
+			if(element.type=='checkbox')
+				return element.checked?element.value:null;
+			if(element.type=='radio')
+				return element.checked?element.value:null;
+			return element.value;
+			break;
+		case "SELECT":		
+			if(element.selectedIndex==-1) {					
+				return null; 
+			} 
+			if(element.getAttribute('multiple')) {
+				var v=[];
+				for(var i=0;i<element.options.length;i++) {
+					if(element.options[i].selected) {
+						v.push(element.options[i].value);
+					}
+				}
+				return v;
+			}											
+			return element.options[element.selectedIndex].value;
+			break;
+		case "TEXTAREA":
+			// TODO: fix this
+			return element.value;
+			break;
+		default:
+			return null; 
+			break;
+	} 	 
+}
+
+/**
+ * DEPRECATED
+ * Returns computed style from the element by style name
+ * @param	{HTMLElement}	element
+ * @param	{String}	styleName
+ * @return	{String} or false
+ */
+wFORMS.helpers.getComputedStyle = function(element, styleName){
+	return document.defaultView.getComputedStyle(element, "").getPropertyValue(styleName);
+}
+
+/**
+ * Returns left position of the element
+ * @params	{HTMLElement}	elem	Source element 
+ */
+wFORMS.helpers.getLeft = function(elem){
+	var pos = 0;
+	while(elem.offsetParent) {
+		try {
+			if(document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'relative'){
+				return pos;
+			}
+			if(pos > 0 && document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'absolute'){
+				return pos;
+			}
+		} catch(x) {}
+		pos += elem.offsetLeft;
+		
+		elem = elem.offsetParent;
+		
+	}
+ 	if(!window.opera && document.all && document.compatMode && document.compatMode != "BackCompat") {
+		pos += parseInt(document.body.currentStyle.marginTop); 	   		
+ 	}
+	return pos;
+}
+
+/**
+ * Returns top position of the element
+ * @params	{HTMLElement}	elem	Source element 
+ */
+wFORMS.helpers.getTop = function(elem){
+	var pos = 0;
+	while(elem.offsetParent) {
+		try {
+			if(document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'relative'){
+				return pos;
+			}
+			if(pos > 0 && document.defaultView.getComputedStyle(elem, "").getPropertyValue('position') == 'absolute'){
+				return pos;
+			}
+		} catch(x) {}
+		pos += elem.offsetTop;
+		
+		elem = elem.offsetParent;
+	}
+	if(!window.opera && document.all && document.compatMode && document.compatMode != "BackCompat") {
+		pos += parseInt(document.body.currentStyle.marginLeft) + 1; 	   		
+ 	}
+	return pos;
+}
+
+/**
+ * highlight change 
+ */ 
+wFORMS.helpers.useSpotlight = false;
+
+wFORMS.helpers.spotlight = function(target) {
+	// not implemented	 	
+}
+
+/**
+ * Activating an Alternate Stylesheet (thx to: http://www.howtocreate.co.uk/tutorials/index.php?tut=0&part=27)
+ * Use this to activate a CSS Stylesheet that shouldn't be used if javascript is turned off.
+ * The stylesheet rel attribute should be 'alternate stylesheet'. The title attribute MUST be set.
+ */
+wFORMS.helpers.activateStylesheet = function(sheetref) {
+	if(document.getElementsByTagName) {
+		var ss=document.getElementsByTagName('link');
+	} else if (document.styleSheets) {
+		var ss = document.styleSheets;
+	}
+	for(var i=0;ss[i];i++ ) {
+		if(ss[i].href.indexOf(sheetref) != -1) {
+			ss[i].disabled = true;
+			ss[i].disabled = false;			
+		}
+	}
+}
+
+wFORMS.helpers.contains = function(array, needle) {
+	var l=array.length;
+	for (var i=0; i<l; i++) {
+		if(array[i] === needle) {
+			return true;
+		}
+	}
+	return false;
+}
+/**
+ * Initialization routine. Automatically applies the behaviors to all web forms in the document.  
+ */	
+wFORMS.onLoadHandler = function() {
+	var forms=document.getElementsByTagName("FORM");
+	
+	for(var i=0;i<forms.length;i++) {
+		if(forms[i].getAttribute('rel')!='no-behavior')
+			wFORMS.applyBehaviors(forms[i]);
+	}	
+}
+
+/**
+ * Initialization routine. Automatically applies all behaviors to the given element.
+ * @param {domElement} A form element, or any of its children.
+ * TODO: Kill existing instances before applying the behavior to the same element. 
+ */	
+wFORMS.applyBehaviors = function(f) {
+	
+	if(!f.querySelectorAll) {
+		base2.DOM.bind(f);
+	}
+	// switch must run before paging behavior
+	if(wFORMS.behaviors['switch']){
+		var b = wFORMS.behaviors['switch'].applyTo(f);
+		if(!wFORMS.instances['switch']) {
+			wFORMS.instances['switch'] = [b];
+		} else {
+			wFORMS.removeBehavior(f, 'switch');
+			wFORMS.instances['switch'].push(b);
+		}		
+	}
+	for(var behaviorName in wFORMS.behaviors) {
+		if(behaviorName == 'switch'){
+			continue;
+		}		
+		if(wFORMS.behaviors[behaviorName].applyTo) {
+			// It is a behavior.
+			
+			var b = wFORMS.behaviors[behaviorName].applyTo(f);
+			
+			// behaviors may create several instances
+			// if single instance returned, convert it to an array
+			if(b && b.constructor != Array) {
+				b=[b];			
+			} 
+			
+			for(var i=0;b && i<b.length;i++) {
+				if(!wFORMS.instances[behaviorName]) {
+					wFORMS.instances[behaviorName] = [b[i]];
+				} else {
+					wFORMS.removeBehavior(f, behaviorName);
+					wFORMS.instances[behaviorName].push(b[i]);
+				}
+			}
+		}
+	}
+	if(wFORMS.behaviors.onApplyAll) {
+		wFORMS.behaviors.onApplyAll(f);
+	}
+}
+
+wFORMS.removeBehavior = function(f, behaviorName) {
+	
+	return null;
+	
+	if(!wFORMS.instances[behaviorName]) 
+		return null;
+
+	for(var i=0; i < wFORMS.instances[behaviorName].length; i++) {
+		if(wFORMS.instances[behaviorName][i].target==f) {
+			
+			// TODO: call a remove method for each behavior to cleanly remove any event handler
+			wFORMS.instances[behaviorName][i] = null;
+		}	
+	}
+	return null;
+}
+
+/**
+ * Returns the behavior instance associated to the given form/behavior pair.
+ * @param	{domElement}	a HTML element (often the form element itself)
+ * @param	{string}		the name of the behavior 
+ * @return	{object}		the instance of the behavior 
+ * TODO: Returns an array if more than one instance for the given form
+ */
+wFORMS.getBehaviorInstance = function(f, behaviorName) {
+	if(!f || !wFORMS.instances[behaviorName]) 
+		return null;
+	
+	for(var i=0; i < wFORMS.instances[behaviorName].length; i++) {
+		if(wFORMS.instances[behaviorName][i].target==f) {
+			return wFORMS.instances[behaviorName][i];
+		}	
+	}
+	return null;
+}
+
+base2.DOM.Element.addEventListener(document, 'DOMContentLoaded',wFORMS.onLoadHandler,false);
+// document.addEventListener('DOMContentLoaded',wFORMS.onLoadHandler,false);
+
+// Attach JS only stylesheet.
+wFORMS.helpers.activateStylesheet('wforms-jsonly.css');
+
+
+
+
+
+
+
+if (typeof(wFORMS) == "undefined") {
+	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
+}
+/**
+ * wForms hint behavior. Show/highlight an HTML element when the associated input gets the focus.
+ */
+wFORMS.behaviors.hint  = { 
+	
+	/**
+	 * Inactive CSS class for the element
+     * @final
+	 */
+	CSS_INACTIVE : 'field-hint-inactive',
+
+	/**
+	 * Active CSS class for the element
+     * @final
+	 */
+	CSS_ACTIVE : 'field-hint',
+
+	/**
+	 * Selector expression for the hint elements
+     * @final
+     * @see	http://www.w3.org/TR/css3-selectors/
+	 */
+	HINT_SELECTOR : '*[id$="-H"]',
+
+	/**
+	 * Suffix of the ID for the hint element
+     * @final
+	 */
+	HINT_SUFFIX : '-H',
+
+	/**
+	 * Creates new instance of the behavior
+     * @constructor
+	 */
+	instance : function(f) {
+		this.behavior = wFORMS.behaviors.hint; 
+		this.target = f;
+	}
+}
+
+/**
+ * Factory Method.
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+wFORMS.behaviors.hint.applyTo = function(f) {
+	var b = new wFORMS.behaviors.hint.instance(f);
+	// Selects all hints elements using predefined selector and attaches
+	// event listeners to related HTML elements for each hint
+	f.querySelectorAll(wFORMS.behaviors.hint.HINT_SELECTOR).forEach(
+		function(elem){
+			
+			// ID attribute is not checked here because selector already contains it
+			// if selector is changed, ID check should also exists
+			// if(!elem.id) { return ; }
+			var e = b.getElementByHintId(elem.id);
+			if(e){
+				if(!e.addEventListener) base2.DOM.bind(e);
+				if(e.tagName == "SELECT" || e.tagName == "TEXTAREA" || (e.tagName == "INPUT" && e.type != "radio" && e.type != "checkbox")){							
+					e.addEventListener('focus', function(event) { b.run(event, this)}, false);
+					e.addEventListener('blur',  function(event) { b.run(event, this)}, false);	
+				} else {
+					e.addEventListener('mouseover', function(event) { b.run(event, e)}, false);
+					e.addEventListener('mouseout', function(event) { b.run(event, e)}, false);
+				}
+			}
+		}
+	);
+	b.onApply();
+	return b;
+}
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.hint.instance.prototype.onApply = function() {} 
+
+/**
+ * Executes the behavior
+ * @param {event} event
+ * @param {domElement} elem
+ */
+wFORMS.behaviors.hint.instance.prototype.run = function(event, element) { 	
+	
+	var hint = this.getHintElement(element);
+	if(!hint) return;
+
+	if(event.type == 'focus' || event.type == 'mouseover'){
+		hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
+		hint.addClass(wFORMS.behaviors.hint.CSS_ACTIVE);
+		this.setup(hint, element);
+	} else{
+		hint.addClass(wFORMS.behaviors.hint.CSS_INACTIVE);
+		hint.removeClass(wFORMS.behaviors.hint.CSS_ACTIVE);
+	}
+}
+
+
+/**
+ * Returns HTMLElement related to specified hint ID
+ * @returns	{HTMLElement}
+ */
+wFORMS.behaviors.hint.instance.prototype.getElementByHintId = function(hintId){
+	var id = hintId.substr(0, hintId.length - wFORMS.behaviors.hint.HINT_SUFFIX.length);
+	var e = document.getElementById(id);
+	return e;
+}
+
+/**
+ * Returns HTMLElement Hint element associated with element event catched from
+ * @returns	{HTMLElement}
+ */
+wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
+	var e = document.getElementById(element.id + this.behavior.HINT_SUFFIX);
+	if(e && !e.hasClass){base2.DOM.bind(e);}
+	return e && e != '' ? e : null;
+}
+
+/**
+ * Setups hint position on the screen depend on the element
+ * @param	{HTMLElement}	hint	Hint HTML element
+ * @param   {HTMLElement}	source	HTML element with focus.
+ */
+wFORMS.behaviors.hint.instance.prototype.setup = function(hint, source){
+	
+	var l = ((source.tagName == 'SELECT' ? + source.offsetWidth : 0) + wFORMS.helpers.getLeft(source));
+	var t  = (wFORMS.helpers.getTop(source) + source.offsetHeight);	
+	hint.style.left = l + "px"; 
+	hint.style.top  = t + "px";
+}
+
+/**
+ * Returns if ID is of the HINT element. Used by repeat behavior to correctly 
+ * update hint ID
+ * @param	{DOMString}	id
+ * @return	boolean
+ */
+wFORMS.behaviors.hint.isHintId = function(id){
+	return id.match(new RegExp(wFORMS.behaviors.hint.HINT_SUFFIX + '$')) != null;
+}
+
+
+if (typeof(wFORMS) == "undefined") {
+	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
+}
+/**
+ * wForms paging behavior. 
+ * See: http://www.formassembly.com/blog/the-pagination-behavior-explained/
+ */
+wFORMS.behaviors.paging = {
+
+	/**
+	 * Selector expression for catching elements
+     * @final
+     * @see	http://www.w3.org/TR/css3-selectors/
+	 */
+	SELECTOR : '.wfPage',
+
+	/**
+	 * CSS class indicates page
+     * @final
+	 */
+	CSS_PAGE : 'wfPage',
+
+	/**
+	 * CSS class for current page
+     * @final
+	 */
+	CSS_CURRENT_PAGE : 'wfCurrentPage',
+
+	/**
+	 * CSS class for next button
+     * @final
+	 */
+	CSS_BUTTON_NEXT : 'wfPageNextButton',
+
+	/**
+	 * CSS class for next button
+     * @final
+	 */
+	CSS_BUTTON_PREVIOUS : 'wfPagePreviousButton',
+	
+	/**
+	 * CSS class for the div contains the previous/next buttons
+     * @final
+	 */
+	CSS_BUTTON_PLACEHOLDER : 'wfPagingButtons',
+	
+	/**
+	 * ID prefix for the next buttons
+     * @final
+	 */
+	ID_BUTTON_NEXT_PREFIX : 'wfPageNextId',
+
+	/**
+	 * ID prefix for the previos buttons
+     * @final
+	 */
+	ID_BUTTON_PREVIOUS_PREFIX : 'wfPagePreviousId',
+
+	/**
+	 * CSS class for hidden submit button
+     * @final
+	 */
+	CSS_SUBMIT_HIDDEN : 'wfHideSubmit',
+
+	/**
+	 * ID attribute prefix for page area
+     * @final
+	 */
+	ID_PAGE_PREFIX	: 'wfPgIndex-',
+
+	/**
+	 * ID attribute suffix for prev/next buttons placeholder
+     * @final
+	 */
+	ID_PLACEHOLDER_SUFFIX : '-buttons',
+
+	/**
+	 * Attribute indicates index of the page button should activate
+     * @final
+	 */
+	ATTR_INDEX : 'wfPageIndex_activate',
+
+	/**
+	 * Custom messages used for creating links
+     * @final
+	 */
+	MESSAGES : {
+		CAPTION_NEXT : 'Next Page',
+		CAPTION_PREVIOUS : 'Previous Page'
+	},
+
+	/**
+     * Indicates that form should be validated on Next clicked
+     * TODO		Possible refactor functionality with validation
+	 */
+	runValidationOnPageNext : true,
+
+	/**
+	 * custom 'Page Next' event handler (to be overridden) 
+     * @param	{HTMLElement}	elem	new page
+	 */
+	 onPageNext: function() {},
+	 
+	/**
+	 * custom 'Page Previous' event handler (to be overridden) 
+     * @param	{HTMLElement}	elem	new page
+	 */
+	 onPagePrevious: function() {}, 
+	 
+	 /**
+	 * custom 'Page Change' event handler (either next or previous) (to be overridden) 
+     * @param	{HTMLElement}	elem	new page
+	 */
+	 onPageChange: function() {}, 
+	   
+	/**
+	 * Creates new instance of the behavior
+     * @param	{HTMLElement}	f	Form element
+     * @constructor
+	 */
+	instance: function(f) {
+		this.behavior = wFORMS.behaviors.paging; 
+		this.target = f;
+		this.currentPageIndex = 1;
+	}
+}
+
+/**
+ * Factory Method.
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+wFORMS.behaviors.paging.applyTo = function(f) {
+	var b = new wFORMS.behaviors.paging.instance(f)
+	var behavior = wFORMS.behaviors.paging;
+	var isValidationAccepted = (wFORMS.behaviors.validation && wFORMS.behaviors.paging.runValidationOnPageNext);
+	// Shows that form contains paging
+	var isPagingApplied = false;
+	
+	// Iterates over the elements with specified class names
+	f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR).forEach(
+		function(elem){			
+			isPagingApplied = true;
+			// Creates placeholder for buttons
+			var ph = b.getOrCreatePlaceHolder(elem);
+			var index = wFORMS.behaviors.paging.getPageIndex(elem);
+			// If first page add just Next button
+			if(index == 1){
+				var ctrl = base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));
+				
+				if(isValidationAccepted){					
+					ctrl.addEventListener('click', function(event) {							
+							var v = wFORMS.getBehaviorInstance(b.target,'validation'); 
+							if(v.run(event, elem)){b.run(event, ctrl);} 
+						}, 
+						false);					
+				}else{
+					ctrl.addEventListener('click', function(event) { b.run(event, ctrl); }, false);
+				}
+
+				wFORMS.behaviors.paging.showPage(elem);
+			}else{
+				// Adds previous button
+				var ctrl = base2.DOM.bind(behavior._createPreviousPageButton(index));
+				ph.insertBefore(ctrl, ph.firstChild);
+
+				ctrl.addEventListener('click', function(event) { b.run(event, ctrl)}, false);
+
+				// If NOT last page adds next button also
+				if(!wFORMS.behaviors.paging.isLastPageIndex(index, true)){
+					var _ctrl = base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));
+
+					if(isValidationAccepted){						
+						_ctrl.addEventListener('click', function(event) {
+							var v = wFORMS.getBehaviorInstance(b.target,'validation'); 							 
+							if(v.run(event, elem)){b.run(event, _ctrl);} 
+						}, false);
+					}else{
+						_ctrl.addEventListener('click', function(event) { b.run(event, _ctrl); }, false);
+					}
+				}
+			}
+		}
+	);
+	// Looking for the first active page from 0. 0 is a "fake page"
+	if(isPagingApplied){		
+		p = b.findNextPage(0);
+		b.currentPageIndex = 0;
+		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
+		b.onApply();		
+	}	
+	return b;
+}
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.paging.instance.prototype.onApply = function() {} 
+
+
+/**
+ * Returns page index by the page area element
+ * @param	{HTMLElement}	elem
+ * @return	{Integer}	or false
+ */
+wFORMS.behaviors.paging.getPageIndex = function(elem){
+	if(elem && elem.id){
+		var index = elem.id.replace(
+			new RegExp(wFORMS.behaviors.paging.ID_PAGE_PREFIX + '(\\d+)'), "$1");
+
+		index = parseInt(index);
+		return !isNaN(index) ? index : false;
+
+	}
+
+	return false;
+}
+
+/**
+ * Check if the given element is in the visible page.
+ * @param	{DOMElement}	an element (such as a field to be validated)
+ * @return	{boolean}
+ */
+wFORMS.behaviors.paging.isElementVisible = function(element){	
+	while(element && element.tagName != 'BODY'){
+		if(element.className) {
+			if(element.className.indexOf(this.CSS_CURRENT_PAGE) != -1) {
+				return true;
+			}
+			if(element.className.indexOf(this.CSS_PAGE) != -1 ) {
+				return false;
+			}
+		} 
+		element = element.parentNode;
+	}	
+	return true;
+}
+
+/**
+ * Private method for creating button. Uses public method for design creating
+ * @param	{Integer}	index 	Index of the page button belongs to
+ * @return	{HTMLElement}
+ * @private
+ * @see wFORMS.behaviors.paging.createNextPageButton
+ */
+wFORMS.behaviors.paging._createNextPageButton = function(index){
+	var elem = this.createNextPageButton();
+	elem.setAttribute(this.ATTR_INDEX, index + 1);
+	elem.id = this.ID_BUTTON_NEXT_PREFIX + index;
+	return elem;
+}
+
+/**
+ * Creates button for moving to the next page. This method could be overridden
+ * And developed for easily customization for users. Behavior uses private method
+ * @return	{HTMLElement}
+ * @public
+ */
+wFORMS.behaviors.paging.createNextPageButton = function(){
+	var elem = document.createElement('input'); 
+	elem.setAttribute('value', this.MESSAGES.CAPTION_NEXT);
+	elem.type = 'button';
+	elem.className = this.CSS_BUTTON_NEXT;
+	return elem;
+}
+
+/**
+ * Private method for creating button. Uses public method for design creating
+ * @param	{Integer}	index 	Index of the page button belongs to
+ * @return	{HTMLElement}
+ * @private
+ * @see wFORMS.behaviors.paging.createPreviousPageButton
+ */
+wFORMS.behaviors.paging._createPreviousPageButton = function(index){
+	var elem = this.createPreviousPageButton();
+	elem.setAttribute(this.ATTR_INDEX, index - 1);
+	elem.id = this.ID_BUTTON_PREVIOUS_PREFIX + index;;
+	return elem;
+}
+
+/**
+ * Creates button for moving to the next page. This method could be overridden
+ * And developed for easily customization for users. Behavior uses private method
+ * @return	{HTMLElement}
+ * @public
+ */
+wFORMS.behaviors.paging.createPreviousPageButton = function(){
+	var elem = document.createElement('input'); 
+	elem.setAttribute('value', this.MESSAGES.CAPTION_PREVIOUS);
+	elem.type = 'button';
+	elem.className = this.CSS_BUTTON_PREVIOUS;
+	return elem;
+}
+
+/**
+ * Creates place holder for buttons
+ * @param	{HTMLElement}	pageElem	Page where placeholder should be created
+ * @return	{HTMLElement}
+ */
+wFORMS.behaviors.paging.instance.prototype.getOrCreatePlaceHolder = function(pageElem){
+	var id = pageElem.id + this.behavior.ID_PLACEHOLDER_SUFFIX;
+	var elem = document.getElementById(id);
+
+	if(!elem){
+		elem = pageElem.appendChild(document.createElement('div'));
+		elem.id = id;
+		elem.className = this.behavior.CSS_BUTTON_PLACEHOLDER;
+	}	
+
+	return elem;
+}
+
+/**
+ * Hides page specified
+ * @param	{HTMLElement}	e
+ */
+wFORMS.behaviors.paging.hidePage = function(e){
+	if(e) {
+		if(!e.removeClass) { // no base2.DOM.bind to speed up function 
+			e.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+		}
+		if(!e.addClass) { // no base2.DOM.bind to speed up function 
+			e.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
+		}
+		e.removeClass(wFORMS.behaviors.paging.CSS_CURRENT_PAGE);
+		e.addClass(wFORMS.behaviors.paging.CSS_PAGE);
+	}
+}
+
+/**
+ * Shows page specified
+ * @param	{HTMLElement}	e
+ */
+wFORMS.behaviors.paging.showPage = function(e){
+	if(e) {
+		if(!e.removeClass) { // no base2.DOM.bind to speed up function 
+			e.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+		}
+		e.removeClass(wFORMS.behaviors.paging.CSS_PAGE);
+		if(!e.addClass) { // no base2.DOM.bind to speed up function 
+			e.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
+		}
+		e.addClass(wFORMS.behaviors.paging.CSS_CURRENT_PAGE);
+	}
+}
+
+/**
+ * Activates page by index
+ * @param	{Integer}	index	
+ * @param	{Boolean}	[optional] scroll to the top of the page (default to true)
+ */
+wFORMS.behaviors.paging.instance.prototype.activatePage = function(index /*, scrollIntoView*/){
+	
+	if(arguments.length>1) {
+		var scrollIntoView = arguments[1];
+	} else {
+		var scrollIntoView = true;
+	}
+	
+	if(index == this.currentPageIndex){
+		return false;
+	}
+	index = parseInt(index);
+	if(index > this.currentPageIndex){
+		var p = this.findNextPage(this.currentPageIndex);
+	} else {
+		var p = this.findPreviousPage(this.currentPageIndex);
+	}
+	
+	if(p) { 
+		// Workaround for Safari. Otherwise it crashes with Safari 1.2
+		var _self = this;
+	//	setTimeout(
+		//	function(){
+				var index = _self.behavior.getPageIndex(p);
+				_self.setupManagedControls(index);
+				_self.behavior.hidePage(_self.behavior.getPageByIndex(_self.currentPageIndex));				
+				_self.behavior.showPage(p);
+				var  _currentPageIndex = _self.currentPageIndex;
+				_self.currentPageIndex = index;
+				
+				// go to top of the page
+				if (scrollIntoView) {
+					if (p.scrollIntoView) {
+						p.scrollIntoView();
+					}
+					else {
+						location.hash = "#" + wFORMS.behaviors.paging.ID_PAGE_PREFIX + index;
+					}
+				}
+				
+				// run page change event handlers
+				_self.behavior.onPageChange(p);
+				if(index > _currentPageIndex){
+					_self.behavior.onPageNext(p);
+				} else {
+					_self.behavior.onPagePrevious(p);
+				}
+		//	}, 1
+		//);
+	}
+}
+
+/**
+ * Setups managed controls: Next/Previous/Send buttons
+ * @param	{int}	index	Index of the page to make controls setting up. If null setups current page
+ */
+wFORMS.behaviors.paging.instance.prototype.setupManagedControls = function(index){
+	// new 
+	if(!index){
+		index = this.currentPageIndex;
+	}
+	
+	// new
+	var b = wFORMS.behaviors.paging;
+	if(b.isFirstPageIndex(index)){
+		if(ctrl = b.getPreviousButton(index)){
+			ctrl.style.visibility = 'hidden';
+		}
+	}else{
+		if(ctrl = b.getPreviousButton(index)){
+			ctrl.style.visibility = 'visible';
+		}
+	}
+
+	if(b.isLastPageIndex(index)){
+		if(ctrl = b.getNextButton(index)){
+			ctrl.style.visibility = 'hidden';
+		}
+		this.showSubmitButtons();
+	} else {
+		if(ctrl = b.getNextButton(index)){
+			ctrl.style.visibility = 'visible';
+		}
+		this.hideSubmitButtons();
+	}
+}
+
+/**
+ * Shows all submit buttons
+ */
+wFORMS.behaviors.paging.instance.prototype.showSubmitButtons = function(){
+	var nl = this.target.getElementsByTagName('input');
+	for(var i=0;i<nl.length;i++) {
+		if(nl[i].type=='submit') {
+			nl[i].className = nl[i].className.replace(new RegExp("(^|\\s)" + this.behavior.CSS_SUBMIT_HIDDEN + "(\\s|$)", "g"), "$2");
+		}	
+	}
+}
+
+/**
+ * Hides all submit button
+ */
+wFORMS.behaviors.paging.instance.prototype.hideSubmitButtons = function(){
+	var nl = this.target.getElementsByTagName('input');
+	for(var i=0;i<nl.length;i++) {
+		if(nl[i].type=='submit') {
+			if(!(new RegExp("(^|\\s)" + this.behavior.CSS_SUBMIT_HIDDEN + "(\\s|$)")).test(nl[i].className)) {
+				nl[i].className+=' '+this.behavior.CSS_SUBMIT_HIDDEN;
+			}
+		}
+	}
+}
+
+/**
+ * Returns page element specified by index
+ * @param	{Integer}	index
+ * @return	{HTMLElement}
+ */
+wFORMS.behaviors.paging.getPageByIndex = function(index){
+	var page = document.getElementById(wFORMS.behaviors.paging.ID_PAGE_PREFIX + index);
+	return page ? base2.DOM.bind(page) : false;
+}
+
+/**
+ * Returns next button specified by index
+ * @param	{int}	index	Index of the page button related to
+ * @return	{HTMLElement}
+ */
+wFORMS.behaviors.paging.getNextButton = function(index){
+	// base2 is not using here because of when control is absen it produces an error in IE
+	// for example on last page there is not Next button, on first - Previous
+	return document.getElementById(wFORMS.behaviors.paging.ID_BUTTON_NEXT_PREFIX + index);
+}
+
+/**
+ * Returns previous button specified by index
+ * @param	{int}	index	Index of the page button related to
+ * @return	{HTMLElement}
+ */
+wFORMS.behaviors.paging.getPreviousButton = function(index){
+	// base2 is not using here because of when control is absen it produces an error in IE
+	// for example on last page there is not Next button, on first - Previous
+	return document.getElementById(wFORMS.behaviors.paging.ID_BUTTON_PREVIOUS_PREFIX + index);
+}
+
+/**
+ * Check if index passed is index of the last page
+ * @param	{Integer}	index
+ * @param	{bool}	ignoreSwitch	Ingoneres switch behavior when checking for last index
+ * @return	{bool}
+ */
+wFORMS.behaviors.paging.isLastPageIndex = function(index, ignoreSwitch){
+	index = parseInt(index) + 1;
+	var b = wFORMS.behaviors.paging;
+	var p = b.getPageByIndex(index);
+
+	if((_b = wFORMS.behaviors['switch']) && !ignoreSwitch){
+		while(p && _b.isSwitchedOff(p)){
+			index++;
+			p = b.getPageByIndex(index);
+		}
+	}
+
+	return p ? false : true;
+}
+
+/**
+ * Check if index passed is index of the first page
+ * @param	{Integer}	index
+ * @param	{bool}	ignoreSwitch	Ingoneres switch behavior when checking for first index
+ * @return	{bool}
+ */
+wFORMS.behaviors.paging.isFirstPageIndex = function(index, ignoreSwitch){
+	index = parseInt(index) - 1;
+	var b = wFORMS.behaviors.paging;
+	var p = b.getPageByIndex(index);
+	if((_b = wFORMS.behaviors['switch']) && !ignoreSwitch){
+		while(p && _b.isSwitchedOff(p)){
+			index--;
+			p = b.getPageByIndex(index);
+		}
+	}
+
+	return p ? false : true;
+}
+
+/**
+ * Returns Next page from the index. Takes in attention switch behavior
+ * @param	{int}	index
+ */
+wFORMS.behaviors.paging.instance.prototype.findNextPage = function(index){
+	index = parseInt(index) + 1;
+	var b = wFORMS.behaviors.paging;
+	var p = b.getPageByIndex(index);
+
+	if(_b = wFORMS.behaviors['switch']){
+		while(p && _b.isSwitchedOff(p)){
+			index++;
+			p = b.getPageByIndex(index);
+		}
+	}
+	return p;
+}
+
+/**
+ * Returns Next page from the index. Takes in attention switch behavior
+ * @param	{int}	index
+ */
+wFORMS.behaviors.paging.instance.prototype.findPreviousPage = function(index){
+	index = parseInt(index) - 1;
+	var b = wFORMS.behaviors.paging;
+	var p = b.getPageByIndex(index);
+
+	if(_b = wFORMS.behaviors['switch']){
+		while(p && _b.isSwitchedOff(p)){
+			index--;
+			p = b.getPageByIndex(index);
+		}
+	}
+
+	return p ? p : false;
+}
+
+
+
+
+
+/**
+ * Executes the behavior
+ * @param {event} e 
+ * @param {domElement} element
+ */
+wFORMS.behaviors.paging.instance.prototype.run = function(e, element){
+	this.activatePage(element.getAttribute(wFORMS.behaviors.paging.ATTR_INDEX));
+}
+
+	
+if (typeof(wFORMS) == "undefined") {
+	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
+}
+/**
+ * wForms repeat behavior. 
+ * See: http://www.formassembly.com/wForms/v2.0/documentation/examples/repeat.html
+ */
+wFORMS.behaviors.repeat = {
+
+	/**
+	 * Selector expression for catching repeat elements
+     * @final
+     * @see	http://www.w3.org/TR/css3-selectors/
+	 */
+	SELECTOR_REPEAT : '*[class~="repeat"]',
+
+	/**
+	 * Selector expression for catching removable section
+     * @final
+     * @see	http://www.w3.org/TR/css3-selectors/
+	 */
+	SELECTOR_REMOVEABLE : '*[class~="removeable"]',
+
+	/**
+	 * Suffix for the ID of 'repeat' link
+     * @final
+	 */
+	ID_SUFFIX_DUPLICATE_LINK : '-wfDL',
+
+	/**
+	 * Suffix for the ID of the repeat counter hidden element
+     * @final
+	 */
+	ID_SUFFIX_COUNTER : '-RC',
+
+	/**
+	 * CSS class for duplicate span/link
+     * @final
+	 */
+	CSS_DUPLICATE_LINK : 'duplicateLink',
+	CSS_DUPLICATE_SPAN : 'duplicateSpan',
+	/**
+	 * CSS class for delete link
+     * @final
+	 */
+	CSS_DELETE_LINK : 'removeLink',
+	CSS_DELETE_SPAN : 'removeSpan',
+	/**
+	 * CSS class for field group that could be removed
+     * @final
+	 */
+	CSS_REMOVEABLE : 'removeable',
+
+	/**
+	 * CSS class for field group that could be repeat
+     * @final
+	 */
+	CSS_REPEATABLE : 'repeat',
+
+	/**
+	 * Attribute specifies that current group is duplicate
+     * @final
+	 */
+	ATTR_DUPLICATE : 'wfr__dup',
+
+	/**
+	 * Attribute specifies that current group is duplicate
+     * @final
+	 */
+	ATTR_DUPLICATE_ELEM : 'wfr__dup_elem',
+
+
+    /**
+     * Means that element has been already handled by repeat behavior
+     */
+	ATTR_HANDLED : 'wfr_handled',
+
+	/**
+	 * Attribute specifies ID of the master section on its dublicate
+     * @final
+	 */
+	ATTR_MASTER_SECTION : 'wfr__master_sec',
+
+	/**
+	 * Special attribute name that is set to Remove link with section ID
+     * should be deleted when link is clicked
+     * @final
+	 */
+	ATTR_LINK_SECTION_ID : 'wfr_sec_id',
+
+	/**
+	 * Messages collection used for creating links
+     * @final
+	 */
+	MESSAGES : {
+		ADD_CAPTION : "Add another response",
+		ADD_TITLE : "Will duplicate this question or section.",
+
+		REMOVE_CAPTION : "Remove",
+		REMOVE_TITLE : "Will remove this question or section"
+	},
+
+	/**
+	 * Array of the attribute names that shoud be updated in the duplicated tree
+	 */
+	UPDATEABLE_ATTR_ARRAY : [
+		'id',
+		'name',
+		'for'
+	],
+
+	/**
+	 * Allows to leave names of the radio buttons the same (behavior-wide setting)
+	 */
+	preserveRadioName : false,
+	
+	/**
+	 * Allows to leave names of the radio buttons the same (field-level setting)
+	 * This class attribute can be set on a repeated element to override the
+	 * behavior's preserveRadioName setting.
+	 */
+	CSS_PRESERVE_RADIO_NAME: "preserveRadioName",
+	
+	/**
+	 * Custom function that could be overridden. 
+	 * Evaluates after section is duplicated
+     * @param	{HTMLElement}	elem	Duplicated section
+	 */
+	onRepeat : function(elem){},
+
+	/**
+	 * Custom function that could be overridden. 
+	 * Evaluates after the section is removed
+	 * @param	{HTMLElement}	elem	a copy of the removed section - detached from the document
+	 */
+	onRemove : function(elem){},
+
+	/**
+	 * Custom function that could be overridden. 
+	 * Returns if section could be repeated
+     * @param	{HTMLElement}	elem	Section to be duplicated
+     * @param	{wFORMS.behaviors.repeat}	b	Behavior mapped to repeatable section 
+     * @return	boolean
+	 */
+	allowRepeat : function(elem, b){
+		return true;
+	},
+
+	/**
+	 * Creates new instance of the behavior
+     * @param	{HTMLElement}	f	Form element
+     * @constructor
+	 */
+	instance : function(f) {
+		this.behavior = wFORMS.behaviors.repeat; 
+		this.target = f;
+	}
+}
+
+/*
+ * Temporary shortcuts
+ */
+var _b = wFORMS.behaviors.repeat;
+var _i = wFORMS.behaviors.repeat.instance;
+
+/**
+ * Factory Method.
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+_b.applyTo = function(f) {
+	// look up for the all elements that could be repeated.
+	// Trying to add event listeners to elements for adding new container.
+	// If need create Add new section element
+	var _self = this;
+	var b = new Array();
+	
+	if(!f.querySelectorAll) base2.DOM.bind(f);
+	
+	f.querySelectorAll(this.SELECTOR_REPEAT).forEach(
+		function(elem){
+			if(_self.isHandled(elem)){
+				return ;
+			}
+			if(!elem.id) elem.id = wFORMS.helpers.randomId();
+			
+			var _b = new _self.instance(elem);
+			var e = _b.getOrCreateRepeatLink(elem);
+			e.addEventListener('click', function(event) { _b.run(event, e)}, false);
+			_b.setElementHandled(elem);
+			b.push(_b);							
+		}
+	);
+	
+	if(!f.hasClass) {
+		f = base2.DOM.bind(f);	
+	}
+	
+	if(f.hasClass(this.CSS_REMOVEABLE)){
+		var m  = this.getMasterSection(f);		
+		var _i = wFORMS.getBehaviorInstance(m, 'repeat');
+		if(_i) {
+			_i.getOrCreateRemoveLink(f);
+		} else if(b[0]){
+			b[0].getOrCreateRemoveLink(f);
+		}
+	}
+	
+	f.querySelectorAll(this.SELECTOR_REMOVEABLE).forEach(function(e){
+		var m  = wFORMS.behaviors.repeat.getMasterSection(e);
+		var _i = wFORMS.getBehaviorInstance(m, 'repeat');
+		if(_i) {
+			_i.getOrCreateRemoveLink(e);
+		} else if(b[0]){
+			b[0].getOrCreateRemoveLink(e);
+		}
+	});
+	
+	for(var i=0;i<b.length;i++) {
+		b[i].onApply();
+	}
+	return b;
+}
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+_i.prototype.onApply = function() {} 
+
+
+/**
+ * Returns repeat link for specified area if it exists, 
+ * otherwise creates new one and returns it
+ * @param	{HTMLElement}	elem	Element repeat link is related to
+ * @return	{HTMLElement}
+ */
+_i.prototype.getOrCreateRepeatLink = function(elem){
+	var id = elem.id + this.behavior.ID_SUFFIX_DUPLICATE_LINK;
+	var e = document.getElementById(id);
+	if(!e || e == ''){
+		e = this.createRepeatLink(id);
+		
+		// Wraps in a span for better CSS positionning control.
+		var spanElem = document.createElement('span');
+		spanElem.className = this.behavior.CSS_DUPLICATE_SPAN;
+		e = spanElem.appendChild(e);
+		
+		if(elem.tagName.toUpperCase() == 'TR'){
+			var tdElem = elem.getElementsByTagName('TD');
+			if(!tdElem){
+				tdElem = elem.appendChild(document.createElement('TD'));
+			} else {
+				tdElem = tdElem[tdElem.length-1]; 
+			}
+			tdElem.appendChild(spanElem);
+		}else{
+			elem.appendChild(spanElem)
+		}
+	}
+
+	return base2.DOM.bind(e);
+}
+
+/**
+ * Returns repeat link for specified area if it exists, 
+ * otherwise creates new one and returns it
+ * @param	{DOMString}	id	ID of the group
+ * @return	{HTMLElement}
+ */
+_i.prototype.createRepeatLink = function(id){
+	// Creates repeat link element
+	var linkElem = document.createElement("A");
+				
+	linkElem.id = id;
+	linkElem.setAttribute('href', '#');	
+	linkElem.className = this.behavior.CSS_DUPLICATE_LINK;
+	linkElem.setAttribute('title', this.behavior.MESSAGES.ADD_TITLE);	
+
+	// Appends text inside the <span element (for CSS replacement purposes) to <a element
+	linkElem.appendChild(document.createElement('span').appendChild(
+		document.createTextNode(this.behavior.MESSAGES.ADD_CAPTION)));
+
+	return linkElem;
+}
+
+/*
+ * Add remove link to duplicated section
+ * @param 	{DOMElement}	duplicated section.
+ */ 	
+_i.prototype.getOrCreateRemoveLink= function(elem){
+	var e  = this.createRemoveLink(elem.id);
+	// looking for the place where to paste link
+	if(elem.tagName == 'TR'){
+		var tds = elem.getElementsByTagName('TD');
+		var tdElem = tds[tds.length-1];
+		tdElem.appendChild(e);
+	} else {
+		elem.appendChild(e)
+	}
+}
+
+/**
+ * Returns remove link for specified area 
+ * @param	{DOMString}	id	ID of the field group
+ * @return	{HTMLElement}
+ */
+_i.prototype.createRemoveLink = function(id){
+	// Creates repeat link element
+	var linkElem = document.createElement("a");
+	
+	linkElem.id = id + this.behavior.ID_SUFFIX_DUPLICATE_LINK;
+	linkElem.setAttribute('href', '#');	
+	linkElem.className = this.behavior.CSS_DELETE_LINK;
+	linkElem.setAttribute('title', this.behavior.MESSAGES.REMOVE_TITLE);	
+	linkElem.setAttribute(this.behavior.ATTR_LINK_SECTION_ID, id);
+
+	// Appends text inside the <span element (for CSS image replacement) to <a element
+	var spanElem = document.createElement('span');
+	spanElem.appendChild(document.createTextNode(this.behavior.MESSAGES.REMOVE_CAPTION));
+	linkElem.appendChild(spanElem);
+
+	var _self = this;
+	linkElem.onclick = function(event) { _self.onRemoveLinkClick(event, linkElem); };	
+
+	// Wraps in a span for better CSS positionning control.
+	var spanElem = document.createElement('span');
+	spanElem.className = this.behavior.CSS_DELETE_SPAN;
+	spanElem.appendChild(linkElem);
+	
+	return spanElem;
+}
+
+
+/**
+ * Duplicates repeat section. Changes ID of the elements, adds event listeners
+ * @param	{HTMLElement}	elem	Element to duplicate
+ */
+_i.prototype.duplicateSection = function(elem){
+	// Call custom function. By default return true
+	if(!this.behavior.allowRepeat(elem, this)){
+		return false;
+	}
+	this.updateMasterSection(elem);
+	// Creates clone of the group
+	var newElem = elem.cloneNode(true);	
+	// Update the ids, names and other attributes that must be changed.
+	// (do it before inserting the element back in the DOM to prevent reseting radio buttons, see bug #152)
+	var index  = this.getNextDuplicateIndex(this.target);
+	var suffix = this.createSuffix(elem, index);
+
+	this.updateDuplicatedSection(newElem, index, suffix);
+	// Insert in DOM		
+	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
+	wFORMS.applyBehaviors(newElem);
+		
+	// Associates repeated input sections with thier calculations.
+	if(wFORMS.behaviors.calculation)
+	{
+	_c = wFORMS.behaviors.calculation;
+	inputItem = newElem.querySelector('input');
+		if(inputItem)
+		{
+		if(inputItem.className.search(_c.VARIABLE_SELECTOR_PREFIX) != -1) 
+			_c.applyTo(inputItem.form);
+		}
+	}
+	// Calls custom function
+	this.behavior.onRepeat(newElem);
+	
+	wFORMS.helpers.spotlight(newElem);
+}
+
+/**
+ * Removes section specified by id
+ * @param	{DOMElement}	element to remove
+ */
+_i.prototype.removeSection = function(elem){
+	if(elem){
+		// Removes section
+		var elem = elem.parentNode.removeChild(elem);
+		// Calls custom function
+		this.behavior.onRemove(elem);
+	}
+}
+/**
+ * Looking for the place where to insert the cloned element
+ * @param 	{DOMElement} 	source element
+ * @return 	{DOMElement} 	target element for 'insertBefore' call.
+ */
+_i.prototype.getInsertNode = function(elem) {
+ 	var insertNode = elem.nextSibling;
+ 	
+ 	if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
+		insertNode = base2.DOM.bind(insertNode); 
+	}
+  	
+	while(insertNode && 
+		 (insertNode.nodeType==3 ||       // skip text-node that can be generated server-side when populating a previously repeated group 
+		  insertNode.hasClass(this.behavior.CSS_REMOVEABLE))) {						
+		
+		insertNode = insertNode.nextSibling;
+		
+		if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
+			insertNode = base2.DOM.bind(insertNode);
+		}
+	}
+	return insertNode;
+}
+/**
+ * Evaluates when user clicks Remove link
+ * @param	{DOMEvent}		Event	catched
+ * @param	{HTMLElement}	elem	Element produced event
+ */
+_i.prototype.onRemoveLinkClick = function(event, link){
+	var e  = document.getElementById(link.getAttribute(this.behavior.ATTR_LINK_SECTION_ID));
+	this.removeSection(e);
+	if(event) event.preventDefault();
+}
+
+/**
+ * Updates attributes inside the master element
+  * @param	{HTMLElement}	elem
+ */
+_i.prototype.updateMasterSection = function(elem){
+	// do it once 
+	if(elem.doItOnce==true)
+		return true;
+	else
+		elem.doItOnce=true;
+
+	var suffix = this.createSuffix(elem);
+	elem.id = this.clearSuffix(elem.id) + suffix;
+	
+	this.updateMasterElements(elem, suffix);
+}
+_i.prototype.updateMasterElements  = function(elem, suffix){
+	
+	if(!elem || elem.nodeType!=1) 
+		return;
+	
+	var cn = elem.childNodes;
+	for(var i=0;i<cn.length;i++) {
+		var n = cn[i];
+		if(n.nodeType!=1) continue;
+		
+		if(!n.hasClass) { // no base2.DOM.bind to speed up function 
+			n.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		}
+		
+		// suffix may change for this node and child nodes, but not sibling nodes, so keep a copy
+		var siblingSuffix = suffix;
+		if(n.hasClass(this.behavior.CSS_REPEATABLE)) {
+			suffix += "[0]";
+		}
+		if(!n.hasClass(this.behavior.CSS_REMOVEABLE)){
+			// Iterates over updateable attribute names
+			for(var j = 0; j < this.behavior.UPDATEABLE_ATTR_ARRAY.length; j++){
+				var attrName = this.behavior.UPDATEABLE_ATTR_ARRAY[j];
+				var value = this.clearSuffix(n.getAttribute(attrName));
+				if(!value){
+					continue;
+				}				
+				if(attrName=='id' && wFORMS.behaviors.hint && wFORMS.behaviors.hint.isHintId(n.id)){
+					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.hint.HINT_SUFFIX + ')$'),"$1" + suffix + "$2");
+				} else if(attrName=='id' && wFORMS.behaviors.validation && wFORMS.behaviors.validation.isErrorPlaceholderId(n.id)){
+					n.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX + ')$'),"$1" + suffix + "$2"); 
+				} else if(attrName=='id' && n.id.indexOf(this.behavior.ID_SUFFIX_DUPLICATE_LINK) != -1){
+					n.id = value.replace(new RegExp("(.*)(" + this.behavior.ID_SUFFIX_DUPLICATE_LINK + ')$'), "$1" + suffix + "$2");
+				} else if(attrName=='id'){ 
+					n.id = value + suffix;		// do not use setAttribute for the id property (doesn't work in IE6)	
+				} else if(attrName=='name'){ 
+					n.name = value + suffix;	// do not use setAttribute for the name property (doesn't work in IE6)	
+				} else {
+					n.setAttribute(attrName, value + suffix);	
+				}
+			}			
+			this.updateMasterElements(n, suffix);
+		}
+		// restore suffix for siblings if needed.
+		suffix = siblingSuffix;
+	}
+}
+
+/**
+ * Updates attributes inside the duplicated tree
+ * TODO rename
+ * @param	{HTMLElement}	dupliocated element (not yet inserted back in DOM)
+ * @param	{integer}		row index
+ * @param	{string}		array-like notation, to be appended to attributes that must be unique.
+ */
+_i.prototype.updateDuplicatedSection = function(elem, index, suffix){
+	
+	// Caches master section ID in the dublicate
+	elem[this.behavior.ATTR_MASTER_SECTION]=elem.id;
+		
+	// Updates element ID (possible problems when repeat element is Hint or switch etc)
+	elem.id = this.clearSuffix(elem.id) + suffix;
+	// Updates classname	
+	elem.className = elem.className.replace(this.behavior.CSS_REPEATABLE, this.behavior.CSS_REMOVEABLE);
+
+	if(!elem.hasClass) { // no base2.DOM.bind to speed up function 
+		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+	}
+	// Check for preserverRadioName override
+	if(elem.hasClass(this.behavior.CSS_PRESERVE_RADIO_NAME)) 
+		var _preserveRadioName = true;
+	else
+		var _preserveRadioName = this.behavior.preserveRadioName;
+	
+	this.updateSectionChildNodes(elem, suffix, _preserveRadioName);
+}
+
+
+/**
+ * Updates NodeList. Changes ID and names attributes
+ * For different node elements suffixes could be different - i.e. for the nested
+ * repeat section IDs and names should store parent section number
+ * @param	elems	Array of the elements should be updated
+ * @param	suffix	Suffix value should be added to attributes
+ */
+_i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName){
+	
+	var removeStack = new Array();
+	var i = 0;
+	
+	while(elem && elem.childNodes && elem.childNodes[i]) {
+	
+		var e = elem.childNodes[i];
+		i++;
+		
+		if(e.nodeType!=1) {
+			// skip text nodes 
+			continue;
+		}
+		if(!e.hasClass) { // no base2.DOM.bind to speed up function 
+			e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		}
+		// Removes created descendant duplicated group if any
+		if(this.behavior.isDuplicate(e)){
+			removeStack.push(e);
+			continue;
+		}
+		// Removes duplicate link
+		if(e.hasClass(this.behavior.CSS_DUPLICATE_SPAN)){
+			removeStack.push(e);
+			continue;
+		}
+		if(e.hasClass(this.behavior.CSS_DUPLICATE_LINK)){
+			removeStack.push(e);
+			continue;
+		}
+				
+		// Clears value	(TODO: select?)
+		if(e.tagName == 'INPUT' || e.tagName == 'TEXTAREA'){
+			if(e.type != 'radio' && e.type != 'checkbox'){
+				e.value = '';
+			} else {
+				e.checked = false;
+			}
+		}
+		
+		this.updateAttributes(e, suffix, preserveRadioName);
+		
+		if(e.hasClass(this.behavior.CSS_REPEATABLE)){
+			this.updateSectionChildNodes(e, this.createSuffix(e), preserveRadioName);
+		} else{
+			this.updateSectionChildNodes(e, suffix, preserveRadioName);
+		}
+   	}   
+	 
+   	for(var i=0;i<removeStack.length;i++){
+   		var e = removeStack[i];
+   		if(e.clearAttributes) {
+			// detach all event handler 
+			e.clearAttributes(false); 	
+		}
+   		if(e.parentNode) e.parentNode.removeChild(e);
+   	}
+   
+}
+
+/**
+ * Creates suffix that should be used inside duplicated repeat section
+ * @param	domelement	Repeat section element
+ * @param	integer		row index	
+ */
+_i.prototype.createSuffix = function(e, index){
+
+	// var idx = e.getAttribute('dindex');
+	var suffix = '[' + (index ? index : '0' ) + ']';
+    var reg = /\[(\d+)\]$/;
+	e = e.parentNode;
+	while(e){
+		if(!e.hasClass) { // no base2.DOM.bind to speed up function 
+			e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		}
+		if(e.hasClass(this.behavior.CSS_REPEATABLE) || e.hasClass(this.behavior.CSS_REMOVEABLE)){
+			var idx = reg.exec(e.id);
+			if(idx) idx = idx[1];
+			//var idx = e.getAttribute('dindex');
+			suffix = '[' + (idx ? idx : '0' ) + ']' + suffix;
+		}
+		e = e.parentNode;
+	}
+	return suffix;
+}
+
+/**
+ * Removes suffix from ID id was previously set
+ * @param	id	Current element id
+ * @return	DOMString
+ */
+_i.prototype.clearSuffix = function(value){
+	if(!value){
+		return;
+	}
+	if(value.indexOf('[') != -1){		
+		return value.substring(0, value.indexOf('['));
+	}
+
+	return value;
+}
+
+/**
+ * Updates attributes of the element in the section
+ * TODO rename
+ * @param	{HTMLElement}	elem
+ */
+_i.prototype.updateAttributes = function(e, idSuffix, preserveRadioName){
+	var isHint = wFORMS.behaviors.hint && wFORMS.behaviors.hint.isHintId(e.id);
+	var isErrorPlaceholder = wFORMS.behaviors.validation && wFORMS.behaviors.validation.isErrorPlaceholderId(e.id);
+	var isDuplicateLink = e.id.indexOf(this.behavior.ID_SUFFIX_DUPLICATE_LINK) != -1;
+
+	// Sets that element belongs to duplicate group
+	this.setInDuplicateGroup(e);
+
+	if(this.behavior.isHandled(e)){
+		this.removeHandled(e)
+	}
+
+	if(wFORMS.behaviors['switch'] && wFORMS.behaviors['switch'].isHandled(e)){
+		wFORMS.behaviors['switch'].removeHandle(e);
+	}
+
+	// Iterates over updateable attribute names
+	var l = this.behavior.UPDATEABLE_ATTR_ARRAY.length;
+	for(var i = 0; i < l; i++){
+		var attrName = this.behavior.UPDATEABLE_ATTR_ARRAY[i];
+		
+		var value = this.clearSuffix(e.getAttribute(attrName));	
+		if(!value){
+			continue;
+		}
+
+		if(attrName == 'name' && e.tagName == 'INPUT' && preserveRadioName){
+			continue;
+		} else if(isErrorPlaceholder && attrName=='id'){	
+			e.id = value + idSuffix + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX;
+		} else if(isHint && attrName=='id'){			
+			e.id = value + idSuffix + wFORMS.behaviors.hint.HINT_SUFFIX;
+		} else if(isDuplicateLink && attrName=='id'){
+			e.id = value.replace(new RegExp("(.*)(" + this.behavior.ID_SUFFIX_DUPLICATE_LINK + ')$'),"$1" + idSuffix + "$2");
+		} else if(attrName=='id'){ 
+			e.id = value + idSuffix;	// do not use setAttribute for the id property (doesn't work in IE6)	
+		} else if(attrName=='name'){ 
+			e.name = value + idSuffix;	// do not use setAttribute for the id property (doesn't work in IE6)	
+		} else {
+			e.setAttribute(attrName, value + idSuffix);	
+		}
+	}
+}
+
+/**
+ * Returns index of the next created duplicate by section HTML element
+ * @param	{HTMLElement}	elem
+ * @return	{Integer}
+ */
+_i.prototype.getNextDuplicateIndex = function(elem){
+	var c = this.getOrCreateCounterField(elem);
+	var newValue = parseInt(c.value) + 1;
+	c.value = newValue;
+	return newValue;
+}
+
+
+/**
+ * Returns counter field fo specified area if exists. Otherwise creates new one
+ * @param	{HTMLElement}	elem
+ * @return	{HTMLElement}
+ */
+_i.prototype.getOrCreateCounterField = function(elem){
+		
+	var cId = elem.id + this.behavior.ID_SUFFIX_COUNTER;
+	
+	// Using getElementById except matchSingle because of lib bug
+	// when element is not exists exception is thrown
+	var cElem = document.getElementById(cId);
+	if(!cElem || cElem == ''){
+		cElem = this.createCounterField(cId);
+		// Trying to find form element
+		var formElem = elem.parentNode;
+		while(formElem && formElem.tagName.toUpperCase() != 'FORM'){
+			formElem = formElem.parentNode;
+		}
+
+		formElem.appendChild(cElem);
+	}
+	return cElem;
+}
+
+/**
+ * Creates counter field with specified ID
+ * @param	{DOMString}	id
+ * @return	{HTMLElement}
+ */
+_i.prototype.createCounterField = function(id){
+	cElem = document.createElement('input');
+	cElem.id = id;
+	cElem.setAttribute('type', 'hidden');
+	cElem.setAttribute('name', id);
+	cElem.value = '0';
+	return cElem;
+}
+
+/**
+ * Returns count of already duplicated sections. If was called from the behavior 
+ * belonged to duplicated section, returns false
+ * @public
+ * @return	{Integer} or {boolean}
+ */
+_i.prototype.getSectionsCount = function(){
+	if(this.behavior.isDuplicate(this.target)){
+		return false;
+	}
+	return parseInt(this.getOrCreateCounterField(this.target).value) + 1;
+}
+
+/**
+ * Specifies that element is inside the duplicate group
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_i.prototype.setInDuplicateGroup = function(elem){
+	return elem.setAttribute(this.behavior.ATTR_DUPLICATE_ELEM, true);
+}
+
+
+/**
+ * setElementHandled
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_i.prototype.setElementHandled = function(elem){
+	return elem.setAttribute(this.behavior.ATTR_HANDLED, true);
+}
+
+/**
+ * Remove handled attribute from element
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_i.prototype.removeHandled = function(elem){
+	return elem.removeAttribute(this.behavior.ATTR_HANDLED);
+}
+
+/**
+ * Returns true if element is duplicate of initial group, false otherwise
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_b.isDuplicate = function(elem){
+	return elem.hasClass(this.CSS_REMOVEABLE);
+}
+
+
+/**
+ * Returns true if element belongs to duplicate group
+ * (to be used by other behaviors) 
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_b.isInDuplicateGroup = function(elem){
+	return elem.getAttribute(this.ATTR_DUPLICATE_ELEM) ? true : false;
+}
+
+
+/**
+ * Checks if element is already handled
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+_b.isHandled = function(elem){
+	return elem.getAttribute(this.ATTR_HANDLED);
+}
+
+
+/**
+ * Returns html element of the master section (repeatable) from its duplicate
+ * @param	{HTMLElement}	elem
+ * @return	{HTMLElement} or false
+ */
+_b.getMasterSection = function(elem){
+	if(!this.isDuplicate(elem)) return false;	
+	return document.getElementById(elem[this.ATTR_MASTER_SECTION]);
+}
+
+
+/**
+ * Executes the behavior
+ * @param {event} e 
+ * @param {domElement} element
+ */
+_i.prototype.run = function(e, element){ 	
+	this.duplicateSection(this.target);
+	if(e) e.preventDefault();
+}
+
+
+if (typeof(wFORMS) == "undefined") {
+	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
+}
+/**
+ * wForms switch behavior.  
+ * See: http://www.formassembly.com/wForms/v2.0/documentation/conditional-sections.php
+ *  and http://www.formassembly.com/wForms/v2.0/documentation/examples/switch_validation.html 
+ */
+wFORMS.behaviors['switch']  = {
+
+	/**
+	 * Selector expression for the switch elements
+     * @final
+     * @see	http://www.w3.org/TR/css3-selectors/
+     * @TODO	Possible change hint due to switch could be not the very first prefix
+     * 			but element could contains it as a CSS class
+     * @TODO	!!!!!! for some reasons it is not working with IE!!!
+     * 			looks like IE does not support selecting by class with selectors
+     *			but selectors API allows such thing
+	 */
+	SELECTOR : '*[class*="switch-"]',
+
+	/**
+	 * CSS class name prefix for switch elements
+     * @final
+	 */
+	CSS_PREFIX : 'switch-',
+
+	/**
+	 * CSS class prefix for the off state of the target element
+     * @final
+	 */
+	CSS_OFFSTATE_PREFIX : 'offstate-',
+
+	/**
+	 * CSS class prefix for the on state of the target element
+     * @final
+	 */
+	CSS_ONSTATE_PREFIX : 'onstate-',
+	
+	/**
+	 * CSS class for switch elements that don't have a native ON state (ie. links)
+     * @final
+	 */
+	CSS_ONSTATE_FLAG : 'swtchIsOn',
+	
+	/**
+	 * CSS class for switch elements that don't have a native OFF state (ie. links)
+     * @final
+	 */
+	CSS_OFFSTATE_FLAG : 'swtchIsOff',
+	
+	/**
+	 * Custom function that could be overridden. 
+	 * Evaluates when an element is switched on
+     * @param	{HTMLElement}	elem	Duplicated section
+	 */
+	onSwitchOn: function(elem){ 
+	},
+	
+	/**
+	 * Custom function that could be overridden. 
+	 * Evaluates when an element is switched off
+     * @param	{HTMLElement}	elem	Duplicated section
+	 */
+	onSwitchOff: function(elem){ 
+	},
+	
+	/**
+	 * Custom function that could be overridden. 
+	 * Evaluates after a switch is triggered
+	 * (after all onSwitchOn and onSwitchOff events)
+     * @param	{HTMLElement}	elem	Duplicated section
+	 */
+	onSwitch: function(form){  
+	},
+	
+	/**
+	 * Creates new instance of the behavior
+     * @constructor
+	 */
+	instance : function(f){
+		this.behavior = wFORMS.behaviors['switch']; 
+		this.target = f;
+	}
+}
+
+/**
+ * Factory Method.
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+wFORMS.behaviors['switch'].applyTo = function(f){
+	var b = new wFORMS.behaviors['switch'].instance(f);	
+	// Iterates all switch elements. Lookup for its triggers and add event listeners
+	f.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR).forEach(
+		function(elem){
+			if(!elem.id){
+				elem.id = wFORMS.helpers.randomId()
+			}
+			switch(elem.tagName.toUpperCase()){
+				case 'OPTION' : 
+					var sNode = elem.parentNode;
+					// Tries to get <select node
+					while (sNode && sNode.tagName != 'SELECT'){
+						sNode = sNode.parentNode;
+					} 
+
+					if(!sNode.addEventListener)
+						base2.DOM.bind(sNode);
+
+					if(sNode && !wFORMS.behaviors['switch'].isHandled(sNode)){
+						sNode.addEventListener('change', function(event) { b.run(event, sNode) }, false);
+						b.setupTargets(sNode);
+						wFORMS.behaviors['switch'].handleElement(sNode);
+					}
+					break;
+
+				case 'INPUT' : 
+					if(elem.type && elem.type.toUpperCase() == 'RADIO'){
+						if(!wFORMS.behaviors['switch'].isHandled(elem)){
+							b.setupTargets(elem);		
+						}
+						// Retreives all radio group
+						var radioGroup = elem.form[elem.name];
+						for(var i=radioGroup.length-1;i>=0;i--) {
+							// [don] Added element binding
+							var _elem = base2.DOM.bind(radioGroup[i]);
+							if(!wFORMS.behaviors['switch'].isHandled(_elem)){
+								_elem.addEventListener('click', function(event) { b.run(event, _elem) }, false);								
+								wFORMS.behaviors['switch'].handleElement(_elem);
+							}
+						}
+					}else{
+						elem.addEventListener('click', function(event) { b.run(event, elem) }, false);
+						b.setupTargets(elem);
+					}
+					break;
+					
+				default:
+					// Other type of element with a switch (links for instance).
+					// The behavior is not run on initialization (no b.setupTargets(elem))
+					elem.addEventListener('click', function(event) { b.run(event, elem) }, false);					
+					break;
+			}
+		}
+	);
+	b.onApply();
+	return b;
+}
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors['switch'].instance.prototype.onApply = function() {} 
+
+
+
+/**
+ * Checks if element is already handled
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+wFORMS.behaviors['switch'].isHandled = function(elem){
+	// TODO remove wHandled to final constant
+	return elem.getAttribute('rel') && elem.getAttribute('rel').indexOf('wfHandled') > -1;
+}
+
+/**
+ * Checks if element is already handled
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+wFORMS.behaviors['switch'].handleElement = function(elem){
+	// TODO remove wHandled to final constant
+	return elem.setAttribute('rel', (elem.getAttribute('rel') || "") + ' wfHandled');
+}
+
+/**
+ * Removes handle attribute from element
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+wFORMS.behaviors['switch'].removeHandle = function(elem){
+	// TODO remove wHandled to final constant
+	if(attr = elem.getAttribute('rel')){
+		if(attr == 'wfHandled'){
+			elem.removeAttribute('rel');
+		}else if(attr.indexOf('wfHandled') != -1){
+			elem.setAttribute('rel', attr.replace(/(.*)( wfHandled)(.*)/, "$1$3"));
+		}
+	}
+}
+
+/**
+ * Returns object with two triggers collection: ON, OFF
+ * @param	{Array}	elems	HTML Elements array to create triggers from
+ * @param	{Array}	includeSwitches	Only that switches should be included
+ * @returns	{Object}	Object of type {ON: Array, OFF: Array}
+ *
+ * Notes: 
+ * May 26th (CS) Replaced base2.forEach with a regular loop when possible
+ *               Fixed ON/OFF array to remove duplicates
+ *               Replaced base2.querySelectorAll to get a radio group. Used form.fields collection instead.
+ */
+wFORMS.behaviors['switch'].instance.prototype.getTriggersByElements = function(elems, includeSwitches){
+	var o = {
+		ON : new Array(), 
+		OFF : new Array(), 
+		toString : function(){
+			return "ON: " + this.ON + "\nOFF: " + this.OFF
+		}
+	};
+	for(var i=0;i<elems.length;i++) {
+		var elem = elems[i];
+		
+		// TODO on switch if checked.
+		switch(elem.tagName.toUpperCase()){
+			case 'OPTION' :
+				if(elem.selected){
+					o.ON = o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+				}else{
+					o.OFF = o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+				}
+				break;
+				
+			case 'SELECT' : 
+				// TODO Check behavior
+				for(var j=0; j < elem.options.length; j++){
+					var opt = elem.options.item(j);
+					if(opt.selected){
+						o.ON = o.ON.concat(this.behavior.getSwitchNamesFromTrigger(opt, includeSwitches));
+					}else{
+						o.OFF = o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(opt, includeSwitches));
+					}
+				}
+				break;
+
+			case 'INPUT' : 
+				if(elem.type && elem.type.toUpperCase() == 'RADIO'){					
+					var radioGroup = elem.form[elem.name];
+					if(!radioGroup) break; // bad markup
+					for(var j=radioGroup.length-1;j>=0;j--) {						
+						var _elem = radioGroup[j];
+						// Do not call getSwitchNamesFromTrigger on this radio input 
+						// if we have/will process it anyway because it's part of the 
+						// collection being evaluated. 
+						if(_elem==elem || !wFORMS.helpers.contains(elems, _elem)) { 							
+							if(_elem.checked){
+								o.ON  = o.ON.concat(this.behavior.getSwitchNamesFromTrigger(_elem, includeSwitches));
+							} else {
+								o.OFF = o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(_elem, includeSwitches));
+							}						
+						}
+					}					
+				}else{
+					if(elem.checked){
+						o.ON = o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+					}else{
+						o.OFF = o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+					}
+				}
+				break;
+				
+			default:
+				if(elem.hasClass(this.behavior.CSS_ONSTATE_FLAG)){
+					o.ON  = o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+				}else{
+					o.OFF = o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+				}
+				break;
+		}
+	}
+	
+	// remove duplicates in arrays
+	var _ON = new Array(); 
+	for(var i=0;i<o.ON.length;i++) {
+		if(!wFORMS.helpers.contains(_ON,o.ON[i])) {
+			_ON.push(o.ON[i]);
+		}
+		
+	}
+	var _OFF = new Array(); 
+	for(var i=0;i<o.OFF.length;i++) {
+		if(!wFORMS.helpers.contains(_OFF,o.OFF[i])) {
+			_OFF.push(o.OFF[i]);
+		}		
+	}
+	o.ON  = _ON;
+	o.OFF = _OFF;
+	
+	return o;
+}
+
+/**
+ * Returns all switch names for given trigger element
+ * @param	{HTMLElement}	elem
+ * @param	{Array}	includeSwitches	Only that switches should be included
+ * @return	Array
+ */
+wFORMS.behaviors['switch'].getSwitchNamesFromTrigger = function(elem, includeSwitches){
+	return wFORMS.behaviors['switch'].getSwitchNames(elem.className, "trigger", includeSwitches);
+}
+
+/**
+ * Returns all switch names for given target element
+ * @param	{HTMLElement}	elem
+ * @param	{Array}	includeSwitches	Only that switches should be included
+ * @return	Array
+ */
+wFORMS.behaviors['switch'].getSwitchNamesFromTarget = function(elem, includeSwitches){
+	return wFORMS.behaviors['switch'].getSwitchNames(elem.className,"target", includeSwitches);
+}
+
+
+/**
+ * Returns all switch names for given element
+ * @param	{string}	value of class attribute
+ * @param	{string}	switch part ('trigger' or 'target') 
+ * @param	{Array}		Only these switches should be included
+ * @return	Array
+ */
+wFORMS.behaviors['switch'].getSwitchNames = function(className, switchPart, includeSwitches){
+	if(!className || className=='') return [];
+	
+	var names  = className.split(" ");
+	var _names = new Array();
+	
+	if(switchPart=='trigger') 
+		var doTriggers = true;
+	else 
+		var doTriggers = false; // do switch targets
+	
+	for(var i=names.length-1;i>=0;i--) {		
+		var cn = names[i];
+		if(doTriggers) {
+			if(cn.indexOf(this.CSS_PREFIX)==0) 
+				var sn = cn.substring(this.CSS_PREFIX.length);
+		} else {
+			if(cn.indexOf(this.CSS_ONSTATE_PREFIX)==0) 
+				var sn = cn.substring(this.CSS_ONSTATE_PREFIX.length);
+			else if(cn.indexOf(this.CSS_OFFSTATE_PREFIX)==0) 
+				var sn = cn.substring(this.CSS_OFFSTATE_PREFIX.length);
+		}
+		if(sn && (!includeSwitches || wFORMS.helpers.contains(includeSwitches, sn))){
+			_names.push(sn);
+		}
+	}
+	//console.log(_names);
+	return _names;
+}
+
+/**
+ * Returns all elements associated with switch name
+ * @TODO	Remove to pre-cache
+ * @param	{String}	sName
+ * @param   'ON'|'OFF'	Specifies whether 'on-state' or 'off-state' elements should be returned 
+ * @returns	StaticNodeList
+ */
+wFORMS.behaviors['switch'].instance.prototype.getTargetsBySwitchName = function(sName, state){
+	var res = new Array();
+	var clazz = this;
+	var b = wFORMS.behaviors.repeat;
+	
+	if(arguments[1]=='ON')
+		var className = [wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + sName];
+	else {
+		var className = [wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + sName];
+	}
+	
+	this.target.querySelectorAll("."+className).forEach(
+		function(elem){
+			// In case target found, IS in the duplicate group and this 
+			// behavior target is NOT in the duplicate section and NOT dupicate itself
+			// SKIP this target
+			// There is no need to make other checks, because that the only
+			// situation could be. Behavior applied to its top element
+			// and we are searching elements inside behavior target
+			if(b && b.isInDuplicateGroup(elem) && 
+				!(b.isDuplicate(clazz.target) || b.isInDuplicateGroup(clazz.target))){
+				return;
+			}
+			res.push(base2.DOM.bind(elem));
+		}	
+	);
+	
+	return res;
+}
+
+/**
+ * Returns all elements associated with switch name
+ * @TODO	Remove to pre-cache
+ * @param	{String}	sName
+ * @returns	StaticNodeList
+ */
+wFORMS.behaviors['switch'].instance.prototype.getTriggersByTarget = function(target){
+	var res = new Array();
+	var clazz = this;
+	var names = wFORMS.behaviors['switch'].getSwitchNamesFromTarget(target);
+	var b = wFORMS.behaviors.repeat;
+
+	base2.forEach(names, function(name){
+		clazz.target.querySelectorAll("."+wFORMS.behaviors['switch'].CSS_PREFIX + name).forEach(
+				function(elem){
+					// In case trigger found IS in the duplicate group and the target
+					// is NOT in the duplicate section and NOT dupicate itself
+					// SKIP this trigger
+					// There is no need to make other checking for because that the only
+					// situation could be. Targets in the duplicate section CAN NOT 
+					// reach triggers from other duplicates because bahaviors applied
+					// to entire section element
+					if(b && b.isInDuplicateGroup(elem) && 
+						!(b.isDuplicate(target) || b.isInDuplicateGroup(target))){
+						return;
+					}
+					res.push(base2.DOM.bind(elem));
+				}	
+		);
+	
+	});
+	return this.getTriggersByElements(res, names);
+}
+
+
+/**
+ * Setups targets depends on switches and control state. I.e. if control is ON
+ * Targets should be ON. 
+ * TODO Check for optimization, check for design
+ * @param	{HTMLElement}	elem
+ */
+wFORMS.behaviors['switch'].instance.prototype.setupTargets = function(elem){
+	this.run(null, elem)
+}
+
+/**
+ * Checks if provided element is switched off
+ * @param	{HTMLElement}	elem
+ * @return	{bool}
+ * @public
+ */
+wFORMS.behaviors['switch'].isSwitchedOff = function(elem){
+	// TODO possible base2.DOM.bind
+	return (elem.className.match(
+		new RegExp(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + "[^ ]*")) ?
+		true : false) &&
+		(elem.className.match(
+		new RegExp(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + "[^ ]*")) ?
+		false : true) ; 
+}
+
+
+/**
+ * Executes the behavior
+ * @param {event} e Event caught. (!In current implementation it could be null in case of the initialization)
+ * @param {domElement} element
+ */
+wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){ 
+	
+	if(!element.hasClass) base2.DOM.bind(element);
+	
+	// If this element does not have a native state attribute (ie. checked/selected)
+	// the classes CSS_ONSTATE_FLAG|CSS_OFFSTATE_FLAG are used and must be switched.
+	if(element.hasClass(this.behavior.CSS_ONSTATE_FLAG)) {	 	
+		element.removeClass(this.behavior.CSS_ONSTATE_FLAG);
+		element.addClass(this.behavior.CSS_OFFSTATE_FLAG);
+		if(e) e.preventDefault();
+		
+	} else if(element.hasClass(this.behavior.CSS_OFFSTATE_FLAG)) {
+		element.removeClass(this.behavior.CSS_OFFSTATE_FLAG);
+		element.addClass(this.behavior.CSS_ONSTATE_FLAG);
+		if(e) e.preventDefault();
+	}
+		
+	var triggers = this.getTriggersByElements(new Array(element));
+	var clazz = this;
+	
+	
+	base2.forEach(triggers.OFF, function(switchName){
+		var targets = clazz.getTargetsBySwitchName(switchName, 'ON');
+		base2.forEach(targets, function(elem){
+			elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
+			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
+			var _triggers = clazz.getTriggersByTarget(elem);
+			if(_triggers.ON.length == 0){				
+				clazz.behavior.onSwitchOff(elem);
+			}
+		})
+	});
+
+	base2.forEach(triggers.ON, function(switchName){
+		var targets = clazz.getTargetsBySwitchName(switchName, 'OFF');
+		base2.forEach(targets, function(elem){
+			elem.removeClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
+			elem.addClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
+			clazz.behavior.onSwitchOn(elem);
+		})
+	});
+
+	if(b = wFORMS.getBehaviorInstance(this.target, 'paging')){
+		b.setupManagedControls();
+	}
+	
+	this.behavior.onSwitch(this.target);
+	
+}
+
+
+
+if (typeof(wFORMS) == "undefined") {
+	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
+}
+/**
+ * wForms validation behavior
+ * 
+ */
+wFORMS.behaviors.validation = {
+	
+	/*
+	 * Suffix of the ID for the error message placeholder
+ 	 */
+	ERROR_PLACEHOLDER_SUFFIX : '-E',
+	
+	
+	rules: {	
+		isRequired	: { selector: ".required", 			  check: 'validateRequired'}, 
+		isAlpha		: { selector: ".validate-alpha", 	  check: 'validateAlpha'},
+		isAlphanum	: { selector: ".validate-alphanum",	  check: 'validateAlphanum'}, 
+		isDate		: { selector: ".validate-date", 	  check: 'validateDate'}, 
+		isTime		: { selector: ".validate-time", 	  check: 'validateTime'}, 
+		isEmail		: { selector: ".validate-email", 	  check: 'validateEmail'}, 
+		isInteger	: { selector: ".validate-integer", 	  check: 'validateInteger'}, 
+		isFloat		: { selector: ".validate-float", 	  check: 'validateFloat'}, 
+		isCustom	: { selector: ".validate-custom",	  check: 'validateCustom'}
+	},	
+	
+	styling: {
+		fieldError	: "errFld",
+		errorMessage: "errMsg"
+	},
+	
+	messages: {
+		isRequired 		: "This field is required. ",
+		isAlpha 		: "The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",
+		isEmail 		: "This does not appear to be a valid email address.",
+		isInteger 		: "Please enter an integer.",
+		isFloat 		: "Please enter a number (ex. 1.9).",
+		isAlphanum 		: "Please use alpha-numeric characters only [a-z 0-9].",
+		isDate 			: "This does not appear to be a valid date.",
+		isCustom		: "Please enter a valid value.",
+		notification	: "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."  // %% will be replaced by the actual number of errors.
+	},
+	
+	
+	instance: function(f) {
+		this.behavior = wFORMS.behaviors.validation; 
+		this.target = f;
+	},
+	
+	onPass: function(f) {},
+	onFail: function(f) {}
+}
+
+/**
+ * Factory Method
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+wFORMS.behaviors.validation.applyTo = function(f) {
+
+	if(!f || !f.tagName) {
+		throw new Error("Can't apply behavior to " + f);
+	}
+	if(f.tagName!="FORM") {
+		// look for form tag in the ancestor nodes.
+		if(f.form) 
+			f=f.form;
+		else {
+			var _f = f;
+			for(f = f.parentNode; f && f.tagName!="FORM" ;f = f.parentNode) continue;
+			if(!f || f.tagName!="FORM") {
+				// form tag not found, look for nested forms.
+				f = _f.getElementsByTagName('form');				
+			}
+		}
+	}
+	if(!f.tagName && f.length>0) {
+		var v = new Array();
+		for(var i=0;i<f.length;i++) {
+			var _v = new wFORMS.behaviors.validation.instance(f[i]); 	
+			if(!f[i].addEventListener) base2.DOM.bind(f[i]);		
+			f[i].addEventListener('submit', function(e){ return _v.run(e, this)} ,false);
+			v.push(_v);	
+			_v.onApply();
+		}
+	} else {
+		var v = new wFORMS.behaviors.validation.instance(f);
+		if(!f.addEventListener) base2.DOM.bind(f);
+		f.addEventListener('submit', function(e){ return v.run(e, this)} ,false);	
+		v.onApply();
+	}
+	
+	return v;	   
+}
+ 
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.validation.instance.prototype.onApply = function() {} 
+
+ 
+/**
+ * Executes the behavior
+ * @param {event} e 
+ * @param {domElement} element
+ * @return	{boolean}	true if validation successful, false otherwise (and prevents event propagation)
+ */
+wFORMS.behaviors.validation.instance.prototype.run = function(e, element) { 
+ 	var errorCount = 0;
+ 	this.elementsInError = {};
+ 	for (var ruleName in this.behavior.rules) {
+ 		var rule = this.behavior.rules[ruleName];
+   		var _self = this;
+		
+		if(!element.querySelectorAll)
+			base2.DOM.bind(element);
+		
+ 		element.querySelectorAll(rule.selector).forEach(function(element) { 
+									
+			// Workaround for apparent bug in querySelectorAll not being limited to descendants of 'element':
+			// See bug #172 - Check if the element is not on the current page of a multi-page form			
+			if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(element)) {
+				return;	
+			}
+			
+			// Do not validate elements that are switched off by the switch behavior
+			if(_self.isSwitchedOff(element))
+				return;			
+			
+			var	value = wFORMS.helpers.getFieldValue(element);	
+			if(rule.check.call) {
+				var passed = rule.check.call(_self, element, value);
+			} else {
+				var passed = _self[rule.check].call(_self, element, value);
+			}				
+ 			if(!passed) { 
+ 				if(!element.id) element.id = wFORMS.helpers.randomId();
+ 				_self.elementsInError[element.id] = { id:element.id, rule: ruleName };
+ 				_self.removeErrorMessage(element); 
+ 				if(rule.fail) {
+ 					// custom fail method
+ 					rule.fail.call(_self, element, ruleName);
+ 				} else {
+ 					// default fail method
+ 					_self.fail.call(_self, element, ruleName);
+ 				} 					
+ 				errorCount ++;
+ 			} else {
+ 				// If no previos rule has found an error on that field,
+ 				// remove any error message from a previous validation run.
+ 				if(!_self.elementsInError[element.id])
+ 					_self.removeErrorMessage(element);
+ 				
+ 				if(rule.pass) {
+	 				// runs custom pass method. 
+	 				rule.pass.call(_self, element);
+	 			} else {
+	 				// default pass method
+	 				_self.pass.call(_self, element);
+	 			}	 			
+ 			}
+ 		});
+ 	}
+	
+ 	if(errorCount > 0) {
+ 		if(e) {
+ 			e.preventDefault?e.preventDefault():e.returnValue = false;
+ 		}
+ 		if(this.behavior.onFail) this.behavior.onFail(this);
+ 		return false;
+ 	}
+ 	if(this.behavior.onPass) this.behavior.onPass(this);
+ 	return true; 
+}
+/**
+ * fail
+ * @param {domElement} element 
+ */
+wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName) { 
+
+	// set class to show that the field has an error
+	element.addClass(this.behavior.styling.fieldError);
+	// show error message.
+	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
+},
+	
+/**
+ * pass
+ * @param {domElement} element 
+ */	
+wFORMS.behaviors.validation.instance.prototype.pass = function(element) { /* no implementation needed */ }
+
+/**
+ * addErrorMessage
+ * @param {domElement} element 
+ * @param {string} error message 
+ */
+wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(element, message) {
+	
+	// we'll need an id here.
+	if (!element.id) element.id = wFORMS.helpers.randomId(); 
+	
+	// Prepare error message
+	var txtNode = document.createTextNode(message);
+	
+	// Find error message placeholder.
+	var p = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+	if(!p) { // create placeholder.
+		p = document.createElement("div"); 
+		p.setAttribute('id', element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+		if(element.tagName=="TR") {
+			p = (element.getElementsByTagName('TD')[0]).appendChild(p);
+		} else {		
+			p = element.parentNode.insertBefore(p,element.nextSibling);
+		}
+	}
+	// Finish the error message.
+	p.appendChild(txtNode);
+	base2.DOM.bind(p);  
+	p.addClass(this.behavior.styling.errorMessage);							
+}
+
+/**
+ * removeErrorMessage
+ * @param {domElement} element 
+ */
+wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(element) { 
+	if(!element.hasClass) base2.DOM.bind(element);
+	if(element.hasClass(this.behavior.styling.fieldError)) {
+		element.removeClass(this.behavior.styling.fieldError);
+		var errorMessage  = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+		if(errorMessage)  {				
+			errorMessage.parentNode.removeChild(errorMessage); 
+		}
+	}
+}
+
+/**
+ * Checks the element's 'visibility' (switch behavior)
+ * @param {domElement} element 
+ * @return	{boolean}	true if the element is not 'visible' (switched off), false otherwise.
+ */
+wFORMS.behaviors.validation.instance.prototype.isSwitchedOff = function(element) {
+	var sb = wFORMS.getBehaviorInstance(this.target,'switch');
+	if(sb) { 
+		var parentElement = element;
+		while(parentElement && parentElement.tagName!='BODY') {
+			// TODO: Check what happens with elements with multiple ON and OFF switches	
+			if(parentElement.className && 
+			   parentElement.className.indexOf(sb.behavior.CSS_OFFSTATE_PREFIX)!=-1 &&
+			   parentElement.className.indexOf(sb.behavior.CSS_ONSTATE_PREFIX)==-1
+			   ) {
+				// switched off. skip element.
+				return true;
+			}
+			parentElement = parentElement.parentNode;
+		}
+	}	
+	return false;
+}
+ 
+/**
+ * Checks if the element with the given id is a placeholder for the error message
+ * @param {domElement} element 
+ * @return	{boolean}	true if the element is a placeholder, false otherwise.
+ */
+wFORMS.behaviors.validation.isErrorPlaceholderId = function(id) {
+	return id.match(new RegExp(wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX + '$')) != null;
+} 
+  
+/**
+ * Checks if the given string is empty (null or whitespace only)
+ * @param {string} s 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.isEmpty = function(s) {				
+	var regexpWhitespace = /^\s+$/;
+	return  ((s == null) || (s.length == 0) || regexpWhitespace.test(s));
+}
+
+/**
+ * validateRequired
+ * @param {domElement} element 
+ * @param {string} element's value (if available) 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateRequired = function(element, value) {
+	switch(element.tagName) {
+		case "INPUT":
+			var inputType = element.getAttribute("type");
+			if(!inputType) inputType = 'text'; 
+			switch(inputType.toLowerCase()) {
+				case "checkbox":
+				case "radio":
+					return element.checked; 
+					break;
+				default:
+					return !this.isEmpty(value);
+			}
+			break;
+		case "SELECT":							
+			return !this.isEmpty(value);
+			break;
+		case "TEXTAREA":
+			return !this.isEmpty(value);
+			break;
+		default:
+			return this.validateOneRequired(element);
+			break;
+	} 	 
+	return false 
+};
+
+/**
+ * validateOneRequired
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateOneRequired = function(element) {
+	if(element.nodeType != 1) return false;
+	
+	if(this.isSwitchedOff(element))
+		return false;	
+	
+	switch(element.tagName) {
+		case "INPUT":
+			var inputType = element.getAttribute("type");
+			if(!inputType) inputType = 'text'; 
+			switch(inputType.toLowerCase()) {
+				case "checkbox":
+				case "radio":
+					return element.checked; 
+					break;
+				default:
+					return !this.isEmpty(wFORMS.helpers.getFieldValue(element));
+			}
+			break;
+		case "SELECT":							
+			return !this.isEmpty(wFORMS.helpers.getFieldValue(element));
+			break;
+		case "TEXTAREA":
+			return !this.isEmpty(wFORMS.helpers.getFieldValue(element));
+			break;
+		default:
+			for(var i=0; i<element.childNodes.length;i++) {
+				if(this.validateOneRequired(element.childNodes[i])) return true;
+			}
+			break;
+	} 	 
+	return false 
+}
+
+/**
+ * validateAlpha
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element, value) {
+	var regexp = /^[a-zA-Z\s]+$/; // Add ' and - ?
+	return this.isEmpty(value) || regexp.test(value);
+}
+
+/**
+ * validateAlphanum
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(element, value) {
+	var regexp = /^[\w\s]+$/;
+	return this.isEmpty(value) || regexp.test(value);
+}
+
+/**
+ * validateDate
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateDate = function(element, value) {
+	var testDate = new Date(value);
+	return this.isEmpty(value) || !isNaN(testDate);
+}
+
+/**
+ * validateTime
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateTime = function(element, value) {
+	/* not yet implemented */	
+	return true;
+}
+
+/**
+ * validateEmail
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateEmail = function(element, value) {
+	var regexpEmail = /\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,}$/;
+	return this.isEmpty(value) || regexpEmail.test(value);
+}
+
+/**
+ * validateInteger
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateInteger = function(element, value) {
+	var regexp = /^[+]?\d+$/;
+	return this.isEmpty(value) || regexp.test(value);
+}
+
+/**
+ * validateFloat
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateFloat = function(element, value) {
+	return this.isEmpty(value) || !isNaN(parseFloat(value));
+}
+
+/**
+ * validateCustom
+ * @param {domElement} element 
+ * @returns {boolean} 
+ */
+wFORMS.behaviors.validation.instance.prototype.validateCustom = function(element, value) {	
+	var pattern = new RegExp("\/(.*)\/([gi]*)");
+	var matches = element.className.match(pattern);
+	//console.log(matches);
+	if(matches && matches[0]) {										
+		var validationPattern = new RegExp(matches[1],matches[2]);
+		if(!value.match(validationPattern)) {
+			return false									
+		}
+	}		
+	return true;
+}
+
+
+if (typeof(wFORMS) == "undefined") {
+	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
+}
+/**
+ * wForms calculation behavior. 
+ */
+wFORMS.behaviors.calculation  = { 
+	
+	/**
+	 * Selector expression for the variable used in a calculation
+     * @final
+     * @see	http://www.w3.org/TR/css3-selectors/
+	 */
+	VARIABLE_SELECTOR_PREFIX : "calc-",
+	
+	/**
+	 * Behavior uses value defined in the class with this prefix if available (e.g. calcval-9.99)
+	 * otherwise uses field value property. 
+	 */
+	CHOICE_VALUE_SELECTOR_PREFIX : "calcval-",
+
+	/**
+	 * Suffix of the ID for the hint element
+     * @final
+	 */
+	CALCULATION_SELECTOR : '*[class*="formula="]',
+
+	/**
+	 * The error message displayed next to a field with a calculation error
+	 */
+	CALCULATION_ERROR_MESSAGE : "There was an error computing this field.",
+	
+	/**
+	 * Creates new instance of the behavior
+     * @constructor
+	 */
+	instance : function(f) {
+		this.behavior = wFORMS.behaviors.calculation; 
+		this.target = f;
+		this.calculations = [];
+		//this.variables = [];
+	}
+}
+
+/**
+ * Factory Method.
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+wFORMS.behaviors.calculation.applyTo = function(f) {
+	var b = new wFORMS.behaviors.calculation.instance(f);
+
+	f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR).forEach(
+		function(elem){
+			// extract formula
+			var formula = elem.className.substr(elem.className.indexOf('formula=')+8).split(' ')[0];
+
+			var variables = formula.split(/[^a-zA-Z]+/g);
+			b.varFields = [];
+			
+			// process variables, add onchange/onblur event to update total.
+			for (var i = 0; i < variables.length; i++) {
+				if(variables[i]!='') {
+					f.querySelectorAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+"\"]").forEach(
+						function(variable){
+							
+							// make sure the variable is an exact match.
+							var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+' ')!=-1);
+							if(!exactMatch) return;
+							
+							switch(variable.tagName + ":" + variable.getAttribute('type') ) {
+								case 'INPUT:':			// (type attribute empty)
+								case 'INPUT:null': 		// (type attribute missing)
+								case 'INPUT:text':
+								case 'INPUT:hidden':
+								case 'INPUT:password':
+								case 'TEXTAREA:null':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('blur', function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;
+								case 'INPUT:radio':		 						
+								case 'INPUT:checkbox':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('click', function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;			
+								case 'SELECT:null':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('change',  function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;		
+								default:
+									// error: variable refers to a non supported element.
+									return;
+									break;
+							}
+							b.varFields.push({name: variables[i], field: variable});						
+						}
+					);			
+				}		
+			}		
+			var calc = { field: elem, formula: formula, variables: b.varFields };		
+			b.calculations.push(calc);	
+			b.compute(calc);
+		}
+	);
+	
+	b.onApply();
+	
+	return b;
+}
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.calculation.instance.prototype.onApply = function() {} 
+
+/**
+ * Runs when a field is changed, update dependent calculated fields. 
+ * @param {event} event
+ * @param {domElement} elem
+ */
+wFORMS.behaviors.calculation.instance.prototype.run = function(event, element) { 
+	
+	for(var i=0; i<this.calculations.length;i++) {		
+		var calc = this.calculations[i];
+		for(var j=0; j<calc.variables.length;j++) {		
+					
+			if(element==calc.variables[j].field) {
+				// this element is part of the calculation for calc.field
+				this.compute(calc);
+			}
+		}
+	}
+} 
+
+/**
+ * Can be used to update a calculated field if the run method is not triggered. 
+ * @param {event} event
+ * @param {domElement} elem
+ */
+wFORMS.behaviors.calculation.instance.prototype.refresh = function(event, element) { 
+	
+	for(var i=0; i<this.calculations.length;i++) {		
+		var calc = this.calculations[i];
+					
+		if(element==calc.field) {
+			this.compute(calc);
+		}
+	}
+} 
+ 
+wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) {
+	var f = this.target;
+	var formula = calculation.formula;
+	var _processedVariables = new Array();
+	
+	for(var i=0; i<calculation.variables.length;i++) {
+		var v = calculation.variables[i];
+		var varval = 0;
+		var _self  = this;
+		
+		// We don't rely on calculation.variables[i].field because 
+		// the form may have changed since we've applied the behavior
+		// (repeat behavior for instance).
+		
+		// Since the calculations can have several variables with the same name
+		// querySelectorAll will catch them all, so we don't need to also loop 
+		// through all of them.
+		if(wFORMS.helpers.contains(_processedVariables,v.name)) {
+			continue;
+		} else {
+			_processedVariables.push(v.name);
+		}
+		 
+		// TODO: Exclude switched-off variables?
+		f.querySelectorAll("*[class*=\""+_self.behavior.VARIABLE_SELECTOR_PREFIX+v.name+"\"]").forEach(
+			function(f){
+				
+				// make sure the variable is an exact match.
+				var exactMatch = ((' ' + f.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+v.name+' ')!=-1);
+				if(!exactMatch) return;
+				
+				// If field value has a different purpose, the value for the calculation can be set in the
+				// class attribute, prefixed with CHOICE_VALUE_SELECTOR_PREFIX
+				if(_self.hasValueInClassName(f)) {
+					var value = _self.getValueFromClassName(f);
+				} else {
+					var value = wFORMS.helpers.getFieldValue(f);					
+				} 
+				if(!value) value=0;
+				
+				if(value.constructor==Array) { // array (multiple select)
+					for(var j=0;j<value.length;j++) { 
+						varval += parseFloat(value[j]);
+					}					
+				} else {
+					varval += parseFloat(value);
+				}
+				
+			}
+		);		
+		
+	    var rgx = new RegExp("([^a-z])("+v.name+")([^a-z])","gi");
+	    while((' '+formula+' ').match(rgx)) {
+	    	formula = (' '+formula+' ').replace(rgx, "$1"+varval+"$3");
+	    }	      
+	} 
+	  
+	try {
+		var result = eval(formula);
+		if(result == 'Infinity' || result == 'NaN' || isNaN(result)){
+			result = 'error';
+		}
+	} catch(x) {		
+		result = 'error';	
+	} 
+	// Check if validation behavior is available. Then flag field if error.
+	var validationBehavior = wFORMS.getBehaviorInstance(this.target,'validation');	
+	if(validationBehavior) {		
+		// add validation error message 
+		if(!wFORMS.behaviors.validation.messages['calculation']) {
+			wFORMS.behaviors.validation.messages['calculation'] = this.behavior.CALCULATION_ERROR_MESSAGE;
+		}
+		validationBehavior.removeErrorMessage(calculation.field);
+		if(result=='error') {			
+			validationBehavior.fail(calculation.field, 'calculation');
+		}
+	}
+	calculation.field.value = result;
+	
+	// If the calculated field is also a variable, recursively update dependant calculations
+	if(calculation.field.className && (calculation.field.className.indexOf(this.behavior.VARIABLE_SELECTOR_PREFIX)!=-1)) {
+		// TODO: Check for infinite loops?
+		this.run(null,calculation.field);
+	} 
+}
+	
+wFORMS.behaviors.calculation.instance.prototype.hasValueInClassName = function(element) {
+	switch(element.tagName) {
+		case "SELECT": 
+			for(var i=0;i<element.options.length;i++) {
+				if(element.options[i].className && element.options[i].className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)!=-1) {
+					return true; 
+				}
+			}
+			return false; 
+			break;
+		default:
+			if(!element.className || (' '+element.className).indexOf(' '+this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1)
+				return false;
+			break;
+	}
+	return true;
+}
+/**
+ * getValueFromClassName 
+ * If field value has a different purpose, the value for the calculation can be set in the
+ * class attribute, prefixed with CHOICE_VALUE_SELECTOR_PREFIX 
+ * @param {domElement} element 
+ * @returns {string} the value of the field, as set in the className
+ */
+wFORMS.behaviors.calculation.instance.prototype.getValueFromClassName = function(element) {
+	switch(element.tagName) {
+		case "INPUT":
+			if(!element.className || element.className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1) 
+				return null;
+			
+			var value = element.className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];								
+			if(element.type=='checkbox')
+				return element.checked?value:null;
+			if(element.type=='radio')
+				return element.checked?value:null;
+			return value;
+			break;
+		case "SELECT":		
+			if(element.selectedIndex==-1) {					
+				return null; 
+			} 
+			if(element.getAttribute('multiple')) {
+				var v=[];
+				for(var i=0;i<element.options.length;i++) {
+					if(element.options[i].selected) {
+						if(element.options[i].className && element.options[i].className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)!=-1) { 
+							var value = element.options[i].className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];								
+							v.push(value);
+						}
+					}
+				}
+				if(v.length==0) return null;
+				return v;
+			}	
+			if (element.options[element.selectedIndex].className &&  element.options[element.selectedIndex].className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)!=-1) { 
+				var value =  element.options[element.selectedIndex].className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];								
+				return value;
+			}													
+			break;
+		case "TEXTAREA":
+			if(!element.className || element.className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1) 
+				return null;
+			var value = element.className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];								
+			
+			return value;
+			break;
+		default:
+			return null; 
+			break;
+	} 	 
+	return null; 
+}

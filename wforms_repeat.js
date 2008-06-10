@@ -344,19 +344,18 @@ _i.prototype.duplicateSection = function(elem){
 		return false;
 	}
 	this.updateMasterSection(elem);
-	
 	// Creates clone of the group
 	var newElem = elem.cloneNode(true);	
-	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
+	// Update the ids, names and other attributes that must be changed.
+	// (do it before inserting the element back in the DOM to prevent reseting radio buttons, see bug #152)
+	var index  = this.getNextDuplicateIndex(this.target);
+	var suffix = this.createSuffix(elem, index);
 
-	this.updateDuplicatedSection(newElem);	
+	this.updateDuplicatedSection(newElem, index, suffix);
+	// Insert in DOM		
+	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
 	wFORMS.applyBehaviors(newElem);
-		//Added by dbuschho to fix value of new element not being displayed.
-		newElem.querySelectorAll('input').forEach(function(i){
-			if(i.attributes['value'])
-				i.value = i.attributes['value'].nodeValue;
-			});
-		//
+		
 	// Associates repeated input sections with thier calculations.
 	if(wFORMS.behaviors.calculation)
 	{
@@ -488,17 +487,15 @@ _i.prototype.updateMasterElements  = function(elem, suffix){
 /**
  * Updates attributes inside the duplicated tree
  * TODO rename
- * @param	{HTMLElement}	elem
+ * @param	{HTMLElement}	dupliocated element (not yet inserted back in DOM)
+ * @param	{integer}		row index
+ * @param	{string}		array-like notation, to be appended to attributes that must be unique.
  */
-_i.prototype.updateDuplicatedSection = function(elem){
+_i.prototype.updateDuplicatedSection = function(elem, index, suffix){
 	
-	var index  = this.getNextDuplicateIndex(this.target);
-	var suffix = this.createSuffix(elem, index);
-
 	// Caches master section ID in the dublicate
 	elem[this.behavior.ATTR_MASTER_SECTION]=elem.id;
-	
-	
+		
 	// Updates element ID (possible problems when repeat element is Hint or switch etc)
 	elem.id = this.clearSuffix(elem.id) + suffix;
 	// Updates classname	
@@ -587,7 +584,8 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 
 /**
  * Creates suffix that should be used inside duplicated repeat section
- * @param	e	Repeat section element
+ * @param	domelement	Repeat section element
+ * @param	integer		row index	
  */
 _i.prototype.createSuffix = function(e, index){
 
@@ -596,8 +594,10 @@ _i.prototype.createSuffix = function(e, index){
     var reg = /\[(\d+)\]$/;
 	e = e.parentNode;
 	while(e){
-		if(e.hasClass && (e.hasClass(this.behavior.CSS_REPEATABLE) ||
-			e.hasClass(this.behavior.CSS_REMOVEABLE))){
+		if(!e.hasClass) { // no base2.DOM.bind to speed up function 
+			e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		}
+		if(e.hasClass(this.behavior.CSS_REPEATABLE) || e.hasClass(this.behavior.CSS_REMOVEABLE)){
 			var idx = reg.exec(e.id);
 			if(idx) idx = idx[1];
 			//var idx = e.getAttribute('dindex');
