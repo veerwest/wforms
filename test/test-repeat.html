@@ -10,6 +10,9 @@
 	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
     <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
 	
+	<!-- 	
+	<script type="text/javascript" src="../build/wforms.js"></script>
+ 	-->
 	<script type="text/javascript" src="../lib/base2-p.js"></script>
 	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
@@ -41,7 +44,7 @@
 	
 	function tearDown() {}
 	
-	function testApplyTo() {
+	function _testApplyTo() {
 		var i=0;
 		document.getElementById('testRepeatForm').querySelectorAll(wFORMS.behaviors.repeat.SELECTOR_REPEAT).forEach(
 			function(elem){			
@@ -52,7 +55,7 @@
 		);
 	}
 	
-	function testDuplicateSectionParts() {
+	function _testDuplicateSectionParts() {
 		var elem = document.getElementById('test0');
 		var inputelem = document.getElementById('testInput0');
 		var bInstance = wFORMS.getBehaviorInstance(elem, 'repeat');
@@ -73,11 +76,11 @@
 		
 		// Clone master element
 		var newElem = elem.cloneNode(true);
-		//base2.DOM.bind(newElem);
-		newElem = elem.parentNode.insertBefore(newElem, bInstance.getInsertNode(elem));
-		
 		// Update ids in cloned element
-		bInstance.updateDuplicatedSection(newElem);	
+		var index  = bInstance.getNextDuplicateIndex(bInstance.target);
+		var suffix = bInstance.createSuffix(elem, index);
+		bInstance.updateDuplicatedSection(newElem, index, suffix);	
+		newElem = elem.parentNode.insertBefore(newElem, bInstance.getInsertNode(elem));
 		
 		// Check ids in cloned element
 		assertNotNull('element with id testInput0[1] should exists',document.getElementById('testInput0[1]')); 
@@ -107,7 +110,7 @@
 	}
 	
 	
-	function testRepeatLinkCreation() {
+	function _testRepeatLinkCreation() {
 		// Checks if repeat links are created
 		assertNotNull('Dynamic Repeat link', document.getElementById('linkCreationTest2-wfDL'));
 		assertEquals('Add another response',document.getElementById('linkCreationTest2-wfDL').innerHTML);
@@ -117,7 +120,7 @@
 		assertEquals('Add Me',document.getElementById('linkCreationTest1-wfDL').innerHTML);
 	}
 	
-	function testFieldsetRepeatWithErrorPlaceholders() {
+	function _testFieldsetRepeatWithErrorPlaceholders() {
 		var elem = document.getElementById('test1');
 		var testinput = document.getElementById('wf_Texte');
 		var placeholder = document.getElementById('wf_Texte-E');
@@ -152,7 +155,7 @@
 		
 	}
 	
-	function testFieldsetRepeatWithFieldHints() {
+	function _testFieldsetRepeatWithFieldHints() {
 		
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('test2'), 'repeat');		
 		bInstance.run();
@@ -176,7 +179,7 @@
 		assertTrue('repeated section should be siblings', s === document.getElementById('test2[1]'));
 	}
 	
-	function testNestedRepeat() {
+	function _testNestedRepeat() {
 	
 		// duplicate parent first		
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest0'), 'repeat');
@@ -222,6 +225,34 @@
 		assertNotNull('id should be: nestedTestInput1[1][2]',	document.getElementById('nestedTestInput1[1][2]'));
 		assertNotNull('id should be: nestedTestInput2[1][2]',	document.getElementById('nestedTestInput2[1][2]'));
 		
+	}
+	
+	function testSecondNestedRepeat() {
+		// duplicate nested section first
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest3'), 'repeat');
+		bInstance.run();
+		// check IDs
+		assertNotNull(document.getElementById('nestedTestInput4'));
+		assertNotNull(document.getElementById('nestedTestInput7'));
+		assertNotNull(document.getElementById('nestedTestInput5[0][0]'));
+		assertNotNull(document.getElementById('nestedTestInput6[0][0]'));
+		assertNotNull(document.getElementById('nestedTestInput5[0][1]'));
+		assertNotNull(document.getElementById('nestedTestInput6[0][1]')); 
+	}
+	
+	
+	function testRadioRepeat() {
+		var r = document.getElementById('radioTestYes');
+		r.checked = true;
+		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('radioTest'), 'repeat');
+		bInstance.run();
+		
+		var r = document.getElementById('radioTestYes[0]');
+		assertEquals(true, r.checked);
+		
+		var r = document.getElementById('radioTestYes[1]');
+		assertEquals(false, r.checked);
 	}
 	</script>
 	
@@ -284,6 +315,28 @@
 				<input id="nestedTestInput3" type="text"  size="40" />
 			</div>
 		</fieldset>
+		
+		<fieldset class="repeat" id="nestedTest2"><legend>Parent Repeat (nested test 2)</legend>
+			<div class="oneField">
+				<input id="nestedTestInput4" type="text" size="40" />
+			</div>
+			<fieldset class="repeat" id="nestedTest3"><legend>Nested Repeat</legend>
+				<div class="oneField">
+					<input id="nestedTestInput5" type="text" size="40" />
+				</div>
+				<div class="oneField">
+					<input id="nestedTestInput6" type="text" size="40" />
+				</div>			
+			</fieldset>
+			<div class="oneField">
+				<input id="nestedTestInput7" type="text"  size="40" />
+			</div>
+			
+			<input type="button" value="run test" onclick="testSecondNestedRepeat()"/> 
+		</fieldset>
+		
+		
+		
 		
 		<div class="repeat" id="linkCreationTest1">			 
 			 <a href="#" id="linkCreationTest1-wfDL" class="duplicateLink">Add Me</a>
@@ -365,6 +418,22 @@
 				</div>
 			</div>
 		</div>
+		
+		
+		<fieldset id="radioTest" class="repeat">
+			<legend>Test Radio Group</legend>
+			<div class="oneField">
+				<span class="oneChoice">
+		 			<input type="radio" value="yes" id="radioTestYes" name="radioTest">
+		 			<label class="postField">Yes</label>
+		 		</span>
+		 		<span class="oneChoice">
+		 			<input type="radio" value="no" id="radioTestNo" name="radioTest">
+		 			<label class="postField">No</label>
+		 		</span>
+			</div>
+			
+		</fieldset>
 		
 	</form>
 </body>
