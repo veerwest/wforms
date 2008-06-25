@@ -562,6 +562,30 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 			}
 		}
 		
+		// Fix #152 - Radio name with IE6+
+		if(e.tagName == 'INPUT' && e.type == 'radio' && document.all && !window.opera && !preserveRadioName) {
+			// Create a radio input that works in IE and insert it before the input it needs to replace
+			var tagHtml = "<INPUT type=\"radio\" name=\""+e.name+suffix+"\"></INPUT>";
+			var fixedRadio = e.parentNode.insertBefore(document.createElement(tagHtml),e);
+			
+			// Remove original radio (keep element in memory)
+			e = e.parentNode.removeChild(e);
+			
+			// Clone other attributes
+			fixedRadio.id = e.id;			
+			var l = this.behavior.UPDATEABLE_ATTR_ARRAY.length;
+			for (var i = 0; i < l; i++) {
+				var attrName = this.behavior.UPDATEABLE_ATTR_ARRAY[i];
+				var value = e.getAttribute(attrName);
+				fixedRadio.setAttribute(attrName, value);	
+			}			
+			// We can now continue with the fixed radio element 
+			e = fixedRadio;	
+			if(!e.hasClass) { // no base2.DOM.bind to speed up function 
+				e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+			}	
+		} 
+		
 		this.updateAttributes(e, suffix, preserveRadioName);
 		
 		if(e.hasClass(this.behavior.CSS_REPEATABLE)){
