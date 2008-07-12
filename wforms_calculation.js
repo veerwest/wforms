@@ -199,24 +199,32 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 				
 				if(value.constructor==Array) { // array (multiple select)
 					for(var j=0;j<value.length;j++) { 
-						varval += parseFloat(value[j]);
-					}					
+						if(String(value[j]).search(/^[\d\.,]*$/) != -1)
+							varval += parseFloat(value[j]);
+						else
+							(!varval)?(varval=value[j]):(varval=String(varval).concat(value[j]));
+					}
 				} else {
-					varval += parseFloat(value);
+						if(String(value).search(/^[\d\.,]*$/) != -1) 
+							varval += parseFloat(value);
+						else
+							(!varval)?(varval=value):(varval=String(varval).concat(value));
 				}
-				
 			}
 		);		
 		
 	    var rgx = new RegExp("([^a-z])("+v.name+")([^a-z])","gi");
 	    while((' '+formula+' ').match(rgx)) {
-	    	formula = (' '+formula+' ').replace(rgx, "$1"+varval+"$3");
+	    if(String(varval).search(/^[\d\.,]*$/) != -1)
+			formula = (' '+formula+' ').replace(rgx, "$1"+varval+"$3");
+		else
+			formula = (' '+formula+' ').replace(rgx, "$1'"+varval+"'$3");
 	    }	      
 	} 
 	  
 	try {
 		var result = eval(formula);
-		if(result == 'Infinity' || result == 'NaN' || isNaN(result)){
+		if(result == 'Infinity' || result == 'NaN' || String(result).match('NaN')){
 			result = 'error';
 		}
 	} catch(x) {		

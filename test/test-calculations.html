@@ -38,7 +38,7 @@
 		assertNotUndefined('Instance of behavior should be available.', bInstance);
 		assertNotUndefined('Instance target should be set',bInstance.target);
 		assertEquals('Instance target should be the form','testForm',bInstance.target.id);
-		assertEquals('Found calculations',9, bInstance.calculations.length);
+		assertEquals('Found calculations',12, bInstance.calculations.length);
 		
 		// Each calculation should have a field, formula and variables 
 		for(var i=0; i<bInstance.calculations.length;i++) {	
@@ -272,6 +272,15 @@
 		assertEquals('11.25', document.getElementById('totalAB').value);
 	}
 
+	function testStringFormulas(){
+		// Check calculations with field default values
+		assertEquals('address', document.getElementById('totalZ').value);
+		assertEquals('zipcode', document.getElementById('totalY').value);
+		
+		// Test
+		assertEquals("address-zipcode", document.getElementById('totalX').value);	
+	}
+	
 	function testSubTotals() {
 		document.getElementById('testInputField').value = '100';	
 		document.getElementById('testTextarea').value = '50';		
@@ -412,6 +421,19 @@
 			
 			<br/>
 		</fieldset>
+
+		<fieldset><legend>TextVariable test</legend>
+			<div class="oneField">
+				<label for="testInputField" class="preField">Text (value) input (Z):</label> 
+				<input id="testInputField" type="" value="address" class="calc-Z" />
+			</div>
+			<div class="oneField">
+				<label for="testInputField" class="preField">Text (value) input (Y):</label> 
+				<input id="testInputField" type="" value="zipcode" class="calc-Y" />
+			</div>					
+		<br />
+		</fieldset>
+
 		<fieldset><legend>Totals</legend>
 			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
 				<label for="" class="preField">Total A=:</label>
@@ -447,6 +469,17 @@
 				<label for="" class="preField">Total F=:</label>
 				<input type="text" readonly="readonly" value="0" id="totalF" class="formula=F" />
 			</div>
+
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total Z=:</label>
+				<input type="text" readonly="readonly" value="" id="totalZ" class="formula=Z" />
+			</div>
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total Y=:</label>
+				<input type="text" readonly="readonly" value="" id="totalY" class="formula=Y" />
+			</div>
+
 			
 			<hr/>
 			<p>Using calculated fields as variables:</p>
@@ -460,6 +493,10 @@
 				<input type="text" readonly="readonly" value="0" id="totalH" class="formula=GRANDTOTAL/10" />%
 			</div>
 						
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="totalX" class="preField">String().concat(Z,'-',Y)=:</label>
+				<input type="text" readonly="readonly" value="" id="totalX" class="formula=String().concat(Z,'-',Y)" />
+			</div>	
 		</fieldset>
 	</form>
 </body>
