@@ -1,0 +1,1359 @@
+<html>
+<head>
+	<link href="http://app.formassembly.com/wForms/3.0/css/antique/wforms.css" rel="stylesheet" type="text/css"></link>
+	<link href="http://app.formassembly.com/wForms/3.0/css/wforms-jsonly.css" rel="alternate stylesheet" title="This stylesheet activated by javascript" type="text/css"></link>
+<link href="http://app.formassembly.com/wForms/3.0/css/wforms-layout.css" rel="stylesheet" type="text/css"></link>
+<!--[if IE 7]>
+<link href="http://app.formassembly.com/wForms/3.0/css/wforms-layout-ie7.css" rel="stylesheet" type="text/css"></link>
+<![endif]-->
+
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_paging.js"></script>
+	<script type="text/javascript" src="../wforms_calculation.js"></script>
+
+	<style type="text/css">
+	.saveAndResume {
+		text-align:right;
+		font-size: small;
+	}
+	.saveAndResume fieldset {
+		text-align:left;
+	}
+	.saveAndResume #tfa_resumeEmail {
+		width: 195px;
+	}
+	.saveAndResume #tfa_resumePassword {
+		width: 195px;
+	}
+	.saveAndResume .actions  { 
+		width: 200px !important; 
+		text-align: right; 
+	}
+	.saveAndResume .actions input {
+		font-weight: bold;
+		font-size: 100%;
+	}
+	.saveAndResume .actions #tfa_resumeLater.wfHideSubmit {
+		display: inline !important;
+	}
+	.onstate-resumelater { display: block }
+	.errorMessage {
+		color:red;
+		background-color:white;
+		padding:5px;
+		border:1px solid #F77;
+		font-family:sans-serif;
+	}
+</style>
+
+
+<script>
+//more compatability issues with IE7
+//http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:forEach
+if (!Array.prototype.filter)
+{
+  Array.prototype.filter = function(fun /*, thisp*/)
+  {
+    var len = this.length;
+    if (typeof fun != "function")
+      throw new TypeError();
+
+    var res = new Array();
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++)
+    {
+      if (i in this)
+      {
+        var val = this[i]; // in case fun mutates this
+        if (fun.call(thisp, val, i, this))
+          res.push(val);
+      }
+    }
+    return res;
+  };
+}
+	
+if (!Array.prototype.forEach)
+{
+  Array.prototype.forEach = function(fun /*, thisp*/)
+  {
+    var len = this.length;
+    if (typeof fun != "function")
+      throw new TypeError();
+
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++)
+    {
+      if (i in this)
+        fun.call(thisp, this[i], i, this);
+    }
+  };
+}
+//
+</script>
+
+<script>
+/**
+ * Factory Method.
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+wFORMS.behaviors.calculation.applyTo = function(f) {
+
+	var b = new wFORMS.behaviors.calculation.instance(f);
+	
+	//07/22/08
+	var classVars = Array();
+	f.querySelectorAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+"\"]").forEach(
+		function (variable) { classVars.push(variable);}
+	);
+	//console.log(classVars);
+	
+	f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR).forEach(
+		function(elem){
+			// extract formula
+			var formula = elem.className.substr(elem.className.indexOf('formula=')+8).split(' ')[0];
+
+			var variables = formula.split(/[^a-zA-Z]+/g);
+			b.varFields = [];
+			
+			// process variables, add onchange/onblur event to update total.
+			for (var i = 0; i < variables.length; i++) {
+				if(variables[i]!='') {
+				//	f.querySelectorAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+"\"]").forEach(
+				//added 07/22/08
+					classVars.filter(function(elem,index,array){ 
+					if(elem.className == (wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i])){return true;}
+					}).forEach(
+						function(variable){
+							// make sure the variable is an exact match.
+							var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+' ')!=-1);
+							if(!exactMatch) return;
+							
+							switch(variable.tagName + ":" + variable.getAttribute('type') ) {
+								case 'INPUT:':			// (type attribute empty)
+								case 'INPUT:null': 		// (type attribute missing)
+								case 'INPUT:text':
+								case 'INPUT:hidden':
+								case 'INPUT:password':
+								case 'TEXTAREA:null':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('blur', function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;
+								case 'INPUT:radio':		 						
+								case 'INPUT:checkbox':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('click', function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;			
+								case 'SELECT:null':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('change',  function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;		
+								default:
+									// error: variable refers to a non supported element.
+									return;
+									break;
+							}
+							b.varFields.push({name: variables[i], field: variable});						
+						}
+					);			
+				}		
+			}
+			var calc = { field: elem, formula: formula, variables: b.varFields };		
+			//console.log(calc);
+			b.calculations.push(calc);	
+			b.compute(calc);
+		}
+	);
+	
+	b.onApply();
+	
+	return b;
+}
+</script>
+
+</head>
+<body>
+<div class="wForm">
+<div class="codesection" id="code-"></div>
+<form method="post" action="http://app.formassembly.com/responses/processor" id="id2600286" class="labelsAbove hintsTooltip" enctype="multipart/form-data">
+<input type="hidden" name="MAX_FILE_SIZE" value="10485760"><div class="wfPage " id="wfPgIndex-1">
+<h3>Contact Information</h3>
+<div id="tfa_FullName" class="inlineSection required">
+<label class="preField">Full Name
+					 <span class="reqMark">*</span></label><div class="oneField"><input type="text" id="tfa_2638644679789" name="tfa_2638644679789" value="" size="12" class=""><span class="errMsg" id="tfa_2638644679789-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_2638644430397" name="tfa_2638644430397" value="" size="15" class=""> (first, last)<span class="errMsg" id="tfa_2638644430397-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_CompanyName" class="preField">Company Name
+				 <span class="reqMark">*</span></label><input type="text" id="tfa_CompanyName" name="tfa_CompanyName" value="" size="40" class="required"><br><span class="errMsg" id="tfa_CompanyName-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Title" class="preField">Title</label><input type="text" id="tfa_Title" name="tfa_Title" value="" size="40" class=""><br><span class="errMsg" id="tfa_Title-E"></span>
+</div>
+<fieldset id="tfa_Address" class="">
+<legend>Address</legend>
+<div class="oneField">
+<label for="tfa_StreetAddress" class="preField">Street Address</label><input type="text" id="tfa_StreetAddress" name="tfa_StreetAddress" value="" size="50" class=""><br><span class="errMsg" id="tfa_StreetAddress-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Addresscontinued" class="preField">Address continued</label><input type="text" id="tfa_Addresscontinued" name="tfa_Addresscontinued" value="" size="50" class=""><br><span class="errMsg" id="tfa_Addresscontinued-E"></span>
+</div>
+<div id="tfa_2638654415685" class="inlineSection">
+<div class="oneField">
+<label for="tfa_City" class="inlineLabel">City</label><input type="text" id="tfa_City" name="tfa_City" value="" size="" class=""><span class="errMsg" id="tfa_City-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_State" class="inlineLabel">State</label><select id="tfa_State" name="tfa_State" class=""><option value="">Please select...</option>
+<option value="tfa_Pleaseselect" class="" selected>Please select</option>
+<option value="tfa_Alabama" class="">Alabama</option>
+<option value="tfa_Alaska" class="">Alaska</option>
+<option value="tfa_Arizona" class="">Arizona</option>
+<option value="tfa_Arkansas" class="">Arkansas</option>
+<option value="tfa_California" class="">California</option>
+<option value="tfa_Colorado" class="">Colorado</option>
+<option value="tfa_Connecticut" class="">Connecticut</option>
+<option value="tfa_Delaware" class="">Delaware</option>
+<option value="tfa_DistrictOfColumb" class="">District Of Columbia</option>
+<option value="tfa_Florida" class="">Florida</option>
+<option value="tfa_Georgia" class="">Georgia</option>
+<option value="tfa_Hawaii" class="">Hawaii</option>
+<option value="tfa_Idaho" class="">Idaho</option>
+<option value="tfa_Illinois" class="">Illinois</option>
+<option value="tfa_Indiana" class="">Indiana</option>
+<option value="tfa_Iowa" class="">Iowa</option>
+<option value="tfa_Kansas" class="">Kansas</option>
+<option value="tfa_Kentucky" class="">Kentucky</option>
+<option value="tfa_Louisiana" class="">Louisiana</option>
+<option value="tfa_Maine" class="">Maine</option>
+<option value="tfa_Maryland" class="">Maryland</option>
+<option value="tfa_Massachusetts" class="">Massachusetts</option>
+<option value="tfa_Michigan" class="">Michigan</option>
+<option value="tfa_Minnesota" class="">Minnesota</option>
+<option value="tfa_Mississippi" class="">Mississippi</option>
+<option value="tfa_Missouri" class="">Missouri</option>
+<option value="tfa_Montana" class="">Montana</option>
+<option value="tfa_Nebraska" class="">Nebraska</option>
+<option value="tfa_Nevada" class="">Nevada</option>
+<option value="tfa_NewHampshire" class="">New Hampshire</option>
+<option value="tfa_NewJersey" class="">New Jersey</option>
+<option value="tfa_NewMexico" class="">New Mexico</option>
+<option value="tfa_NewYork" class="">New York</option>
+<option value="tfa_NorthCarolina" class="">North Carolina</option>
+<option value="tfa_NorthDakota" class="">North Dakota</option>
+<option value="tfa_Ohio" class="">Ohio</option>
+<option value="tfa_Oklahoma" class="">Oklahoma</option>
+<option value="tfa_Oregon" class="">Oregon</option>
+<option value="tfa_Pennsylvania" class="">Pennsylvania</option>
+<option value="tfa_RhodeIsland" class="">Rhode Island</option>
+<option value="tfa_SouthCarolina" class="">South Carolina</option>
+<option value="tfa_SouthDakota" class="">South Dakota</option>
+<option value="tfa_Tennessee" class="">Tennessee</option>
+<option value="tfa_Texas" class="">Texas</option>
+<option value="tfa_Utah" class="">Utah</option>
+<option value="tfa_Vermont" class="">Vermont</option>
+<option value="tfa_Virginia" class="">Virginia</option>
+<option value="tfa_Washington" class="">Washington</option>
+<option value="tfa_WestVirginia" class="">West Virginia</option>
+<option value="tfa_Wisconsin" class="">Wisconsin</option>
+<option value="tfa_Wyoming" class="">Wyoming</option>
+<option value="tfa_PuertoRico" class="">Puerto Rico</option>
+<option value="tfa_VirginIsland" class="">Virgin Island</option>
+<option value="tfa_NorthernMarianaI" class="">Northern Mariana Islands</option>
+<option value="tfa_Guam" class="">Guam</option>
+<option value="tfa_AmericanSamoa" class="">American Samoa</option>
+<option value="tfa_Palau" class="">Palau</option></select><span class="errMsg" id="tfa_State-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_ZipCode" class="preField">Zip Code</label><input type="text" id="tfa_ZipCode" name="tfa_ZipCode" value="" size="5" class="validate-integer"><br><span class="errMsg" id="tfa_ZipCode-E"></span>
+</div>
+</fieldset>
+<div id="tfa_Phone" class="inlineSection required">
+<label class="preField">Phone #
+					 <span class="reqMark">*</span></label><div class="oneField">(<input type="text" id="tfa_2638954030914" name="tfa_2638954030914" value="" size="3" class="validate-integer">)<span class="errMsg" id="tfa_2638954030914-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_2638964725915" name="tfa_2638964725915" value="" size="3" class="validate-integer"> -<span class="errMsg" id="tfa_2638964725915-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_2638964687331" name="tfa_2638964687331" value="" size="4" class="validate-integer"><span class="errMsg" id="tfa_2638964687331-E"></span>
+</div>
+<div class="oneField labelsAbove">  ext.<input type="text" id="tfa_ext" name="tfa_ext" value="" size="5" class="validate-integer"><span class="errMsg" id="tfa_ext-E"></span>
+</div>
+</div>
+<div class="oneField">
+<label for="tfa_EMailAddress" class="preField">E-Mail Address
+				 <span class="reqMark">*</span></label><input type="text" id="tfa_EMailAddress" name="tfa_EMailAddress" value="" size="40" class="validate-email required"><br><span class="errMsg" id="tfa_EMailAddress-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_PreferredContact" class="preField">Preferred Contact Method
+				 <span class="reqMark">*</span></label><select id="tfa_PreferredContact" name="tfa_PreferredContact" class="required"><option value="">Please select...</option>
+<option value="tfa_Phone1" class="">Phone</option>
+<option value="tfa_Email" class="">Email</option>
+<option value="tfa_Any" class="">Any</option></select><br><span class="errMsg" id="tfa_PreferredContact-E"></span>
+</div>
+</div>
+<div class="wfPage " id="wfPgIndex-2">
+<h3>Event Overview</h3>
+<div class="oneField">
+<label for="tfa_Whatisthenameofy" class="preField">Event Name: (ex: "2009 Strategic Summit")
+				 <span class="reqMark">*</span></label><input type="text" id="tfa_Whatisthenameofy" name="tfa_Whatisthenameofy" value="" size="40" class="required"><br><span class="errMsg" id="tfa_Whatisthenameofy-E"></span>
+</div>
+<fieldset id="tfa_2580720930257" class="">
+<div id="tfa_EventDate" class="repeat inlineSection required">
+<label class="preField">Event Date:
+					 <span class="reqMark">*</span></label><div class="oneField">from <input type="text" id="tfa_1752509490807" name="tfa_1752509490807" value="MM/DD/YYYY" size="10" class="validate-date"> to <span class="errMsg" id="tfa_1752509490807-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_1752519144332" name="tfa_1752519144332" value="MM/DD/YYYY" size="10" class="validate-date"><span class="errMsg" id="tfa_1752519144332-E"></span>
+</div>
+<span class="duplicateSpan"><a id="tfa_EventDate-wfDL" class="duplicateLink" href="#">Click to add alternate date</a></span>
+</div>
+<div id="tfa_Preferreddaypatt" class="inlineSection required">
+<label class="preField">Preferred day pattern:
+					 <span class="reqMark">*</span></label><div class="oneField">From <select id="tfa_2580730753035" name="tfa_2580730753035" class="calc-BeginDay"><option value="">Please select...</option>
+<option value="tfa_Sunday" class="calcval-Sunday">Sunday</option>
+<option value="tfa_Monday" class="calcval-Monday">Monday</option>
+<option value="tfa_Tuesday" class="calcval-Tuesday">Tuesday</option>
+<option value="tfa_Wednesday" class="calcval-Wednesday">Wednesday</option>
+<option value="tfa_Thursday" class="calcval-Thursday">Thursday</option>
+<option value="tfa_Friday" class="calcval-Friday">Friday</option>
+<option value="tfa_Saturday" class="calcval-Saturday">Saturday</option></select><span class="errMsg" id="tfa_2580730753035-E"></span>
+</div>
+<div class="oneField"> through <select id="tfa_2580740980468" name="tfa_2580740980468" class="calc-EndDay"><option value="">Please select...</option>
+<option value="tfa_Sunday1" class="calcval-Sunday">Sunday</option>
+<option value="tfa_Monday1" class="calcval-Monday">Monday</option>
+<option value="tfa_Tuesday1" class="calcval-Tuesday">Tuesday</option>
+<option value="tfa_Wednesday1" class="calcval-Wednesday">Wednesday</option>
+<option value="tfa_Thursday1" class="calcval-Thursday">Thursday</option>
+<option value="tfa_Friday1" class="calcval-Friday">Friday</option>
+<option value="tfa_Saturday1" class="calcval-Saturday">Saturday</option></select><span class="errMsg" id="tfa_2580740980468-E"></span>
+</div>
+</div>
+</fieldset>
+<fieldset id="tfa_2580750765840" class="">
+<div class="oneField">
+<label for="tfa_Whoisthedecision" class="preField">Who is the decision maker for this event?</label><select id="tfa_Whoisthedecision" name="tfa_Whoisthedecision" class=""><option value="">Please select...</option>
+<option value="tfa_Self" class="">Self</option>
+<option value="tfa_ComitteeBoard" class="">Comittee/Board</option>
+<option value="tfa_Other" class="switch-c">Other</option></select><br><span class="errMsg" id="tfa_Whoisthedecision-E"></span>
+</div>
+<div class="offstate-c oneField"><textarea cols="40" rows="2" id="tfa_2580890098770" name="tfa_2580890098770" class="">Please explain "other" decision maker.</textarea><br><span class="errMsg" id="tfa_2580890098770-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_DecisionDate" class="preField">Decision Date:</label><input type="text" id="tfa_DecisionDate" name="tfa_DecisionDate" value="MM/DD/YYYY" size="10" class="validate-date"><br><span class="errMsg" id="tfa_DecisionDate-E"></span>
+</div>
+</fieldset>
+<div class="oneField" id="tfa_Whichbestdescrib">
+<label for="tfa_Whichbestdescrib" class="preField">Which best describes your event?
+				 <span class="reqMark">*</span></label><span class="required"><span class="oneChoice"><input type="radio" value="tfa_ExecutiveRetreat" class="switch-b" id="tfa_ExecutiveRetreat" name="tfa_Whichbestdescrib"><label for="tfa_ExecutiveRetreat" class="postField">Executive Retreat</label></span><span class="oneChoice"><input type="radio" value="tfa_IncentiveTravel" class="switch-g" id="tfa_IncentiveTravel" name="tfa_Whichbestdescrib"><label for="tfa_IncentiveTravel" class="postField">Incentive Travel</label></span><span class="oneChoice"><input type="radio" value="tfa_6473228923029" class="switch-i" id="tfa_6473228923029" name="tfa_Whichbestdescrib"><label for="tfa_6473228923029" class="postField">Convention</label></span><span class="oneChoice"><input type="radio" value="tfa_Otherpleasedescr" class="switch-a" id="tfa_Otherpleasedescr" name="tfa_Whichbestdescrib"><label for="tfa_Otherpleasedescr" class="postField">Other</label></span></span><br><span class="errMsg" id="tfa_Whichbestdescrib-E"></span>
+</div>
+<div class="offstate-a oneField">
+<label for="tfa_9930109571480" class="preField">Please describe your "other" type of event:</label><textarea cols="40" rows="2" id="tfa_9930109571480" name="tfa_9930109571480" class=""></textarea><br><span class="errMsg" id="tfa_9930109571480-E"></span>
+</div>
+</div>
+<div class="wfPage offstate-b" id="wfPgIndex-3">
+<h3>Executive Retreat Details</h3>
+<div class="oneField" id="tfa_4638282420755"><span class="oneChoice"><input type="checkbox" value="tfa_Ihaveaneventplan" class="switch-d" id="tfa_Ihaveaneventplan" name="tfa_Ihaveaneventplan"><label for="tfa_Ihaveaneventplan" class="postField">I have an event plan I would like to upload.</label></span><br><span class="errMsg" id="tfa_4638282420755-E"></span>
+</div>
+<div class="offstate-d oneField">
+<label for="tfa_FileUploadIfyoua" class="preField">Click browse to upload your event plan. After upload, please scan the remaining questionnaire and complete any sections not addressed in your uploaded file.</label><input type="file" id="tfa_FileUploadIfyoua" name="tfa_FileUploadIfyoua" value="" size="40" class=""><br><span class="errMsg" id="tfa_FileUploadIfyoua-E"></span>
+</div>
+<fieldset id="tfa_Preferences" class="">
+<legend>Preferences</legend>
+<div id="tfa_Inordertohelpusc" class="inlineSection"><label class="preField">In order to help us create an event plan that is best suited for your group, please answer the following 3 questions:</label></div>
+<div class="oneField">
+<label for="tfa_1Thepurposeofthi" class="preField">1. The purpose of this event is:</label><select id="tfa_1Thepurposeofthi" name="tfa_1Thepurposeofthi" class=""><option value="">Please select...</option>
+<option value="tfa_Allbusiness" class="">All business</option>
+<option value="tfa_LaidBackRelaxing" class="">A combination of business and leisure</option>
+<option value="tfa_ACombination" class="">Some business, but mostly leisure</option>
+<option value="tfa_Allleisure" class="">All leisure</option></select><br><span class="errMsg" id="tfa_1Thepurposeofthi-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_2Ourgroupcanbest" class="preField">2. Our group can best be described as:</label><select id="tfa_2Ourgroupcanbest" name="tfa_2Ourgroupcanbest" class=""><option value="">Please select...</option>
+<option value="tfa_Sophisticated" class="">Sophisticated</option>
+<option value="tfa_FunLoving" class="">Fun-loving</option>
+<option value="tfa_Acombination1" class="">A combination of the two</option></select><br><span class="errMsg" id="tfa_2Ourgroupcanbest-E"></span>
+</div>
+<div class="oneField" id="tfa_3Ourgroupenjoysa">
+<label for="tfa_3Ourgroupenjoysa" class="preField">3. Our group enjoys activities that are: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PhysicallyDemand1" class="" id="tfa_PhysicallyDemand1" name="tfa_PhysicallyDemand1"><label for="tfa_PhysicallyDemand1" class="postField">Physically Demanding</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_6056408841842" class="" id="tfa_6056408841842" name="tfa_6056408841842"><label for="tfa_6056408841842" class="postField">Relaxing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_PhysicallyDemand" class="" id="tfa_PhysicallyDemand" name="tfa_PhysicallyDemand"><label for="tfa_PhysicallyDemand" class="postField">Indoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_605640884184200tmp-9200600378463" class="" id="tfa_605640884184200tmp-9200600378463" name="tfa_605640884184200tmp-9200600378463"><label for="tfa_605640884184200tmp-9200600378463" class="postField">Outdoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Structured" class="" id="tfa_Structured" name="tfa_Structured"><label for="tfa_Structured" class="postField">Structured</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Selfguided" class="" id="tfa_Selfguided" name="tfa_Selfguided"><label for="tfa_Selfguided" class="postField">Self-guided</label></span><br><span class="errMsg" id="tfa_3Ourgroupenjoysa-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_2581030865593" class="">
+<legend>Attendees</legend>
+<div id="tfa_Estimatednumbero" class="inlineSection">
+<label class="preField">Estimated number of attendees:</label><div class="oneField"><input type="text" id="tfa_9930249775272" name="tfa_9930249775272" value="" size="5" class="validate-integer calc-businessattendees"> business associates and<span class="errMsg" id="tfa_9930249775272-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_9930259214521" name="tfa_9930259214521" value="" size="5" class="validate-integer calc-spouseattendees"> spouses/guests<span class="errMsg" id="tfa_9930259214521-E"></span>
+</div>
+</div>
+<div class="oneField labelsRightAligned">for a total of: <input type="text" id="tfa_9930259581845" name="tfa_9930259581845" value="" size="5" class="validate-integer formula=businessattendees+spouseattendees"> attendees<br><span class="errMsg" id="tfa_9930259581845-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Lodging" class="">
+<legend>Lodging</legend>
+<div class="oneField" id="tfa_Wereinterestedin">
+<label for="tfa_Wereinterestedin" class="preField">We're interested in hotels with a rating of: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_3Stars" class="" id="tfa_3Stars" name="tfa_3Stars"><label for="tfa_3Stars" class="postField">3 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_4Stars" class="" id="tfa_4Stars" name="tfa_4Stars"><label for="tfa_4Stars" class="postField">4 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_5Stars" class="" id="tfa_5Stars" name="tfa_5Stars"><label for="tfa_5Stars" class="postField">5 Stars</label></span><br><span class="errMsg" id="tfa_Wereinterestedin-E"></span>
+</div>
+<fieldset id="tfa_NumberofRoomsNee" class="">
+<legend>Number of Rooms Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_RoomNights" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_NumberofRooms" name="tfa_NumberofRooms" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_NumberofRooms-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_2581180930173" name="tfa_2581180930173" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_2581180930173-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tuesday2" name="tfa_Tuesday2" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tuesday2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wednesday2" name="tfa_Wednesday2" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wednesday2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thursday2" name="tfa_Thursday2" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thursday2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Friday2" name="tfa_Friday2" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Friday2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Saturday2" name="tfa_Saturday2" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Saturday2-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week22" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun" name="tfa_Sun" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_Sun-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon" name="tfa_Mon" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_Mon-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue" name="tfa_Tue" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tue-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed" name="tfa_Wed" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wed-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur" name="tfa_Thur" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thur-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri" name="tfa_Fri" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Fri-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat" name="tfa_Sat" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Sat-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalRoomNights" class="inlineSection">
+<label class="preField">Total Room Nights:</label><div class="oneField"><input type="text" id="tfa_8167704164460" name="tfa_8167704164460" value="" size="4" class="validate-integer formula=Sun+Mon+Tue+Wed+Thu+Fri+Sat"><span class="errMsg" id="tfa_8167704164460-E"></span>
+</div>
+</div>
+</fieldset>
+<fieldset id="tfa_NumberofSuitesNe1" class="">
+<legend>Number of Suites Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_Week11" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun1" name="tfa_Sun1" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun1-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon1" name="tfa_Mon1" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon1-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue1" name="tfa_Tue1" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue1-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed1" name="tfa_Wed1" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed1-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur1" name="tfa_Thur1" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur1-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri1" name="tfa_Fri1" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri1-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat1" name="tfa_Sat1" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat1-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week23" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun2" name="tfa_Sun2" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon2" name="tfa_Mon2" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue2" name="tfa_Tue2" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed2" name="tfa_Wed2" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur2" name="tfa_Thur2" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri2" name="tfa_Fri2" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri2-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat2" name="tfa_Sat2" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat2-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalSuiteNights1" class="inlineSection">
+<label class="preField">Total Suite Nights:</label><div class="oneField"><input type="text" id="tfa_8503788435546" name="tfa_8503788435546" value="" size="4" class="validate-integer formula=Suns+Mons+Tues+Weds+Thus+Fris+Sats"><span class="errMsg" id="tfa_8503788435546-E"></span>
+</div>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Itinerary" class="">
+<legend>Itinerary</legend>
+<div class="oneField" id="tfa_6208588664549"><span class="oneChoice"><input type="radio" value="tfa_Myitineraryisinc" class="" id="tfa_Myitineraryisinc" name="tfa_6208588664549"><label for="tfa_Myitineraryisinc" class="postField">My itinerary is included in my uploaded file</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Iwouldliketocrea" class="switch-e" id="tfa_Iwouldliketocrea" name="tfa_6208588664549"><label for="tfa_Iwouldliketocrea" class="postField">I would like to create an itinerary</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Pleasesuggestani" class="" id="tfa_Pleasesuggestani" name="tfa_6208588664549"><label for="tfa_Pleasesuggestani" class="postField">Please suggest an itinerary for me</label></span><br><span class="errMsg" id="tfa_6208588664549-E"></span>
+</div>
+<fieldset id="tfa_BuildYourItinera" class="offstate-e">
+<legend>Build Your Itinerary</legend>
+<div id="tfa_6208708457441" class="repeat inlineSection">
+<div class="oneField">
+<label for="tfa_Day" class="inlineLabel">Day:</label><select id="tfa_Day" name="tfa_Day" class=""><option value="">Please select...</option>
+<option value="tfa_Sunday6" class="">Sunday</option>
+<option value="tfa_Monday5" class="">Monday</option>
+<option value="tfa_Tuesday6" class="">Tuesday</option>
+<option value="tfa_Wednesday6" class="">Wednesday</option>
+<option value="tfa_Thursday6" class="">Thursday</option>
+<option value="tfa_Friday6" class="">Friday</option>
+<option value="tfa_Saturday6" class="">Saturday</option></select><span class="errMsg" id="tfa_Day-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Time" class="inlineLabel">Time:</label><input type="text" id="tfa_Time" name="tfa_Time" value="HH:MM" size="5" class=""><span class="errMsg" id="tfa_Time-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_AMPM" class="inlineLabel">AM/PM:</label><select id="tfa_AMPM" name="tfa_AMPM" class=""><option value="">Please select...</option>
+<option value="tfa_AM" class="">AM</option>
+<option value="tfa_PM" class="">PM</option></select><span class="errMsg" id="tfa_AMPM-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Duration" class="inlineLabel">Duration:</label><input type="text" id="tfa_Duration" name="tfa_Duration" value="" size="3" class="">hours<span class="errMsg" id="tfa_Duration-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Type" class="inlineLabel">Type:</label><select id="tfa_Type" name="tfa_Type" class=""><option value="">Please select...</option>
+<option value="tfa_Meeting" class="">Meeting</option>
+<option value="tfa_BreakoutSession" class="">Breakout Session</option>
+<option value="tfa_MealFunction" class="">Meal Function</option>
+<option value="tfa_ExcursionLeisure" class="">Excursion/Leisure Activity</option>
+<option value="tfa_Other1" class="">Other</option></select><span class="errMsg" id="tfa_Type-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Description" class="inlineLabel">Description:</label><textarea cols="30" rows="2" id="tfa_Description" name="tfa_Description" class=""></textarea><span class="errMsg" id="tfa_Description-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofParticipants" class="inlineLabel"># of Participants</label><input type="text" id="tfa_ofParticipants" name="tfa_ofParticipants" value="" size="3" class=""><span class="errMsg" id="tfa_ofParticipants-E"></span>
+</div>
+<span class="duplicateSpan"><a id="tfa_6208708457441-wfDL" class="duplicateLink" href="#">Add Event</a></span>
+</div>
+</fieldset>
+<fieldset id="tfa_ExcursionsLeisur" class="">
+<legend>Entertainment, Dining, and Leisure Activities</legend>
+<div class="oneField" id="tfa_8504388964337"><span class="oneChoice"><input type="radio" value="tfa_Makeasuggestionf" class="" id="tfa_Makeasuggestionf" name="tfa_8504388964337"><label for="tfa_Makeasuggestionf" class="postField">Make a suggestion for activities based on my preferences</label></span><br><span class="oneChoice"><input type="radio" value="tfa_3658581417635" class="switch-f" id="tfa_3658581417635" name="tfa_8504388964337"><label for="tfa_3658581417635" class="postField">Allow me to choose from a list of all activities</label></span><br><span class="errMsg" id="tfa_8504388964337-E"></span>
+</div>
+<div class="offstate-f oneField" id="tfa_Choosefromthefol">
+<label for="tfa_Choosefromthefol" class="preField">Choose from the following live entertainment/speakers for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_MotivationalSpea" class="" id="tfa_MotivationalSpea" name="tfa_MotivationalSpea"><label for="tfa_MotivationalSpea" class="postField">Motivational Speaker
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_ProfessionalWork" class="" id="tfa_ProfessionalWork" name="tfa_ProfessionalWork"><label for="tfa_ProfessionalWork" class="postField">Professional Workshops
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_LiveMusicians" class="" id="tfa_LiveMusicians" name="tfa_LiveMusicians"><label for="tfa_LiveMusicians" class="postField">Live Musicians
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_VarietyShow" class="" id="tfa_VarietyShow" name="tfa_VarietyShow"><label for="tfa_VarietyShow" class="postField">Variety Show
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_StandupComedian" class="" id="tfa_StandupComedian" name="tfa_StandupComedian"><label for="tfa_StandupComedian" class="postField">Stand-up Comedian</label></span><br><span class="errMsg" id="tfa_Choosefromthefol-E"></span>
+</div>
+<div class="offstate-f oneField" id="tfa_Choosefromthefol1">
+<label for="tfa_Choosefromthefol1" class="preField">Choose from the following dining options for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PrivateBanquet" class="" id="tfa_PrivateBanquet" name="tfa_PrivateBanquet"><label for="tfa_PrivateBanquet" class="postField">Private Banquet
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_FineDiningRestau" class="" id="tfa_FineDiningRestau" name="tfa_FineDiningRestau"><label for="tfa_FineDiningRestau" class="postField">Fine Dining Restaurants
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_DinnerandLakeCru" class="" id="tfa_DinnerandLakeCru" name="tfa_DinnerandLakeCru"><label for="tfa_DinnerandLakeCru" class="postField">Dinner and Lake Cruise
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorBarBQwith" class="" id="tfa_OutdoorBarBQwith" name="tfa_OutdoorBarBQwith"><label for="tfa_OutdoorBarBQwith" class="postField">Outdoor Bar-B-Q with Live Bluegrass Band
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorCrawfishB" class="" id="tfa_OutdoorCrawfishB" name="tfa_OutdoorCrawfishB"><label for="tfa_OutdoorCrawfishB" class="postField">Outdoor Crawfish Boil with Live Cajun Band
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OtherOutdoorDini" class="" id="tfa_OtherOutdoorDini" name="tfa_OtherOutdoorDini"><label for="tfa_OtherOutdoorDini" class="postField">Other Outdoor Dining</label></span><br><span class="errMsg" id="tfa_Choosefromthefol1-E"></span>
+</div>
+<div class="offstate-f oneField" id="tfa_Choosefromthefol2">
+<label for="tfa_Choosefromthefol2" class="preField">Choose from the following excursions for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_LakeCruise" class="" id="tfa_LakeCruise" name="tfa_LakeCruise"><label for="tfa_LakeCruise" class="postField">Lake Cruise
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CasinoNight" class="" id="tfa_CasinoNight" name="tfa_CasinoNight"><label for="tfa_CasinoNight" class="postField">Casino Night
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_PokerTournament" class="" id="tfa_PokerTournament" name="tfa_PokerTournament"><label for="tfa_PokerTournament" class="postField">Poker Tournament
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Watersports" class="" id="tfa_Watersports" name="tfa_Watersports"><label for="tfa_Watersports" class="postField">Watersports
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Parasailing" class="" id="tfa_Parasailing" name="tfa_Parasailing"><label for="tfa_Parasailing" class="postField">Parasailing
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedFishing" class="" id="tfa_GuidedFishing" name="tfa_GuidedFishing"><label for="tfa_GuidedFishing" class="postField">Guided Fishing
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_SpaServices" class="" id="tfa_SpaServices" name="tfa_SpaServices"><label for="tfa_SpaServices" class="postField">Spa Services
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedShopping" class="" id="tfa_GuidedShopping" name="tfa_GuidedShopping"><label for="tfa_GuidedShopping" class="postField">Guided Shopping
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CulinaryWorkshop" class="" id="tfa_CulinaryWorkshop" name="tfa_CulinaryWorkshop"><label for="tfa_CulinaryWorkshop" class="postField">Culinary Workshop
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_WineTasting" class="" id="tfa_WineTasting" name="tfa_WineTasting"><label for="tfa_WineTasting" class="postField">Wine Tasting
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Golf" class="" id="tfa_Golf" name="tfa_Golf"><label for="tfa_Golf" class="postField">Golf
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CanoeAdventure" class="" id="tfa_CanoeAdventure" name="tfa_CanoeAdventure"><label for="tfa_CanoeAdventure" class="postField">Canoe Adventure
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HorsebackRiding" class="" id="tfa_HorsebackRiding" name="tfa_HorsebackRiding"><label for="tfa_HorsebackRiding" class="postField">Horseback Riding
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TeamBuildingExer" class="" id="tfa_TeamBuildingExer" name="tfa_TeamBuildingExer"><label for="tfa_TeamBuildingExer" class="postField">Team Building Exercises
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HelicopterTours" class="" id="tfa_HelicopterTours" name="tfa_HelicopterTours"><label for="tfa_HelicopterTours" class="postField">Helicopter Tours 
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TicketstoaBranso" class="" id="tfa_TicketstoaBranso" name="tfa_TicketstoaBranso"><label for="tfa_TicketstoaBranso" class="postField">Tickets to a Branson Show</label></span><br><span class="errMsg" id="tfa_Choosefromthefol2-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</div>
+<div class="wfPage offstate-g" id="wfPgIndex-4">
+<h3>Incentive Travel Details</h3>
+<div class="oneField" id="tfa_1247802115027"><span class="oneChoice"><input type="checkbox" value="tfa_Ihaveaneventplan1" class="switch-h" id="tfa_Ihaveaneventplan1" name="tfa_Ihaveaneventplan1"><label for="tfa_Ihaveaneventplan1" class="postField">I have an event plan I would like to upload.</label></span><br><span class="errMsg" id="tfa_1247802115027-E"></span>
+</div>
+<div class="offstate-h oneField">
+<label for="tfa_Clickbrowsetoupl" class="preField">Click browse to upload your event plan. After upload, please scan the remaining questionnaire and complete any sections not addressed in your uploaded file.</label><input type="file" id="tfa_Clickbrowsetoupl" name="tfa_Clickbrowsetoupl" value="" size="40" class=""><br><span class="errMsg" id="tfa_Clickbrowsetoupl-E"></span>
+</div>
+<fieldset id="tfa_Preferences1" class="">
+<legend>Preferences</legend>
+<div id="tfa_Inordertohelpusc1" class="inlineSection"><label class="preField">In order to help us create an event plan that is best suited for your group, please answer the following 4 questions:</label></div>
+<div class="oneField">
+<label for="tfa_1Thepurposeofthi1" class="preField">1. The purpose of this event is:</label><select id="tfa_1Thepurposeofthi1" name="tfa_1Thepurposeofthi1" class=""><option value="">Please select...</option>
+<option value="tfa_Allbusiness1" class="">All business</option>
+<option value="tfa_Acombinationofbu" class="">A combination of business and leisure</option>
+<option value="tfa_Somebusinessbutm" class="">Some business, but mostly leisure</option>
+<option value="tfa_Allleisure1" class="">All leisure</option></select><br><span class="errMsg" id="tfa_1Thepurposeofthi1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_2Ourgroupcanbest1" class="preField">2. Our group can best be described as:</label><select id="tfa_2Ourgroupcanbest1" name="tfa_2Ourgroupcanbest1" class=""><option value="">Please select...</option>
+<option value="tfa_Sophisticated1" class="">Sophisticated</option>
+<option value="tfa_Funloving1" class="">Fun-loving</option>
+<option value="tfa_Acombinationofth" class="">A combination of the two</option></select><br><span class="errMsg" id="tfa_2Ourgroupcanbest1-E"></span>
+</div>
+<div class="oneField" id="tfa_3Ourgroupenjoysa1">
+<label for="tfa_3Ourgroupenjoysa1" class="preField">3. Our group enjoys activities that are: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PhysicallyDemand2" class="" id="tfa_PhysicallyDemand2" name="tfa_PhysicallyDemand2"><label for="tfa_PhysicallyDemand2" class="postField">Physically Demanding</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Relaxing" class="" id="tfa_Relaxing" name="tfa_Relaxing"><label for="tfa_Relaxing" class="postField">Relaxing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Indoors" class="" id="tfa_Indoors" name="tfa_Indoors"><label for="tfa_Indoors" class="postField">Indoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Outdoors" class="" id="tfa_Outdoors" name="tfa_Outdoors"><label for="tfa_Outdoors" class="postField">Outdoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Structured1" class="" id="tfa_Structured1" name="tfa_Structured1"><label for="tfa_Structured1" class="postField">Structured</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Selfguided1" class="" id="tfa_Selfguided1" name="tfa_Selfguided1"><label for="tfa_Selfguided1" class="postField">Self-guided</label></span><br><span class="errMsg" id="tfa_3Ourgroupenjoysa1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_4Ourgroupconsist" class="preField">4. Our group consists of:</label><select id="tfa_4Ourgroupconsist" name="tfa_4Ourgroupconsist" class=""><option value="">Please select...</option>
+<option value="tfa_Employeesonly" class="">Employees only</option>
+<option value="tfa_Employeesandspou" class="">Employees and spouse/guest</option>
+<option value="tfa_Employeesandthei" class="">Employees and their families</option></select><br><span class="errMsg" id="tfa_4Ourgroupconsist-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Attendees" class="">
+<legend>Attendees</legend>
+<div id="tfa_Estimatednumbero1" class="inlineSection">
+<label class="preField">Estimated number of attendees:</label><div class="oneField"><input type="text" id="tfa_1248352024507" name="tfa_1248352024507" value="" size="5" class="validate-integer calc-businessattendees"> business associates and<span class="errMsg" id="tfa_1248352024507-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_1248372391183" name="tfa_1248372391183" value="" size="5" class="validate-integer calc-spouseattendees"> spouses/guests<span class="errMsg" id="tfa_1248372391183-E"></span>
+</div>
+</div>
+<div class="oneField labelsRightAligned">for a total of: <input type="text" id="tfa_1248413960639" name="tfa_1248413960639" value="" size="5" class="validate-integer formula=businessattendees+spouseattendees"> attendees<br><span class="errMsg" id="tfa_1248413960639-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Lodging1" class="">
+<legend>Lodging</legend>
+<div class="oneField" id="tfa_Wereinterestedin1">
+<label for="tfa_Wereinterestedin1" class="preField">We're interested in hotels with a rating of: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_3Stars1" class="" id="tfa_3Stars1" name="tfa_3Stars1"><label for="tfa_3Stars1" class="postField">3 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_4Stars1" class="" id="tfa_4Stars1" name="tfa_4Stars1"><label for="tfa_4Stars1" class="postField">4 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_5Stars1" class="" id="tfa_5Stars1" name="tfa_5Stars1"><label for="tfa_5Stars1" class="postField">5 Stars</label></span><br><span class="errMsg" id="tfa_Wereinterestedin1-E"></span>
+</div>
+<fieldset id="tfa_NumberofRoomsNee1" class="">
+<legend>Number of Rooms Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_Week1" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun3" name="tfa_Sun3" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_Sun3-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon3" name="tfa_Mon3" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_Mon3-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue3" name="tfa_Tue3" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tue3-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed3" name="tfa_Wed3" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wed3-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur3" name="tfa_Thur3" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thur3-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri3" name="tfa_Fri3" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Fri3-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat3" name="tfa_Sat3" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Sat3-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week2" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun4" name="tfa_Sun4" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_Sun4-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon4" name="tfa_Mon4" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_Mon4-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue4" name="tfa_Tue4" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tue4-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed4" name="tfa_Wed4" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wed4-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur4" name="tfa_Thur4" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thur4-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri4" name="tfa_Fri4" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Fri4-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat4" name="tfa_Sat4" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Sat4-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalRoomNights1" class="inlineSection">
+<label class="preField">Total Room Nights:</label><div class="oneField"><input type="text" id="tfa_1249344023422" name="tfa_1249344023422" value="" size="4" class="validate-integer formula=Sun+Mon+Tue+Wed+Thu+Fri+Sat"><span class="errMsg" id="tfa_1249344023422-E"></span>
+</div>
+</div>
+</fieldset>
+<fieldset id="tfa_NumberofSuitesNe" class="">
+<legend>Number of Suites Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_Week12" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun5" name="tfa_Sun5" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun5-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon5" name="tfa_Mon5" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon5-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue5" name="tfa_Tue5" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue5-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed5" name="tfa_Wed5" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed5-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur5" name="tfa_Thur5" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur5-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri5" name="tfa_Fri5" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri5-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat5" name="tfa_Sat5" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat5-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week21" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun6" name="tfa_Sun6" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun6-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon6" name="tfa_Mon6" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon6-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue6" name="tfa_Tue6" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue6-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed6" name="tfa_Wed6" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed6-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur6" name="tfa_Thur6" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur6-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri6" name="tfa_Fri6" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri6-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat6" name="tfa_Sat6" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat6-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalSuiteNights" class="inlineSection">
+<label class="preField">Total Suite Nights:</label><div class="oneField"><input type="text" id="tfa_1250546144373" name="tfa_1250546144373" value="" size="4" class="validate-integer formula=Suns+Mons+Tues+Weds+Thus+Fris+Sats"><span class="errMsg" id="tfa_1250546144373-E"></span>
+</div>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Itinerary1" class="">
+<legend>Itinerary</legend>
+<div class="oneField" id="tfa_1250596887921"><span class="oneChoice"><input type="radio" value="tfa_Myitineraryisinc1" class="" id="tfa_Myitineraryisinc1" name="tfa_1250596887921"><label for="tfa_Myitineraryisinc1" class="postField">My itinerary is included in my uploaded file</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Iwouldliketocrea1" class="switch-j" id="tfa_Iwouldliketocrea1" name="tfa_1250596887921"><label for="tfa_Iwouldliketocrea1" class="postField">I would like to create an itinerary</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Pleasesuggestani1" class="" id="tfa_Pleasesuggestani1" name="tfa_1250596887921"><label for="tfa_Pleasesuggestani1" class="postField">Please suggest an itinerary for me</label></span><br><span class="errMsg" id="tfa_1250596887921-E"></span>
+</div>
+<fieldset id="tfa_BuildYourItinera1" class="offstate-j">
+<legend>Build Your Itinerary</legend>
+<div id="tfa_1250716812351" class="repeat inlineSection">
+<div class="oneField">
+<label for="tfa_Day1" class="inlineLabel">Day:</label><select id="tfa_Day1" name="tfa_Day1" class=""><option value="">Please select...</option>
+<option value="tfa_Sunday2" class="">Sunday</option>
+<option value="tfa_Monday2" class="">Monday</option>
+<option value="tfa_Tuesday3" class="">Tuesday</option>
+<option value="tfa_Wednesday3" class="">Wednesday</option>
+<option value="tfa_Thursday3" class="">Thursday</option>
+<option value="tfa_Friday3" class="">Friday</option>
+<option value="tfa_Saturday3" class="">Saturday</option></select><span class="errMsg" id="tfa_Day1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Time1" class="inlineLabel">Time:</label><input type="text" id="tfa_Time1" name="tfa_Time1" value="HH:MM" size="5" class=""><span class="errMsg" id="tfa_Time1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_AMPM1" class="inlineLabel">AM/PM:</label><select id="tfa_AMPM1" name="tfa_AMPM1" class=""><option value="">Please select...</option>
+<option value="tfa_AM1" class="">AM</option>
+<option value="tfa_PM1" class="">PM</option></select><span class="errMsg" id="tfa_AMPM1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Duration1" class="inlineLabel">Duration:</label><input type="text" id="tfa_Duration1" name="tfa_Duration1" value="" size="3" class="">hours<span class="errMsg" id="tfa_Duration1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Type1" class="inlineLabel">Type:</label><select id="tfa_Type1" name="tfa_Type1" class=""><option value="">Please select...</option>
+<option value="tfa_Meeting1" class="">Meeting</option>
+<option value="tfa_BreakoutSession1" class="">Breakout Session</option>
+<option value="tfa_MealFunction1" class="">Meal Function</option>
+<option value="tfa_ExcursionLeisure1" class="">Excursion/Leisure Activity</option>
+<option value="tfa_Other2" class="">Other</option></select><span class="errMsg" id="tfa_Type1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Description1" class="inlineLabel">Description:</label><textarea cols="30" rows="2" id="tfa_Description1" name="tfa_Description1" class=""></textarea><span class="errMsg" id="tfa_Description1-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofParticipants1" class="inlineLabel"># of Participants</label><input type="text" id="tfa_ofParticipants1" name="tfa_ofParticipants1" value="" size="3" class=""><span class="errMsg" id="tfa_ofParticipants1-E"></span>
+</div>
+<span class="duplicateSpan"><a id="tfa_1250716812351-wfDL" class="duplicateLink" href="#">Add Event</a></span>
+</div>
+</fieldset>
+<fieldset id="tfa_EntertainmentDin" class="">
+<legend>Entertainment, Dining, and Leisure Activities</legend>
+<div class="oneField" id="tfa_1251397614069"><span class="oneChoice"><input type="radio" value="tfa_Makeasuggestionf1" class="" id="tfa_Makeasuggestionf1" name="tfa_1251397614069"><label for="tfa_Makeasuggestionf1" class="postField">Make a suggestion for activities based on my preferences</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Allowmetochoosef" class="switch-q" id="tfa_Allowmetochoosef" name="tfa_1251397614069"><label for="tfa_Allowmetochoosef" class="postField">Allow me to choose from a list of all activities</label></span><br><span class="errMsg" id="tfa_1251397614069-E"></span>
+</div>
+<div class="offstate-q oneField" id="tfa_Choosefromthefol3">
+<label for="tfa_Choosefromthefol3" class="preField">Choose from the following live entertainment/speakers for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_MotivationalSpea1" class="" id="tfa_MotivationalSpea1" name="tfa_MotivationalSpea1"><label for="tfa_MotivationalSpea1" class="postField">Awards Show</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_AwardsBanquet" class="" id="tfa_AwardsBanquet" name="tfa_AwardsBanquet"><label for="tfa_AwardsBanquet" class="postField">Awards Banquet</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_VarietyShow2" class="" id="tfa_VarietyShow2" name="tfa_VarietyShow2"><label for="tfa_VarietyShow2" class="postField">Variety Show</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CelebrityComedia" class="" id="tfa_CelebrityComedia" name="tfa_CelebrityComedia"><label for="tfa_CelebrityComedia" class="postField">Celebrity Comedian</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CelebrityMusicia" class="" id="tfa_CelebrityMusicia" name="tfa_CelebrityMusicia"><label for="tfa_CelebrityMusicia" class="postField">Celebrity Musician</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_MotivationalSpea2" class="" id="tfa_MotivationalSpea2" name="tfa_MotivationalSpea2"><label for="tfa_MotivationalSpea2" class="postField">Motivational Speaker</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_PrivatePerforman" class="" id="tfa_PrivatePerforman" name="tfa_PrivatePerforman"><label for="tfa_PrivatePerforman" class="postField">Private Performance of a Branson Show</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_FireworksDisplay" class="" id="tfa_FireworksDisplay" name="tfa_FireworksDisplay"><label for="tfa_FireworksDisplay" class="postField">Fireworks Display</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_LiveDanceBand" class="" id="tfa_LiveDanceBand" name="tfa_LiveDanceBand"><label for="tfa_LiveDanceBand" class="postField">Live Dance Band</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_FamilyFunCarniva" class="" id="tfa_FamilyFunCarniva" name="tfa_FamilyFunCarniva"><label for="tfa_FamilyFunCarniva" class="postField">Family Fun Carnival</label></span><br><span class="errMsg" id="tfa_Choosefromthefol3-E"></span>
+</div>
+<div class="offstate-q oneField" id="tfa_Choosefromthefol4">
+<label for="tfa_Choosefromthefol4" class="preField">Choose from the following dining options for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PrivateBanquet1" class="" id="tfa_PrivateBanquet1" name="tfa_PrivateBanquet1"><label for="tfa_PrivateBanquet1" class="postField">Private Banquets</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_FineDiningRestau2" class="" id="tfa_FineDiningRestau2" name="tfa_FineDiningRestau2"><label for="tfa_FineDiningRestau2" class="postField">Fine Dining Restaurants</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorBarBQwith2" class="" id="tfa_OutdoorBarBQwith2" name="tfa_OutdoorBarBQwith2"><label for="tfa_OutdoorBarBQwith2" class="postField">Outdoor Bar-B-Q with Bluegrass Band</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorCrawfishB2" class="" id="tfa_OutdoorCrawfishB2" name="tfa_OutdoorCrawfishB2"><label for="tfa_OutdoorCrawfishB2" class="postField">Outdoor Crawfish Boil with Cajun Band</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OtherOutdoorDini2" class="" id="tfa_OtherOutdoorDini2" name="tfa_OtherOutdoorDini2"><label for="tfa_OtherOutdoorDini2" class="postField">Other Outdoor Dining</label></span><br><span class="errMsg" id="tfa_Choosefromthefol4-E"></span>
+</div>
+<div class="offstate-q oneField" id="tfa_Choosefromthefol5">
+<label for="tfa_Choosefromthefol5" class="preField">Choose from the following excursions for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_LakeCruise1" class="" id="tfa_LakeCruise1" name="tfa_LakeCruise1"><label for="tfa_LakeCruise1" class="postField">Lake Cruises</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Watersports2" class="" id="tfa_Watersports2" name="tfa_Watersports2"><label for="tfa_Watersports2" class="postField">Watersports</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Parasailing2" class="" id="tfa_Parasailing2" name="tfa_Parasailing2"><label for="tfa_Parasailing2" class="postField">Parasailing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedFishing2" class="" id="tfa_GuidedFishing2" name="tfa_GuidedFishing2"><label for="tfa_GuidedFishing2" class="postField">Guided Fishing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_ThemeParkWaterPa" class="" id="tfa_ThemeParkWaterPa" name="tfa_ThemeParkWaterPa"><label for="tfa_ThemeParkWaterPa" class="postField">Theme Park/Water Park Outing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CasinoNight2" class="" id="tfa_CasinoNight2" name="tfa_CasinoNight2"><label for="tfa_CasinoNight2" class="postField">Casino Night</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_PokerTournament2" class="" id="tfa_PokerTournament2" name="tfa_PokerTournament2"><label for="tfa_PokerTournament2" class="postField">Poker Tournament</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_SpaServices2" class="" id="tfa_SpaServices2" name="tfa_SpaServices2"><label for="tfa_SpaServices2" class="postField">Spa Services</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedShopping2" class="" id="tfa_GuidedShopping2" name="tfa_GuidedShopping2"><label for="tfa_GuidedShopping2" class="postField">Guided Shopping</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_WineTasting2" class="" id="tfa_WineTasting2" name="tfa_WineTasting2"><label for="tfa_WineTasting2" class="postField">Wine Tasting</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CulinaryWorkshop2" class="" id="tfa_CulinaryWorkshop2" name="tfa_CulinaryWorkshop2"><label for="tfa_CulinaryWorkshop2" class="postField">Culinary Workshop</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Golf2" class="" id="tfa_Golf2" name="tfa_Golf2"><label for="tfa_Golf2" class="postField">Golf</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CanoeAdventure2" class="" id="tfa_CanoeAdventure2" name="tfa_CanoeAdventure2"><label for="tfa_CanoeAdventure2" class="postField">Canoe Adventure</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HorsebackRiding2" class="" id="tfa_HorsebackRiding2" name="tfa_HorsebackRiding2"><label for="tfa_HorsebackRiding2" class="postField">Horseback Riding</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TeamBuildingExer2" class="" id="tfa_TeamBuildingExer2" name="tfa_TeamBuildingExer2"><label for="tfa_TeamBuildingExer2" class="postField">Team Building Exercises</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HelicopterTours2" class="" id="tfa_HelicopterTours2" name="tfa_HelicopterTours2"><label for="tfa_HelicopterTours2" class="postField">Helicopter Tours</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TicketstoaBranso2" class="" id="tfa_TicketstoaBranso2" name="tfa_TicketstoaBranso2"><label for="tfa_TicketstoaBranso2" class="postField">Tickets to a Branson Show</label></span><br><span class="errMsg" id="tfa_Choosefromthefol5-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</div>
+<div class="wfPage offstate-i" id="wfPgIndex-5">
+<h3>Convention Details</h3>
+<div class="oneField" id="tfa_7532558208778"><span class="oneChoice"><input type="checkbox" value="tfa_Ihaveaneventplan2" class="switch-k" id="tfa_Ihaveaneventplan2" name="tfa_Ihaveaneventplan2"><label for="tfa_Ihaveaneventplan2" class="postField">I have an event plan I would like to upload.</label></span><br><span class="errMsg" id="tfa_7532558208778-E"></span>
+</div>
+<div class="offstate-k oneField">
+<label for="tfa_Clickbrowsetoupl1" class="preField">Click browse to upload your event plan. After upload, please scan the remaining questionnaire and complete any sections not addressed in your uploaded file.</label><input type="file" id="tfa_Clickbrowsetoupl1" name="tfa_Clickbrowsetoupl1" value="" size="40" class=""><br><span class="errMsg" id="tfa_Clickbrowsetoupl1-E"></span>
+</div>
+<fieldset id="tfa_Preferences2" class="">
+<legend>Preferences</legend>
+<div id="tfa_Inordertohelpusc2" class="inlineSection"><label class="preField">In order to help us create an event plan that is best suited for your group, please answer the following 5 questions:</label></div>
+<div class="oneField">
+<label for="tfa_1Thepurposeofthi2" class="preField">1. The purpose of this event is:</label><select id="tfa_1Thepurposeofthi2" name="tfa_1Thepurposeofthi2" class=""><option value="">Please select...</option>
+<option value="tfa_Allbusiness2" class="">All business</option>
+<option value="tfa_Acombinationofbu1" class="">A combination of business and leisure</option>
+<option value="tfa_Somebusinessbutm1" class="">Some business, but mostly leisure</option>
+<option value="tfa_Allleisure2" class="">All leisure</option></select><br><span class="errMsg" id="tfa_1Thepurposeofthi2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_2Ourgroupcanbest2" class="preField">2. Our group can best be described as:</label><select id="tfa_2Ourgroupcanbest2" name="tfa_2Ourgroupcanbest2" class=""><option value="">Please select...</option>
+<option value="tfa_Sophisticated2" class="">Sophisticated</option>
+<option value="tfa_Funloving2" class="">Fun-loving</option>
+<option value="tfa_Acombinationofth1" class="">A combination of the two</option></select><br><span class="errMsg" id="tfa_2Ourgroupcanbest2-E"></span>
+</div>
+<div class="oneField" id="tfa_3Ourgroupenjoysa2">
+<label for="tfa_3Ourgroupenjoysa2" class="preField">3. Our group enjoys activities that are: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PhysicallyDemand3" class="" id="tfa_PhysicallyDemand3" name="tfa_PhysicallyDemand3"><label for="tfa_PhysicallyDemand3" class="postField">Physically Demanding</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Relaxing1" class="" id="tfa_Relaxing1" name="tfa_Relaxing1"><label for="tfa_Relaxing1" class="postField">Relaxing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Indoors1" class="" id="tfa_Indoors1" name="tfa_Indoors1"><label for="tfa_Indoors1" class="postField">Indoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Outdoors1" class="" id="tfa_Outdoors1" name="tfa_Outdoors1"><label for="tfa_Outdoors1" class="postField">Outdoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Structured2" class="" id="tfa_Structured2" name="tfa_Structured2"><label for="tfa_Structured2" class="postField">Structured</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Selfguided2" class="" id="tfa_Selfguided2" name="tfa_Selfguided2"><label for="tfa_Selfguided2" class="postField">Self-guided</label></span><br><span class="errMsg" id="tfa_3Ourgroupenjoysa2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_4Ourgroupconsist1" class="preField">4. Our group consists of:</label><select id="tfa_4Ourgroupconsist1" name="tfa_4Ourgroupconsist1" class=""><option value="">Please select...</option>
+<option value="tfa_Employeesonly1" class="">Employees only</option>
+<option value="tfa_Employeesandspou1" class="">Employees and spouse/guest</option>
+<option value="tfa_Employeesandthei1" class="">Employees and their families</option></select><br><span class="errMsg" id="tfa_4Ourgroupconsist1-E"></span>
+</div>
+<div class="oneField" id="tfa_5Attendeeswillbe">
+<label for="tfa_5Attendeeswillbe" class="preField">5. Attendees will be responsible for arranging/paying for their own:</label><span class="oneChoice"><input type="checkbox" value="tfa_ConventionAdmiss" class="" id="tfa_ConventionAdmiss" name="tfa_ConventionAdmiss"><label for="tfa_ConventionAdmiss" class="postField">Convention Admission</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Transportation" class="" id="tfa_Transportation" name="tfa_Transportation"><label for="tfa_Transportation" class="postField">Transportation</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Lodging2" class="" id="tfa_Lodging2" name="tfa_Lodging2"><label for="tfa_Lodging2" class="postField">Lodging</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Meals" class="" id="tfa_Meals" name="tfa_Meals"><label for="tfa_Meals" class="postField">Meals</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Entertainment" class="" id="tfa_Entertainment" name="tfa_Entertainment"><label for="tfa_Entertainment" class="postField">Entertainment</label></span><br><span class="errMsg" id="tfa_5Attendeeswillbe-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Attendees1" class="">
+<legend>Attendees</legend>
+<div id="tfa_Estimatednumbero2" class="inlineSection">
+<label class="preField">Estimated number of attendees:</label><div class="oneField"><input type="text" id="tfa_7536624919315" name="tfa_7536624919315" value="" size="5" class="validate-integer calc-businessattendees"> business associates and<span class="errMsg" id="tfa_7536624919315-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_7536774280476" name="tfa_7536774280476" value="" size="5" class="validate-integer calc-spouseattendees"> spouses/guests<span class="errMsg" id="tfa_7536774280476-E"></span>
+</div>
+</div>
+<div class="oneField labelsRightAligned">for a total of: <input type="text" id="tfa_7536935090707" name="tfa_7536935090707" value="" size="5" class="validate-integer formula=businessattendees+spouseattendees"> attendees<br><span class="errMsg" id="tfa_7536935090707-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Lodging3" class="">
+<legend>Lodging</legend>
+<div class="oneField" id="tfa_Wereinterestedin2">
+<label for="tfa_Wereinterestedin2" class="preField">We're interested in hotels with a rating of: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_3Stars2" class="" id="tfa_3Stars2" name="tfa_3Stars2"><label for="tfa_3Stars2" class="postField">3 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_4Stars2" class="" id="tfa_4Stars2" name="tfa_4Stars2"><label for="tfa_4Stars2" class="postField">4 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_5Stars2" class="" id="tfa_5Stars2" name="tfa_5Stars2"><label for="tfa_5Stars2" class="postField">5 Stars</label></span><br><span class="errMsg" id="tfa_Wereinterestedin2-E"></span>
+</div>
+<fieldset id="tfa_NumberofRoomsNee2" class="">
+<legend>Number of Rooms Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_Week13" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun7" name="tfa_Sun7" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_Sun7-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon7" name="tfa_Mon7" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_Mon7-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue7" name="tfa_Tue7" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tue7-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed7" name="tfa_Wed7" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wed7-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur7" name="tfa_Thur7" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thur7-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri7" name="tfa_Fri7" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Fri7-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat7" name="tfa_Sat7" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Sat7-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week24" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun8" name="tfa_Sun8" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_Sun8-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon8" name="tfa_Mon8" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_Mon8-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue8" name="tfa_Tue8" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tue8-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed8" name="tfa_Wed8" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wed8-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur8" name="tfa_Thur8" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thur8-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri8" name="tfa_Fri8" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Fri8-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat8" name="tfa_Sat8" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Sat8-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalRoomNights2" class="inlineSection">
+<label class="preField">Total Room Nights:</label><div class="oneField"><input type="text" id="tfa_7544145688111" name="tfa_7544145688111" value="" size="4" class="validate-integer formula=Sun+Mon+Tue+Wed+Thu+Fri+Sat"><span class="errMsg" id="tfa_7544145688111-E"></span>
+</div>
+</div>
+</fieldset>
+<fieldset id="tfa_NumberofSuitesNe2" class="">
+<legend>Number of Suites Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_Week14" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun9" name="tfa_Sun9" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun9-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon9" name="tfa_Mon9" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon9-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue9" name="tfa_Tue9" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue9-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed9" name="tfa_Wed9" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed9-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur9" name="tfa_Thur9" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur9-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri9" name="tfa_Fri9" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri9-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat9" name="tfa_Sat9" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat9-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week25" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun10" name="tfa_Sun10" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun10-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon10" name="tfa_Mon10" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon10-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue10" name="tfa_Tue10" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue10-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed10" name="tfa_Wed10" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed10-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur10" name="tfa_Thur10" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur10-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri10" name="tfa_Fri10" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri10-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat10" name="tfa_Sat10" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat10-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalSuiteNights2" class="inlineSection">
+<label class="preField">Total Suite Nights:</label><div class="oneField"><input type="text" id="tfa_7552577748827" name="tfa_7552577748827" value="" size="4" class="validate-integer formula=Suns+Mons+Tues+Weds+Thus+Fris+Sats"><span class="errMsg" id="tfa_7552577748827-E"></span>
+</div>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Itinerary2" class="">
+<legend>Itinerary</legend>
+<div class="oneField" id="tfa_7553008339261"><span class="oneChoice"><input type="radio" value="tfa_Myitineraryisinc2" class="" id="tfa_Myitineraryisinc2" name="tfa_7553008339261"><label for="tfa_Myitineraryisinc2" class="postField">My itinerary is included in my uploaded file</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Iwouldliketocrea2" class="switch-l" id="tfa_Iwouldliketocrea2" name="tfa_7553008339261"><label for="tfa_Iwouldliketocrea2" class="postField">I would like to create an itinerary</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Pleasesuggestani2" class="" id="tfa_Pleasesuggestani2" name="tfa_7553008339261"><label for="tfa_Pleasesuggestani2" class="postField">Please suggest an itinerary for me</label></span><br><span class="errMsg" id="tfa_7553008339261-E"></span>
+</div>
+<fieldset id="tfa_BuildYourItinera2" class="offstate-l">
+<legend>Build Your Itinerary</legend>
+<div id="tfa_7553849748235" class="repeat inlineSection">
+<div class="oneField">
+<label for="tfa_Day2" class="inlineLabel">Day:</label><select id="tfa_Day2" name="tfa_Day2" class=""><option value="">Please select...</option>
+<option value="tfa_Sunday3" class="">Sunday</option>
+<option value="tfa_Monday3" class="">Monday</option>
+<option value="tfa_Tuesday4" class="">Tuesday</option>
+<option value="tfa_Wednesday4" class="">Wednesday</option>
+<option value="tfa_Thursday4" class="">Thursday</option>
+<option value="tfa_Friday4" class="">Friday</option>
+<option value="tfa_Saturday4" class="">Saturday</option></select><span class="errMsg" id="tfa_Day2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Time2" class="inlineLabel">Time:</label><input type="text" id="tfa_Time2" name="tfa_Time2" value="HH:MM" size="5" class=""><span class="errMsg" id="tfa_Time2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_AMPM2" class="inlineLabel">AM/PM:</label><select id="tfa_AMPM2" name="tfa_AMPM2" class=""><option value="">Please select...</option>
+<option value="tfa_AM2" class="">AM</option>
+<option value="tfa_PM2" class="">PM</option></select><span class="errMsg" id="tfa_AMPM2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Duration2" class="inlineLabel">Duration:</label><input type="text" id="tfa_Duration2" name="tfa_Duration2" value="" size="3" class="">hours<span class="errMsg" id="tfa_Duration2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Type2" class="inlineLabel">Type:</label><select id="tfa_Type2" name="tfa_Type2" class=""><option value="">Please select...</option>
+<option value="tfa_Meeting2" class="">Meeting</option>
+<option value="tfa_BreakoutSession2" class="">Breakout Session</option>
+<option value="tfa_MealFunction2" class="">Meal Function</option>
+<option value="tfa_ExcursionLeisure2" class="">Excursion/Leisure Activity</option>
+<option value="tfa_Other3" class="">Other</option></select><span class="errMsg" id="tfa_Type2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Description2" class="inlineLabel">Description:</label><textarea cols="30" rows="2" id="tfa_Description2" name="tfa_Description2" class=""></textarea><span class="errMsg" id="tfa_Description2-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofParticipants2" class="inlineLabel"># of Participants</label><input type="text" id="tfa_ofParticipants2" name="tfa_ofParticipants2" value="" size="3" class=""><span class="errMsg" id="tfa_ofParticipants2-E"></span>
+</div>
+<span class="duplicateSpan"><a id="tfa_7553849748235-wfDL" class="duplicateLink" href="#">Add Event</a></span>
+</div>
+</fieldset>
+<fieldset id="tfa_EntertainmentDin1" class="">
+<legend>Entertainment, Dining, and Leisure Activities</legend>
+<div class="oneField" id="tfa_7558355931954"><span class="oneChoice"><input type="radio" value="tfa_Makeasuggestionf2" class="" id="tfa_Makeasuggestionf2" name="tfa_7558355931954"><label for="tfa_Makeasuggestionf2" class="postField">Make a suggestion for activities based on my preferences</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Allowmetochoosef1" class="switch-m" id="tfa_Allowmetochoosef1" name="tfa_7558355931954"><label for="tfa_Allowmetochoosef1" class="postField">Allow me to choose from a list of all activities</label></span><br><span class="errMsg" id="tfa_7558355931954-E"></span>
+</div>
+<div class="offstate-m oneField" id="tfa_Choosefromthefol6">
+<label for="tfa_Choosefromthefol6" class="preField">Choose from the following live entertainment/speakers for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_AwardsShow2" class="" id="tfa_AwardsShow2" name="tfa_AwardsShow2"><label for="tfa_AwardsShow2" class="postField">Awards Show</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_AwardsBanquet1" class="" id="tfa_AwardsBanquet1" name="tfa_AwardsBanquet1"><label for="tfa_AwardsBanquet1" class="postField">Awards Banquet</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_VarietyShow3" class="" id="tfa_VarietyShow3" name="tfa_VarietyShow3"><label for="tfa_VarietyShow3" class="postField">Variety Show</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CelebrityComedia1" class="" id="tfa_CelebrityComedia1" name="tfa_CelebrityComedia1"><label for="tfa_CelebrityComedia1" class="postField">Celebrity Comedian</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CelebrityMusicia1" class="" id="tfa_CelebrityMusicia1" name="tfa_CelebrityMusicia1"><label for="tfa_CelebrityMusicia1" class="postField">Celebrity Musician</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_MotivationalSpea3" class="" id="tfa_MotivationalSpea3" name="tfa_MotivationalSpea3"><label for="tfa_MotivationalSpea3" class="postField">Motivational Speaker</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_PrivatePerforman1" class="" id="tfa_PrivatePerforman1" name="tfa_PrivatePerforman1"><label for="tfa_PrivatePerforman1" class="postField">Private Performance of a Branson Show</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_FireworksDisplay1" class="" id="tfa_FireworksDisplay1" name="tfa_FireworksDisplay1"><label for="tfa_FireworksDisplay1" class="postField">Fireworks Display</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_LiveDanceBand1" class="" id="tfa_LiveDanceBand1" name="tfa_LiveDanceBand1"><label for="tfa_LiveDanceBand1" class="postField">Live Dance Band</label></span><br><span class="errMsg" id="tfa_Choosefromthefol6-E"></span>
+</div>
+<div class="offstate-m oneField" id="tfa_Choosefromthefol7">
+<label for="tfa_Choosefromthefol7" class="preField">Choose from the following dining options for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PrivateBanquets2" class="" id="tfa_PrivateBanquets2" name="tfa_PrivateBanquets2"><label for="tfa_PrivateBanquets2" class="postField">Private Banquets</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_FineDiningRestau3" class="" id="tfa_FineDiningRestau3" name="tfa_FineDiningRestau3"><label for="tfa_FineDiningRestau3" class="postField">Fine Dining Restaurants</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorBarBQwith3" class="" id="tfa_OutdoorBarBQwith3" name="tfa_OutdoorBarBQwith3"><label for="tfa_OutdoorBarBQwith3" class="postField">Outdoor Bar-B-Q with Bluegrass Band</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorCrawfishB3" class="" id="tfa_OutdoorCrawfishB3" name="tfa_OutdoorCrawfishB3"><label for="tfa_OutdoorCrawfishB3" class="postField">Outdoor Crawfish Boil with Cajun Band</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OtherOutdoorDini3" class="" id="tfa_OtherOutdoorDini3" name="tfa_OtherOutdoorDini3"><label for="tfa_OtherOutdoorDini3" class="postField">Other Outdoor Dining</label></span><br><span class="errMsg" id="tfa_Choosefromthefol7-E"></span>
+</div>
+<div class="offstate-m oneField" id="tfa_Choosefromthefol8">
+<label for="tfa_Choosefromthefol8" class="preField">Choose from the following excursions for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_LakeCruises2" class="" id="tfa_LakeCruises2" name="tfa_LakeCruises2"><label for="tfa_LakeCruises2" class="postField">Lake Cruises</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Watersports3" class="" id="tfa_Watersports3" name="tfa_Watersports3"><label for="tfa_Watersports3" class="postField">Watersports</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Parasailing3" class="" id="tfa_Parasailing3" name="tfa_Parasailing3"><label for="tfa_Parasailing3" class="postField">Parasailing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedFishing3" class="" id="tfa_GuidedFishing3" name="tfa_GuidedFishing3"><label for="tfa_GuidedFishing3" class="postField">Guided Fishing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_ThemeParkWaterPa1" class="" id="tfa_ThemeParkWaterPa1" name="tfa_ThemeParkWaterPa1"><label for="tfa_ThemeParkWaterPa1" class="postField">Theme Park/Water Park Outing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CasinoNight3" class="" id="tfa_CasinoNight3" name="tfa_CasinoNight3"><label for="tfa_CasinoNight3" class="postField">Casino Night</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_PokerTournament3" class="" id="tfa_PokerTournament3" name="tfa_PokerTournament3"><label for="tfa_PokerTournament3" class="postField">Poker Tournament</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_SpaServices3" class="" id="tfa_SpaServices3" name="tfa_SpaServices3"><label for="tfa_SpaServices3" class="postField">Spa Services</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedShopping3" class="" id="tfa_GuidedShopping3" name="tfa_GuidedShopping3"><label for="tfa_GuidedShopping3" class="postField">Guided Shopping</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_WineTasting3" class="" id="tfa_WineTasting3" name="tfa_WineTasting3"><label for="tfa_WineTasting3" class="postField">Wine Tasting</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CulinaryWorkshop3" class="" id="tfa_CulinaryWorkshop3" name="tfa_CulinaryWorkshop3"><label for="tfa_CulinaryWorkshop3" class="postField">Culinary Workshop</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Golf3" class="" id="tfa_Golf3" name="tfa_Golf3"><label for="tfa_Golf3" class="postField">Golf</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CanoeAdventure3" class="" id="tfa_CanoeAdventure3" name="tfa_CanoeAdventure3"><label for="tfa_CanoeAdventure3" class="postField">Canoe Adventure</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HorsebackRiding3" class="" id="tfa_HorsebackRiding3" name="tfa_HorsebackRiding3"><label for="tfa_HorsebackRiding3" class="postField">Horseback Riding</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TeamBuildingExer3" class="" id="tfa_TeamBuildingExer3" name="tfa_TeamBuildingExer3"><label for="tfa_TeamBuildingExer3" class="postField">Team Building Exercises</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HelicopterTours3" class="" id="tfa_HelicopterTours3" name="tfa_HelicopterTours3"><label for="tfa_HelicopterTours3" class="postField">Helicopter Tours</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TicketstoaBranso3" class="" id="tfa_TicketstoaBranso3" name="tfa_TicketstoaBranso3"><label for="tfa_TicketstoaBranso3" class="postField">Tickets to a Branson Show</label></span><br><span class="errMsg" id="tfa_Choosefromthefol8-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</div>
+<div class="wfPage offstate-a" id="wfPgIndex-6">
+<h3>Event Details (Other)</h3>
+<div class="oneField" id="tfa_7561590188889"><span class="oneChoice"><input type="checkbox" value="tfa_Ihaveaneventplan3" class="switch-n" id="tfa_Ihaveaneventplan3" name="tfa_Ihaveaneventplan3"><label for="tfa_Ihaveaneventplan3" class="postField">I have an event plan I would like to upload.</label></span><br><span class="errMsg" id="tfa_7561590188889-E"></span>
+</div>
+<div class="offstate-n oneField">
+<label for="tfa_Clickbrowsetoupl2" class="preField">Click browse to upload your event plan. After upload, please scan the remaining questionnaire and complete any sections not addressed in your uploaded file.</label><input type="file" id="tfa_Clickbrowsetoupl2" name="tfa_Clickbrowsetoupl2" value="" size="40" class=""><br><span class="errMsg" id="tfa_Clickbrowsetoupl2-E"></span>
+</div>
+<fieldset id="tfa_Preferences3" class="">
+<legend>Preferences</legend>
+<div id="tfa_Inordertohelpusc3" class="inlineSection"><label class="preField">In order to help us create an event plan that is best suited for your group, please answer the following 3 questions:</label></div>
+<div class="oneField">
+<label for="tfa_1Thepurposeofthi3" class="preField">1. The purpose of this event is:</label><select id="tfa_1Thepurposeofthi3" name="tfa_1Thepurposeofthi3" class=""><option value="">Please select...</option>
+<option value="tfa_Allbusiness3" class="">All business</option>
+<option value="tfa_Acombinationofbu2" class="">A combination of business and leisure</option>
+<option value="tfa_Somebusinessbutm2" class="">Some business, but mostly leisure</option>
+<option value="tfa_Allleisure3" class="">All leisure</option></select><br><span class="errMsg" id="tfa_1Thepurposeofthi3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_2Ourgroupcanbest3" class="preField">2. Our group can best be described as:</label><select id="tfa_2Ourgroupcanbest3" name="tfa_2Ourgroupcanbest3" class=""><option value="">Please select...</option>
+<option value="tfa_Sophisticated3" class="">Sophisticated</option>
+<option value="tfa_Funloving3" class="">Fun-loving</option>
+<option value="tfa_Acombinationofth2" class="">A combination of the two</option></select><br><span class="errMsg" id="tfa_2Ourgroupcanbest3-E"></span>
+</div>
+<div class="oneField" id="tfa_3Ourgroupenjoysa3">
+<label for="tfa_3Ourgroupenjoysa3" class="preField">3. Our group enjoys activities that are: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PhysicallyDemand4" class="" id="tfa_PhysicallyDemand4" name="tfa_PhysicallyDemand4"><label for="tfa_PhysicallyDemand4" class="postField">Physically Demanding</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Relaxing2" class="" id="tfa_Relaxing2" name="tfa_Relaxing2"><label for="tfa_Relaxing2" class="postField">Relaxing</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Indoors2" class="" id="tfa_Indoors2" name="tfa_Indoors2"><label for="tfa_Indoors2" class="postField">Indoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Outdoors2" class="" id="tfa_Outdoors2" name="tfa_Outdoors2"><label for="tfa_Outdoors2" class="postField">Outdoors</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Structured3" class="" id="tfa_Structured3" name="tfa_Structured3"><label for="tfa_Structured3" class="postField">Structured</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Selfguided3" class="" id="tfa_Selfguided3" name="tfa_Selfguided3"><label for="tfa_Selfguided3" class="postField">Self-guided</label></span><br><span class="errMsg" id="tfa_3Ourgroupenjoysa3-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Attendees2" class="">
+<legend>Attendees</legend>
+<div id="tfa_Estimatednumbero3" class="inlineSection">
+<label class="preField">Estimated number of attendees:</label><div class="oneField"><input type="text" id="tfa_7567028325097" name="tfa_7567028325097" value="" size="5" class="validate-integer calc-businessattendees"> business associates and<span class="errMsg" id="tfa_7567028325097-E"></span>
+</div>
+<div class="oneField"><input type="text" id="tfa_7567178749621" name="tfa_7567178749621" value="" size="5" class="validate-integer calc-spouseattendees"> spouses/guests<span class="errMsg" id="tfa_7567178749621-E"></span>
+</div>
+</div>
+<div class="oneField labelsRightAligned">for a total of: <input type="text" id="tfa_7567458540050" name="tfa_7567458540050" value="" size="5" class="validate-integer formula=businessattendees+spouseattendees"> attendees<br><span class="errMsg" id="tfa_7567458540050-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_Lodging4" class="">
+<legend>Lodging</legend>
+<div class="oneField" id="tfa_Wereinterestedin3">
+<label for="tfa_Wereinterestedin3" class="preField">We're interested in hotels with a rating of: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_3Stars3" class="" id="tfa_3Stars3" name="tfa_3Stars3"><label for="tfa_3Stars3" class="postField">3 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_4Stars3" class="" id="tfa_4Stars3" name="tfa_4Stars3"><label for="tfa_4Stars3" class="postField">4 Stars</label></span><span class="oneChoice"><input type="checkbox" value="tfa_5Stars3" class="" id="tfa_5Stars3" name="tfa_5Stars3"><label for="tfa_5Stars3" class="postField">5 Stars</label></span><br><span class="errMsg" id="tfa_Wereinterestedin3-E"></span>
+</div>
+<fieldset id="tfa_NumberofRoomsNee3" class="">
+<legend>Number of Rooms Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_Week15" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun11" name="tfa_Sun11" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_Sun11-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon11" name="tfa_Mon11" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_Mon11-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue11" name="tfa_Tue11" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tue11-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed11" name="tfa_Wed11" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wed11-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur11" name="tfa_Thur11" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thur11-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri11" name="tfa_Fri11" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Fri11-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat11" name="tfa_Sat11" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Sat11-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week26" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun12" name="tfa_Sun12" value="" size="1" class="calc-Sun"><span class="errMsg" id="tfa_Sun12-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon12" name="tfa_Mon12" value="" size="1" class="calc-Mon"><span class="errMsg" id="tfa_Mon12-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue12" name="tfa_Tue12" value="" size="1" class="calc-Tue"><span class="errMsg" id="tfa_Tue12-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed12" name="tfa_Wed12" value="" size="1" class="calc-Wed"><span class="errMsg" id="tfa_Wed12-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur12" name="tfa_Thur12" value="" size="1" class="calc-Thu"><span class="errMsg" id="tfa_Thur12-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri12" name="tfa_Fri12" value="" size="1" class="calc-Fri"><span class="errMsg" id="tfa_Fri12-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat12" name="tfa_Sat12" value="" size="1" class="calc-Sat"><span class="errMsg" id="tfa_Sat12-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalRoomNights3" class="inlineSection">
+<label class="preField">Total Room Nights:</label><div class="oneField"><input type="text" id="tfa_7580147773048" name="tfa_7580147773048" value="" size="4" class="validate-integer formula=Sun+Mon+Tue+Wed+Thu+Fri+Sat"><span class="errMsg" id="tfa_7580147773048-E"></span>
+</div>
+</div>
+</fieldset>
+<fieldset id="tfa_NumberofSuitesNe3" class="">
+<legend>Number of Suites Needed</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Sun 
+			</th>
+<th>Mon 
+			</th>
+<th>Tue 
+			</th>
+<th>Wed 
+			</th>
+<th>Thur 
+			</th>
+<th>Fri 
+			</th>
+<th>Sat 
+			</th>
+</tr>
+<tr id="tfa_Week16" class="alternate-0">
+<th>Week 1 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun13" name="tfa_Sun13" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun13-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon13" name="tfa_Mon13" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon13-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue13" name="tfa_Tue13" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue13-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed13" name="tfa_Wed13" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed13-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur13" name="tfa_Thur13" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur13-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri13" name="tfa_Fri13" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri13-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat13" name="tfa_Sat13" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat13-E"></span>
+</div></td>
+</tr>
+<tr id="tfa_Week27" class="alternate-1">
+<th>Week 2 </th>
+<td><div class="oneField"><input type="text" id="tfa_Sun14" name="tfa_Sun14" value="" size="1" class="calc-Suns"><span class="errMsg" id="tfa_Sun14-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Mon14" name="tfa_Mon14" value="" size="1" class="calc-Mons"><span class="errMsg" id="tfa_Mon14-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Tue14" name="tfa_Tue14" value="" size="1" class="calc-Tues"><span class="errMsg" id="tfa_Tue14-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Wed14" name="tfa_Wed14" value="" size="1" class="calc-Weds"><span class="errMsg" id="tfa_Wed14-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Thur14" name="tfa_Thur14" value="" size="1" class="calc-Thus"><span class="errMsg" id="tfa_Thur14-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Fri14" name="tfa_Fri14" value="" size="1" class="calc-Fris"><span class="errMsg" id="tfa_Fri14-E"></span>
+</div></td>
+<td><div class="oneField"><input type="text" id="tfa_Sat14" name="tfa_Sat14" value="" size="1" class="calc-Sats"><span class="errMsg" id="tfa_Sat14-E"></span>
+</div></td>
+</tr>
+</table>
+<div id="tfa_TotalSuiteNights3" class="inlineSection">
+<label class="preField">Total Suite Nights:</label><div class="oneField"><input type="text" id="tfa_7593876769547" name="tfa_7593876769547" value="" size="4" class="validate-integer formula=Suns+Mons+Tues+Weds+Thus+Fris+Sats"><span class="errMsg" id="tfa_7593876769547-E"></span>
+</div>
+</div>
+</fieldset>
+</fieldset>
+<fieldset id="tfa_Itinerary3" class="">
+<legend>Itinerary</legend>
+<div class="oneField" id="tfa_7594327702709"><span class="oneChoice"><input type="radio" value="tfa_Myitineraryisinc3" class="" id="tfa_Myitineraryisinc3" name="tfa_7594327702709"><label for="tfa_Myitineraryisinc3" class="postField">My itinerary is included in my uploaded file</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Iwouldliketocrea3" class="switch-o" id="tfa_Iwouldliketocrea3" name="tfa_7594327702709"><label for="tfa_Iwouldliketocrea3" class="postField">I would like to create an itinerary</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Pleasesuggestani3" class="" id="tfa_Pleasesuggestani3" name="tfa_7594327702709"><label for="tfa_Pleasesuggestani3" class="postField">Please suggest an itinerary for me</label></span><br><span class="errMsg" id="tfa_7594327702709-E"></span>
+</div>
+<fieldset id="tfa_BuildYourItinera3" class="offstate-o">
+<legend>Build Your Itinerary</legend>
+<div id="tfa_7595719443962" class="repeat inlineSection">
+<div class="oneField">
+<label for="tfa_Day3" class="inlineLabel">Day:</label><select id="tfa_Day3" name="tfa_Day3" class=""><option value="">Please select...</option>
+<option value="tfa_Sunday4" class="">Sunday</option>
+<option value="tfa_Monday4" class="">Monday</option>
+<option value="tfa_Tuesday5" class="">Tuesday</option>
+<option value="tfa_Wednesday5" class="">Wednesday</option>
+<option value="tfa_Thursday5" class="">Thursday</option>
+<option value="tfa_Friday5" class="">Friday</option>
+<option value="tfa_Saturday5" class="">Saturday</option></select><span class="errMsg" id="tfa_Day3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Time3" class="inlineLabel">Time:</label><input type="text" id="tfa_Time3" name="tfa_Time3" value="HH:MM" size="5" class=""><span class="errMsg" id="tfa_Time3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_AMPM3" class="inlineLabel">AM/PM:</label><select id="tfa_AMPM3" name="tfa_AMPM3" class=""><option value="">Please select...</option>
+<option value="tfa_AM3" class="">AM</option>
+<option value="tfa_PM3" class="">PM</option></select><span class="errMsg" id="tfa_AMPM3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Duration3" class="inlineLabel">Duration:</label><input type="text" id="tfa_Duration3" name="tfa_Duration3" value="" size="3" class="">hours<span class="errMsg" id="tfa_Duration3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Type3" class="inlineLabel">Type:</label><select id="tfa_Type3" name="tfa_Type3" class=""><option value="">Please select...</option>
+<option value="tfa_Meeting3" class="">Meeting</option>
+<option value="tfa_BreakoutSession3" class="">Breakout Session</option>
+<option value="tfa_MealFunction3" class="">Meal Function</option>
+<option value="tfa_ExcursionLeisure3" class="">Excursion/Leisure Activity</option>
+<option value="tfa_Other4" class="">Other</option></select><span class="errMsg" id="tfa_Type3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_Description3" class="inlineLabel">Description:</label><textarea cols="30" rows="2" id="tfa_Description3" name="tfa_Description3" class=""></textarea><span class="errMsg" id="tfa_Description3-E"></span>
+</div>
+<div class="oneField">
+<label for="tfa_ofParticipants3" class="inlineLabel"># of Participants</label><input type="text" id="tfa_ofParticipants3" name="tfa_ofParticipants3" value="" size="3" class=""><span class="errMsg" id="tfa_ofParticipants3-E"></span>
+</div>
+<span class="duplicateSpan"><a id="tfa_7595719443962-wfDL" class="duplicateLink" href="#">Add Event</a></span>
+</div>
+</fieldset>
+<fieldset id="tfa_EntertainmentDin2" class="">
+<legend>Entertainment, Dining, and Leisure Activities</legend>
+<div class="oneField" id="tfa_7602218531536"><span class="oneChoice"><input type="radio" value="tfa_Makeasuggestionf3" class="" id="tfa_Makeasuggestionf3" name="tfa_7602218531536"><label for="tfa_Makeasuggestionf3" class="postField">Make a suggestion for activities based on my preferences</label></span><br><span class="oneChoice"><input type="radio" value="tfa_Allowmetochoosef2" class="switch-p" id="tfa_Allowmetochoosef2" name="tfa_7602218531536"><label for="tfa_Allowmetochoosef2" class="postField">Allow me to choose from a list of all activities</label></span><br><span class="errMsg" id="tfa_7602218531536-E"></span>
+</div>
+<div class="offstate-p oneField" id="tfa_Choosefromthefol9">
+<label for="tfa_Choosefromthefol9" class="preField">Choose from the following live entertainment/speakers for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_MotivationalSpea4" class="" id="tfa_MotivationalSpea4" name="tfa_MotivationalSpea4"><label for="tfa_MotivationalSpea4" class="postField">Motivational Speaker
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_ProfessionalWork2" class="" id="tfa_ProfessionalWork2" name="tfa_ProfessionalWork2"><label for="tfa_ProfessionalWork2" class="postField">Professional Workshops
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_LiveMusicians2" class="" id="tfa_LiveMusicians2" name="tfa_LiveMusicians2"><label for="tfa_LiveMusicians2" class="postField">Live Musicians
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_VarietyShow4" class="" id="tfa_VarietyShow4" name="tfa_VarietyShow4"><label for="tfa_VarietyShow4" class="postField">Variety Show
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_StandupComedian2" class="" id="tfa_StandupComedian2" name="tfa_StandupComedian2"><label for="tfa_StandupComedian2" class="postField">Stand-up Comedian</label></span><br><span class="errMsg" id="tfa_Choosefromthefol9-E"></span>
+</div>
+<div class="offstate-p oneField" id="tfa_Choosefromthefol10">
+<label for="tfa_Choosefromthefol10" class="preField">Choose from the following dining options for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_PrivateBanquet2" class="" id="tfa_PrivateBanquet2" name="tfa_PrivateBanquet2"><label for="tfa_PrivateBanquet2" class="postField">Private Banquet
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_FineDiningRestau4" class="" id="tfa_FineDiningRestau4" name="tfa_FineDiningRestau4"><label for="tfa_FineDiningRestau4" class="postField">Fine Dining Restaurants
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_DinnerandLakeCru2" class="" id="tfa_DinnerandLakeCru2" name="tfa_DinnerandLakeCru2"><label for="tfa_DinnerandLakeCru2" class="postField">Dinner and Lake Cruise
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorBarBQwith4" class="" id="tfa_OutdoorBarBQwith4" name="tfa_OutdoorBarBQwith4"><label for="tfa_OutdoorBarBQwith4" class="postField">Outdoor Bar-B-Q with Live Bluegrass Band
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OutdoorCrawfishB4" class="" id="tfa_OutdoorCrawfishB4" name="tfa_OutdoorCrawfishB4"><label for="tfa_OutdoorCrawfishB4" class="postField">Outdoor Crawfish Boil with Live Cajun Band
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_OtherOutdoorDini4" class="" id="tfa_OtherOutdoorDini4" name="tfa_OtherOutdoorDini4"><label for="tfa_OtherOutdoorDini4" class="postField">Other Outdoor Dining</label></span><br><span class="errMsg" id="tfa_Choosefromthefol10-E"></span>
+</div>
+<div class="offstate-p oneField" id="tfa_Choosefromthefol11">
+<label for="tfa_Choosefromthefol11" class="preField">Choose from the following excursions for more information: (check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_LakeCruise2" class="" id="tfa_LakeCruise2" name="tfa_LakeCruise2"><label for="tfa_LakeCruise2" class="postField">Lake Cruise
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CasinoNight4" class="" id="tfa_CasinoNight4" name="tfa_CasinoNight4"><label for="tfa_CasinoNight4" class="postField">Casino Night
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_PokerTournament4" class="" id="tfa_PokerTournament4" name="tfa_PokerTournament4"><label for="tfa_PokerTournament4" class="postField">Poker Tournament
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Watersports4" class="" id="tfa_Watersports4" name="tfa_Watersports4"><label for="tfa_Watersports4" class="postField">Watersports
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Parasailing4" class="" id="tfa_Parasailing4" name="tfa_Parasailing4"><label for="tfa_Parasailing4" class="postField">Parasailing
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedFishing4" class="" id="tfa_GuidedFishing4" name="tfa_GuidedFishing4"><label for="tfa_GuidedFishing4" class="postField">Guided Fishing
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_SpaServices4" class="" id="tfa_SpaServices4" name="tfa_SpaServices4"><label for="tfa_SpaServices4" class="postField">Spa Services
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_GuidedShopping4" class="" id="tfa_GuidedShopping4" name="tfa_GuidedShopping4"><label for="tfa_GuidedShopping4" class="postField">Guided Shopping
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CulinaryWorkshop4" class="" id="tfa_CulinaryWorkshop4" name="tfa_CulinaryWorkshop4"><label for="tfa_CulinaryWorkshop4" class="postField">Culinary Workshop
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_WineTasting4" class="" id="tfa_WineTasting4" name="tfa_WineTasting4"><label for="tfa_WineTasting4" class="postField">Wine Tasting
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Golf4" class="" id="tfa_Golf4" name="tfa_Golf4"><label for="tfa_Golf4" class="postField">Golf
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_CanoeAdventure4" class="" id="tfa_CanoeAdventure4" name="tfa_CanoeAdventure4"><label for="tfa_CanoeAdventure4" class="postField">Canoe Adventure
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HorsebackRiding4" class="" id="tfa_HorsebackRiding4" name="tfa_HorsebackRiding4"><label for="tfa_HorsebackRiding4" class="postField">Horseback Riding
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TeamBuildingExer4" class="" id="tfa_TeamBuildingExer4" name="tfa_TeamBuildingExer4"><label for="tfa_TeamBuildingExer4" class="postField">Team Building Exercises
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_HelicopterTours4" class="" id="tfa_HelicopterTours4" name="tfa_HelicopterTours4"><label for="tfa_HelicopterTours4" class="postField">Helicopter Tours 
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_TicketstoaBranso4" class="" id="tfa_TicketstoaBranso4" name="tfa_TicketstoaBranso4"><label for="tfa_TicketstoaBranso4" class="postField">Tickets to a Branson Show</label></span><br><span class="errMsg" id="tfa_Choosefromthefol11-E"></span>
+</div>
+</fieldset>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-7">
+<h3>Services</h3>
+<fieldset id="tfa_Transportation1" class="">
+<legend>Transportation</legend>
+<div class="oneField" id="tfa_Selectanyofthefo">
+<label for="tfa_Selectanyofthefo" class="preField">Select any of the following for more information: (Check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_Travelagencyserv" class="" id="tfa_Travelagencyserv" name="tfa_Travelagencyserv"><label for="tfa_Travelagencyserv" class="postField">Travel agency services for individual flights</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_8103349524459" class="" id="tfa_8103349524459" name="tfa_8103349524459"><label for="tfa_8103349524459" class="postField">Group travel via plane</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Grouptravelviaex" class="" id="tfa_Grouptravelviaex" name="tfa_Grouptravelviaex"><label for="tfa_Grouptravelviaex" class="postField">Group travel via executive motorcoach</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_810334952445900tmp-0227784142311" class="" id="tfa_810334952445900tmp-0227784142311" name="tfa_810334952445900tmp-0227784142311"><label for="tfa_810334952445900tmp-0227784142311" class="postField">Airport shuttle/car service</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_LimousineServic" class="" id="tfa_LimousineServic" name="tfa_LimousineServic"><label for="tfa_LimousineServic" class="postField">Limousine/car service during event</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Shuttleservicedu" class="" id="tfa_Shuttleservicedu" name="tfa_Shuttleservicedu"><label for="tfa_Shuttleservicedu" class="postField">Shuttle service during event</label></span><br><span class="errMsg" id="tfa_Selectanyofthefo-E"></span>
+</div>
+</fieldset>
+<fieldset id="tfa_OtherServices" class="">
+<legend>Other Services</legend>
+<div class="oneField" id="tfa_Selectanyofthefo1">
+<label for="tfa_Selectanyofthefo1" class="preField">Select any of the following for more information: (Check all that apply)</label><span class="oneChoice"><input type="checkbox" value="tfa_Videoproductionc" class="" id="tfa_Videoproductionc" name="tfa_Videoproductionc"><label for="tfa_Videoproductionc" class="postField">Video production crew
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Photographer" class="" id="tfa_Photographer" name="tfa_Photographer"><label for="tfa_Photographer" class="postField">Photographer
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Preeventregistra" class="" id="tfa_Preeventregistra" name="tfa_Preeventregistra"><label for="tfa_Preeventregistra" class="postField">Pre-event registration
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Onsiteregistrati" class="" id="tfa_Onsiteregistrati" name="tfa_Onsiteregistrati"><label for="tfa_Onsiteregistrati" class="postField">On-site registration
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_Hospitalitysuite" class="" id="tfa_Hospitalitysuite" name="tfa_Hospitalitysuite"><label for="tfa_Hospitalitysuite" class="postField">Hospitality suite
+</label></span><br><span class="oneChoice"><input type="checkbox" value="tfa_24Houronsiteconc" class="" id="tfa_24Houronsiteconc" name="tfa_24Houronsiteconc"><label for="tfa_24Houronsiteconc" class="postField">24-Hour on-site concierge</label></span><br><span class="errMsg" id="tfa_Selectanyofthefo1-E"></span>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-8"><div class="oneField">
+<label for="tfa_Thankyouforcompl" class="preField">Thank you for completing our online RFP. Please share any additional comments that might help us better serve you. Once complete, click the submit button below.</label><textarea cols="40" id="tfa_Thankyouforcompl" name="tfa_Thankyouforcompl" class=""></textarea><br><span class="errMsg" id="tfa_Thankyouforcompl-E"></span>
+</div></div>
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="button" class="secondaryAction" onclick="history.go(-1)" value="reset"><input type="hidden" value="25034" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="0e924a0982cf81096fa37bb355a4a872" name="tfa_dbControl" id="tfa_dbControl">
+</div>
+</form>
+</div>
+
+	
+<p class="supportInfo"><a href="http://app.formassembly.com/forms/help/25034" target="new">Need assistance with this form?</a></p>
+</body>
+</html>
