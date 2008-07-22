@@ -1,0 +1,633 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>wForms 3.0 - Calculation Behavior Test Suite</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+   
+<script type="text/javascript" src="../lib/base2-p.js"></script>
+<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+<script type="text/javascript" src="../wforms_core.js"></script>
+<script type="text/javascript" src="../wforms_calculation.js"></script>
+<script type="text/javascript">
+//more compatability issues with IE7
+//http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:forEach
+if (!Array.prototype.filter)
+{
+  Array.prototype.filter = function(fun /*, thisp*/)
+  {
+    var len = this.length;
+    if (typeof fun != "function")
+      throw new TypeError();
+
+    var res = new Array();
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++)
+    {
+      if (i in this)
+      {
+        var val = this[i]; // in case fun mutates this
+        if (fun.call(thisp, val, i, this))
+          res.push(val);
+      }
+    }
+    return res;
+  };
+}
+	
+if (!Array.prototype.forEach)
+{
+  Array.prototype.forEach = function(fun /*, thisp*/)
+  {
+    var len = this.length;
+    if (typeof fun != "function")
+      throw new TypeError();
+
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++)
+    {
+      if (i in this)
+        fun.call(thisp, this[i], i, this);
+    }
+  };
+}
+//
+
+/**
+ * Factory Method.
+ * Applies the behavior to the given HTML element by setting the appropriate event handlers.
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
+ */	
+wFORMS.behaviors.calculation.applyTo = function(f) {
+
+	var b = new wFORMS.behaviors.calculation.instance(f);
+	
+	//07/22/08
+	var classVars = Array();
+	f.querySelectorAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+"\"]").forEach(
+		function (variable) { classVars.push(variable);}
+	);
+	//console.log(classVars);
+	
+	f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR).forEach(
+		function(elem){
+			// extract formula
+			var formula = elem.className.substr(elem.className.indexOf('formula=')+8).split(' ')[0];
+
+			var variables = formula.split(/[^a-zA-Z]+/g);
+			b.varFields = [];
+			
+			// process variables, add onchange/onblur event to update total.
+			for (var i = 0; i < variables.length; i++) {
+				if(variables[i]!='') {
+				//	f.querySelectorAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+"\"]").forEach(
+				//added 07/22/08
+					classVars.filter(function(elem,index,array){ 
+					if(elem.className == (wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i])){return true;}
+					}).forEach(
+						function(variable){
+							// make sure the variable is an exact match.
+							var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+' ')!=-1);
+							if(!exactMatch) return;
+							
+							switch(variable.tagName + ":" + variable.getAttribute('type') ) {
+								case 'INPUT:':			// (type attribute empty)
+								case 'INPUT:null': 		// (type attribute missing)
+								case 'INPUT:text':
+								case 'INPUT:hidden':
+								case 'INPUT:password':
+								case 'TEXTAREA:null':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('blur', function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;
+								case 'INPUT:radio':		 						
+								case 'INPUT:checkbox':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('click', function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;			
+								case 'SELECT:null':
+									if(!variable._wforms_calc_handled) {
+										variable.addEventListener('change',  function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									}
+									break;		
+								default:
+									// error: variable refers to a non supported element.
+									return;
+									break;
+							}
+							b.varFields.push({name: variables[i], field: variable});						
+						}
+					);			
+				}		
+			}
+			var calc = { field: elem, formula: formula, variables: b.varFields };		
+			//console.log(calc);
+			b.calculations.push(calc);	
+			b.compute(calc);
+		}
+	);
+	
+	b.onApply();
+	
+	return b;
+}
+</script>
+
+<script type="text/javascript">
+
+	wFORMS.behaviors.calculation.instance.prototype.onApply = function() {
+		bInstance = this;
+		setUpPageStatus = 'complete';
+	} 
+  	
+	function setUpPage() {}
+  
+  	function setUp() {
+		document.getElementById('testInputField').value = '10';	
+		document.getElementById('testTextarea').value = '40';	
+		document.getElementById('totalAB').className = 'formula=A+B';
+		wFORMS.behaviors.calculation.applyTo(document.getElementById('testForm'));	
+	}
+	
+	function tearDown() {}
+	
+	function testApplyTo() {
+	
+		assertNotUndefined('Instance of behavior should be available.', bInstance);
+		assertNotUndefined('Instance target should be set',bInstance.target);
+		assertEquals('Instance target should be the form','testForm',bInstance.target.id);
+		assertEquals('Found calculations',12, bInstance.calculations.length);
+		
+		// Each calculation should have a field, formula and variables 
+		for(var i=0; i<bInstance.calculations.length;i++) {	
+			var c = bInstance.calculations[i];
+			assertNotUndefined(c.field);
+			assertEquals('string', typeof c.formula);
+			assertEquals('object', typeof c.variables);
+		}
+	}
+	
+	function testTextInput() {
+		// Check calculations with field default values
+		assertEquals('10', document.getElementById('totalA').value);
+		
+		// Change text input value:
+		document.getElementById('testInputField').value = '100';
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testInputField'));
+		
+		// Test
+		assertEquals('100', document.getElementById('totalA').value);
+	}
+	
+	function testTextarea() {
+		// Check calculations with field default values
+		assertEquals('40', document.getElementById('totalB').value);
+		
+		// Change text input value:
+		document.getElementById('testTextarea').value = '400';
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testTextarea'));
+		
+		// Test
+		assertEquals('400', document.getElementById('totalB').value);
+	}
+	
+	function testSelect() {
+		// ---- Calculation value stored in option value attribute ----
+		
+		// Check calculations with field default values
+		assertEquals('16', document.getElementById('totalC').value);
+		
+		// Change select multiple value 
+		document.getElementById('testSelectField1').options[2].selected = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testSelectField1'));
+		
+		// Check calculations with field default values
+		assertEquals('17', document.getElementById('totalC').value);
+		
+		// ---- Calculation value stored in option class attribute ---- 
+		// Change select multiple value 
+		document.getElementById('testSelectField2').options[2].selected = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testSelectField1'));
+		
+		// Check calculations with field default values
+		assertEquals('27', document.getElementById('totalC').value);
+		
+	}
+	
+	function testSelectMultiple() {
+		// ---- Calculation value stored in option value attribute ----
+		
+		// Check calculations with field default values
+		assertEquals('0', document.getElementById('totalD').value);
+		
+		// Change select multiple value 
+		document.getElementById('testSelectMultiple1').options[0].selected = true;
+		document.getElementById('testSelectMultiple1').options[1].selected = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testSelectMultiple1'));
+		
+		// Test
+		assertEquals('12', document.getElementById('totalD').value);
+
+		// ---- Calculation value stored in option class attribute ---- 
+		
+		// Change select multiple value 
+		document.getElementById('testSelectMultiple2').options[0].selected = true;
+		document.getElementById('testSelectMultiple2').options[2].selected = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testSelectMultiple2'));
+		
+		// Test
+		assertEquals('29', document.getElementById('totalD').value);
+	}
+	
+	function testRadio() {
+		// ---- Calculation value stored in input value attribute ----
+		
+		// Check calculations with field default values
+		assertEquals('0', document.getElementById('totalE').value);
+		
+		// Change radio value 
+		document.getElementById('radio11').checked = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('radio11'));
+		
+		// Test
+		assertEquals('14', document.getElementById('totalE').value);
+		
+		// ---- Calculation value stored in option class attribute ---- 
+		
+		// Change radio value 
+		document.getElementById('radio21').checked = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('radio21'));
+		
+		// Test
+		assertEquals('118', document.getElementById('totalE').value);
+		
+	}
+	
+	function testCheckbox() {
+		// ---- Calculation value stored in input value attribute ----
+		
+		// Check calculations with field default values
+		assertEquals('0', document.getElementById('totalF').value);
+		
+		// Change radio value 
+		document.getElementById('checkbox11').checked = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('checkbox11'));
+		
+		// Test
+		assertEquals('2', document.getElementById('totalF').value);
+		
+		// ---- Calculation value stored in option class attribute ---- 
+	
+		// Change radio value 
+		document.getElementById('checkbox21').checked = true;
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('checkbox21'));
+		
+		// Test
+		assertEquals('11.5', document.getElementById('totalF').value);
+	}
+	
+	function testSimpleFormulas() {
+		var f = document.getElementById('totalAB');
+		var form = document.getElementById('testForm');
+		// Check calculations with field default values (A+B)
+		// A  = 10
+		// B  = 40
+		// AB = 99 (tests variable name collision)
+		assertEquals('50', f.value);
+		
+		// Change formulas		
+		f.className = 'formula=B*A'; 
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('400', f.value);
+		
+		f.className = 'formula=B-A'; 
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('30', f.value);
+		
+		f.className = 'formula=B/A'; 
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('4', f.value);
+		
+		f.className = 'formula=A%7'; 
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('3', f.value);
+		
+		f.className = 'formula=B+2';
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('42', f.value); 
+
+		f.className = 'formula=(B+A+2)';
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('52', f.value); 
+		
+		f.className = 'formula=(B/A)/2';
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('2', f.value);
+
+		f.className = 'formula=AB+A';
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('109', f.value);
+		
+		f.className = 'formula=A+AB+A';
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('119', f.value);
+		
+		f.className = 'formula=AB/AB';
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('1', f.value);
+		
+		f.className = 'formula=A+A';
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('20', f.value);
+	}
+	
+	function testFloatingFormulas() {
+		var f = document.getElementById('totalAB');
+		var form = document.getElementById('testForm');
+		// Check calculations with field default values (A+B)
+		// A  = 10
+		// B  = 40
+		// AB = 99 (tests variable name collision)
+		assertEquals('50', f.value);
+		
+		// Change formulas		
+		f.className = 'formula=B*2.5'; 
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('100', f.value);
+		
+		// Change formulas		
+		f.className = 'formula=B*2.5'; 
+		wFORMS.behaviors.calculation.applyTo(form);
+		assertEquals('100', f.value);
+		
+		// Change field value
+		document.getElementById('testTextarea').value = '4.5';
+		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testTextarea'));
+		
+		// Test
+		assertEquals('11.25', document.getElementById('totalAB').value);
+	}
+
+	function testStringFormulas(){
+		// Check calculations with field default values
+		assertEquals('address', document.getElementById('totalZ').value);
+		assertEquals('zipcode', document.getElementById('totalY').value);
+		
+		// Test
+		assertEquals("address-zipcode", document.getElementById('totalX').value);	
+	}
+	
+	function testSubTotals() {
+		document.getElementById('testInputField').value = '100';	
+		document.getElementById('testTextarea').value = '50';		
+	
+		// Update calculations
+		bInstance.run(null,document.getElementById('testInputField'));
+		bInstance.run(null,document.getElementById('testTextarea'));
+	
+		// Test
+		assertEquals('150', document.getElementById('totalG').value);
+		assertEquals('15', document.getElementById('totalH').value);
+	}
+
+</script>
+
+
+</head>
+<body>
+
+<form id="testForm">
+		
+	<fieldset id="calculationFieldset" style="width:45%;float:left"><legend>Calculation Examples</legend>
+			<div class="oneField">
+				<label for="testInputField" class="preField">Text input (A):</label> 
+				<input id="testInputField" type="" value="10" class="calc-A" />
+				<input id="testInputField" type="" value="99" class="calc-AB" />
+			</div>
+			<div class="oneField">
+				<label for="testTextarea" class="preField">Textarea (B):</label>
+				<textarea id="testTextarea"  class="calc-B" >40</textarea>
+			</div>
+			<div class="oneField">
+				<p>Value for calculation stored in the value attribute.</p>
+				<label for="testSelectField1" class="preField">Select drop-down (C):</label>
+				<select id="testSelectField1" class="calc-C">
+					<option value="">select..</option>
+					<option value="1" selected>1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</select>
+			</div>
+			
+			<div class="oneField">
+				<p>Value for calculation stored in the class attribute.</p>
+				<label for="testSelectField2" class="preField">Select drop-down (C):</label>
+				<select id="testSelectField2" class="calc-C">
+					<option value="">select..</option>
+					<option value="zz" selected class="calcval-15 otherclass">15</option>
+					<option value="ee" class="otherclass calcval-25">25</option>
+					<option value="qq" class="calcval-35">35</option>
+				</select>
+			</div>
+			
+			<div class="oneField">
+				<p>Value for calculation stored in the value attribute.</p>
+				<label for="testSelectMultiple1" class="preField">Select drop-down (D):</label>
+				<select id="testSelectMultiple1" multiple="multiple" class="calc-D">
+					<option value="5">5</option>
+					<option value="7">7</option>
+					<option value="12">12</option>
+				</select>
+			</div>	
+			<div class="oneField">
+				<p>Value for calculation stored in the class attribute.</p>
+				<label for="testSelectMultiple2" class="preField">Select drop-down (D):</label>
+				<select id="testSelectMultiple2" multiple="multiple" class="calc-D">
+					<option value="5" class="calcval-5">5</option>
+					<option value="7" class="calcval-7">7</option>
+					<option value="12" class="calcval-12">12</option>
+				</select>
+			</div>	
+			<div class="oneField">
+				<p>Value for calculation stored in the value attribute.</p>
+				<label class="preField">Radio group (E):</label>		
+				<span class="oneChoice">				
+					<input type="radio" id="radio11" name="radioGroup1" value="14" class="calc-E"/>
+					<label for="radio1">14</label>
+				</span>
+				<span class="oneChoice">
+					<input type="radio" id="radio12" name="radioGroup1" value="24" class="calc-E" />
+					<label for="radio2">24</label>
+				</span>
+				<span class="oneChoice">
+					<input type="radio" id="radio13" name="radioGroup1"  value="34" class="calc-E" />
+					<label for="radio3">34</label>
+				</span>			
+			</div>	
+			
+			<div class="oneField">
+				<p>Value for calculation stored in the class attribute.</p>
+				<label class="preField">Radio group (E):</label>		
+				<span class="oneChoice">				
+					<input type="radio" id="radio21" name="radioGroup2" value="14" class="calc-E calcval-104"/>
+					<label for="radio1">104</label>
+				</span>
+				<span class="oneChoice">
+					<input type="radio" id="radio22" name="radioGroup2" value="24" class="calc-E calcval-114" />
+					<label for="radio2">114</label>
+				</span>
+				<span class="oneChoice">
+					<input type="radio" id="radio23" name="radioGroup2"  value="34" class="calc-E calcval-124" />
+					<label for="radio3">124</label>
+				</span>			
+			</div>	
+			
+			<div class="oneField">
+				<p>Value for calculation stored in the value attribute.</p>
+				<label class="preField">Checkboxes (F):</label> 
+				<span class="oneChoice">
+					<input type="checkbox" id="checkbox11" value="2" class="calc-F" />
+					<label for="checkbox1" class="postField">2</label>
+				</span>
+				<span class="oneChoice">
+					<input type="checkbox" id="checkbox12" value="3" class="calc-F" />
+					<label for="checkbox2" class="postField">3</label>
+				</span>
+				<span class="oneChoice">
+					<input type="checkbox" id="checkbox13" value="4" class="calc-F" />
+					<label for="checkbox3" class="postField">4</label>			
+				</span>
+			</div>
+			<div class="oneField">
+				<p>Value for calculation stored in the class attribute.</p>
+				<label class="preField">Checkboxes (F):</label> 
+				<span class="oneChoice">
+					<input type="checkbox" id="checkbox21" value="ww" class="calc-F calcval-9.5" />
+					<label for="checkbox1" class="postField">9.5</label>
+				</span>
+				<span class="oneChoice">
+					<input type="checkbox" id="checkbox22" value="zz" class="calc-F calcval-10.5" />
+					<label for="checkbox2" class="postField">10.5</label>
+				</span>
+				<span class="oneChoice">
+					<input type="checkbox" id="checkbox23" value="ee" class="calc-F calcval-11.5" />
+					<label for="checkbox3" class="postField">11.5</label>			
+				</span>
+			</div>
+			
+			<br/>
+		</fieldset>
+
+		<fieldset><legend>TextVariable test</legend>
+			<div class="oneField">
+				<label for="testInputField" class="preField">Text (value) input (Z):</label> 
+				<input id="testInputField" type="" value="address" class="calc-Z" />
+			</div>
+			<div class="oneField">
+				<label for="testInputField" class="preField">Text (value) input (Y):</label> 
+				<input id="testInputField" type="" value="zipcode" class="calc-Y" />
+			</div>					
+		<br />
+		</fieldset>
+
+		<fieldset><legend>Totals</legend>
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total A=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalA" class="formula=A calc-TOTA" />
+			</div>			
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total B=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalB" class="formula=B calc-TOTB" />
+			</div>	
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total A+B=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalAB" class="formula=A+B" />
+			</div>		
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total C=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalC" class="formula=C" />
+			</div>			
+
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total D=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalD" class="formula=D" />
+			</div>
+						
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total E=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalE" class="formula=E" />
+			</div>
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total F=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalF" class="formula=F" />
+			</div>
+
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total Z=:</label>
+				<input type="text" readonly="readonly" value="" id="totalZ" class="formula=Z" />
+			</div>
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="" class="preField">Total Y=:</label>
+				<input type="text" readonly="readonly" value="" id="totalY" class="formula=Y" />
+			</div>
+
+			
+			<hr/>
+			<p>Using calculated fields as variables:</p>
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="totalG" class="preField">Grand Total A+B=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalG" class="formula=TOTA+TOTB calc-GRANDTOTAL" />
+			</div>
+			
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="totalH" class="preField">10% of Grand Total=:</label>
+				<input type="text" readonly="readonly" value="0" id="totalH" class="formula=GRANDTOTAL/10" />%
+			</div>
+						
+			<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+				<label for="totalX" class="preField">String().concat(Z,'-',Y)=:</label>
+				<input type="text" readonly="readonly" value="" id="totalX" class="formula=String().concat(Z,'-',Y)" />
+			</div>	
+		</fieldset>
+	</form>
+</body>
+</html>
