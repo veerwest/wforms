@@ -190,7 +190,11 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		b.currentPageIndex = 0;
 		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
 		b.onApply();		
-	}	
+	}
+	
+	// intercept the submit event
+	base2.DOM.Element.addEventListener(f, 'submit', function (e) {b.onSubmit(e, b)});
+	
 	return b;
 }
 
@@ -198,8 +202,22 @@ wFORMS.behaviors.paging.applyTo = function(f) {
  * Executed once the behavior has been applied to the document.
  * Can be overwritten.
  */
-wFORMS.behaviors.paging.instance.prototype.onApply = function() {} 
+wFORMS.behaviors.paging.instance.prototype.onApply = function() {}
 
+/** On submit advance the page instead, until the last page. */
+wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
+	if (!wFORMS.behaviors.paging.isLastPageIndex(b.currentPageIndex)) {
+		var nextPage = b.findNextPage(b.currentPageIndex);
+		e.preventDefault();
+		b.activatePage(b.currentPageIndex + 1);
+		
+		// focus the first form element in the next page
+		var first = base2.DOM.Element.querySelector(nextPage, 'input, textarea, select');
+		if (first) {
+			first.focus();
+		}
+	}
+}
 
 /**
  * Returns page index by the page area element
