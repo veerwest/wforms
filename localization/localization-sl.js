@@ -1,5 +1,6 @@
 // Localization for wForms v3.0 - a javascript extension to web forms.
-// LANGUAGE_HERE - July 19th 2006 - Thanks to AUTHOR_HERE
+// slovenščina  - Feb. 5th 2007
+// Thanks to Matej Valencic
 
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 //
@@ -7,31 +8,31 @@
 // Example: 
 // <head>...
 // <script type="text/javascript" src="wforms.js" ></script>
-// <script type="text/javascript" src="localization-XX.js" ></script>
+// <script type="text/javascript" src="localization-sl.js" ></script>
 // </head>
 
 wFORMS.behaviors.validation.messages = {
-	isRequired 		: "Toto pole je povinn.",
-	isAlpha 		: "V textu nejsou povoleny cslice.",
-	isEmail 		: "Toto nen sprvn e-mailov adresa.",
-	isInteger 		: "Zadejte cslo.",
-	isFloat 		: "VZadejte desetin cslo.",
-	isAlphanum 		: "Pouijte pouze psmena (A-Z) a csla (0-9).",
-	isDate 			: "Zadejte sprvn datum",
+	isRequired 		: "To polje je obvezno.",
+	isAlpha 		: "Besedilo morajo biti samo znaki (a-z), A-Z). Številke niso dovoljene.",
+	isEmail 		: "Ta podatek ne zgleda kot pravilen email naslov.",
+	isInteger 		: "Please enter a number.",
+	isFloat 		: "Prosimo, vnesite ločilo (pr. 1.9).",
+	isAlphanum 		: "Prosimo uporabite samo alfanumerične znake (a-z 0-9)",
+	isDate 			: "Ta podatek ni pravilen datum.",
 	isCustom		: "",
-	notification	: "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."
+	notification	: "V obrazcu je %% napak. Podatki niso bili posredovani. Prosimo preglejte podatke ponovno."
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
-	ADD_CAPTION 	: "Add another response ",
+	ADD_CAPTION 	: "Dodajte odgovor",
 	ADD_TITLE 		: "",
-	REMOVE_CAPTION 	: "Remove",
+	REMOVE_CAPTION 	: "Odstrani",
 	REMOVE_TITLE 	: ""	
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Next Page',
-	CAPTION_PREVIOUS : 'Previous Page'
+	CAPTION_NEXT 	 : 'Naslednja stran',
+	CAPTION_PREVIOUS : 'Predhodna stran'
 }
 
 

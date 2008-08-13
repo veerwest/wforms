@@ -1,5 +1,5 @@
 // Localization for wForms v3.0 - a javascript extension to web forms.
-// LANGUAGE_HERE - July 19th 2006 - Thanks to AUTHOR_HERE
+// 	čeština (czech) - July 19th 2006 - Thanks to Martin Jirsak
 
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 //
@@ -11,34 +11,34 @@
 // </head>
 
 wFORMS.behaviors.validation.messages = {
-	isRequired 		: "Fältet måste fyllas i.",
-	isAlpha 		: "Texten får endast innehålla bokstäver (a-z, A-Z). Siffror är inte tillåtna.",
-	isEmail 		: "Detta ser inte ut som en giltig e-postadress.",
-	isInteger 		: "Ange ett tal.",
-	isFloat 		: "Ange ett decimaltal (t ex 1.9).",
-	isAlphanum 		: "Endast alfanumeriska tecken tillåts (a-z 0-9).	",
-	isDate 			: "Detta ser inte ut som ett giltigt datum.",
+	isRequired 		: "Toto pole je povinné.",
+	isAlpha 		: "Text musí obsahovat pouze písmena (a-z, A-Z). Čísla nejsou povolena.",
+	isEmail 		: "Zdá se, že toto není správná emailová adresa.",
+	isInteger 		: "Vložte prosím číslo (bez desetinných míst).",
+	isFloat 		: "Vložte prosím číslo (tj. 1,9).",
+	isAlphanum 		: "Použijte prosím pouze znaky písmen a číslic (a-z, 0-9).",
+	isDate 			: "Zdá se, že toto nejsou platné datum.",
 	isCustom		: "",
-	notification	: "%% fel upptäcktes. Formuläret har inte skickats ännu.\nVänligen gå igenom formuläret igen."
+	notification	: "%% Chyba/y. Váš formulář nebyl dosud odeslán. Překontrolujte prosím informace, které jste poskytli."
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
-	ADD_CAPTION 	: "Lägg till ett svar",
+	ADD_CAPTION 	: "Přidejte další odpověď",
 	ADD_TITLE 		: "",
-	REMOVE_CAPTION 	: "Ta bort",
+	REMOVE_CAPTION 	: "Odebrat",
 	REMOVE_TITLE 	: ""	
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Nästa sida',
-	CAPTION_PREVIOUS : 'Förra sidan'
+	CAPTION_NEXT 	 : 'Další strana',
+	CAPTION_PREVIOUS : 'Předchozí strana'
 }
 
 
 // Alpha & Alphanumeric Input Validation: 
 wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element, value) {
 	// Basic Latin
-	var reg =  /^[\u0041-\u007A\u00C0-\u00FF]+$/;
+	var reg =  /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
 	// Latin-1
 	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF]+$/;
 	// Latin Extended-A
@@ -49,7 +49,7 @@ wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element,
 }
 wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(element, value) {
 	// Basic Latin
-	var reg =  /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
+	var reg =  /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
 	// Latin-1
 	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
 	// Latin Extended-A

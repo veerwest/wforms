@@ -19,7 +19,7 @@ wFORMS.behaviors.validation.messages = {
 	isAlphanum 		: "V tomto poli používajte len písmená a čísla (a-z 0-9).	",
 	isDate 			: "Toto nie je platný dátum.",
 	isCustom		: "",
-	notification	: ""
+	notification	: "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {

@@ -1,5 +1,5 @@
 // Localization for wForms v3.0 - a javascript extension to web forms.
-// Turkish - July 19th 2006 - Thanks to AUTHOR_HERE
+// LANGUAGE_HERE - July 19th 2006 - Thanks to AUTHOR_HERE
 
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 //
@@ -7,7 +7,7 @@
 // Example: 
 // <head>...
 // <script type="text/javascript" src="wforms.js" ></script>
-// <script type="text/javascript" src="localization-tr.js" ></script>
+// <script type="text/javascript" src="localization-XX.js" ></script>
 // </head>
 
 wFORMS.behaviors.validation.messages = {

@@ -1,5 +1,5 @@
 // Localization for wForms v3.0 - a javascript extension to web forms.
-// Nederland - July 19th 2006 - Thanks to Willem Overbeeke
+// Svenska - July 19th 2006 - Thanks to AUTHOR_HERE
 
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 //
@@ -11,34 +11,34 @@
 // </head>
 
 wFORMS.behaviors.validation.messages = {
-	isRequired 		: "Invullen van dit veld is verplicht.",
-	isAlpha 		: "De tekst kan uitsluitend alfanumerieke tekens bevatten (a-z, A-Z). Cijfers zijn niet toegestaan.",
-	isEmail 		: "Dit email adres is niet juist.",
-	isInteger 		: "Voer a.u.b. een geheel getal in.",
-	isFloat 		: "a.u.b. alleen cijfers (0-9) zonder spaties ingeven",
-	isAlphanum 		: "a.u.b. alleen alfanumerieke tekens (a-z, A-Z, 0-9) zonder spaties ingeven.",
-	isDate 			: "Dit is geen valide datum. ",
+	isRequired 		: "Fältet måste fyllas i.",
+	isAlpha 		: "Texten får endast innehålla bokstäver (a-z, A-Z). Siffror är inte tillåtna.",
+	isEmail 		: "Detta ser inte ut som en giltig e-postadress.",
+	isInteger 		: "Ange ett tal.",
+	isFloat 		: "Ange ett decimaltal (t ex 1.9).",
+	isAlphanum 		: "Endast alfanumeriska tecken tillåts (a-z 0-9).	",
+	isDate 			: "Detta ser inte ut som ett giltigt datum.",
 	isCustom		: "",
-	notification	: "%% fouten ontdekt. Het formulier is nog niet verzonden.\nControleer a.u.b. de informatie die is ingevoerd."
+	notification	: "%% fel upptäcktes. Formuläret har inte skickats ännu.\nVänligen gå igenom formuläret igen."
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
-	ADD_CAPTION 	: "Antwoord toevoegen",
-	ADD_TITLE 		: "Voeg een rij toe",
-	REMOVE_CAPTION 	: "Verwijderen",
-	REMOVE_TITLE 	: "Verwijdert het voorgaande veld of veld groep."	
+	ADD_CAPTION 	: "Lägg till ett svar",
+	ADD_TITLE 		: "",
+	REMOVE_CAPTION 	: "Ta bort",
+	REMOVE_TITLE 	: ""	
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Volgende pagina',
-	CAPTION_PREVIOUS : 'Vorige pagina'
+	CAPTION_NEXT 	 : 'Nästa sida',
+	CAPTION_PREVIOUS : 'Förra sidan'
 }
 
 
 // Alpha & Alphanumeric Input Validation: 
 wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element, value) {
 	// Basic Latin
-	var reg =  /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
+	var reg =  /^[\u0041-\u007A\u00C0-\u00FF]+$/;
 	// Latin-1
 	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF]+$/;
 	// Latin Extended-A
@@ -49,7 +49,7 @@ wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element,
 }
 wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(element, value) {
 	// Basic Latin
-	var reg =  /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
+	var reg =  /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
 	// Latin-1
 	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
 	// Latin Extended-A
