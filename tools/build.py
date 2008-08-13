@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-from jsmin import jsmin
 
 branch = os.path.abspath(os.path.dirname(__file__) +'/..')
 
@@ -25,5 +24,5 @@ for module in modules:
 
 wforms = open(branch +'/build/wforms.js', 'w')
 print 'Writing '+ wforms.name
-wforms.write(jsmin("\n\n".join(compilation)))
+wforms.write("\n\n".join(compilation))
 wforms.close()
