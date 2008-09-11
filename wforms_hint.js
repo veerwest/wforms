@@ -128,11 +128,10 @@ wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
  * @param   {HTMLElement}	source	HTML element with focus.
  */
 wFORMS.behaviors.hint.instance.prototype.setup = function(hint, source){
-	
-	var l = ((source.tagName == 'SELECT' ? + source.offsetWidth : 0) + wFORMS.helpers.getLeft(source));
-	var t  = (wFORMS.helpers.getTop(source) + source.offsetHeight);	
-	hint.style.left = l + "px"; 
-	hint.style.top  = t + "px";
+	if (source.offsetParent == hint.offsetParent) {
+		hint.style.left = source.offsetLeft +'px';
+		hint.style.top = (source.offsetTop + source.offsetHeight) +'px';
+	}
 }
 
 /**
