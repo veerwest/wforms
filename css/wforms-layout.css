@@ -75,7 +75,6 @@
 /* Label + input wrapper */
 .wForm form .oneField {						
 	display: block;
-	position: relative;
 	padding: 2px 0;
 	margin-bottom: 0.75em; 	
 	width: 100%

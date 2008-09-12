@@ -13,11 +13,7 @@ wFORMS.behaviors['switch']  = {
 	 * Selector expression for the switch elements
      * @final
      * @see	http://www.w3.org/TR/css3-selectors/
-     * @TODO	Possible change hint due to switch could be not the very first prefix
-     * 			but element could contains it as a CSS class
-     * @TODO	!!!!!! for some reasons it is not working with IE!!!
-     * 			looks like IE does not support selecting by class with selectors
-     *			but selectors API allows such thing
+
 	 */
 	SELECTOR : '*[class*="switch-"]',
 
@@ -93,12 +89,18 @@ wFORMS.behaviors['switch']  = {
  * @return {object} an instance of the behavior 
  */	
 wFORMS.behaviors['switch'].applyTo = function(f){
+	
 	var b = new wFORMS.behaviors['switch'].instance(f);	
 	// Iterates all switch elements. Lookup for its triggers and add event listeners
 	f.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR).forEach(
 		function(elem){
 			if(!elem.id){
 				elem.id = wFORMS.helpers.randomId()
+			}
+			if(!elem.addEventListener) {
+				elem.addEventListener = function(event,handler,p) {
+					base2.DOM.Element.addEventListener(this,event,handler,p);
+				}
 			}
 			switch(elem.tagName.toUpperCase()){
 				case 'OPTION' : 
@@ -108,9 +110,13 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 						sNode = sNode.parentNode;
 					} 
 
-					if(!sNode.addEventListener)
-						base2.DOM.bind(sNode);
-
+					//if(!sNode.addEventListener)
+					//	base2.DOM.bind(sNode);
+					if(!sNode.addEventListener) {
+						sNode.addEventListener = function(event,handler,p) {
+							base2.DOM.Element.addEventListener(this,event,handler,p);
+						}
+					}
 					if(sNode && !wFORMS.behaviors['switch'].isHandled(sNode)){
 						sNode.addEventListener('change', function(event) { b.run(event, sNode) }, false);
 						b.setupTargets(sNode);
@@ -126,14 +132,21 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 						// Retreives all radio group
 						var radioGroup = elem.form[elem.name];
 						for(var i=radioGroup.length-1;i>=0;i--) {
-							// [don] Added element binding
-							var _elem = base2.DOM.bind(radioGroup[i]);
+							
+							// var _elem = base2.DOM.bind(radioGroup[i]);
+							var _elem = radioGroup[i];
+							
 							if(!wFORMS.behaviors['switch'].isHandled(_elem)){
+								if(!_elem.addEventListener) {
+									_elem.addEventListener = function(event,handler,p) {
+										base2.DOM.Element.addEventListener(this,event,handler,p);
+									}
+								}
 								_elem.addEventListener('click', function(event) { b.run(event, _elem) }, false);								
 								wFORMS.behaviors['switch'].handleElement(_elem);
 							}
 						}
-					}else{
+					} else {						
 						elem.addEventListener('click', function(event) { b.run(event, elem) }, false);
 						b.setupTargets(elem);
 					}
@@ -217,7 +230,6 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggersByElements = function(e
 	for(var i=0;i<elems.length;i++) {
 		var elem = elems[i];
 		
-		// TODO on switch if checked.
 		switch(elem.tagName.toUpperCase()){
 			case 'OPTION' :
 				if(elem.selected){
@@ -228,7 +240,6 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggersByElements = function(e
 				break;
 				
 			case 'SELECT' : 
-				// TODO Check behavior
 				for(var j=0; j < elem.options.length; j++){
 					var opt = elem.options.item(j);
 					if(opt.selected){
@@ -349,7 +360,6 @@ wFORMS.behaviors['switch'].getSwitchNames = function(className, switchPart, incl
 			_names.push(sn);
 		}
 	}
-	//console.log(_names);
 	return _names;
 }
 
@@ -371,7 +381,8 @@ wFORMS.behaviors['switch'].instance.prototype.getTargetsBySwitchName = function(
 		var className = [wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + sName];
 	}
 	
-	this.target.querySelectorAll("."+className).forEach(
+	// Optimization: on/off state can be set only on fieldsets and divs
+	this.target.querySelectorAll("FIELDSET[class~='"+className+"'], DIV[class~='"+className+"']", "TR[class~='"+className+"']").forEach(
 		function(elem){
 			// In case target found, IS in the duplicate group and this 
 			// behavior target is NOT in the duplicate section and NOT dupicate itself
@@ -383,7 +394,7 @@ wFORMS.behaviors['switch'].instance.prototype.getTargetsBySwitchName = function(
 				!(b.isDuplicate(clazz.target) || b.isInDuplicateGroup(clazz.target))){
 				return;
 			}
-			res.push(base2.DOM.bind(elem));
+			res.push(elem); // base2.DOM.bind(elem)
 		}	
 	);
 	
@@ -416,7 +427,7 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggersByTarget = function(tar
 						!(b.isDuplicate(target) || b.isInDuplicateGroup(target))){
 						return;
 					}
-					res.push(base2.DOM.bind(elem));
+					res.push(elem); // base2.DOM.bind(elem)
 				}	
 		);
 	
@@ -442,7 +453,6 @@ wFORMS.behaviors['switch'].instance.prototype.setupTargets = function(elem){
  * @public
  */
 wFORMS.behaviors['switch'].isSwitchedOff = function(elem){
-	// TODO possible base2.DOM.bind
 	return (elem.className.match(
 		new RegExp(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + "[^ ]*")) ?
 		true : false) &&
@@ -458,8 +468,12 @@ wFORMS.behaviors['switch'].isSwitchedOff = function(elem){
  * @param {domElement} element
  */
 wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){ 
-	
-	if(!element.hasClass) base2.DOM.bind(element);
+
+	if(!element.hasClass) { // no base2.DOM.bind to speed up function 
+		element.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		element.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+		element.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
+	}	
 	
 	// If this element does not have a native state attribute (ie. checked/selected)
 	// the classes CSS_ONSTATE_FLAG|CSS_OFFSTATE_FLAG are used and must be switched.
@@ -476,11 +490,14 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 		
 	var triggers = this.getTriggersByElements(new Array(element));
 	var clazz = this;
-	
-	
+		
 	base2.forEach(triggers.OFF, function(switchName){
 		var targets = clazz.getTargetsBySwitchName(switchName, 'ON');
-		base2.forEach(targets, function(elem){
+		base2.forEach(targets, function(elem){		
+			if(!elem.removeClass) { // no base2.DOM.bind to speed up function 
+				elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+				elem.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
+			}	
 			elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
 			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
 			var _triggers = clazz.getTriggersByTarget(elem);
@@ -493,6 +510,10 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 	base2.forEach(triggers.ON, function(switchName){
 		var targets = clazz.getTargetsBySwitchName(switchName, 'OFF');
 		base2.forEach(targets, function(elem){
+			if(!elem.removeClass) { // no base2.DOM.bind to speed up function 
+				elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+				elem.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
+			}
 			elem.removeClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
 			elem.addClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
 			clazz.behavior.onSwitchOn(elem);
@@ -503,7 +524,6 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 		b.setupManagedControls();
 	}
 	
-	this.behavior.onSwitch(this.target);
-	
+	this.behavior.onSwitch(this.target);	
 }
 
