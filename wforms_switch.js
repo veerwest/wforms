@@ -78,7 +78,8 @@ wFORMS.behaviors['switch']  = {
 	 */
 	instance : function(f){
 		this.behavior = wFORMS.behaviors['switch']; 
-		this.target = f;
+		this.target   = f;
+		this.cache    = {};
 	}
 }
 
@@ -91,77 +92,72 @@ wFORMS.behaviors['switch']  = {
 wFORMS.behaviors['switch'].applyTo = function(f){
 	
 	var b = new wFORMS.behaviors['switch'].instance(f);	
-	// Iterates all switch elements. Lookup for its triggers and add event listeners
-	f.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR).forEach(
-		function(elem){
-			if(!elem.id){
-				elem.id = wFORMS.helpers.randomId()
-			}
-			if(!elem.addEventListener) {
-				elem.addEventListener = function(event,handler,p) {
-					base2.DOM.Element.addEventListener(this,event,handler,p);
-				}
-			}
-			switch(elem.tagName.toUpperCase()){
-				case 'OPTION' : 
-					var sNode = elem.parentNode;
-					// Tries to get <select node
-					while (sNode && sNode.tagName != 'SELECT'){
-						sNode = sNode.parentNode;
-					} 
+	b.buildCache();	
+	b.setupTriggers();
+	b.setupTargets();
+	b.onApply();	
+	return b;	
+}
 
-					//if(!sNode.addEventListener)
-					//	base2.DOM.bind(sNode);
-					if(!sNode.addEventListener) {
-						sNode.addEventListener = function(event,handler,p) {
-							base2.DOM.Element.addEventListener(this,event,handler,p);
-						}
-					}
-					if(sNode && !wFORMS.behaviors['switch'].isHandled(sNode)){
-						sNode.addEventListener('change', function(event) { b.run(event, sNode) }, false);
-						b.setupTargets(sNode);
-						wFORMS.behaviors['switch'].handleElement(sNode);
-					}
-					break;
-
-				case 'INPUT' : 
-					if(elem.type && elem.type.toUpperCase() == 'RADIO'){
-						if(!wFORMS.behaviors['switch'].isHandled(elem)){
-							b.setupTargets(elem);		
-						}
-						// Retreives all radio group
-						var radioGroup = elem.form[elem.name];
-						for(var i=radioGroup.length-1;i>=0;i--) {
-							
-							// var _elem = base2.DOM.bind(radioGroup[i]);
-							var _elem = radioGroup[i];
-							
-							if(!wFORMS.behaviors['switch'].isHandled(_elem)){
-								if(!_elem.addEventListener) {
-									_elem.addEventListener = function(event,handler,p) {
-										base2.DOM.Element.addEventListener(this,event,handler,p);
-									}
-								}
-								_elem.addEventListener('click', function(event) { b.run(event, _elem) }, false);								
-								wFORMS.behaviors['switch'].handleElement(_elem);
-							}
-						}
-					} else {						
-						elem.addEventListener('click', function(event) { b.run(event, elem) }, false);
-						b.setupTargets(elem);
-					}
-					break;
+wFORMS.behaviors['switch'].instance.prototype.setupTriggers = function() {
+	
+	for(var i in this.cache) {
+		var triggers = this.cache[i].triggers;
+		for(var j in triggers) {
+			this.setupTrigger(triggers[j]);
+		} 
+	}	
+}
+	
+wFORMS.behaviors['switch'].instance.prototype.setupTrigger = function(elem) {
+	var self = this;
+	if(!elem.id){
+		elem.id = wFORMS.helpers.randomId()
+	}
+	switch(elem.tagName.toUpperCase()){
+		case 'OPTION' : 
+			var sNode = elem.parentNode;
+			// Tries to get <select node
+			while (sNode && sNode.tagName != 'SELECT'){
+				sNode = sNode.parentNode;
+			} 		
+			if(sNode && !wFORMS.behaviors['switch'].isHandled(sNode)){
+				sNode.addEventListener('change', function(event) { self.run(event, sNode) }, false);
+				wFORMS.behaviors['switch'].handleElement(sNode);
+			}
+			break;
+		case 'SELECT' :
+			if(elem && !wFORMS.behaviors['switch'].isHandled(elem)){
+				elem.addEventListener('change', function(event) { self.run(event, elem) }, false);
+				wFORMS.behaviors['switch'].handleElement(elem);
+			}
+			break;		
+		case 'INPUT' : 
+			if(elem.type && elem.type.toUpperCase() == 'RADIO'){
+				
+				// Retreives all radio group
+				var radioGroup = elem.form[elem.name];
+				for(var i=radioGroup.length-1;i>=0;i--) {
 					
-				default:
-					// Other type of element with a switch (links for instance).
-					// The behavior is not run on initialization (no b.setupTargets(elem))
-					elem.addEventListener('click', function(event) { b.run(event, elem) }, false);					
-					break;
+					var _elem = radioGroup[i];
+					wFORMS.standardizeElement(_elem);	
+					
+					if(!wFORMS.behaviors['switch'].isHandled(_elem)){
+						_elem.addEventListener('click', function(event) { self.run(event, _elem) }, false);								
+						this.behavior.handleElement(_elem);
+					}
+				}
+			} else {						
+				elem.addEventListener('click', function(event) { self.run(event, elem) }, false);								
 			}
-		}
-	);
-	b.onApply();
-	return b;
+			break;
+			
+		default:
+			// Other type of element with a switch (links for instance).
+			// The behavior is not run on initialization (no b.setupTargets(elem))
+			elem.addEventListener('click', function(event) { self.run(event, elem) }, false);						
+			break;
+	}
 }
 
 /**
@@ -209,17 +205,140 @@ wFORMS.behaviors['switch'].removeHandle = function(elem){
 }
 
 /**
+ *
+ */
+wFORMS.behaviors['switch'].instance.prototype.buildCache = function() {
+	if(typeof time != 'undefined') time.start('applyswitch');
+	
+	var l = this.target.getElementsByTagName('*');
+		
+	for(var i=0;i<l.length;i++) {
+		if(l[i].tagName) {
+		
+			// Iterates all elements. Lookup for triggers and targets
+			if(l[i].className && l[i].className.indexOf(this.behavior.CSS_PREFIX)!=-1) {		
+				this.addTriggerToCache(l[i]);	
+			}
+			if(l[i].className && l[i].className.indexOf(this.behavior.CSS_OFFSTATE_PREFIX)!=-1) {
+				this.addTargetToCache(l[i]);			
+			}
+			if(l[i].className && l[i].className.indexOf(this.behavior.CSS_ONSTATE_PREFIX)!=-1) {
+				this.addTargetToCache(l[i]);			
+			}
+		}
+	}	
+	if(typeof time != 'undefined') time.stop('applyswitch')
+	if(typeof time != 'undefined') time.report();
+}
+
+/**
+ * if argument provided, invalidate cache only if element contains a switch or trigger.
+ */
+wFORMS.behaviors['switch'].instance.prototype.invalidateCache = function() {
+	
+	var resetCache = true;
+	
+	if(arguments.length>0) {			
+		var element = document.getElementById(arguments[0]);
+		if(element) {
+			var resetCache = false;		
+			if(!element.querySelectorAll) base2.DOM.bind(element);
+			var selector = "*[class*=\""+this.behavior.CSS_PREFIX+"\"], *[class*=\""+this.behavior.CSS_OFFSTATE_PREFIX+"\"], *[class*=\""+this.behavior.CSS_ONSTATE_PREFIX+"\"]";
+			var l = element.querySelectorAll(selector);
+			if(l.length>0 || element.className && 
+							 (element.className.indexOf(this.behavior.CSS_PREFIX)!=-1 || 
+							  element.className.indexOf(this.behavior.CSS_OFFSTATE_PREFIX) != -1 ||
+							  element.className.indexOf(this.behavior.CSS_ONSTATE_PREFIX)!=-1)) {
+				resetCache = true;
+			}
+		}
+	}	
+	if(resetCache) {
+		this.cache = {};	
+		this.buildCache();
+	}
+}
+
+wFORMS.behaviors['switch'].instance.prototype.addTriggerToCache = function(element) {
+	
+	// For selects, make sure to get the <SELECT> element.
+	if(element.tagName =='OPTION') {
+		var sNode = element.parentNode;
+		// Tries to get <select node
+		while (sNode && sNode.tagName != 'SELECT'){
+			sNode = sNode.parentNode;
+		} 
+		if(!sNode){
+			return; // bad markup
+		}
+		element = sNode;	
+	}	
+
+	wFORMS.standardizeElement(element);
+						
+	var t = this.getTriggers(new Array(element));
+	
+	for(var i=0;i< t.ON.length; i++) {
+		var switchName = t.ON[i];
+		if(typeof this.cache[switchName]== 'undefined') {
+			this.cache[switchName] = { triggers: [], targets: []};
+		}
+		for(var j=0;j<this.cache[switchName].triggers.length;j++) {
+			if(this.cache[switchName].triggers[j]==element) {
+				break;
+			}
+		}
+		if(j==this.cache[switchName].triggers.length) {
+			this.cache[switchName].triggers.push(element);
+		}
+	}
+	for(var i=0;i< t.OFF.length; i++) {
+		var switchName = t.OFF[i];
+		if(typeof this.cache[switchName]== 'undefined') {
+			this.cache[switchName] = { triggers: [], targets: []};
+		}
+		for(var j=0;j<this.cache[switchName].triggers.length;j++) {
+			if(this.cache[switchName].triggers[j]==element) {
+				break;
+			}
+		}
+		if(j==this.cache[switchName].triggers.length) {
+			this.cache[switchName].triggers.push(element);
+		}
+	}		
+}
+
+wFORMS.behaviors['switch'].instance.prototype.addTargetToCache = function(element) {
+		
+	wFORMS.standardizeElement(element);
+		
+	var switchNames = this.behavior.getSwitchNamesFromTarget(element);
+		
+	for(var i in switchNames) {
+		switchName = switchNames[i];
+		if(typeof this.cache[switchName]== 'undefined') {
+			this.cache[switchName] = { triggers: [], targets: []};
+		}
+		for(var i=0;i<this.cache[switchName].targets.length;i++) {
+			if(this.cache[switchName].targets[i]==element) {
+				break;
+			}
+		}
+		if(i==this.cache[switchName].targets.length) {
+			this.cache[switchName].targets.push(element);
+		}
+	}
+}
+
+ 
+/**
  * Returns object with two triggers collection: ON, OFF
  * @param	{Array}	elems	HTML Elements array to create triggers from
  * @param	{Array}	includeSwitches	Only that switches should be included
  * @returns	{Object}	Object of type {ON: Array, OFF: Array}
  *
- * Notes: 
- * May 26th (CS) Replaced base2.forEach with a regular loop when possible
- *               Fixed ON/OFF array to remove duplicates
- *               Replaced base2.querySelectorAll to get a radio group. Used form.fields collection instead.
  */
-wFORMS.behaviors['switch'].instance.prototype.getTriggersByElements = function(elems, includeSwitches){
+wFORMS.behaviors['switch'].instance.prototype.getTriggers = function(elems, includeSwitches){
 	var o = {
 		ON : new Array(), 
 		OFF : new Array(), 
@@ -364,86 +483,27 @@ wFORMS.behaviors['switch'].getSwitchNames = function(className, switchPart, incl
 }
 
 /**
- * Returns all elements associated with switch name
- * @TODO	Remove to pre-cache
- * @param	{String}	sName
- * @param   'ON'|'OFF'	Specifies whether 'on-state' or 'off-state' elements should be returned 
- * @returns	StaticNodeList
- */
-wFORMS.behaviors['switch'].instance.prototype.getTargetsBySwitchName = function(sName, state){
-	var res = new Array();
-	var clazz = this;
-	var b = wFORMS.behaviors.repeat;
-	
-	if(arguments[1]=='ON')
-		var className = [wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + sName];
-	else {
-		var className = [wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + sName];
-	}
-	
-	// Optimization: on/off state can be set only on fieldsets and divs
-	this.target.querySelectorAll("FIELDSET[class~='"+className+"'], DIV[class~='"+className+"']", "TR[class~='"+className+"']").forEach(
-		function(elem){
-			// In case target found, IS in the duplicate group and this 
-			// behavior target is NOT in the duplicate section and NOT dupicate itself
-			// SKIP this target
-			// There is no need to make other checks, because that the only
-			// situation could be. Behavior applied to its top element
-			// and we are searching elements inside behavior target
-			if(b && b.isInDuplicateGroup(elem) && 
-				!(b.isDuplicate(clazz.target) || b.isInDuplicateGroup(clazz.target))){
-				return;
-			}
-			res.push(elem); // base2.DOM.bind(elem)
-		}	
-	);
-	
-	return res;
-}
-
-/**
- * Returns all elements associated with switch name
- * @TODO	Remove to pre-cache
- * @param	{String}	sName
- * @returns	StaticNodeList
+ * 
  */
 wFORMS.behaviors['switch'].instance.prototype.getTriggersByTarget = function(target){
 	var res = new Array();
-	var clazz = this;
+	
 	var names = wFORMS.behaviors['switch'].getSwitchNamesFromTarget(target);
 	var b = wFORMS.behaviors.repeat;
 
-	base2.forEach(names, function(name){
-		clazz.target.querySelectorAll("."+wFORMS.behaviors['switch'].CSS_PREFIX + name).forEach(
-				function(elem){
-					// In case trigger found IS in the duplicate group and the target
-					// is NOT in the duplicate section and NOT dupicate itself
-					// SKIP this trigger
-					// There is no need to make other checking for because that the only
-					// situation could be. Targets in the duplicate section CAN NOT 
-					// reach triggers from other duplicates because bahaviors applied
-					// to entire section element
-					if(b && b.isInDuplicateGroup(elem) && 
-						!(b.isDuplicate(target) || b.isInDuplicateGroup(target))){
-						return;
-					}
-					res.push(elem); // base2.DOM.bind(elem)
-				}	
-		);
-	
-	});
-	return this.getTriggersByElements(res, names);
-}
-
-
-/**
- * Setups targets depends on switches and control state. I.e. if control is ON
- * Targets should be ON. 
- * TODO Check for optimization, check for design
- * @param	{HTMLElement}	elem
- */
-wFORMS.behaviors['switch'].instance.prototype.setupTargets = function(elem){
-	this.run(null, elem)
+	for(var i in names) {
+		var c = this.cache[names[i]];
+		if(c) {
+			for(j in c.triggers) {
+				var elem = c.triggers[j];
+				if(b && b.isInDuplicateGroup(elem) && !(b.isDuplicate(target) || b.isInDuplicateGroup(target))){
+					break;
+				}
+				res.push(elem); // base2.DOM.bind(elem)
+			}
+		} 
+	}
+	return this.getTriggers(res, names);	
 }
 
 /**
@@ -461,6 +521,23 @@ wFORMS.behaviors['switch'].isSwitchedOff = function(elem){
 		false : true) ; 
 }
 
+/**
+ * Setups targets depends on switches and control state. I.e. if control is ON
+ * Targets should be ON. 
+ */
+wFORMS.behaviors['switch'].instance.prototype.setupTargets = function(){
+
+	for(var switchName in this.cache) {
+		for(var j in this.cache[switchName].triggers) {
+			var elem = this.cache[switchName].triggers[j];
+			
+			// Switch link state is set with the class 'swtchIsOn'/'swtchIsOff' 
+			if(elem.tagName!='A' || elem.hasClass(this.behavior.CSS_ONSTATE_FLAG)) {
+				this.run(null, elem)
+			}			
+		}		
+	}	
+}
 
 /**
  * Executes the behavior
@@ -469,12 +546,6 @@ wFORMS.behaviors['switch'].isSwitchedOff = function(elem){
  */
 wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){ 
 
-	if(!element.hasClass) { // no base2.DOM.bind to speed up function 
-		element.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
-		element.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
-		element.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
-	}	
-	
 	// If this element does not have a native state attribute (ie. checked/selected)
 	// the classes CSS_ONSTATE_FLAG|CSS_OFFSTATE_FLAG are used and must be switched.
 	if(element.hasClass(this.behavior.CSS_ONSTATE_FLAG)) {	 	
@@ -488,42 +559,40 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 		if(e) e.preventDefault();
 	}
 		
-	var triggers = this.getTriggersByElements(new Array(element));
-	var clazz = this;
-		
-	base2.forEach(triggers.OFF, function(switchName){
-		var targets = clazz.getTargetsBySwitchName(switchName, 'ON');
-		base2.forEach(targets, function(elem){		
-			if(!elem.removeClass) { // no base2.DOM.bind to speed up function 
-				elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
-				elem.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
-			}	
+	var triggers = this.getTriggers(new Array(element));
+	
+	for(var i in triggers.OFF) {
+		var switchName = triggers.OFF[i];
+		for(j in this.cache[switchName].targets) {
+			var elem = this.cache[switchName].targets[j];
+			
+			wFORMS.standardizeElement(elem);
+			
 			elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
 			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
-			var _triggers = clazz.getTriggersByTarget(elem);
+			
+			var _triggers = this.getTriggersByTarget(elem);
 			if(_triggers.ON.length == 0){				
-				clazz.behavior.onSwitchOff(elem);
+				this.behavior.onSwitchOff(elem);
 			}
-		})
-	});
-
-	base2.forEach(triggers.ON, function(switchName){
-		var targets = clazz.getTargetsBySwitchName(switchName, 'OFF');
-		base2.forEach(targets, function(elem){
-			if(!elem.removeClass) { // no base2.DOM.bind to speed up function 
-				elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
-				elem.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };
-			}
-			elem.removeClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
-			elem.addClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
-			clazz.behavior.onSwitchOn(elem);
-		})
-	});
-
+		}				
+	}
+	for(var i in triggers.ON) {
+		var switchName = triggers.ON[i];
+		for(j in this.cache[switchName].targets) {			
+			var elem = this.cache[switchName].targets[j];
+			
+			wFORMS.standardizeElement(elem);
+			
+			elem.removeClass(this.behavior.CSS_OFFSTATE_PREFIX + switchName);
+			elem.addClass(this.behavior.CSS_ONSTATE_PREFIX + switchName);			
+			this.behavior.onSwitchOn(elem);			
+		}				
+	}
+		
 	if(b = wFORMS.getBehaviorInstance(this.target, 'paging')){
 		b.setupManagedControls();
-	}
-	
+	}	
 	this.behavior.onSwitch(this.target);	
 }
 

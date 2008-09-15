@@ -154,7 +154,7 @@ wFORMS.behaviors.repeat = {
 	 */
 	instance : function(f) {
 		this.behavior = wFORMS.behaviors.repeat; 
-		this.target = f;
+		this.target = f;		
 	}
 }
 
@@ -840,4 +840,9 @@ _b.getMasterSection = function(elem){
 _i.prototype.run = function(e, element){ 	
 	this.duplicateSection(this.target);
 	if(e) e.preventDefault();
+	
+	var b = wFORMS.getBehaviorInstance(this.target, 'switch');
+	if(b){		
+		b.invalidateCache(element);
+	}	
 }

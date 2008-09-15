@@ -186,7 +186,25 @@ wFORMS.onLoadHandler = function() {
 			wFORMS.applyBehaviors(forms[i]);
 	}	
 }
-
+/**
+ * 
+ */
+wFORMS.standardizeElement = function(elem) {
+	if(!elem.addEventListener) {
+		elem.addEventListener = function(event,handler,p) {
+			base2.DOM.Element.addEventListener(this,event,handler,p);
+		}
+	}
+	if(!elem.hasClass) {
+		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+	}
+	if(!elem.removeClass) {
+		elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+	}
+	if(!elem.addClass) {
+		elem.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };	
+	}
+}
 /**
  * Initialization routine. Automatically applies all behaviors to the given element.
  * @param {domElement} A form element, or any of its children.

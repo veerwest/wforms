@@ -155,8 +155,9 @@
 		<div id="casee" class="offstate-e">This is E state</div>
 		<div id="casef" class="offstate-f">This is F state</div>
 		<div id="caseg" class="offstate-g">This is G state</div>
+		<a href="#" onclick="invalidateCache('testform1')">Reset Cache</a>
 	</form>
-	
+	<hr/>
 	<form method="post" action="" id="testform2">
 		
 		<label>A or B?</label>
@@ -194,7 +195,20 @@
 			</fieldset>
 		</div>
 	
+		<a href="#" onclick="invalidateCache('testform2')">Reset Cache</a>
+		
 	</form>
+	
+	<script type="text/javascript">
+		function invalidateCache(f) {
+			if(typeof f=='string') {
+				f = document.getElementById(f);
+			}			
+			b = wFORMS.getBehaviorInstance(f, 'switch')
+			b.invalidateCache();			
+		}
+	
+	</script>
 </body>
 </html>
 
