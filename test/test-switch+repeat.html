@@ -11,6 +11,7 @@
     <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
     <style type="text/css">
  		.offstate-z { display:none;}
+ 		.offstate-y { display:none;}
 	</style> 
 	<!-- 
 	<script type="text/javascript" src="../build/wforms.js"></script>
@@ -86,6 +87,11 @@
 		<fieldset class="repeat" id="testrepeat">
 			<input type="checkbox" class="switch-a" id="switcha" />Switch A<br/>
 			<div id="casea" class="offstate-a">This is A state</div>
+			
+			<input type="radio" name="switchy" class="switch-y" id="switchy1" />Switch Y ON<br/>
+			<input type="radio" name="switchy" class="" id="switchy2" />Switch Y OFF<br/>
+			
+			<div id="testy" class="offstate-y">Y STATE</div>
 		</fieldset >
 		<hr/>
 		<input type="checkbox" class="switch-z" id="switchz" />Switch Z<br/>
