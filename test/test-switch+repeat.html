@@ -12,11 +12,15 @@
     <style type="text/css">
  		.offstate-z { display:none;}
 	</style> 
+	<!-- 
+	<script type="text/javascript" src="../build/wforms.js"></script>
+	-->
 	<script type="text/javascript" src="../lib/src/base2.js"></script>
 	<script type="text/javascript" src="../lib/src/base2-dom.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../wforms_switch.js"></script>
+	
 	<script type="text/javascript">
 	
 	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {
@@ -26,7 +30,7 @@
 	function setUpPage() {}
   
   	function setUp() {
-  		document.getElementById('switcha').checked = false;
+  		
   	}
 	
 	function tearDown() {}
@@ -37,13 +41,42 @@
 		rInstance.run();
 		// turn switch on
 		document.getElementById('switcha[1]').checked = true;	
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat[1]'),'switch');	
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
 		sInstance.run(null, document.getElementById('switcha[1]'));
 		// check
 		assertEquals("onstate-a", document.getElementById('casea[1]').className);
+				
+	}
+	function testSwitchCacheInvalidation() {
+		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat3'),'repeat');
+		// repeat
+		rInstance.run();
+		// turn switch on
+		document.getElementById('switchc').checked = true;	
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
+		sInstance.run(null, document.getElementById('switchc'));
 		
+		// check
+		assertEquals("onstate-c", document.getElementById('casec[0]').className);
+		assertEquals("onstate-c", document.getElementById('casec[1]').className);
 	}
 	
+	function testSwitchScope(){
+		
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
+		document.getElementById('switchd').checked = true;
+		sInstance.run(null, document.getElementById('switchd'));
+		
+		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('cased'),'repeat');
+		rInstance.run();
+		
+		document.getElementById('switche[0][0]').checked = true;
+		sInstance.run(null, document.getElementById('switche[0][0]'));
+		
+		assertEquals("onstate-e", document.getElementById('casee[0][0]').className);
+		assertEquals("offstate-e", document.getElementById('casee[0][1]').className);
+		
+	}
 	</script>
 	
 </head>
@@ -66,7 +99,22 @@
 				<div id="caseb" class="offstate-b">This is B state</div>
 			</fieldset>
 		</div>
+		<hr/>
+		<input type="checkbox" class="switch-c" id="switchc" />Switch C<br/>
+		<fieldset  class="repeat" id="testrepeat3">
+			<div id="casec" class="offstate-c">This is C state</div>
+		</fieldset>
+		<hr/>
+		
+		<fieldset  class="repeat" id="testrepeat4">
+			<input type="checkbox" class="switch-d" id="switchd" />Switch D<br/>
+			<fieldset id="cased" class="offstate-d repeat">
+				<input type="checkbox" class="switch-e" id="switche" />Switch E<br/>
+				<div id="casee" class="offstate-e">This is E state</div>
+			</fieldset>
+		</fieldset>
 	</form>
+	<a href="#" onclick='testSwitchCacheInvalidation(); return false;'>test</a>
 </body>
 </html>
 

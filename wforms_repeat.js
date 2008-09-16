@@ -835,14 +835,8 @@ _b.getMasterSection = function(elem){
 /**
  * Executes the behavior
  * @param {event} e 
- * @param {domElement} element
  */
-_i.prototype.run = function(e, element){ 	
+_i.prototype.run = function(e){ 	
 	this.duplicateSection(this.target);
 	if(e) e.preventDefault();
-	
-	var b = wFORMS.getBehaviorInstance(this.target, 'switch');
-	if(b){		
-		b.invalidateCache(element);
-	}	
 }
