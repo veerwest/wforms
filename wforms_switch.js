@@ -102,14 +102,17 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 	if(b) {
 		// but reset cache.
 		b.cache = {};	
+		// will return an empty behavior to save memory (workaround. core doesn't check if the behavior returned already exists)
+		ret = new Array({target:null}); 
 	} else {		
-		b = new wFORMS.behaviors['switch'].instance(f);	
+		b = new wFORMS.behaviors['switch'].instance(f);
+		ret = b; 	
 	}		
 	b.buildCache();	
 	b.setupTriggers();
 	b.setupTargets();
 	b.onApply();
-	return b;	
+	return ret;	
 }
 
 wFORMS.behaviors['switch'].instance.prototype.setupTriggers = function() {
@@ -230,7 +233,6 @@ wFORMS.behaviors['switch'].removeHandle = function(elem){
  *
  */
 wFORMS.behaviors['switch'].instance.prototype.buildCache = function() {
-	if(typeof time != 'undefined') time.start('applyswitch');
 	
 	var l = this.target.getElementsByTagName('*');
 		
@@ -248,9 +250,7 @@ wFORMS.behaviors['switch'].instance.prototype.buildCache = function() {
 				this.addTargetToCache(l[i]);			
 			}
 		}
-	}	
-	if(typeof time != 'undefined') time.stop('applyswitch')
-	if(typeof time != 'undefined') time.report();
+	}		
 }
 
 /**

@@ -27,8 +27,8 @@
 	source = null;
 
 	var SUBMODULES = [
-	    "lib/base2-p",
-		"lib/base2-dom-p",
+	    "lib/src/base2",
+		"lib/src/base2-dom",
 		"wforms_core",
 		"wforms_hint",
 		"wforms_paging",
