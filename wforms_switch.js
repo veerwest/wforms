@@ -94,11 +94,10 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 	while(f && f.tagName!='FORM') {
 		f = f.parentNode;
 	}
-	if(!f) return; // bad markup
 	
 	// keep existing instance if possible
 	var b = wFORMS.getBehaviorInstance(f,'switch');
-	
+		
 	if(b) {
 		// but reset cache.
 		b.cache = {};	
@@ -153,6 +152,16 @@ wFORMS.behaviors['switch'].instance.prototype.setupTrigger = function(elem) {
 				
 				// Retreives all radio group
 				var radioGroup = elem.form[elem.name];
+				if(!radioGroup) {
+					// repeated radio groups don't show up in the collection in IE6+
+					radioGroup = [];
+					var c = elem.form.getElementsByTagName('INPUT');
+					for(var k=0;k<c.length;k++) {
+						if(c[k].type=='radio' && c[k].name==elem.name) {
+							radioGroup.push(c[k]);
+						}
+					}
+				}
 				for(var i=radioGroup.length-1;i>=0;i--) {
 					
 					var _elem = radioGroup[i];
@@ -237,8 +246,7 @@ wFORMS.behaviors['switch'].instance.prototype.buildCache = function() {
 	var l = this.target.getElementsByTagName('*');
 		
 	for(var i=0;i<l.length;i++) {
-		if(l[i].tagName) {
-		
+		if(l[i].tagName) {					
 			// Iterates all elements. Lookup for triggers and targets
 			if(l[i].className && l[i].className.indexOf(this.behavior.CSS_PREFIX)!=-1) {		
 				this.addTriggerToCache(l[i]);	
@@ -282,7 +290,6 @@ wFORMS.behaviors['switch'].instance.prototype.invalidateCache = function() {
 }
 
 wFORMS.behaviors['switch'].instance.prototype.addTriggerToCache = function(element) {
-	
 	// For selects, make sure to get the <SELECT> element.
 	if(element.tagName =='OPTION') {
 		var sNode = element.parentNode;
@@ -396,7 +403,16 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggers = function(elems, incl
 			case 'INPUT' : 
 				if(elem.type && elem.type.toUpperCase() == 'RADIO'){					
 					var radioGroup = elem.form[elem.name];
-					if(!radioGroup) break; // bad markup
+					if(!radioGroup) {
+						// repeated radio groups don't show up in the collection in IE6+
+						var radioGroup = [];
+						var c = elem.form.getElementsByTagName('INPUT');
+						for(var k=0;k<c.length;k++) {
+							if(c[k].type=='radio' && c[k].name==elem.name) {
+								radioGroup.push(c[k]);
+							}
+						}
+					}
 					for(var j=radioGroup.length-1;j>=0;j--) {						
 						var _elem = radioGroup[j];
 						// Do not call getSwitchNamesFromTrigger on this radio input 

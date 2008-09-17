@@ -567,13 +567,18 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 			// Create a radio input that works in IE and insert it before the input it needs to replace
 			var tagHtml = "<INPUT type=\"radio\" name=\""+e.name+suffix+"\"></INPUT>";
 			var fixedRadio = e.parentNode.insertBefore(document.createElement(tagHtml),e);
+			/*
+			var fixedRadio = e.parentNode.insertBefore(document.createElement("SPAN"),e);
+			fixedRadio.innerHTML = tagHtml;
+			fixedRadio = fixedRadio.firstChild;
+			*/			
+			// Clone other attributes
+			fixedRadio.id = e.id;
+			fixedRadio.className = e.className;		
 			
 			// Remove original radio (keep element in memory)
-			e = e.parentNode.removeChild(e);
-			
-			// Clone other attributes
-			fixedRadio.id = e.id;		
-				
+			e = e.parentNode.removeChild(e);			
+							
 			var l = this.behavior.UPDATEABLE_ATTR_ARRAY.length;
 						
 			for (var j = 0; j < l; j++) {			
@@ -585,7 +590,7 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 			e = fixedRadio;				
 			if(!e.hasClass) { // no base2.DOM.bind to speed up function 
 				e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
-			}			
+			}								
 		} 
 		
 		this.updateAttributes(e, suffix, preserveRadioName);

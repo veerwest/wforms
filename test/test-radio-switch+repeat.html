@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>	
+	<title>wForms 3.0 - Switch Behavior Test Suite</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	<!-- 
+	<script type="text/javascript" src="../build/wforms.js"></script>
+	-->
+	<script type="text/javascript" src="../lib/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/src/base2-dom.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_repeat.js"></script>	
+	<script type="text/javascript" src="../wforms_switch.js"></script>
+	
+	<script type="text/javascript">
+	
+	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {
+		setUpPageStatus = 'complete';		
+	} 
+	
+	function setUpPage() {}
+  
+  	function setUp() {
+  		
+  	}
+	
+	function tearDown() {}
+	
+	function testSwitch(){
+		
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
+		document.getElementById('switchy1').checked = true;
+		sInstance.run(null, document.getElementById('switchy1'));
+		
+		assertEquals("onstate-y", document.getElementById('testy').className);
+		
+		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat'),'repeat');
+		rInstance.run();			
+		
+		assertEquals("onstate-y", document.getElementById('testy[0]').className);
+		assertEquals("offstate-y", document.getElementById('testy[1]').className);
+		
+		document.getElementById('switchy1[1]').checked = true;
+		sInstance.run(null, document.getElementById('switchy1[1]'));
+		assertEquals("onstate-y", document.getElementById('testy[1]').className);
+		
+		document.getElementById('switchy2[1]').checked = true;
+		sInstance.run(null, document.getElementById('switchy2[1]'));
+		assertEquals("offstate-y", document.getElementById('testy[1]').className);
+		
+		document.getElementById('switchy2[0]').checked = true;
+		sInstance.run(null, document.getElementById('switchy2[0]'));
+		assertEquals("offstate-y", document.getElementById('testy[0]').className);
+		
+		document.getElementById('switchy1[1]').checked = true;
+		sInstance.run(null, document.getElementById('switchy1[1]'));
+		assertEquals("onstate-y", document.getElementById('testy[1]').className);
+		
+	}
+	</script>
+	
+</head>
+
+<body class="wForm">
+	<form id="testform">
+		
+		<fieldset class="repeat" id="testrepeat">
+						
+			<input type="radio" name="switchy" class="switch-y" id="switchy1" />Switch Y ON<br/>
+			<input type="radio" name="switchy" class="" id="switchy2" />Switch Y OFF<br/>
+			
+			<div id="testy" class="offstate-y">Y STATE</div>
+		</fieldset >
+	
+		<input type="radio" name="testradio[0]" id="testradio" />
+		<input type="radio" name="testradio[0]" id="testradio2" />
+	</form>
+	<a href="#" onclick='testSwitch(); return false;'>test</a>
+</body>
+</html>
+
+
