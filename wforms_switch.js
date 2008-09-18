@@ -107,9 +107,9 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 		b = new wFORMS.behaviors['switch'].instance(f);
 		ret = b; 	
 	}		
-	b.buildCache();	
-	b.setupTriggers();
-	b.setupTargets();
+	b.buildCache();		
+	b.setupTriggers();	
+	b.setupTargets();	
 	b.onApply();
 	return ret;	
 }
@@ -563,16 +563,18 @@ wFORMS.behaviors['switch'].isSwitchedOff = function(elem){
  * Targets should be ON. 
  */
 wFORMS.behaviors['switch'].instance.prototype.setupTargets = function(){
-
-	for(var i in this.cache) {
-		
+	var _ran = []; 
+	for(var i in this.cache) {	
 		for(var j=0; j< this.cache[i].triggers.length; j++) {
 			var elem = this.cache[i].triggers[j];
-		
-			// Switch link state is set with the class 'swtchIsOn'/'swtchIsOff' 
-			if(elem.tagName!='A' || elem.hasClass(this.behavior.CSS_ONSTATE_FLAG)) {
-				this.run(null, elem)
-			}			
+			// an element can have several triggers (ie. select tag), so make sure we run it only once.
+			if(!wFORMS.helpers.contains(_ran,elem)) {
+				// Switch link state is set with the class 'swtchIsOn'/'swtchIsOff' 
+				if(elem.tagName!='A' || elem.hasClass(this.behavior.CSS_ONSTATE_FLAG)) {
+					_ran.push(elem);
+					this.run(null, elem)
+				}			
+			}
 		}		
 	}	
 }
@@ -632,9 +634,10 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 		
 	var triggers = this.getTriggers(new Array(element));
 	
+	
 	for(var i=0; i<triggers.OFF.length;i++) {
 		var switchName = triggers.OFF[i];
-		
+			
 		for(var j=0; j<this.cache[switchName].targets.length;j++) {
 			var elem = this.cache[switchName].targets[j];
 						
@@ -657,6 +660,7 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 		var switchName = triggers.ON[i];
 		for(var j=0; j<this.cache[switchName].targets.length;j++) {			
 			var elem = this.cache[switchName].targets[j];
+			
 			
 			if(!this.inScope(element,elem)) {
 				continue;
