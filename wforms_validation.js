@@ -105,14 +105,14 @@ wFORMS.behaviors.validation.instance.prototype.onApply = function() {}
  
 /**
  * Executes the behavior
- * @param {event} e 
+ * @param {event} 		e 	(optional) 
  * @param {domElement} element
  * @return	{boolean}	true if validation successful, false otherwise (and prevents event propagation)
  */
 wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 	
 	// hack to stop to event propagation under paging
-	if (e.pagingStopPropagation) {
+	if (e && e.pagingStopPropagation) {
 		return false;
 	}
 
