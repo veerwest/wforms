@@ -207,15 +207,24 @@ wFORMS.behaviors.paging.instance.prototype.onApply = function() {}
 /** On submit advance the page instead, until the last page. */
 wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
 	if (!wFORMS.behaviors.paging.isLastPageIndex(b.currentPageIndex)) {
+		var currentPage = wFORMS.behaviors.paging.getPageByIndex(b.currentPageIndex);
 		var nextPage = b.findNextPage(b.currentPageIndex);
-		e.preventDefault();
-		b.activatePage(b.currentPageIndex + 1);
 		
-		// focus the first form element in the next page
-		var first = base2.DOM.Element.querySelector(nextPage, 'input, textarea, select');
-		if (first) {
-			first.focus();
+		// validate and advance the page
+		var v = wFORMS.getBehaviorInstance(b.target, 'validation');
+		if (v.run(e, currentPage)) {
+			b.activatePage(b.currentPageIndex + 1);
+			
+			// focus the first form element in the next page
+			var first = base2.DOM.Element.querySelector(nextPage, 'input, textarea, select');
+			if (first) {
+				first.focus();
+			}
 		}
+		
+		e.stopPropagation();
+		e.preventDefault();
+		e.pagingStopPropagation = true;
 	}
 }
 
