@@ -574,7 +574,8 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 			*/			
 			// Clone other attributes
 			fixedRadio.id = e.id;
-			fixedRadio.className = e.className;		
+			fixedRadio.className = e.className;
+			fixedRadio.value = e.value;
 			
 			// Remove original radio (keep element in memory)
 			e = e.parentNode.removeChild(e);			
