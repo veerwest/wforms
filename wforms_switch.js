@@ -107,7 +107,7 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 		b = new wFORMS.behaviors['switch'].instance(f);
 		ret = b; 	
 	}		
-	b.buildCache();		
+	b.buildCache();			
 	b.setupTriggers();	
 	b.setupTargets();	
 	b.onApply();
@@ -243,6 +243,8 @@ wFORMS.behaviors['switch'].removeHandle = function(elem){
  */
 wFORMS.behaviors['switch'].instance.prototype.buildCache = function() {
 	
+	this.cache_processed = new Array();	// stores ids of elements already processed, to prevent duplicate parsing. 
+	
 	var l = this.target.getElementsByTagName('*');
 		
 	for(var i=0;i<l.length;i++) {
@@ -290,6 +292,7 @@ wFORMS.behaviors['switch'].instance.prototype.invalidateCache = function() {
 }
 
 wFORMS.behaviors['switch'].instance.prototype.addTriggerToCache = function(element) {
+
 	// For selects, make sure to get the <SELECT> element.
 	if(element.tagName =='OPTION') {
 		var sNode = element.parentNode;
@@ -301,7 +304,14 @@ wFORMS.behaviors['switch'].instance.prototype.addTriggerToCache = function(eleme
 			return; // bad markup
 		}
 		element = sNode;	
-	}	
+	}
+	
+	for(var j=0;j<this.cache_processed.length;j++) {
+		if(this.cache_processed[j]==element.id) {
+			return; // already processed (happens for <select>)
+		}
+	}
+	this.cache_processed.push(element.id);
 
 	wFORMS.standardizeElement(element);
 						
@@ -535,8 +545,11 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggersByTarget = function(tar
 		var c = this.cache[names[i]];
 		if(c) {
 			for(j=0; j<c.triggers.length;j++) {
-				var elem = c.triggers[j];				
-				res.push(elem); 
+				var elem = c.triggers[j];
+				for(var k=0;k<res.length && res[k]!=elem;k++);
+				if(k==res.length) {
+					res.push(elem);
+				} 
 			}
 		} 
 	}
@@ -637,7 +650,7 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 	
 	for(var i=0; i<triggers.OFF.length;i++) {
 		var switchName = triggers.OFF[i];
-			
+					
 		for(var j=0; j<this.cache[switchName].targets.length;j++) {
 			var elem = this.cache[switchName].targets[j];
 						
@@ -648,9 +661,10 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 			wFORMS.standardizeElement(elem);
 			
 			elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
-			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);
-			
+			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);			
+						
 			var _triggers = this.getTriggersByTarget(elem);
+			
 			if(_triggers.ON.length == 0){				
 				this.behavior.onSwitchOff(elem);
 			}
