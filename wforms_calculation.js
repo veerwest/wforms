@@ -70,7 +70,7 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 							var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+' ')!=-1);
 							if(!exactMatch) return;
 							
-							switch(variable.tagName + ":" + variable.getAttribute('type') ) {
+							switch(variable.tagName + ":" + variable.type) {
 								case 'INPUT:':			// (type attribute empty)
 								case 'INPUT:null': 		// (type attribute missing)
 								case 'INPUT:text':
