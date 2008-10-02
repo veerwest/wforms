@@ -70,36 +70,34 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 							var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+' ')!=-1);
 							if(!exactMatch) return;
 							
-							switch(variable.tagName + ":" + variable.type) {
-								case 'INPUT:':			// (type attribute empty)
-								case 'INPUT:null': 		// (type attribute missing)
-								case 'INPUT:text':
-								case 'INPUT:hidden':
-								case 'INPUT:password':
-								case 'TEXTAREA:null':
-									if(!variable._wforms_calc_handled) {
+							// listen for value changes
+							if(!variable._wforms_calc_handled) {
+								var t = variable.tagName.toLowerCase();
+								if (t == 'input' || t == 'textarea') {
+									
+									// toggled fields
+									var y = variable.type.toLowerCase();
+									if (t == 'input' && (y == 'radio' || y == 'checkbox')) {
+										variable.addEventListener('click', function(e){ return b.run(e, this)}, false);
+										variable._wforms_calc_handled = true;
+									
+									// text entry fields
+									} else {
 										variable.addEventListener('blur', function(e){ return b.run(e, this)}, false);
 										variable._wforms_calc_handled = true;
 									}
-									break;
-								case 'INPUT:radio':		 						
-								case 'INPUT:checkbox':
-									if(!variable._wforms_calc_handled) {
-										variable.addEventListener('click', function(e){ return b.run(e, this)}, false);
-										variable._wforms_calc_handled = true;
-									}
-									break;			
-								case 'SELECT:null':
-									if(!variable._wforms_calc_handled) {
-										variable.addEventListener('change',  function(e){ return b.run(e, this)}, false);
-										variable._wforms_calc_handled = true;
-									}
-									break;		
-								default:
-									// error: variable refers to a non supported element.
+									
+								// select boxes
+								} else if (t == 'select') {
+									variable.addEventListener('change',  function(e){ return b.run(e, this)}, false);
+									variable._wforms_calc_handled = true;
+									
+								// unsupported elements	
+								} else {
 									return;
-									break;
+								}
 							}
+							
 							b.varFields.push({name: variables[i], field: variable});						
 						}
 					);			
