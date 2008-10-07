@@ -73,6 +73,7 @@
 	</head>
 	<body class="wForm" style="padding:5px; margin:10px;">
         <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" class="hintsTooltip">
+        	
             <div class="oneField">
                 <label for="testField" class="preField">Test Field
                 	<span class="reqMark">*</span>
@@ -96,6 +97,24 @@
                     </td>
                 </tr>
             </table>
+			
+            <fieldset>
+            	<legend>Moo</legend>
+            	<div class="oneField">
+            		<label for="tfa_Blash" class="preField">Blash</label>
+            		<input type="text" id="tfa_Blash" name="tfa_Blash" size="40" />
+            		<div class="field-hint-inactive" id="tfa_Blash-H"><span>What?</span></div><br>
+            		<span class="errMsg" id="tfa_Blash-E"></span>
+				</div>
+			</fieldset>
+			
+			<div class="oneField">
+				<label for="tfa_Blerg" class="preField">Blerg</label>
+				<input type="text" id="tfa_Blerg" name="tfa_Blerg" size="40" />
+				<div class="field-hint-inactive" id="tfa_Blerg-H"><span>Hint</span></div><br>
+				<span class="errMsg" id="tfa_Blerg-E"></span>
+			</div>
+            
         </form>
     </body>
 </html>
