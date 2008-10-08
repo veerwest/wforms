@@ -3080,6 +3080,20 @@ wFORMS.helpers.getTop = function(elem){
 }
 
 /**
+ * determine the position of an element relative to the document
+ */
+wFORMS.helpers.position = function (element) {
+	var x = element.offsetLeft;
+	var y = element.offsetTop;
+	if (element.offsetParent) {
+		var p = this.position(element.offsetParent);
+		x += p.left;
+		y += p.top;
+	}
+	return {left: x, top: y};
+};
+
+/**
  * highlight change 
  */ 
 wFORMS.helpers.useSpotlight = false;
@@ -3366,12 +3380,20 @@ wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
  * @param	{HTMLElement}	hint	Hint HTML element
  * @param   {HTMLElement}	source	HTML element with focus.
  */
-wFORMS.behaviors.hint.instance.prototype.setup = function(hint, source){
-	
-	var l = ((source.tagName == 'SELECT' ? + source.offsetWidth : 0) + wFORMS.helpers.getLeft(source));
-	var t  = (wFORMS.helpers.getTop(source) + source.offsetHeight);	
-	hint.style.left = l + "px"; 
-	hint.style.top  = t + "px";
+wFORMS.behaviors.hint.instance.prototype.setup = function(hint, field){
+	var fp = wFORMS.helpers.position(field);
+	var hp = wFORMS.helpers.position(hint);
+	var diff = {
+		left: fp.left - hp.left,
+		top: fp.top - hp.top
+	};
+	if (field.tagName.toLowerCase() == 'select') {
+		hint.style.left = hint.offsetLeft + diff.left + field.offsetWidth +'px';
+		hint.style.top = hint.offsetTop + diff.top +'px';
+	} else {
+		hint.style.left = hint.offsetLeft + diff.left +'px';
+		hint.style.top = hint.offsetTop + diff.top + field.offsetHeight +'px';
+	}
 }
 
 /**

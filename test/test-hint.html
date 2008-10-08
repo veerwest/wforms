@@ -46,27 +46,32 @@
 		function tearDown() {}
 		
 		function testHint() {
-			var testForm = document.getElementById('testForm');
-			var field = document.getElementById('testField');
-			var hint = document.getElementById('testField-H');
-			var bInstance = wFORMS.getBehaviorInstance(testForm, 'hint');
-			
-			bInstance.setup(hint, field);
-		
-			assertEquals('225px', hint.style.left);
-			assertEquals('52px', hint.style.top);
-		}
-		
-		function testHintInTableCell() {
-			var testForm = document.getElementById('testForm');
-			var field = document.getElementById('testField2');
-			var hint = document.getElementById('testField2-H');
-			var bInstance = wFORMS.getBehaviorInstance(testForm, 'hint');
-			
-			bInstance.setup(hint, field);
-		
-			assertEquals('21px', hint.style.left);
-			assertEquals('90px', hint.style.top);
+			var form = document.getElementById('testForm');
+			var fields = [
+				'test-field-0',
+				'test-field-1',
+				'test-field-2',
+				'test-field-3',
+				'test-field-4'
+			];
+			for (var f in fields) {
+				var field = document.getElementById(fields[f]);
+				var hint = document.getElementById(fields[f] +'-H');
+				var behavior = wFORMS.getBehaviorInstance(form, 'hint');
+				
+				behavior.setup(hint, field);
+				
+				var fp = wFORMS.helpers.position(field);
+				var hp = wFORMS.helpers.position(hint);
+				
+				if (field.tagName.toLowerCase() == 'select') {
+					assertEquals(fp.left + field.offsetWidth, hp.left);
+					assertEquals(fp.top, hp.top);
+				} else {
+					assertEquals(fp.left, hp.left);
+					assertEquals(fp.top + field.offsetHeight, hp.top);
+				}
+			}
 		}
 		
 	</script>
@@ -75,24 +80,24 @@
         <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" class="hintsTooltip">
         	
             <div class="oneField">
-                <label for="testField" class="preField">Test Field
+                <label for="test-field-0" class="preField">Test Field
                 	<span class="reqMark">*</span>
                 </label>
-              	<input type="text" id="testField" name="testField"  />
-                <div class="field-hint-inactive" id="testField-H">
+              	<input type="text" id="test-field-0" name="test-field-0"  />
+                <div class="field-hint-inactive" id="test-field-0-H">
                     <span>Mail and e-mail correspondence will be sent to this name.</span>
                 </div>
               	<br />
-               	<span class="errMsg" id="testField-E"></span>
+               	<span class="errMsg" id="test-field-0-E"></span>
             </div>
 			
 			 <table>
                 <tr id="testRow" class="alternate-0">
 	                  <td>                        
-                        <input type="text" id="testField2" name="testField2" value="" size="40" class="" />
+                        <input type="text" id="test-field-4" name="test-field-4" value="" size="40" class="" />
 
-                        <div class="field-hint-inactive" id="testField2-H">
-                            <span>hint testField2</span>
+                        <div class="field-hint-inactive" id="test-field-4-H">
+                            <span>hint test-field-4</span>
                         </div>          	           
                     </td>
                 </tr>
@@ -101,18 +106,29 @@
             <fieldset>
             	<legend>Moo</legend>
             	<div class="oneField">
-            		<label for="tfa_Blash" class="preField">Blash</label>
-            		<input type="text" id="tfa_Blash" name="tfa_Blash" size="40" />
-            		<div class="field-hint-inactive" id="tfa_Blash-H"><span>What?</span></div><br>
-            		<span class="errMsg" id="tfa_Blash-E"></span>
+            		<label for="test-field-1" class="preField">Blash</label>
+            		<input type="text" id="test-field-1" name="test-field-1" size="40" />
+            		<div class="field-hint-inactive" id="test-field-1-H"><span>What?</span></div><br>
+            		<span class="errMsg" id="test-field-1-E"></span>
 				</div>
 			</fieldset>
 			
 			<div class="oneField">
-				<label for="tfa_Blerg" class="preField">Blerg</label>
-				<input type="text" id="tfa_Blerg" name="tfa_Blerg" size="40" />
-				<div class="field-hint-inactive" id="tfa_Blerg-H"><span>Hint</span></div><br>
-				<span class="errMsg" id="tfa_Blerg-E"></span>
+				<label for="test-field-2" class="preField">Blerg</label>
+				<input type="text" id="test-field-2" name="test-field-2" size="40" />
+				<div class="field-hint-inactive" id="test-field-2-H"><span>Hint</span></div><br>
+				<span class="errMsg" id="test-field-2-E"></span>
+			</div>
+			
+			<div class="oneField">
+				<label for="test-field-3" class="preField">Thing</label>
+				<select id="test-field-3" name="test-field-3">
+					<option></option>
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</select>
+				<div class="field-hint-inactive" id="test-field-3-H"><span>Doot</span></div><br>
+				<span class="errMsg" id="test-field-2-E"></span>
 			</div>
             
         </form>

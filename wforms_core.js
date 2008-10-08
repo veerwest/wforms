@@ -139,6 +139,20 @@ wFORMS.helpers.getTop = function(elem){
 }
 
 /**
+ * determine the position of an element relative to the document
+ */
+wFORMS.helpers.position = function (element) {
+	var x = element.offsetLeft;
+	var y = element.offsetTop;
+	if (element.offsetParent) {
+		var p = this.position(element.offsetParent);
+		x += p.left;
+		y += p.top;
+	}
+	return {left: x, top: y};
+};
+
+/**
  * highlight change 
  */ 
 wFORMS.helpers.useSpotlight = false;
