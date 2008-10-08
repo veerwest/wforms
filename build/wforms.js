@@ -3347,7 +3347,9 @@ wFORMS.behaviors.hint.instance.prototype.run = function(event, element) {
 	if(event.type == 'focus' || event.type == 'mouseover'){
 		hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
 		hint.addClass(wFORMS.behaviors.hint.CSS_ACTIVE);
-		this.setup(hint, element);
+		if (!element.form.hasClass('hintsSide')) {
+			this.setup(hint, element);
+		}
 	} else{
 		hint.addClass(wFORMS.behaviors.hint.CSS_INACTIVE);
 		hint.removeClass(wFORMS.behaviors.hint.CSS_ACTIVE);
@@ -3380,7 +3382,10 @@ wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
  * @param	{HTMLElement}	hint	Hint HTML element
  * @param   {HTMLElement}	source	HTML element with focus.
  */
-wFORMS.behaviors.hint.instance.prototype.setup = function(hint, field){
+wFORMS.behaviors.hint.instance.prototype.setup = function(hint, field) {
+	if (hint.parentNode != field.form) {
+		field.form.appendChild(hint);
+	}
 	var fp = wFORMS.helpers.position(field);
 	var hp = wFORMS.helpers.position(hint);
 	var diff = {
