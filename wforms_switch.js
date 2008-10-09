@@ -306,6 +306,10 @@ wFORMS.behaviors['switch'].instance.prototype.addTriggerToCache = function(eleme
 		element = sNode;	
 	}
 	
+	if(!element.id) {
+		element.id = wFORMS.helpers.randomId();
+	}
+	
 	for(var j=0;j<this.cache_processed.length;j++) {
 		if(this.cache_processed[j]==element.id) {
 			return; // already processed (happens for <select>)
@@ -593,6 +597,7 @@ wFORMS.behaviors['switch'].instance.prototype.setupTargets = function(){
 }
 
 wFORMS.behaviors['switch'].instance.prototype.inScope = function(trigger, target) {
+	
 	var br = wFORMS.behaviors.repeat;
 	if(br) {
 		var triggerRepeat = trigger;
@@ -619,6 +624,7 @@ wFORMS.behaviors['switch'].instance.prototype.inScope = function(trigger, target
 					wFORMS.standardizeElement(target);
 				}	
 			}
+			
 			return !isInRepeat;
 		}
 	}
