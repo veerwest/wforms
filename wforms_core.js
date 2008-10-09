@@ -88,6 +88,23 @@ wFORMS.helpers.getComputedStyle = function(element, styleName){
 }
 
 /**
+ * finds the parent form of any element
+ */
+wFORMS.helpers.getForm = function (e) {
+	if (e.form) {
+		return e.form;
+	} else if (e.parentNode) {
+		if (e.parentNode.tagName.toLowerCase() == 'form') {
+			return e.parentNode;
+		} else {
+			return this.getForm(e.parentNode);
+		}
+	} else {
+		return null;
+	}
+};
+
+/**
  * Returns left position of the element
  * @params	{HTMLElement}	elem	Source element 
  */

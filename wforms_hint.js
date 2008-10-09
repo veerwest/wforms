@@ -94,7 +94,7 @@ wFORMS.behaviors.hint.instance.prototype.run = function(event, element) {
 	if(event.type == 'focus' || event.type == 'mouseover'){
 		hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
 		hint.addClass(wFORMS.behaviors.hint.CSS_ACTIVE);
-		if (!element.form.hasClass('hintsSide')) {
+		if (!wFORMS.helpers.getForm(element).hasClass('hintsSide')) {
 			this.setup(hint, element);
 		}
 	} else{
