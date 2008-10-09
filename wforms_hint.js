@@ -130,8 +130,9 @@ wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
  * @param   {HTMLElement}	source	HTML element with focus.
  */
 wFORMS.behaviors.hint.instance.prototype.setup = function(hint, field) {
-	if (hint.parentNode != field.form) {
-		field.form.appendChild(hint);
+	var form = wFORMS.helpers.getForm(field);
+	if (hint.parentNode != form) {
+		form.appendChild(hint);
 	}
 	var fp = wFORMS.helpers.position(field);
 	var hp = wFORMS.helpers.position(hint);
