@@ -3029,6 +3029,23 @@ wFORMS.helpers.getComputedStyle = function(element, styleName){
 }
 
 /**
+ * finds the parent form of any element
+ */
+wFORMS.helpers.getForm = function (e) {
+	if (e.form) {
+		return e.form;
+	} else if (e.parentNode) {
+		if (e.parentNode.tagName.toLowerCase() == 'form') {
+			return e.parentNode;
+		} else {
+			return this.getForm(e.parentNode);
+		}
+	} else {
+		return null;
+	}
+};
+
+/**
  * Returns left position of the element
  * @params	{HTMLElement}	elem	Source element 
  */
@@ -3347,7 +3364,7 @@ wFORMS.behaviors.hint.instance.prototype.run = function(event, element) {
 	if(event.type == 'focus' || event.type == 'mouseover'){
 		hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
 		hint.addClass(wFORMS.behaviors.hint.CSS_ACTIVE);
-		if (!element.form.hasClass('hintsSide')) {
+		if (!wFORMS.helpers.getForm(element).hasClass('hintsSide')) {
 			this.setup(hint, element);
 		}
 	} else{
