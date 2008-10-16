@@ -86,14 +86,22 @@ wFORMS.helpers.clearFieldValues = function(element) {
 			} else //  if(element.type!='hidden') skip hidden fields?
 				element.value = "";					
 			break;
-		case "SELECT":		
-			if(element.selectedIndex!=-1) {					
-				element.selectedIndex = -1;
-			} 										
+		case "SELECT":
+			// clear the selected attribute for all options in the select.			 				
 			for(var i=0;i<element.options.length;i++) {
 				if(element.options[i].selected) {
 					element.options[i].selected = false;
 				}
+			}
+			if(element.options[0].value=='') {
+				// No value is defined for the first option. 
+				// We assume it to be of the 'Please select...' kind and 
+				// we can safely revert to it.				
+				element.selectedIndex = 0;
+				element.options[0].selected = true;
+			} else {
+				// Otherwise, clear the selection altogether.
+				element.selectedIndex = -1;
 			}
 			break;
 		case "TEXTAREA":
@@ -120,13 +128,15 @@ wFORMS.helpers.clearFieldValues = function(element) {
  * @param {event} event
  * @param {domElement} elem
  */
-wFORMS.behaviors.calculation.instance.prototype.refresh = function(event, element) { 
-	
-	for(var i=0; i<this.calculations.length;i++) {		
-		var calc = this.calculations[i];
-					
-		if(element==calc.field) {
-			this.compute(calc);
+if(wFORMS.behaviors.calculation) {
+	wFORMS.behaviors.calculation.instance.prototype.refresh = function(event, element) { 
+		
+		for(var i=0; i<this.calculations.length;i++) {		
+			var calc = this.calculations[i];
+						
+			if(element==calc.field) {
+				this.compute(calc);
+			}
 		}
-	}
-} 
+	} 
+}
