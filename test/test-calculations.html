@@ -38,7 +38,7 @@
 		assertNotUndefined('Instance of behavior should be available.', bInstance);
 		assertNotUndefined('Instance target should be set',bInstance.target);
 		assertEquals('Instance target should be the form','testForm',bInstance.target.id);
-		assertEquals('Found calculations',12, bInstance.calculations.length);
+		assertEquals('Found calculations',13, bInstance.calculations.length);
 		
 		// Each calculation should have a field, formula and variables 
 		for(var i=0; i<bInstance.calculations.length;i++) {	
@@ -293,6 +293,13 @@
 		assertEquals('150', document.getElementById('totalG').value);
 		assertEquals('15', document.getElementById('totalH').value);
 	}
+	
+	function testVariableValueConflict() {
+		document.getElementById('a').value = 'a';	
+		document.getElementById('b').value = 'b';
+		
+		bInstance.run(null, document.getElementById('c'));
+	}
 
 </script>
 
@@ -497,6 +504,22 @@
 				<label for="totalX" class="preField">String().concat(Z,'-',Y)=:</label>
 				<input type="text" readonly="readonly" value="" id="totalX" class="formula=String().concat(Z,'-',Y)" />
 			</div>	
+			
+			<div class="oneField">
+				<label for="a" class="preField">A:</label>
+				<input type="text" readonly="readonly" value="" id="a" class="calc-a" />
+			</div>
+			
+			<div class="oneField">
+				<label for="b" class="preField">B:</label>
+				<input type="text" readonly="readonly" value="" id="b" class="calc-b" />
+			</div>
+			
+			<div class="oneField">
+				<label for="c" class="preField">A+B=:</label>
+				<input type="text" readonly="readonly" value="" id="c" class="formula=a+b" />
+			</div>
+			
 		</fieldset>
 	</form>
 </body>

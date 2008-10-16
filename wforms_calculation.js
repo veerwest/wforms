@@ -211,17 +211,17 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 			}
 		);		
 		
-	    var rgx = new RegExp("([^a-z])("+v.name+")([^a-z])","gi");
-	    while((' '+formula+' ').match(rgx)) {
-	    if(String(varval).search(/^[\d\.,]*$/) != -1)
-			formula = (' '+formula+' ').replace(rgx, "$1"+varval+"$3");
-		else
-			formula = (' '+formula+' ').replace(rgx, "$1'"+varval+"'$3");
-	    }	      
+		// prepend variable assignment to the formula
+		if(String(varval).search(/^[\d\.,]*$/) != -1) {
+			formula = 'var '+ v.name +' = '+ varval +'; '+ formula;
+		} else {
+			formula = 'var '+ v.name +' = "'+ varval +'"; '+ formula;
+		}
 	} 
 	  
 	try {
-		var result = eval(formula);
+		var calc = function () {return eval(formula)};
+		var result = calc();
 		if(result == 'Infinity' || result == 'NaN' || String(result).match('NaN')){
 			result = 'error';
 		}
