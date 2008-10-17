@@ -215,7 +215,7 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 		if(String(varval).search(/^[\d\.,]*$/) != -1) {
 			formula = 'var '+ v.name +' = '+ varval +'; '+ formula;
 		} else {
-			formula = 'var '+ v.name +' = "'+ varval +'"; '+ formula;
+			formula = 'var '+ v.name +' = "'+ varval.replace(/\"/g, '\\"') +'"; '+ formula;
 		}
 	} 
 	  

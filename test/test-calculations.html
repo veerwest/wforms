@@ -297,8 +297,17 @@
 	function testVariableValueConflict() {
 		document.getElementById('a').value = 'a';	
 		document.getElementById('b').value = 'b';
-		
-		bInstance.run(null, document.getElementById('c'));
+		bInstance.run(null, document.getElementById('a'));
+		bInstance.run(null, document.getElementById('b'));
+		assertEquals('ab', document.getElementById('c').value);
+	}
+	
+	function testQuoteValue() {
+		document.getElementById('a').value = "''";	
+		document.getElementById('b').value = '""';
+		bInstance.run(null, document.getElementById('a'));
+		bInstance.run(null, document.getElementById('b'));
+		assertEquals('\'\'""', document.getElementById('c').value);
 	}
 
 </script>
