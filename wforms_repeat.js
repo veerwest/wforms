@@ -641,15 +641,20 @@ _i.prototype.createSuffix = function(e, index){
 }
 
 /**
- * Removes suffix from ID id was previously set
+ * Removes row counters from ID
  * @param	id	Current element id
  * @return	DOMString
+ * 
+ * repeated field ID is: 			fieldid[n]...[n]
+ * repeated hint ID is:				fieldid[n]...[n]-H
+ * repeated error placeholder is : 	fieldid[n]...[n]-E
+ * returns fieldid, fieldid-H or fieldid-E
  */
 _i.prototype.clearSuffix = function(value){
 	if(!value){
 		return;
-	}
-    value = value.replace(/(\[\d+\])+(\-H)?$/,"");    
+	}	
+    value = value.replace(/(\[\d+\])+(\-[HE])?$/,"$2");    
 	return value;
 }
 
@@ -687,9 +692,9 @@ _i.prototype.updateAttributes = function(e, idSuffix, preserveRadioName){
 		if(attrName == 'name' && e.tagName == 'INPUT' && preserveRadioName){
 			continue;
 		} else if(isErrorPlaceholder && attrName=='id'){	
-			e.id = value + idSuffix + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX;
+			e.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.validation.ERROR_PLACEHOLDER_SUFFIX + ')$'),"$1" + idSuffix + "$2");
 		} else if(isHint && attrName=='id'){			
-			e.id = value + idSuffix + wFORMS.behaviors.hint.HINT_SUFFIX;
+			e.id = value.replace(new RegExp("(.*)(" + wFORMS.behaviors.hint.HINT_SUFFIX + ')$'),"$1" + idSuffix + "$2");
 		} else if(isDuplicateLink && attrName=='id'){
 			e.id = value.replace(new RegExp("(.*)(" + this.behavior.ID_SUFFIX_DUPLICATE_LINK + ')$'),"$1" + idSuffix + "$2");
 		} else if(attrName=='id'){ 
