@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>wForms Layout Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<link href="../../css/abstract-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-blue theme"  />
+    <link href="../../css/abstract-brown/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-brown theme"  />
+    <link href="../../css/abstract-green/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-green theme"  />
+    <link href="../../css/antique/wforms.css" type="text/css" rel="alternate stylesheet" title="antique theme"  />
+    <link href="../../css/antique-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="antique-blue theme"  />
+    <link href="../../css/black/wforms.css" type="text/css" rel="alternate stylesheet" title="black theme"  />
+    <link href="../../css/bureaucrat/wforms.css" type="text/css" rel="alternate stylesheet" title="bureaucrat theme"  />
+    <link href="../../css/vhgdesign/wforms.css" type="text/css" rel="alternate stylesheet" title="vhgdesign theme"  />
+    <link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  />
+     
+   
+   
+	<script type="text/javascript" src="../../build/wforms.js"></script>
+	<script type="text/javascript" src="test-layout.js"></script>
+	
+</head>
+<body>
+	Test Pages:
+	<script type="text/javascript">
+		listTestPages();		
+	</script>
+	<br/>
+	Stylesheets:
+	<script type="text/javascript">
+		listAlternateStyleSheets();		
+	</script>
+	<div class="wForm">
+		<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" class="labelsLeftAligned">
+			
+			<fieldset><legend>Left Aligned Labels</legend>
+				<div class="oneField">
+					<label for="tfa_EstimatedConvers" class="preField">Long Long Long Long Long Long Long Long Long Long Long Long label <span class="reqMark">*</span></label>
+					<input type="text" id="tfa_EstimatedConvers" name="tfa_EstimatedConvers" value="" size="0" class="validate-date required"/>
+					<br/><span class="errMsg" id="tfa_EstimatedConvers-E"></span>
+				</div>
+				<div class="oneField">
+					<label for="tfa_OpportunityTypec" class="preField">Short label</label>
+					<select id="tfa_OpportunityTypec" name="tfa_OpportunityTypec" class="">
+						<option value="">Please select...</option>
+						<option value="tfa_mapid03781932816" class="">option abcdefghijklmnopqrst</option>
+					</select>
+					<br/><span class="errMsg" id="tfa_OpportunityTypec-E"></span>
+				</div>
+					
+			</fieldset>	
+			
+			<div class="actions">
+				<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="5871" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="5bdfed095fe123104093459112828666" name="tfa_dbControl" id="tfa_dbControl">
+			</div>
+		</form>
+	</div>
+</body>
+</html>
