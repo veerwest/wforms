@@ -32,7 +32,13 @@
 			bInstance = wFORMS.getBehaviorInstance(document.getElementById('testForm'), 'validation');
 		}
 		
-		function tearDown() {}
+		// remove any remaining error message
+		function tearDown() {
+			var r = document.getElementById('testField-E');
+			if (r) {
+				r.parentNode.removeChild(r);
+			}
+		}
 		
 		function testValidateAlpha() {
 			// setup
@@ -184,6 +190,65 @@
 			// Test validation rule
 			assertTrue('test@abc.e.mail.co.jp should pass email validation', bInstance.run(null, testForm)); 
 			
+		}
+		
+		function testValidatePhone() {
+			var cases = [
+				['780-9080', true],
+				['243.654.5302', true],
+				['765.653.7232 #104', true],
+				['879-8999 # 7', true],
+				['(800) 324-7008 ext. 3459', true],
+				['(540) 566-7932 ext 2', true],
+				['(761) 234 4395', true],
+				['+33 2 44 20 18 98', true],
+				['(+41) 22 730 5989', true],
+				['011 44 1225 324 980', true],
+				['moof', false],
+				['870-t0y0', false],
+				['1-897-234-4009 #x', false],
+				['1-419-625-4375 ext b', false]
+			];
+			
+			// retrieve form and field
+			var testForm  = document.getElementById('testForm');
+			var testField = document.getElementById('testField');
+			
+			// apply validation class to field
+			testField.className = 'validate-phone';
+			
+			// override error message
+			var error = 'phone error message test';
+			wFORMS.behaviors.validation.messages.isPhone = error;
+			
+			for (var c in cases) {
+				var value = cases[c][0];
+				
+				// apply case value and run validation behavior
+				testField.value = value;
+				bInstance.run(null, testForm);
+				
+				// check for validity
+				if (cases[c][1]) {
+					assertNull(
+						'"'+ value +'" should validate, but failed.',
+						document.getElementById('testField-E')
+					);
+					
+				// check for invalidity
+				} else {
+					var m = document.getElementById('testField-E');
+					assertNotNull(
+						'"'+ value +'" did not produce an error message.',
+						m
+					);
+					assertEquals(
+						'"'+ value +'" did not receive the correct error message.',
+						error,
+						m.innerHTML
+					);
+				}
+			}
 		}
 		
 		function testValidateInteger() {

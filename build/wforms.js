@@ -5622,6 +5622,7 @@ wFORMS.behaviors.validation = {
 		isEmail		: { selector: ".validate-email", 	  check: 'validateEmail'}, 
 		isInteger	: { selector: ".validate-integer", 	  check: 'validateInteger'}, 
 		isFloat		: { selector: ".validate-float", 	  check: 'validateFloat'}, 
+		isPhone		: { selector: ".validate-phone",	  check: 'validatePhone'},
 		isCustom	: { selector: ".validate-custom",	  check: 'validateCustom'}
 	},	
 	
@@ -5638,6 +5639,7 @@ wFORMS.behaviors.validation = {
 		isFloat 		: "Please enter a number (ex. 1.9).",
 		isAlphanum 		: "Please use alpha-numeric characters only [a-z 0-9].",
 		isDate 			: "This does not appear to be a valid date.",
+		isPhone			: "Please enter a valid phone number.",
 		isCustom		: "Please enter a valid value.",
 		notification	: "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."  // %% will be replaced by the actual number of errors.
 	},
@@ -5659,7 +5661,6 @@ wFORMS.behaviors.validation = {
  * @return {object} an instance of the behavior 
  */	
 wFORMS.behaviors.validation.applyTo = function(f) {
-
 	if(!f || !f.tagName) {
 		throw new Error("Can't apply behavior to " + f);
 	}
@@ -6026,6 +6027,28 @@ wFORMS.behaviors.validation.instance.prototype.validateInteger = function(elemen
  */
 wFORMS.behaviors.validation.instance.prototype.validateFloat = function(element, value) {
 	return this.isEmpty(value) || !isNaN(parseFloat(value));
+}
+
+/**
+ * validatePhone
+ * @param {domElement} element
+ * @returns {boolean}
+ */
+wFORMS.behaviors.validation.instance.prototype.validatePhone = function(element, value) {
+	if (this.isEmpty(value)) {
+		return true;
+	}
+	var formats = [
+		/^[\d-\. \+\(\)]+$/, // any combination of valid characters
+		/^[\d-\. \+\(\)]+ # {0,1}\d+ *$/, // with hash extension
+		/^[\d-\. \+\(\)]+ ext\.{0,1} \d+ *$/ // with abbreviated extension
+	];
+	for (var f in formats) {
+		if (formats[f].test(value)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
