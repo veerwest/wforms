@@ -285,6 +285,9 @@
 	padding: 4px 15px;
 }
 /* Captcha */
+.wForm fieldset.captcha legend {
+	display: none;
+}
 .wForm .captchaHelp {
 	font-size: 0.75em;
 }
