@@ -122,8 +122,14 @@
 
 /* Field w/ a validation error */
 .wForm form .errFld {
-	padding: 1px;
+	padding: 3px;
 	border: 1px solid #F00;
+}
+.wForm div.errFld {
+	background-color: transparent !important;
+}
+.wForm span.errFld {
+	background-color: transparent !important;
 }
 /* Styling for message associated with a validation error. */
 .wForm form .errMsg {	
