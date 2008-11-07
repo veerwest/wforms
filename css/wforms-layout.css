@@ -81,8 +81,9 @@
 }
 
 /* Radio/checkbox + label wrapper */
-.wForm form .oneChoice {						
-	white-space: nowrap; 
+.wForm form .oneChoice {
+	display: inline-block;					
+	white-space: nowrap;
 }
 /* Place the label and checkbox/radio on its own line */
 .wForm form .oneChoicePerLine .oneChoice {						
