@@ -440,9 +440,9 @@ wFORMS.behaviors.validation.instance.prototype.validatePhone = function(element,
 		return true;
 	}
 	var formats = [
-		/^[\d-\. \+\(\)]+$/, // any combination of valid characters
-		/^[\d-\. \+\(\)]+ # {0,1}\d+ *$/, // with hash extension
-		/^[\d-\. \+\(\)]+ ext\.{0,1} \d+ *$/ // with abbreviated extension
+		/^[\d\-\. \+\(\)]+$/, // any combination of valid characters
+		/^[\d\-\. \+\(\)]+ # {0,1}\d+ *$/, // with hash extension
+		/^[\d\-\. \+\(\)]+ ext\.{0,1} \d+ *$/ // with abbreviated extension
 	];
 	for (var f in formats) {
 		if (formats[f].test(value)) {
