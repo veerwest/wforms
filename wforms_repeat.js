@@ -345,7 +345,8 @@ _i.prototype.duplicateSection = function(elem){
 	}
 	this.updateMasterSection(elem);
 	// Creates clone of the group
-	var newElem = elem.cloneNode(true);	
+	var newElem = elem.cloneNode(true);
+		
 	// Update the ids, names and other attributes that must be changed.
 	// (do it before inserting the element back in the DOM to prevent reseting radio buttons, see bug #152)
 	var index  = this.getNextDuplicateIndex(this.target);
@@ -354,6 +355,7 @@ _i.prototype.duplicateSection = function(elem){
 	this.updateDuplicatedSection(newElem, index, suffix);
 	// Insert in DOM		
 	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
+	
 	wFORMS.applyBehaviors(newElem);
 		
 	// Associates repeated input sections with thier calculations.
@@ -426,11 +428,11 @@ _i.prototype.onRemoveLinkClick = function(event, link){
  */
 _i.prototype.updateMasterSection = function(elem){
 	// do it once 
-	if(elem.doItOnce==true)
+	if(elem.doItOnce==true) {		
 		return true;
-	else
+	} else {
 		elem.doItOnce=true;
-
+	}
 	var suffix = this.createSuffix(elem);
 	elem.id = this.clearSuffix(elem.id) + suffix;
 	
@@ -522,6 +524,11 @@ _i.prototype.updateDuplicatedSection = function(elem, index, suffix){
  * @param	suffix	Suffix value should be added to attributes
  */
 _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName){
+	
+	/* Fix for Ticket #256 - id of nested repeated element not set properly */
+	if(elem.doItOnce) {		
+		elem.doItOnce = null;		
+	}
 	
 	var removeStack = new Array();
 	var i = 0;
@@ -751,6 +758,7 @@ _i.prototype.getOrCreateCounterField = function(elem){
  * @return	{HTMLElement}
  */
 _i.prototype.createCounterField = function(id){
+
 	cElem = document.createElement('input');
 	cElem.id = id;
 	cElem.setAttribute('type', 'hidden');
