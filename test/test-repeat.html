@@ -44,7 +44,7 @@
 	
 	function tearDown() {}
 	
-	function _testApplyTo() {
+	function testApplyTo() {
 		var i=0;
 		document.getElementById('testRepeatForm').querySelectorAll(wFORMS.behaviors.repeat.SELECTOR_REPEAT).forEach(
 			function(elem){			
@@ -55,7 +55,28 @@
 		);
 	}
 	
-	function _testDuplicateSectionParts() {
+	function testClearSuffix() {
+		
+		var b = new wFORMS.behaviors.repeat.instance();
+		
+		assertEquals('testId',b.clearSuffix("testId"));
+		assertEquals('testId',b.clearSuffix("testId[0]"));
+		assertEquals('testId',b.clearSuffix("testId[0][0]"));
+	
+		assertEquals('1','testId-E',b.clearSuffix("testId-E"));
+		assertEquals('2','testId-E',b.clearSuffix("testId[0]-E"));
+		assertEquals('3','testId-E',b.clearSuffix("testId[0][0]-E"));
+		
+		assertEquals('testId-H',b.clearSuffix("testId-H"));
+		assertEquals('testId-H',b.clearSuffix("testId[0]-H"));
+		assertEquals('testId-H',b.clearSuffix("testId[0][0]-H"));	
+		
+		assertEquals('testId-D',b.clearSuffix("testId-D"));
+		assertEquals('testId-D',b.clearSuffix("testId-D[0]"));
+		assertEquals('testId-D',b.clearSuffix("testId-D[0][0]"));
+	}
+	
+	function testDuplicateSectionParts() {
 		var elem = document.getElementById('test0');
 		var inputelem = document.getElementById('testInput0');
 		var bInstance = wFORMS.getBehaviorInstance(elem, 'repeat');
@@ -65,9 +86,9 @@
 		bInstance.updateMasterSection(elem);
 		
 		// Check ids in master element
-		assertEquals('test0[0]',elem.id); 
-		assertEquals('testInput0[0]',inputelem.id); 
-		assertEquals('testInput0[0]',inputelem.name); 		
+		assertEquals('test0[0]',elem.id);
+		assertEquals('testInput0[0]',inputelem.id);
+		assertEquals('testInput0[0]',inputelem.name);
 		assertNotNull('Insert Node should be valid', bInstance.getInsertNode(elem));
 		
 		// Check counter value
@@ -110,7 +131,7 @@
 	}
 	
 	
-	function _testRepeatLinkCreation() {
+	function testRepeatLinkCreation() {
 		// Checks if repeat links are created
 		assertNotNull('Dynamic Repeat link', document.getElementById('linkCreationTest2-wfDL'));
 		assertEquals('Add another response',document.getElementById('linkCreationTest2-wfDL').innerHTML);
@@ -120,7 +141,7 @@
 		assertEquals('Add Me',document.getElementById('linkCreationTest1-wfDL').innerHTML);
 	}
 	
-	function _testFieldsetRepeatWithErrorPlaceholders() {
+	function testFieldsetRepeatWithErrorPlaceholders() {
 		var elem = document.getElementById('test1');
 		var testinput = document.getElementById('wf_Texte');
 		var placeholder = document.getElementById('wf_Texte-E');
@@ -155,7 +176,7 @@
 		
 	}
 	
-	function _testFieldsetRepeatWithFieldHints() {
+	function testFieldsetRepeatWithFieldHints() {
 		
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('test2'), 'repeat');		
 		bInstance.run();
@@ -179,7 +200,7 @@
 		assertTrue('repeated section should be siblings', s === document.getElementById('test2[1]'));
 	}
 	
-	function _testNestedRepeat() {
+	function testNestedRepeat() {
 	
 		// duplicate parent first		
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest0'), 'repeat');
@@ -196,6 +217,9 @@
 		assertNotNull('id should be: nestedTestInput2[1][0]',	document.getElementById('nestedTestInput2[1][0]'));
 		assertNotNull('id should be: nestedTestInput3[1]',		document.getElementById('nestedTestInput3[1]'));
 
+		// check counter
+		assertNotNull('id should be: nestedTest0[0]-RC',		document.getElementById('nestedTest0[0]-RC'));
+		
 		// duplicate nested section
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest1[0][0]'), 'repeat');
 		bInstance.run();
@@ -207,6 +231,10 @@
 		assertNotNull('id should be: nestedTestInput1[0][1]',	document.getElementById('nestedTestInput1[0][1]'));
 		assertNotNull('id should be: nestedTestInput2[0][1]',	document.getElementById('nestedTestInput2[0][1]'));
 		assertNotNull('id should be: nestedTestInput3[0]',		document.getElementById('nestedTestInput3[0]'));
+		
+		// check counter
+		assertNotNull('id should be: nestedTest1[0][0]-RC',		document.getElementById('nestedTest1[0][0]-RC'));
+		
 		
 		// duplicate repeated nested section
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest1[1]'), 'repeat');
@@ -220,10 +248,18 @@
 		assertNotNull('id should be: nestedTestInput2[1][1]',	document.getElementById('nestedTestInput2[1][1]'));
 		assertNotNull('id should be: nestedTestInput3[1]',		document.getElementById('nestedTestInput3[1]'));
 		
+		// check counter
+		assertNotNull('id should be: nestedTest1[1][0]-RC',		document.getElementById('nestedTest1[1][0]-RC'));
+		
+		
 		// duplicate again repeated nested section
 		bInstance.run();
 		assertNotNull('id should be: nestedTestInput1[1][2]',	document.getElementById('nestedTestInput1[1][2]'));
 		assertNotNull('id should be: nestedTestInput2[1][2]',	document.getElementById('nestedTestInput2[1][2]'));
+		
+		// check counter
+		assertEquals('counter value should be 2',		document.getElementById('nestedTest1[1][0]-RC').value,'2');
+		
 		
 	}
 	
@@ -237,7 +273,30 @@
 		assertNotNull(document.getElementById('nestedTestInput5[0][0]'));
 		assertNotNull(document.getElementById('nestedTestInput6[0][0]'));
 		assertNotNull(document.getElementById('nestedTestInput5[0][1]'));
-		assertNotNull(document.getElementById('nestedTestInput6[0][1]')); 
+		assertNotNull(document.getElementById('nestedTestInput6[0][1]'));
+		
+		// check counter
+		assertNotNull('id should be: nestedTest3[0][0]-RC',	document.getElementById('nestedTest3[0][0]-RC'));
+		
+		// duplicate parent 		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest2'), 'repeat');
+		bInstance.run();
+		
+		// check counter
+		assertNotNull('id should be: nestedTest2[0]-RC',document.getElementById('nestedTest2[0]-RC')); 
+
+		// check repeated fieldset id		
+		assertNotNull('id should be: nestedTest3[1]',document.getElementById('nestedTest3[1]'));
+		assertNotNull('id should be: nestedTest3[1]',document.getElementById('nestedTest2[0]'));  
+		assertNotNull('id should be: nestedTest3[1]',document.getElementById('nestedTest2[1]'));
+		
+		// duplicate repeated nested section
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest3[1]'), 'repeat');
+		bInstance.run();
+		
+		// check bug #259 - counter name incorrect for nested repeats (IE7 only)
+		assertNotNull('id should be: nestedTest3[1][0]-RC',document.getElementById('nestedTest3[1][0]-RC')); 
+		assertEquals('counter value should be 1', '1', document.getElementById('nestedTest3[1][0]-RC').value);
 	}
 	
 	
