@@ -22,10 +22,13 @@
    
 	<script type="text/javascript">
 		wFORMS.behaviors.repeat.onRepeat = function(n) {
+			
+			return; 
+		
 			var form = document.getElementById('testRepeatForm');
 			var f=form.getElementsByTagName('input');
 			for(var i=0;i<f.length;i++) {
-				if(f[i].id && f[i].id.indexOf(wFORMS.behaviors.repeat.ID_SUFFIX_COUNTER)==-1) {
+				if(f[i].id && f[i].id.indexOf(wFORMS.behaviors.repeat.ID_SUFFIX_COUNTER)==-1 && f[i].type!='button') {
 					f[i].value='id='+f[i].id;
 				}
 			}
@@ -111,6 +114,11 @@
 		assertEquals('id should be testInput0[0]','testInput0[0]',inputelem.id); 
 		assertEquals('name should be testInput0[0]','testInput0[0]',inputelem.name); 
 		
+		// Check value of repeated button (test for http://code.google.com/p/wforms/issues/detail?id=2)
+		assertEquals('Test',document.getElementById('runButtonTest0[0]').value);
+		assertEquals('Test',document.getElementById('runButtonTest0[1]').value);
+		
+		 
 		// Apply behaviors to cloned element
 		wFORMS.applyBehaviors(newElem);
 		
@@ -329,6 +337,7 @@
 					<span>JJ/MM/AAAA </span>
 				</div>						
 			</div>
+			<input type="button" value="Test" id="runButtonTest0"/>
 		</div>	
 		<br/>
 		<fieldset class="repeat" id="test1">
@@ -424,8 +433,7 @@
 					</select><span class="errMsg" id="tfa_Month10-E"></span>
 				</div>
 				<div class="oneField">
-					<label for="tfa_Day" class="inlineLabel">Day
-									&nbsp;<span class="reqMark">*</span>
+					<label for="tfa_Day" class="inlineLabel">Day&nbsp;<span class="reqMark">*</span>
 					</label>
 					<select id="tfa_Day" name="tfa_Day" class="required">
 						<option value="">Please select...</option>
@@ -490,8 +498,7 @@
 		 			<input type="radio" value="no" id="radioTestNo" name="radioTest">
 		 			<label class="postField">No</label>
 		 		</span>
-			</div>
-			
+			</div>			
 		</fieldset>
 		
 	</form>

@@ -561,7 +561,7 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 		}
 				
 		// Clears value	(TODO: select?)
-		if(e.tagName == 'INPUT' || e.tagName == 'TEXTAREA'){
+		if((e.tagName == 'INPUT' && e.type != 'button') || e.tagName == 'TEXTAREA'){
 			if(e.type != 'radio' && e.type != 'checkbox'){
 				e.value = '';
 			} else {
@@ -574,11 +574,7 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 			// Create a radio input that works in IE and insert it before the input it needs to replace
 			var tagHtml = "<INPUT type=\"radio\" name=\""+e.name+suffix+"\"></INPUT>";
 			var fixedRadio = e.parentNode.insertBefore(document.createElement(tagHtml),e);
-			/*
-			var fixedRadio = e.parentNode.insertBefore(document.createElement("SPAN"),e);
-			fixedRadio.innerHTML = tagHtml;
-			fixedRadio = fixedRadio.firstChild;
-			*/			
+		
 			// Clone other attributes
 			fixedRadio.id = e.id;
 			fixedRadio.className = e.className;
