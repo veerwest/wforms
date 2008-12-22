@@ -10,11 +10,22 @@
 
 <link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
 <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
-   
+
+
+<!--      
+<script type="text/javascript" src="http://base2.googlecode.com/svn/version/1.0/src/base2.js"></script>   
+<script type="text/javascript" src="http://base2.googlecode.com/svn/version/1.0/src/base2-dom.js"></script>
 <script type="text/javascript" src="../lib/base2-p.js"></script>
-<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+<script type="text/javascript" src="../lib/base2-dom-p.js"></script> 
+-->
+<script type="text/javascript" src="../lib/src/base2.js"></script>
+<script type="text/javascript" src="../lib/src/base2-dom.js"></script>
+
+
 <script type="text/javascript" src="../wforms_core.js"></script>
-<script type="text/javascript" src="../wforms_calculation.js"></script>
+<script type="text/javascript" src="../wforms_calculation.js"></script> 
+
+
 <script type="text/javascript">
 
 	wFORMS.behaviors.calculation.instance.prototype.onApply = function() {
@@ -38,7 +49,7 @@
 		assertNotUndefined('Instance of behavior should be available.', bInstance);
 		assertNotUndefined('Instance target should be set',bInstance.target);
 		assertEquals('Instance target should be the form','testForm',bInstance.target.id);
-		assertEquals('Found calculations',13, bInstance.calculations.length);
+		assertEquals('Found calculations',14, bInstance.calculations.length);
 		
 		// Each calculation should have a field, formula and variables 
 		for(var i=0; i<bInstance.calculations.length;i++) {	
@@ -309,6 +320,11 @@
 		bInstance.run(null, document.getElementById('b'));
 		assertEquals('\'\'""', document.getElementById('c').value);
 	}
+	
+	function testLargeFormula() {
+		bInstance.run(null,document.getElementById('inputWithLongFormula'));
+		assertEquals('21', document.getElementById('inputWithLongFormula').value);		
+	}
 
 </script>
 
@@ -529,6 +545,32 @@
 				<input type="text" readonly="readonly" value="" id="c" class="formula=a+b" />
 			</div>
 			
+		</fieldset>
+		
+		<fieldset><legend>Test for Long Formula</legend>
+			<input type="text" class="calc-RegOne" value="1" />
+			<input type="hidden" class="calc-RegTwo" value="1" />
+			<input type="hidden" class="calc-ChildrensProgram" value="1" />
+			<input type="hidden" class="calc-AdultOneMeals" value="1" />
+			<input type="hidden" class="calc-AdultTwoMeals" value="1" />
+			<input type="hidden" class="calc-ChildAPreschoolLunch" value="1" />
+			<input type="hidden" class="calc-ChildAChildLunch" value="1" />
+			<input type="hidden" class="calc-ChildAAdultLunch" value="1" />	
+			<input type="hidden" class="calc-ChildBPreschoolLunch" value="1" />
+			<input type="hidden" class="calc-ChildBChildLunch" value="1" />
+			<input type="hidden" class="calc-ChildBAdultLunch" value="1" />
+			<input type="hidden" class="calc-ChildCPreschoolLunch" value="1" />
+			<input type="hidden" class="calc-ChildCChildLunch" value="1" />
+			<input type="hidden" class="calc-ChildCAdultLunch" value="1" />
+			<input type="hidden" class="calc-ChildDPreschoolLunch" value="1" />
+			<input type="hidden" class="calc-ChildDChildLunch" value="1" />
+			<input type="hidden" class="calc-ChildDAdultLunch" value="1" />
+			<input type="hidden" class="calc-ChildEPreschoolLunch" value="1" />
+			<input type="hidden" class="calc-ChildEChildLunch" value="1" />
+			<input type="hidden" class="calc-ChildEAdultLunch" value="1" />
+			<input type="hidden" class="calc-Donation" value="1" />
+						
+			<input type="text" id="inputWithLongFormula" class="formula=RegOne+RegTwo+ChildrensProgram+AdultOneMeals+AdultTwoMeals+ChildAPreschoolLunch+ChildAChildLunch+ChildAAdultLunch+ChildBPreschoolLunch+ChildBChildLunch+ChildBAdultLunch+ChildCPreschoolLunch+ChildCChildLunch+ChildCAdultLunch+ChildDPreschoolLunch+ChildDChildLunch+ChildDAdultLunch+ChildEPreschoolLunch+ChildEChildLunch+ChildEAdultLunch+Donation calc-Total" /> 
 		</fieldset>
 	</form>
 </body>
