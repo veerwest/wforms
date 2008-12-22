@@ -42,7 +42,7 @@ wFORMS.behaviors.validation = {
 		isDate 			: "This does not appear to be a valid date.",
 		isPhone			: "Please enter a valid phone number.",
 		isCustom		: "Please enter a valid value.",
-		notification	: "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."  // %% will be replaced by the actual number of errors.
+		notification	: "The form is not complete and has not been submitted yet. There was %% problem(s) with your submission."  // %% will be replaced by the actual number of errors.
 	},
 	
 	
