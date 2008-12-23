@@ -227,13 +227,25 @@ wFORMS.standardizeElement = function(elem) {
 		}
 	}
 	if(!elem.hasClass) {
-		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		elem.hasClass = function(className) { 
+			var regexp = new RegExp("(^|\\s)" + className + "(\\s|$)");
+			return regexp.test(elem.className);
+		};
 	}
 	if(!elem.removeClass) {
-		elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+		elem.removeClass = function(className) {
+			var regexp = new RegExp("(^|\\s)" + className + "(\\s|$)", "g");
+			//elem.className = trim(elem.className.replace(regexp, "$2"));
+			elem.className = elem.className.replace(regexp, "$2");
+			elem.className = String(elem.className).replace(/^\s\s*/, "").replace(/\s\s*$/, "");
+		};
 	}
 	if(!elem.addClass) {
-		elem.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };	
+		elem.addClass = function(className) {
+			if (!this.hasClass(elem, className)) {
+		      elem.className += (elem.className ? " " : "") + className;
+			}
+		};	
 	}
 }
 /**
