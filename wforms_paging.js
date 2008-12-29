@@ -87,7 +87,8 @@ wFORMS.behaviors.paging = {
 	 */
 	MESSAGES : {
 		CAPTION_NEXT : 'Next Page',
-		CAPTION_PREVIOUS : 'Previous Page'
+		CAPTION_PREVIOUS : 'Previous Page',
+		CAPTION_UNLOAD : 'Any data entered on ANY PAGE of this form will be LOST.'
 	},
 
 	/**
@@ -96,6 +97,11 @@ wFORMS.behaviors.paging = {
 	 */
 	runValidationOnPageNext : true,
 
+	/**
+	 * Add an unload handler to warn the user of potential loss of data
+	 */
+	warnOnUnload: true,
+	 
 	/**
 	 * custom 'Page Next' event handler (to be overridden) 
      * @param	{HTMLElement}	elem	new page
@@ -189,6 +195,11 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		p = b.findNextPage(0);
 		b.currentPageIndex = 0;
 		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
+	
+		// Add a unload handler to prevent accidental loss of data when navigating away from the page
+		if(this.warnOnUnload && !window.onbeforeunload) {	
+			window.onbeforeunload = function() { return b.behavior.MESSAGES.CAPTION_UNLOAD };
+		}
 		b.onApply();		
 	}
 	
@@ -225,8 +236,32 @@ wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
 		e.stopPropagation();
 		e.preventDefault();
 		e.pagingStopPropagation = true;
+	} 
+	else {
+		if(window.onbeforeunload) {
+			window.onbeforeunload = null;
+		}
 	}
 }
+
+/** 
+ * instance-specific pageNext event handler (can be overriden).
+ * @param	{HTMLElement}	page element 
+ */ 
+wFORMS.behaviors.paging.instance.prototype.onPageNext = function(p) { this.behavior.onPageNext(p); }
+
+/** 
+ * instance-specific pagePrevious event handler (can be overriden).
+ * @param	{HTMLElement}	page element 
+ */ 
+wFORMS.behaviors.paging.instance.prototype.onPagePrevious = function(p) { this.behavior.onPagePrevious(p); }
+
+/** 
+ * instance-specific pageChange event handlers (can be overriden).
+ * @param	{HTMLElement}	page element 
+ */ 
+ wFORMS.behaviors.paging.instance.prototype.onPageChange = function(p) { this.behavior.onPagePrevious(p);}
+
 
 /**
  * Returns page index by the page area element
@@ -420,11 +455,11 @@ wFORMS.behaviors.paging.instance.prototype.activatePage = function(index /*, scr
 				}
 				
 				// run page change event handlers
-				_self.behavior.onPageChange(p);
+				_self.onPageChange(p);
 				if(index > _currentPageIndex){
-					_self.behavior.onPageNext(p);
+					_self.onPageNext(p);
 				} else {
-					_self.behavior.onPagePrevious(p);
+					_self.onPagePrevious(p);
 				}
 		//	}, 1
 		//);
