@@ -1,0 +1,56 @@
+<html>
+<head>	
+	<title>wForms 3.0 - OnBlur Validation Example</title>
+	
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+	<link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<script src="../../lib/base2-p.js"></script>
+	<script src="../../lib/base2-dom-p.js"></script>
+	<script src="../../wforms_core.js"></script>
+	<script src="../../wforms_validation.js"></script>
+	<script src="../../customization/wforms_onblur_validation.js"></script>
+</head>
+
+<body class="wForm">
+
+	<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
+       <div class="oneField" id="testDiv">
+       		<label for="testField" class="preField">Test Field 1</label>
+       		<input type="text" id="testField"  name="testField"  class="validate-alpha" value="" />  (validate-alpha)<br/>
+		</div>
+        <div class="oneField">
+         	<label for="testField2" class="preField">Test Field 2</label>
+			<input type="checkbox" id="testField2" name="testField2" class="required" value="" /> (required) <br/>
+		</div>
+		<div class="oneField" class="required">
+         	<label for="testField3" class="preField">Test Field 3</label>
+			<input type="radio" id="testField3a" name="testField3" value="a" /> A
+			<input type="radio" id="testField3b" name="testField3" value="b" /> B <br/>
+		</div>
+		<div class="oneField">
+			<label for="testField4" class="preField">Test Field 4</label>			
+			<textarea id="testField4" class="validate-integer"></textarea> (validate-integer) <br/>
+            <br />
+       	</div>
+       	
+       	<div class="actions"><input type="submit" value="TEST 1" /></div>
+	</form>
+		
+	<hr/>
+		
+	<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm2" >	
+		<table style="border:1px solid #EEE">
+			<tr class="required"><td>Label: <span class="reqMark">*</span></td><td><input type="text" class="" /></td></tr>
+			<tr class="required"><td>Label: <span class="reqMark">*</span></td><td><input type="text" class="" /></td></tr>
+		</table>
+		
+		<div class="actions"><input type="submit" value="TEST 2" /></div>
+	</form>
+		 
+
+</body>
+</html>

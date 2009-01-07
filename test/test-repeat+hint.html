@@ -15,6 +15,7 @@
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../wforms_hint.js"></script>	
+	<script type="text/javascript" src="../wforms_validation.js"></script>	
    
 	<script type="text/javascript">
 		wFORMS.behaviors.repeat.onRepeat = function(n) {
@@ -33,7 +34,6 @@
 	wFORMS.behaviors.repeat.instance.prototype.onApply = function() {
 		setUpPageStatus = 'complete';
 	} 
-	wFORMS.behaviors.repeat.onRepeat = function() {}
 	
 	function setUpPage() {}
   
@@ -43,14 +43,28 @@
 	
 	function testFieldsetRepeatWithFieldHints() {
 		var fieldHint = document.getElementById('testInput0-H');
+		var placeholder = document.getElementById('testInput0-E');
 		
-		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('test0'), 'repeat');		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementsByTagName('DIV')[1], 'repeat');		
 		bInstance.run();
 		
 		// Check  field hint
-		assertEquals('testInput0[0]-H',fieldHint.id);
-		assertNotNull(document.getElementById('testInput0[1]-H'));
+		assertEquals('testInput0[0][0]-H',fieldHint.id);
+		assertNotNull(document.getElementById('testInput0[0][1]-H'));
 		
+		// Check placeholder for validation behavior 
+		assertEquals('testInput0[0][0]-E', placeholder.id);
+		assertNotNull('Error Placeholder Id should be properly constructed', document.getElementById('testInput0[0][1]-E'));
+		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementsByTagName('DIV')[0], 'repeat');		
+		bInstance.run();
+		
+		assertEquals('testInput0[0][0]-H',fieldHint.id);
+		assertNotNull(document.getElementById('testInput0[1][0]-H'));
+		assertNotNull(document.getElementById('testInput0[0][1]-H'));
+		assertNotNull(document.getElementById('testInput0[0][0]-H'));
+		
+		assertNotNull('Error Placeholder with id testInput0[1][0]-E should exists', document.getElementById('testInput0[1][0]-E'));
 	}
 	
 	</script>
@@ -62,14 +76,16 @@
 
 	<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testRepeatForm" style="width: 550px">
 		<div class="repeat" id="test0">
-			<div class="oneField">
+			<div class="oneField repeat" id="test1">
 				<label for="testInput0" class="preField" style="min-width:5em">Date</label>
 				<input type="text" id="testInput0" name="testInput0" value="" size="" />
 				<div class="field-hint-inactive" id="testInput0-H">
 					<span>JJ/MM/AAAA </span>
-				</div>						
+				</div>					
+				<div id="testInput0-E" class="errMsg">error placeholder</div>
 			</div>
 		</div>	
+		<a href="#" onclick="testFieldsetRepeatWithErrorPlaceholders(); return false;">Test</a>
 	</form>
 </body>
 </html>

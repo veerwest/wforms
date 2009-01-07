@@ -36,7 +36,7 @@
 	
 	function tearDown() {}
 	
-	function testApplyTo() {
+	function _testApplyTo() {
 		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat'),'repeat');
 		// repeat
 		rInstance.run();
@@ -60,6 +60,32 @@
 		// check
 		assertEquals("onstate-c", document.getElementById('casec[0]').className);
 		assertEquals("onstate-c", document.getElementById('casec[1]').className);
+		//console.log(sInstance.cache);
+		
+		// check cache
+		var expected = { a:'',b:'',c:'',d:'',e:'',y:'',z:'' };
+		for(var i in sInstance.cache) {
+			assertEquals("string", typeof expected[i]);
+			delete expected[i];			
+		}
+		var i=0;
+		for(i in expected);		
+		assertEquals(0, i);
+		
+		assertEquals('a',1, sInstance.cache['a'].targets.length);
+		assertEquals('a',1, sInstance.cache['a'].triggers.length);
+		assertEquals('b',1, sInstance.cache['b'].targets.length);
+		assertEquals('b',1, sInstance.cache['b'].triggers.length);
+		assertEquals('c',2, sInstance.cache['c'].targets.length);
+		assertEquals('c',1, sInstance.cache['c'].triggers.length);
+		
+		rInstance.run();
+		assertEquals('c',3, sInstance.cache['c'].targets.length);
+		assertEquals('c',1, sInstance.cache['c'].triggers.length);
+		
+		rInstance.run();
+		assertEquals('c',4, sInstance.cache['c'].targets.length);
+		assertEquals('c',1, sInstance.cache['c'].triggers.length);
 	}
 	
 	function testSwitchScope(){

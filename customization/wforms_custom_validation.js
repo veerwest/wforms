@@ -25,3 +25,11 @@ wFORMS.behaviors.validation.instance.prototype.validateDateInTheFuture = functio
 	var today = new Date();
 	return (testDate.getTime() > today.getTime());
 }
+
+// see http://beta.formassembly.com/forum/discussion/258/validating-fields-in-repeated-sections/#Item_2
+// checks that selector works with repeated field
+wFORMS.behaviors.validation.rules.fieldspecific    = { selector: "*[id^='testid']", check: 'somevalidation' }
+wFORMS.behaviors.validation.messages.fieldspecific = "oops..";
+wFORMS.behaviors.validation.instance.prototype.somevalidation = function(element, value) {			
+	return false;
+}

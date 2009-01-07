@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>	
+	<title>wForms 3.0 - Switch Behavior Test Suite</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+   
+	<script type="text/javascript" src="../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_switch.js"></script>
+	<script type="text/javascript" src="../customization/wforms_custom_clear_switch.js"></script>
+	<script type="text/javascript">
+	
+	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {	
+		setUpPageStatus = 'complete';		
+	} 
+	
+	function setUpPage() {}
+  
+  	function setUp() {}
+	
+	function tearDown() {}
+	
+	
+	function testClearSwitch() {
+		var f = document.getElementById('testform1');
+		var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
+		var s = document.getElementById('switcha');
+		
+		assertEquals('value1', f.test1a.value);
+		assertEquals('value2', f.test1b.value);
+		assertEquals(true, f.test2a.checked);
+		assertEquals(false, f.test2b.checked);
+		assertEquals(true, f.test3.checked);
+		assertEquals(1, f.test4.selectedIndex);
+		assertEquals(3, f.test5.selectedIndex);
+		assertEquals(1, f.test6.selectedIndex);
+		
+		s.checked=false;
+		bInstance.run(null, s);
+		
+		assertEquals('', f.test1a.value);
+		assertEquals('', f.test1b.value);
+		assertEquals(false, f.test2a.checked);
+		assertEquals(false, f.test2b.checked);
+		assertEquals(false, f.test3.checked);
+		assertEquals(-1, f.test4.selectedIndex);
+		assertEquals('should revert to first option when the option has no value set',0, f.test5.selectedIndex);
+		assertEquals(-1, f.test6.selectedIndex);				
+	}
+	
+	</script>
+	<style type="text/css">
+		.wForm form .offstate-a {
+			display: block !important;
+			opacity: 0.3;
+		}
+	</style>
+</head>
+
+<body class="wForm">
+	<form id="testform1">
+		<input name="fooz" type="checkbox" class="switch-a" id="switcha" checked="checked" />A Switch <br/>
+		<div id="casea" class="offstate-a">
+		
+			<p>This is A state, all values should be cleared when the checkbox is unchecked.</p>
+		
+			<input type="text" name="test1a" id="test1a" value="value1" />
+			<br/>
+			<textarea id="test1b" name="test1b" >value2</textarea>			
+			<br/>
+			<input name="foo" type="radio" id="test2a" checked="checked" />Radio A<br/>
+			<input name="foo" type="radio" id="test2b"  />Radio B<br/>
+			<br/>
+			<input type="checkbox" id="test3" checked="checked" name="test3"  />Checkbox 1<br/>
+			<br/>
+			<select name="test4" id="test4">
+				<option value="2">2</option>
+				<option value="3" selected="selected">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>	
+			<br/>
+			<select name="test5" id="test5">
+				<option value="">please select...</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4" selected="selected">4</option>
+				<option value="5">5</option>
+			</select>
+			<br/>
+			<select name="test6" id="test6" multiple="multiple">
+				<option value="2" id='option1'>2</option>
+				<option value="3" id='option2' selected="selected">3</option>
+				<option value="4" id='option3' selected="selected">4</option>
+				<option value="5" id='option4'>5</option>
+			</select>	
+		</div>
+		
+		
+		<a href="#" onclick="testClearSwitch(); return false;">test</a>
+
+	
+	
+	</form>
+	<hr/>
+	
+</body>
+</html>
+
+
