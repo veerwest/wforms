@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>wForms Layout Tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<link href="../../css/abstract-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-blue theme"  />
+    <link href="../../css/abstract-brown/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-brown theme"  />
+    <link href="../../css/abstract-green/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-green theme"  />
+    <link href="../../css/antique/wforms.css" type="text/css" rel="alternate stylesheet" title="antique theme"  />
+    <link href="../../css/antique-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="antique-blue theme"  />
+    <link href="../../css/black/wforms.css" type="text/css" rel="alternate stylesheet" title="black theme"  />
+    <link href="../../css/bureaucrat/wforms.css" type="text/css" rel="alternate stylesheet" title="bureaucrat theme"  />
+    <link href="../../css/vhgdesign/wforms.css" type="text/css" rel="alternate stylesheet" title="vhgdesign theme"  />
+    <link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  />
+     
+   
+  	<script type="text/javascript" src="../../lib/base2-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../../wforms_core.js"></script>
+	<script type="text/javascript" src="../../wforms_hint.js"></script>	
+ 
+	
+	<script type="text/javascript" src="test-layout.js"></script>
+	
+	<style type="text/css">
+	.wForm {
+		width: 780px; 
+		margin: 0 auto;
+	}
+	</style>
+</head>
+<body>
+	Test Pages:
+	<script type="text/javascript">
+		listTestPages();		
+	</script>
+	<br/>
+	Stylesheets:
+	<script type="text/javascript">
+		listAlternateStyleSheets();		
+	</script>
+	<div class="wForm" dir="rtl">
+		<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm">
+			
+			
+			<fieldset><legend>Label Alignment (for Right-To-Left Languages)</legend>
+			
+				<fieldset class="labelsAbove"><legend>Labels Above</legend>
+					<div class="oneField">
+						<label class="preField">Text Input: </label>
+						<input type="text" name="textInput0" />
+					</div>
+					
+					<div class="oneField">
+						<label class="preField">File Upload: </label>
+						<input type="file" name="textInput0" />
+					</div>
+					
+					<div class="oneField">
+						<label class="preField">TextArea: </label>
+						<textarea rows="3" cols="15"></textarea>
+					</div>
+					<div class="oneField">
+						<label class="preField">Select: </label>
+						<select >
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>												
+					</div>
+					<div class="oneField">
+						<label class="preField">Select Multiple: </label>
+						<select multiple="multiple">
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>		
+					</div>
+					<div class="oneField">
+	                    <label class="preField">Radio group:</label>
+	
+	                    <span class="oneChoice">
+	                       <input type="radio" name="radioGroup" />
+	                       <label>First choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" name="radioGroup" />
+	                        <label>Second choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" name="radioGroup" />
+	                        <label>Third choice</label>
+	                    </span>
+	                </div>
+	
+	                <div class="oneField">
+	                    <label class="preField">Checkboxes:</label>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox"  />
+	                        <label class="postField">First choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" name="radioGroup" />
+	                        <label class="postField">Second choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" name="radioGroup" />
+	                        <label class="postField">Third choice</label>
+	                    </span>
+	                </div>
+					
+					
+					<div class="inlineSection">
+						<label class="preField">Inside an inline section:</label>
+						<div class="oneField">
+							<label class="inlineLabel">Text Input 1: </label>
+							<input type="text" name="textInput1" />
+						</div>
+						<div class="oneField">
+							<label class="inlineLabel">Text Input 2: </label>
+							<input type="text" name="textInput2" />
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inline section (suite)</label>
+						<div class="oneField">
+							<label class="inlineLabel">TextArea: </label>
+							<textarea  rows="3" cols="15"></textarea>
+						</div>
+						<div class="oneField">
+							<label class="inlineLabel">Select: </label>
+							<select>
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>												
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inline section (suite)</label>
+						<div class="oneField">
+							<label class="inlineLabel">Select Multiple: </label>
+							<select multiple="multiple">
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>														
+						</div>
+						<div class="oneField">
+		                    <label class="inlineLabel">Checkboxes:</label>		
+		                    <span class="oneChoice">
+		                        <input type="checkbox"  />
+		                        <label class="postField">First choice</label>
+		                    </span>
+		                </div>
+					</div>
+					
+				</fieldset>	
+			
+			
+			
+				<fieldset  class="labelsLeftAligned"><legend>Left aligned</legend>
+					<div class="oneField">
+						<label class="preField">Text Input: </label>
+						<input type="text" name="textInput0" />
+					</div>
+					
+					<div class="oneField">
+						<label class="preField">File Upload: </label>
+						<input type="file" name="textInput0" />
+					</div>
+					
+					<div class="oneField">
+						<label class="preField">TextArea: </label>
+						<textarea rows="3" cols="15"></textarea>
+					</div>
+					<div class="oneField">
+						<label class="preField">Select: </label>
+						<select >
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>												
+					</div>
+					<div class="oneField">
+						<label class="preField">Select Multiple: </label>
+						<select multiple="multiple">
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>		
+					</div>
+					<div class="oneField">
+	                    <label class="preField">Radio group:</label>
+	
+	                    <span class="oneChoice">
+	                       <input type="radio" name="radioGroup" />
+	                       <label>First choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" name="radioGroup" />
+	                        <label>Second choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" name="radioGroup" />
+	                        <label>Third choice</label>
+	                    </span>
+	                </div>
+	
+	                <div class="oneField">
+	                    <label class="preField">Checkboxes:</label>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox"  />
+	                        <label class="postField">First choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" name="radioGroup" />
+	                        <label class="postField">Second choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" name="radioGroup" />
+	                        <label class="postField">Third choice</label>
+	                    </span>
+	                </div>
+					
+					
+					<div class="inlineSection">
+						<label class="preField">Inside an inline section:</label>
+						<div class="oneField">
+							<label class="inlineLabel">Text Input 1: </label>
+							<input type="text" name="textInput1" />
+						</div>
+						<div class="oneField">
+							<label class="inlineLabel">Text Input 2: </label>
+							<input type="text" name="textInput2" />
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inline section (suite)</label>
+						<div class="oneField">
+							<label class="inlineLabel">TextArea: </label>
+							<textarea  rows="3" cols="15"></textarea>
+						</div>
+						<div class="oneField">
+							<label class="inlineLabel">Select: </label>
+							<select>
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>												
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inline section (suite)</label>
+						<div class="oneField">
+							<label class="inlineLabel">Select Multiple: </label>
+							<select multiple="multiple">
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>														
+						</div>
+						<div class="oneField">
+		                    <label class="inlineLabel">Checkboxes:</label>		
+		                    <span class="oneChoice">
+		                        <input type="checkbox"  />
+		                        <label class="postField">First choice</label>
+		                    </span>
+		                </div>
+					</div>
+					
+				</fieldset>			
+				 
+				 
+				<fieldset class="labelsRightAligned"><legend>Right aligned</legend>
+					<div class="oneField">
+						<label class="preField">Text Input: </label>
+						<input type="text" name="textInput0" />
+					</div>
+					
+					<div class="oneField">
+						<label class="preField">File Upload: </label>
+						<input type="file" name="textInput0" />
+					</div>
+					
+					<div class="oneField">
+						<label class="preField">TextArea: </label>
+						<textarea rows="3" cols="15"></textarea>
+					</div>
+					<div class="oneField">
+						<label class="preField">Select: </label>
+						<select >
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>												
+					</div>
+					<div class="oneField">
+						<label class="preField">Select Multiple: </label>
+						<select multiple="multiple">
+							<option>.................................</option>
+							<option>.................................</option>
+							<option>.................................</option>
+						</select>		
+					</div>
+					<div class="oneField">
+	                    <label class="preField">Radio group:</label>
+	
+	                    <span class="oneChoice">
+	                       <input type="radio" name="radioGroup" />
+	                       <label>First choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" name="radioGroup" />
+	                        <label>Second choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="radio" name="radioGroup" />
+	                        <label>Third choice</label>
+	                    </span>
+	                </div>
+	
+	                <div class="oneField">
+	                    <label class="preField">Checkboxes:</label>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox"  />
+	                        <label class="postField">First choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" name="radioGroup" />
+	                        <label class="postField">Second choice</label>
+	                    </span>
+	
+	                    <span class="oneChoice">
+	                        <input type="checkbox" name="radioGroup" />
+	                        <label class="postField">Third choice</label>
+	                    </span>
+	                </div>
+					
+					
+					<div class="inlineSection">
+						<label class="preField">Inside an inline section:</label>
+						<div class="oneField">
+							<label class="inlineLabel">Text Input 1: </label>
+							<input type="text" name="textInput1" />
+						</div>
+						<div class="oneField">
+							<label class="inlineLabel">Text Input 2: </label>
+							<input type="text" name="textInput2" />
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inline section (suite)</label>
+						<div class="oneField">
+							<label class="inlineLabel">TextArea: </label>
+							<textarea  rows="3" cols="15"></textarea>
+						</div>
+						<div class="oneField">
+							<label class="inlineLabel">Select: </label>
+							<select>
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>												
+						</div>
+					</div>
+					<div class="inlineSection">
+						<label class="preField">Inline section (suite)</label>
+						<div class="oneField">
+							<label class="inlineLabel">Select Multiple: </label>
+							<select multiple="multiple">
+								<option>.................................</option>
+								<option>.................................</option>
+								<option>.................................</option>
+							</select>														
+						</div>
+						<div class="oneField">
+		                    <label class="inlineLabel">Checkboxes:</label>		
+		                    <span class="oneChoice">
+		                        <input type="checkbox"  />
+		                        <label class="postField">First choice</label>
+		                    </span>
+		                </div>
+					</div>
+					
+				</fieldset>		
+				 
+			</fieldset>	
+			
+			<div class="actions">
+				<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"/>				
+			</div>
+		</form>
+	</div>
+</body>
+</html>
