@@ -304,7 +304,7 @@ wFORMS.behaviors.calculation.instance.prototype.getValueFromClassName = function
 			if(element.selectedIndex==-1) {					
 				return null; 
 			} 
-			if(element.getAttribute('multiple')) {
+			if (element.multiple) {
 				var v=[];
 				for(var i=0;i<element.options.length;i++) {
 					if(element.options[i].selected) {
