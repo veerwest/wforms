@@ -7,6 +7,7 @@
 	var cwd = FileSystem.GetParentFolderName(WScript.ScriptFullName);
 	var srcDir = cwd + "/../";
 
+	var base2_version = "beta2";
 	
 	var outfile = cwd + "/../build/wforms.js";
 	var outfile_packed  = cwd + "/../build/wforms_pack.js";
@@ -27,8 +28,8 @@
 	source = null;
 
 	var SUBMODULES = [
-	    "lib/src/base2",
-		"lib/src/base2-dom",
+	    "lib/base2/"+base2_version+"/src/base2",
+		"lib/base2/"+base2_version+"/src/base2-dom",
 		"wforms_core",
 		"wforms_hint",
 		"wforms_paging",

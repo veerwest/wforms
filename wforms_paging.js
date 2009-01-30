@@ -200,12 +200,11 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		if(this.warnOnUnload && !window.onbeforeunload) {	
 			window.onbeforeunload = function() { return b.behavior.MESSAGES.CAPTION_UNLOAD };
 		}
-		b.onApply();		
+		b.onApply();	
+		
+		// intercept the submit event
+		base2.DOM.Element.addEventListener(f, 'submit', function (e) {b.onSubmit(e, b)});	
 	}
-	
-	// intercept the submit event
-	base2.DOM.Element.addEventListener(f, 'submit', function (e) {b.onSubmit(e, b)});
-	
 	return b;
 }
 
@@ -236,15 +235,15 @@ wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
 		e.stopPropagation();
 		e.preventDefault();
 		e.pagingStopPropagation = true;
-	} 
+	}
 	else {
 		if(window.onbeforeunload) {
 			window.onbeforeunload = null;
 		}
-	}
+}
 }
 
-/** 
+/**
  * instance-specific pageNext event handler (can be overriden).
  * @param	{HTMLElement}	page element 
  */ 

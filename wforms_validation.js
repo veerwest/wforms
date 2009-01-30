@@ -48,7 +48,16 @@ wFORMS.behaviors.validation = {
 	
 	instance: function(f) {
 		this.behavior = wFORMS.behaviors.validation; 
-		this.target = f;
+		this.target   = f;
+		var self 	  = this;
+		
+		if(!f.__wFormsValidationHandled) {
+			if(!f.addEventListener) {
+				wFORMS.standardizeElement(f);
+			}
+			f.addEventListener('submit', function(e){ return self.run(e, this)} ,false);
+			f.__wFormsValidationHandled = true;			
+		}
 	},
 	
 	onPass: function(f) {},
@@ -81,16 +90,12 @@ wFORMS.behaviors.validation.applyTo = function(f) {
 	if(!f.tagName && f.length>0) {
 		var v = new Array();
 		for(var i=0;i<f.length;i++) {
-			var _v = new wFORMS.behaviors.validation.instance(f[i]); 	
-			if(!f[i].addEventListener) base2.DOM.bind(f[i]);		
-			f[i].addEventListener('submit', function(e){ return _v.run(e, this)} ,false);
+			var _v = new wFORMS.behaviors.validation.instance(f[i]);
 			v.push(_v);	
 			_v.onApply();
 		}
 	} else {
 		var v = new wFORMS.behaviors.validation.instance(f);
-		if(!f.addEventListener) base2.DOM.bind(f);
-		f.addEventListener('submit', function(e){ return v.run(e, this)} ,false);	
 		v.onApply();
 	}
 	
@@ -111,7 +116,7 @@ wFORMS.behaviors.validation.instance.prototype.onApply = function() {}
  * @return	{boolean}	true if validation successful, false otherwise (and prevents event propagation)
  */
 wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
-		
+	
 	// hack to stop to event propagation under paging
 	if (e && e.pagingStopPropagation) {
 		return false;

@@ -6,7 +6,7 @@ NodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; 
 //
 
 if (typeof(base2) == "undefined") {
-	throw new Error("Base2 not found. wForms 3.0 depends on the base2 library.");
+	throw new Error("Base2 not found. wForms 3 depends on the base2 library.");
 }
 
 if (typeof(wFORMS) == "undefined") {
@@ -227,7 +227,12 @@ wFORMS.standardizeElement = function(elem) {
 		}
 	}
 	if(!elem.hasClass) {
-		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		elem.hasClass = function(className) { 
+			if((' ' + this.className + ' ').indexOf(' ' + className +' ') != -1) {
+				return true;
+			}			
+			return false;		
+		};
 	}
 	if(!elem.removeClass) {
 		elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };

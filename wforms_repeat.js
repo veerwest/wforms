@@ -356,16 +356,16 @@ _i.prototype.duplicateSection = function(elem){
 	// Insert in DOM		
 	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
 	
+	// 36.815ms 2425 calls.
+	// 2520 189000 calls
 	wFORMS.applyBehaviors(newElem);
 		
-	// Associates repeated input sections with thier calculations.
-	if(wFORMS.behaviors.calculation)
-	{
-	_c = wFORMS.behaviors.calculation;
-	inputItem = newElem.querySelector('input');
-		if(inputItem)
-		{
-		if(inputItem.className.search(_c.VARIABLE_SELECTOR_PREFIX) != -1) 
+	// Associates repeated input sections with their calculations.
+	if(wFORMS.behaviors.calculation) {
+		_c = wFORMS.behaviors.calculation;
+		inputItem = newElem.querySelector('input');
+		if(inputItem) {
+			if(inputItem.className.search(_c.VARIABLE_SELECTOR_PREFIX) != -1) 
 			_c.applyTo(inputItem.form);
 		}
 	}

@@ -13,11 +13,8 @@
  		.offstate-z { display:none;}
  		.offstate-y { display:none;}
 	</style> 
-	<!-- 
-	<script type="text/javascript" src="../build/wforms.js"></script>
-	-->
-	<script type="text/javascript" src="../lib/src/base2.js"></script>
-	<script type="text/javascript" src="../lib/src/base2-dom.js"></script>
+	<script type="text/javascript" src="../lib/base2/beta2/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/beta2/src/base2-dom.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../wforms_switch.js"></script>
@@ -36,7 +33,7 @@
 	
 	function tearDown() {}
 	
-	function _testApplyTo() {
+	function testApplyTo() {
 		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat'),'repeat');
 		// repeat
 		rInstance.run();
@@ -46,9 +43,10 @@
 		sInstance.run(null, document.getElementById('switcha[1]'));
 		// check
 		assertEquals("onstate-a", document.getElementById('casea[1]').className);
-				
+		assertEquals('targets a',2, sInstance.cache['a'].targets.length);		
 	}
 	function testSwitchCacheInvalidation() {
+		
 		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat3'),'repeat');
 		// repeat
 		rInstance.run();
@@ -60,7 +58,6 @@
 		// check
 		assertEquals("onstate-c", document.getElementById('casec[0]').className);
 		assertEquals("onstate-c", document.getElementById('casec[1]').className);
-		//console.log(sInstance.cache);
 		
 		// check cache
 		var expected = { a:'',b:'',c:'',d:'',e:'',y:'',z:'' };
@@ -72,36 +69,106 @@
 		for(i in expected);		
 		assertEquals(0, i);
 		
-		assertEquals('a',1, sInstance.cache['a'].targets.length);
-		assertEquals('a',1, sInstance.cache['a'].triggers.length);
-		assertEquals('b',1, sInstance.cache['b'].targets.length);
+		assertEquals('targets b',1, sInstance.cache['b'].targets.length);
 		assertEquals('b',1, sInstance.cache['b'].triggers.length);
-		assertEquals('c',2, sInstance.cache['c'].targets.length);
+		assertEquals('targets c',2, sInstance.cache['c'].targets.length);
 		assertEquals('c',1, sInstance.cache['c'].triggers.length);
 		
 		rInstance.run();
-		assertEquals('c',3, sInstance.cache['c'].targets.length);
+		assertEquals('targets c',3, sInstance.cache['c'].targets.length);
 		assertEquals('c',1, sInstance.cache['c'].triggers.length);
 		
 		rInstance.run();
-		assertEquals('c',4, sInstance.cache['c'].targets.length);
+		assertEquals('targets c',4, sInstance.cache['c'].targets.length);
 		assertEquals('c',1, sInstance.cache['c'].triggers.length);
 	}
 	
 	function testSwitchScope(){
 		
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');
+		
+			
 		document.getElementById('switchd').checked = true;
 		sInstance.run(null, document.getElementById('switchd'));
+		assertEquals("repeat onstate-d", document.getElementById('cased').className);
 		
 		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('cased'),'repeat');
 		rInstance.run();
+		
+		assertEquals(2,sInstance.cache.d.targets.length);
 		
 		document.getElementById('switche[0][0]').checked = true;
 		sInstance.run(null, document.getElementById('switche[0][0]'));
 		
 		assertEquals("onstate-e", document.getElementById('casee[0][0]').className);
 		assertEquals("offstate-e", document.getElementById('casee[0][1]').className);
+	
+		
+			
+		document.getElementById('switchd').checked = false;
+		sInstance.run(null, document.getElementById('switchd'));
+		assertEquals("repeat offstate-d", document.getElementById('cased[0][0]').className);
+		assertEquals("removeable offstate-d", document.getElementById('cased[0][1]').className);
+		
+		
+			
+	}
+	
+	function testSwitchMerge() {
+
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform2'),'switch');	
+
+		var f  = document.getElementById('testform2');
+		var d2 = document.getElementById('div2');
+		
+		// check cache
+		var expected = { e:''};
+		for(var i in sInstance.cache) {
+			assertEquals("string", typeof expected[i]);
+			delete expected[i];			
+		}
+		var i=0;
+		for(i in expected);		
+		assertEquals(0, i);
+			
+		d2 = f.appendChild(d2);
+		wFORMS.behaviors['switch'].applyTo(d2);
+		
+		// check cache
+		var expected = { e:'', f:''};
+		for(var i in sInstance.cache) {
+			assertEquals("string", typeof expected[i]);
+			delete expected[i];			
+		}
+		var i=0;
+		for(i in expected);		
+		assertEquals(0, i);
+
+		
+		assertEquals('e',1, sInstance.cache['e'].targets.length);
+		assertEquals('e',1, sInstance.cache['e'].triggers.length);
+		assertEquals('f',1, sInstance.cache['f'].targets.length);
+		assertEquals('f',1, sInstance.cache['f'].triggers.length);
+		
+		var d4 = document.getElementById('div4');
+		d4 = f.appendChild(d4);
+		wFORMS.behaviors['switch'].applyTo(d4);
+		
+		// check unchanged cache
+		var expected = { e:'', f:''};
+		for(var i in sInstance.cache) {
+			assertEquals("string", typeof expected[i]);
+			delete expected[i];			
+		}
+		var i=0;
+		for(i in expected);		
+		assertEquals(0, i);
+
+		
+		assertEquals('e',1, sInstance.cache['e'].targets.length);
+		assertEquals('e',1, sInstance.cache['e'].triggers.length);
+		assertEquals('f',1, sInstance.cache['f'].targets.length);
+		assertEquals('f',1, sInstance.cache['f'].triggers.length);
 		
 	}
 	</script>
@@ -146,7 +213,26 @@
 			</fieldset>
 		</fieldset>
 	</form>
-	<a href="#" onclick='testSwitchCacheInvalidation(); return false;'>test</a>
+	<a href="#" onclick='testSwitchScope(); return false;'>test scope</a>
+	
+	
+	
+	<form id="testform2">
+	
+		<input type="checkbox" class="switch-e" id="switche" />Switch E<br/>
+		<div id="div1" class="offstate-e">offstate-e</div>
+	</form>
+
+	<div id="div2">
+		<input type="checkbox" class="switch-f" id="switchf" />Switch F<br/>
+		<div id="div3" class="offstate-f">offstate-f</div>
+	</div>
+	
+	<div id="div4">
+		Nothing
+	</div>
+
+	<a href="#" onclick='testSwitchMerge(); return false;'>test merge</a>
 </body>
 </html>
 

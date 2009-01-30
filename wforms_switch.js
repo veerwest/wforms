@@ -91,29 +91,55 @@ wFORMS.behaviors['switch']  = {
  */	
 wFORMS.behaviors['switch'].applyTo = function(f){
 	
-	while(f && f.tagName!='FORM') {
-		f = f.parentNode;
+	var b = new wFORMS.behaviors['switch'].instance(f);
+	
+	// Traverse dom tree and look for elements with the switch trigger or target classes. Store in cache object.
+	b.buildCache();
+	
+	if(b.isCacheEmpty()) {
+		// Nothing to do, bail out.
+		b.onApply();
+		return b;
 	}
 	
-	// keep existing instance if possible
-	var b = wFORMS.getBehaviorInstance(f,'switch');
-		
-	if(b) {
-		// but reset cache.
-		b.cache = {};	
-		// will return an empty behavior to save memory (workaround. core doesn't check if the behavior returned already exists)
-		ret = new Array({target:null}); 
-	} else {		
-		b = new wFORMS.behaviors['switch'].instance(f);
-		ret = b; 	
-	}		
-	b.buildCache();			
+	// Add onchange/onclick event handlers to found triggers.
 	b.setupTriggers();	
+	
+	// Check if behavior was applied on a form element. If not, we may need to merge behavior.
+	// (This happens when behavior is applied to a repeated section) 
+	if(f.tagName!='FORM') {	
+		
+		// Check if there's a parent form tag, with a switch behavior already set up.		
+		while(f && f.tagName!='FORM') {
+			f = f.parentNode;
+		}		
+		var _b = wFORMS.getBehaviorInstance(f,'switch');
+		if(_b) {
+			// Found existing instance of behavior on parent form element. 
+			
+			// Merge triggers+targets just found into existing behavior's cache. We'll discard the new behavior data once we're done here.
+			_b.merge(b);
+			
+			// Copy cache back into new behavior so we can set up the targets correctly.
+			b.cache = _b.cache;			
+			b.setupTargets();	
+			
+			// Run 'onApply' hook.			
+			b.onApply();
+			
+			// Discard the new behavior data by returning an empty behavior object.
+			// (it's a workaround. Core doesn't check if the behavior returned already exists)
+			return new Array({target:null}); 
+		}				
+	}	
 	b.setupTargets();	
 	b.onApply();
-	return ret;	
+	return b;	
 }
 
+/**
+ * Go through all triggers listed in the behavior cache and add event handlers.  
+ */
 wFORMS.behaviors['switch'].instance.prototype.setupTriggers = function() {
 	for(var i in this.cache) {
 		var triggers = this.cache[i].triggers;
@@ -122,7 +148,10 @@ wFORMS.behaviors['switch'].instance.prototype.setupTriggers = function() {
 		} 
 	}	
 }
-	
+
+/**
+ * Add event handler to trigger element.
+ */	
 wFORMS.behaviors['switch'].instance.prototype.setupTrigger = function(elem) {
 	var self = this;
 	if(!elem.id){
@@ -239,28 +268,91 @@ wFORMS.behaviors['switch'].removeHandle = function(elem){
 }
 
 /**
- *
+ * Traverse dom tree and look for elements with the switch trigger or target classes. Store in cache object.
  */
 wFORMS.behaviors['switch'].instance.prototype.buildCache = function() {
 	
 	this.cache_processed = new Array();	// stores ids of elements already processed, to prevent duplicate parsing. 
+	
+	// Run on target first, then all children
+	if(this.target.className) {
+		if(this.target.className.indexOf(this.behavior.CSS_PREFIX)!=-1) {		
+			this.addTriggerToCache(this.target);	
+		}
+		if(this.target.className.indexOf(this.behavior.CSS_OFFSTATE_PREFIX)!=-1) {
+			this.addTargetToCache(this.target);			
+		}
+		if(this.target.className.indexOf(this.behavior.CSS_ONSTATE_PREFIX)!=-1) {
+			this.addTargetToCache(this.target);			
+		}
+	}
 	
 	var l = this.target.getElementsByTagName('*');
 		
 	for(var i=0;i<l.length;i++) {
 		if(l[i].tagName) {					
 			// Iterates all elements. Lookup for triggers and targets
-			if(l[i].className && l[i].className.indexOf(this.behavior.CSS_PREFIX)!=-1) {		
-				this.addTriggerToCache(l[i]);	
-			}
-			if(l[i].className && l[i].className.indexOf(this.behavior.CSS_OFFSTATE_PREFIX)!=-1) {
-				this.addTargetToCache(l[i]);			
-			}
-			if(l[i].className && l[i].className.indexOf(this.behavior.CSS_ONSTATE_PREFIX)!=-1) {
-				this.addTargetToCache(l[i]);			
+			if(l[i].className) {
+				if(l[i].className.indexOf(this.behavior.CSS_PREFIX)!=-1) {		
+					this.addTriggerToCache(l[i]);	
+				}
+				if(l[i].className.indexOf(this.behavior.CSS_OFFSTATE_PREFIX)!=-1) {
+					this.addTargetToCache(l[i]);			
+				}
+				if(l[i].className.indexOf(this.behavior.CSS_ONSTATE_PREFIX)!=-1) {
+					this.addTargetToCache(l[i]);			
+				}
 			}
 		}
-	}		
+	}	
+}
+
+/**
+ * Merge cache between two behaviors (valid only when applied to the same form).
+ */
+wFORMS.behaviors['switch'].instance.prototype.merge = function(b) {
+
+	// Merge cache object 
+	for(var i in b.cache) {
+		if(!this.cache[i]) {
+			this.cache[i] = b.cache[i];
+			continue;
+		}	
+		
+		for(var j=0; j< b.cache[i].triggers.length; j++) {
+			
+			for(var k=0; k<this.cache[i].triggers.length && b.cache[i].triggers[j]!=this.cache[i].triggers[k]; k++);
+			
+			if(k==this.cache[i].triggers.length) {
+				this.cache[i].triggers.push(b.cache[i].triggers[j]);
+			}
+		}
+		
+		for(var j=0; j< b.cache[i].targets.length; j++) {
+			for(var k=0; k<this.cache[i].targets.length && b.cache[i].targets[j]!=this.cache[i].targets[k]; k++);
+			
+			if(k==this.cache[i].targets.length) {
+				this.cache[i].targets.push(b.cache[i].targets[j]);
+			}
+		}
+	}
+
+
+		
+	// Merge cache_processed array.
+	for(var i=0;i<b.cache_processed.length;i++) {
+		for(var j=0;j<this.cache_processed.length && this.cache_processed[j]!=b.cache_processed[i];j++);
+		if(j==this.cache_processed.length) {
+			this.cache_processed.push(b.cache_processed[i]);
+		}		
+	}
+}
+
+wFORMS.behaviors['switch'].instance.prototype.isCacheEmpty = function(){
+	for(var c in this.cache) {
+		return false;
+	}
+	return true; 
 }
 
 /**
@@ -576,8 +668,8 @@ wFORMS.behaviors['switch'].isSwitchedOff = function(elem){
 }
 
 /**
- * Setups targets depends on switches and control state. I.e. if control is ON
- * Targets should be ON. 
+ * Set appropriate classes on switch targets, depending on switch states. 
+ * i.e. if control is ON, Targets should be ON. 
  */
 wFORMS.behaviors['switch'].instance.prototype.setupTargets = function(){
 	var _ran = []; 
