@@ -210,7 +210,7 @@ wFORMS.helpers.contains = function(array, needle) {
 
 // Loader config
 wFORMS.LOADER    	  = {};
-wFORMS.LOADER.enabled = true;
+wFORMS.LOADER.enabled = false;
 wFORMS.LOADER.message = "Please wait...";
 wFORMS.LOADER.spinner = ""; // image url
 wFORMS.LOADER.speed   = 2;
