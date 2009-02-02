@@ -33,3 +33,12 @@ wFORMS.behaviors.validation.messages.fieldspecific = "oops..";
 wFORMS.behaviors.validation.instance.prototype.somevalidation = function(element, value) {			
 	return false;
 }
+
+
+/* ALL REQUIRED IMPLEMENTATION */
+wFORMS.behaviors.validation.rules.allRequired    = { selector: ".allrequired", check: 'validateAllRequired' }
+wFORMS.behaviors.validation.messages.allRequired = "All fields are required";
+
+wFORMS.behaviors.validation.instance.prototype.validateAllRequired = function(element) {
+	var elements = element.getElementsByTagName('*');
+}

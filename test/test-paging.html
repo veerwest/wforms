@@ -19,9 +19,10 @@
 	<script type="text/javascript" src="../wforms_validation.js"></script>
 	
 	<script type="text/javascript">
+		wFORMS.behaviors.paging.warnOnUnload = false;
 		
 		wFORMS.behaviors.paging.instance.prototype.onApply = function() {
-			setUpPageStatus = 'complete';		
+			setUpPageStatus = 'complete';					
 		} 
 		
 		function setUpPage() {

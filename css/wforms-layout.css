@@ -300,6 +300,24 @@
 	margin-bottom: 1em;
 }
 
+.wForm .wfLoader {	
+	text-align: center;
+}
+.wForm .wfLoader .inner {
+	padding: 5px 1em;
+	display: inline-block;
+	text-align: center;
+	width: 150px;
+	background-color: #000;
+	color: #FFF;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.wForm .wfLoader img {
+	vertical-align: middle;
+	margin: 5px;
+}
+
 /* FIREFOX BUG FIXES ================================================================ */
 /* layout bug fix for divs with overflow:auto|hidden and absolute positioning */
 .wForm form .inlineSection, x:-moz-any-link {

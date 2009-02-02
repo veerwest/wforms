@@ -851,6 +851,17 @@ _b.getMasterSection = function(elem){
  * @param {event} e 
  */
 _i.prototype.run = function(e){ 	
-	this.duplicateSection(this.target);
+	
+	if(!wFORMS.LOADER.enabled) {
+		this.duplicateSection(this.target);
+	} else {
+		// run through timeout only if loader is enabled (breaks test suite otherwise)
+		var self = this;
+		wFORMS.LOADER.show(self.target);
+		setTimeout( function() { 
+			self.duplicateSection(self.target);
+			wFORMS.LOADER.hide(self.target, true); 
+		}, 1);
+	}
 	if(e) e.preventDefault();
 }

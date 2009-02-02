@@ -134,6 +134,7 @@ wFORMS.behaviors['switch'].applyTo = function(f){
 	}	
 	b.setupTargets();	
 	b.onApply();
+	
 	return b;	
 }
 
