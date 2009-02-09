@@ -197,8 +197,12 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
 	
 		// Add a unload handler to prevent accidental loss of data when navigating away from the page
-		if(this.warnOnUnload && !window.onbeforeunload) {	
-			window.onbeforeunload = function() { return b.behavior.MESSAGES.CAPTION_UNLOAD };
+		if(!window.onbeforeunload) {	
+			window.onbeforeunload = function() { 
+				if(b.behavior.warnOnUnload)
+					return b.behavior.MESSAGES.CAPTION_UNLOAD;
+				// don't return anything to skip the warning 
+			};
 		}
 		b.onApply();	
 		
