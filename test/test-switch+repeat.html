@@ -171,6 +171,29 @@
 		assertEquals('f',1, sInstance.cache['f'].triggers.length);
 		
 	}
+	
+	function testRepeatedRadioSwitch(){
+		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_radio-D[0]'),'repeat');
+	
+	try{
+		var parent = base2.DOM.bind(document.getElementById('tfa_radio-D[0]').parentNode);
+		var count = parent.querySelectorAll("div").length;		//Count number of repeated sections
+			assertEquals(1,count);	
+			
+		sInstance.run(null, document.getElementById('tfa_radio-D[0]'));
+		sInstance.onRemoveLinkClick(null,document.getElementById('tfa_radio-D[1]-wfDL'));
+		sInstance.run(null, document.getElementById('tfa_radio-D[0]'));
+		//Add -remove -add cycle
+		
+		count = parent.querySelectorAll("div").length;
+			assertEquals(2,count);	//Verify that two sections now exist.
+		
+	}catch(err){
+		assertEquals("Add/remove/add fails for radio buttons",true,false);
+		//force failure if error thrown (as from elem.form is null)
+	}
+	
+	}
 	</script>
 	
 </head>
@@ -233,6 +256,19 @@
 	</div>
 
 	<a href="#" onclick='testSwitchMerge(); return false;'>test merge</a>
+	
+	
+	<form id="testform3">
+	<fieldset class="" id="tfa_0693953105672" >
+		<div class="repeat oneField" id="tfa_radio-D[0]" >
+			<span class="choices" id="tfa_radio[0]">
+				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_one[0]" class="switch-a" value="tfa_one" rel=" wfHandled"/><label class="postField" for="tfa_one[0][0]">one</label></span>
+				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_two[0]" class="" value="tfa_two" rel=" wfHandled"/><label class="postField" for="tfa_two[0][0]">two</label></span>
+				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_three[0]" class="" value="tfa_three" rel=" wfHandled"/><label class="postField" for="tfa_three[0][0]">three</label></span>
+			</span>
+		</div>
+	</fieldset>
+	</form>
 </body>
 </html>
 

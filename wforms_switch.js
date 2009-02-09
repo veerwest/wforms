@@ -508,7 +508,8 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggers = function(elems, incl
 				break;
 
 			case 'INPUT' : 
-				if(elem.type && elem.type.toUpperCase() == 'RADIO'){					
+					//Test to make sure that elem.form exists (this path called even after section is deleted)
+				if(elem.type && elem.type.toUpperCase() == 'RADIO' && elem.form){
 					var radioGroup = elem.form[elem.name];
 					if(!radioGroup) {
 						// repeated radio groups don't show up in the collection in IE6+
