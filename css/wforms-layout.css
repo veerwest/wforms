@@ -81,12 +81,14 @@
 }
 
 /* Radio/checkbox + label wrapper */
-.wForm form .oneChoice {						
-	display: inline-block;
-	white-space: nowrap; /* keeps checkbox/radio and label together */
+.wForm form .oneChoice {
+	display: inline-block;					
+	white-space: nowrap;
 }
+
 .wForm form .oneChoice label {
-	white-space: normal; /* allows label to wrap if needed (ticket #242) */
+	white-space: inherit !important;
+	/* allows label to wrap if needed (ticket #242) */
 }
 /* Place the label and checkbox/radio on its own line */
 .wForm form .oneChoicePerLine .oneChoice {						
@@ -149,6 +151,7 @@
 	margin: 0;	
 	white-space: nowrap;
 }
+
 /* Input Validation Rules */
 
 /* Asterisk on required fields */
