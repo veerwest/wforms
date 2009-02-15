@@ -6,10 +6,10 @@
  This stylesheet and the associated images are Copyright (c) 2007-2008 Veer West LLC (http://www.veerwest.com)	
  and licensed under the Creative Commons Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/) 
 */
- 
+
 .wForm form {
 	margin: .8em 0 1.6em 0; 
-	padding: 0; 
+	padding: 10px;
 }
 .wForm fieldset {
 	margin: 0 0 1em 0;
@@ -151,7 +151,6 @@
 	margin: 0;	
 	white-space: nowrap;
 }
-
 /* Input Validation Rules */
 
 /* Asterisk on required fields */
@@ -291,13 +290,20 @@
 .wForm form .wfPagingButtons .wfPageNextButton {
 	padding: 4px 15px;
 }
-/* Captcha */
-.wForm fieldset.captcha legend {
-	display: none;
-}
-.wForm .captchaHelp {
-	font-size: 0.75em;
-}
+/* Captcha Dialog */
+.wForm 
+	.captcha .oneField 	{ width: 250px; float: left !important; }
+.wForm 
+	.captcha .oneField 
+	.preField 			{ display:inline !important; }
+.wForm 
+	.captcha img 		{ border:1px solid #ccc; margin-bottom: 10px; }
+.wForm 
+	.captcha input 		{ width: 108px; }
+.wForm fieldset.captcha 
+	legend 				{ display: none; }
+.wForm .captchaHelp 	{ font-size: 0.75em; }
+
 /* form builder HTML Section */
 .wForm .htmlsection {
 	margin-bottom: 1em;
