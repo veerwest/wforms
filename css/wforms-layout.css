@@ -274,6 +274,7 @@
 /* Buttons */
 .wForm form .actions {
 	margin: 20px 0 10px 0;	
+	text-align: right;
 }
 .wForm form .actions .primaryAction {
 	padding: 4px 15px;	
