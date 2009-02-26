@@ -23,7 +23,7 @@ wFORMS.behaviors.validation.instance.prototype.isURL = function(element, value) 
 }
 
 wFORMS.behaviors.validation.messages.isBetweenLimit = "This text length is incorrect.";
-wFORMS.behaviors.validation.rules.isBetweenLimit = { selector: ".validate-between", check: 'isNotBetweenLimit' }
+wFORMS.behaviors.validation.rules.isBetweenLimit = { selector: ".validate-between", check: 'isBetweenLimit' }
 wFORMS.behaviors.validation.instance.prototype.isBetweenLimit = function(element, value) {
 	var pattern = new RegExp(/validate-between [\d]*:[\d]*/i);
 	var matches = element.className.match(pattern);
