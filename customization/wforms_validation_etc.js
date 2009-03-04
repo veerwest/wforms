@@ -18,7 +18,7 @@ if (typeof(wFORMS.behaviors['validation']) == "undefined") {
 wFORMS.behaviors.validation.messages.isURL = "This is not a valid URL. Format is http://www.example.com";
 wFORMS.behaviors.validation.rules.isURL = { selector: ".validate-url", check: 'isURL' };
 wFORMS.behaviors.validation.instance.prototype.isURL = function(element, value) {
-        var regexp = new RegExp("^(http|https)://[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(([0-9]{1,5})?/.*)?$","i");
+        var regexp = new RegExp("^(((ht|f)tp(s?))\://)?(www.|[a-zA-Z].)[a-zA-Z0-9\-\.]+\.(com|edu|gov|mil|net|org|biz|info|name|museum|us|ca|uk)(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\;\?\'\\\+&amp;%\$#\=~_\-]+))*$","i");
         return this.isEmpty(value) || regexp.test(value);
 }
 
@@ -30,11 +30,29 @@ wFORMS.behaviors.validation.instance.prototype.isBetweenLimit = function(element
 		if(matches[0]) {
 			matches = matches[0].match(/(\d*):(\d*)/i);
 			if(matches[1] && matches[2]){
-				return ( (value.length >= matches[1]) && (value.length <= matches[2]) );
+				if(!((value.length >= matches[1]) && (value.length <= matches[2]))){
+					wFORMS.behaviors.validation.messages.isBetweenLimit = "This text length is incorrect. Your text must be between "+matches[1]+" and "+matches[2]+" characters long.";
+				return false;
+				}
 			}
 		}
 	return true;
 }
+
+
+//wFORMS.behaviors.validation.messages.isSame = "These values do not match.";
+//wFORMS.behaviors.validation.rules.isSame = { selector: ".validate-between", check: 'isSame' }
+//wFORMS.behaviors.validation.instance.prototype.isSame = function(element, value) {
+//	var pattern = new RegExp(/validate-same:[\d]*/i);
+//	var matches = element.className.match(pattern);
+//		if(matches[0]) {
+//			matches = matches[0].match(/(\d*):(\d*)/i);
+//			if(matches[1] && matches[2]){
+//				return ( (value.length >= matches[1]) && (value.length <= matches[2]) );
+//			}
+//		}
+//	return true;
+//}
 
 
 function tfa_validate(idValue,newClass){
@@ -43,3 +61,4 @@ function tfa_validate(idValue,newClass){
 		base2.DOM.HTMLElement.addClass(elem,newClass);
 	});
 }
+
