@@ -1,8 +1,16 @@
-//This should be removed when base2 becomes safari compatable. 
-if( navigator.appVersion.search(/Safari/) != -1)
-{
-NodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
-} 
+//Crossbrowser hacks. 
+try{
+	if( NodeList && !(NodeList.prototype.forEach))
+	{
+		NodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
+	} 
+}catch(e){};
+
+try{
+	if( StaticNodeList && !(StaticNodeList.prototype.forEach)){
+		StaticNodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
+	}
+}catch(e){};
 //
 
 if (typeof(base2) == "undefined") {
