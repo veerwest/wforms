@@ -80,7 +80,7 @@ function global_init(){
 				{
 					var title_name = wFORMS.helpers.calender.title;
 				}else{
-					var title_name = "Pick a title";
+					var title_name = "Please select a date";
 				}
 			cal = new YAHOO.widget.Calendar("cal",newdiv.id, { title: title_name, close:true});
 			YAHOO.formmanager.calendar.setLocale(cal);
