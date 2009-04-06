@@ -1,7 +1,7 @@
 (window.location.protocol == "https:") ? _HTTP="https://" : _HTTP="http://";
 	
 	//Store old onApply behavior for reuse.
-	var _onApply      = wFORMS.behaviors.paging.instance.prototype.onApply;
+	var _onApply      = wFORMS.behaviors.validation.instance.prototype.onApply;
 	wFORMS.behaviors.validation.instance.prototype.onApply = function(){
 		var forms=document.getElementsByTagName("FORM");
 		for(i =0; i < forms.length; i++){
@@ -13,7 +13,7 @@
 					Library.push(_HTTP+"ajax.googleapis.com/ajax/libs/yui/2.6.0/build/yahoo-dom-event/yahoo-dom-event.js"	);
 					Library.push(_HTTP+"ajax.googleapis.com/ajax/libs/yui/2.6.0/build/calendar/calendar-min.js"	);
 				
-					Library.push("testing/dates.js");
+					Library.push("http://wforms.googlecode.com/svn/trunk/sandbox/testing/dates.js");
 					
 					wFORMS.helpers.ext_js.loaded = function(){global_init();};
 					wFORMS.helpers.ext_js.add(Library);
@@ -57,7 +57,3 @@
 	}
 		
 	}
-
-base2.DOM.Element.addEventListener(document,"DOMContentLoaded",function(){
-base2.DOM.Element.addEventListener(document.getElementById('tfa_Name'),"click",function(){alert(wFORMS.helpers.ext_js.count);});
-});
