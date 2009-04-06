@@ -1,6 +1,5 @@
 function global_init(){
 
-//if(checkYahooLoaded()){			//Wait for IE to finish loading YAHOO library
 	YAHOO.namespace("formmanager.calendar");
 	
 	YAHOO.formmanager.calendar.handler = function(type,args,obj) {
@@ -9,9 +8,9 @@ function global_init(){
 			if(dates){
 				//var selectedDate = (dates[0].getMonth()+1) + "/" + dates[0].getDate() + "/" + dates[0].getFullYear();
 				var selectedDateArray = Array();
-					selectedDateArray[this.Locale.MDY_DAY_POSITION-1] = dates[0].getDate();
-					selectedDateArray[this.Locale.MDY_MONTH_POSITION-1] = dates[0].getMonth()+1;
-					selectedDateArray[this.Locale.MDY_YEAR_POSITION-1] = dates[0].getFullYear();
+				selectedDateArray[this.Locale.MDY_DAY_POSITION-1] = dates[0].getDate();
+				selectedDateArray[this.Locale.MDY_MONTH_POSITION-1] = dates[0].getMonth()+1;
+				selectedDateArray[this.Locale.MDY_YEAR_POSITION-1] = dates[0].getFullYear();
 				var seperator = 	this.Locale.DATE_FIELD_DELIMITER;
 				
 				
@@ -60,8 +59,10 @@ function global_init(){
 
 	
 	YAHOO.formmanager.calendar.calendars_array = Array();
+
 	function cal_init(){
-	var forms=document.getElementsByTagName("FORM");
+		
+		var forms=document.getElementsByTagName("FORM");
 	
 		for(i =0; i < forms.length; i++){
 		base= base2.DOM.bind(forms[i]);
@@ -101,18 +102,16 @@ function global_init(){
 	cal_init();
 	//}else{setTimeout(global_init,500);}//Wait for IE to finish loading YAHOO library
 	
-	}
+}
 	
-	function checkYahooLoaded(){
-	
+function checkYahooLoaded(){
 	if((typeof YAHOO) != "undefined"){
 		if((typeof YAHOO.widget) != "undefined"){
 			if((typeof YAHOO.widget.Calendar) != "undefined")
 				{return true;}
 		}
 	}
-	
 	return false;
-	}
+}
 	
-	//global_init();
+	
