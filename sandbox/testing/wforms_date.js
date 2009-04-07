@@ -1,5 +1,6 @@
 new function(_) {
 
+	if(!wFORMS.helpers.calender) {wFORMS.helpers.calender = {}};
 	var _HTTP = '';
 
 	(window.location.protocol == "https:") ? _HTTP="https://" : _HTTP="http://";
