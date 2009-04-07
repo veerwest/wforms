@@ -1,6 +1,6 @@
 new function(_) {
 
-	if(!wFORMS.helpers.calender) {wFORMS.helpers.calender = {}};
+	if(!wFORMS.helpers.calendar) {wFORMS.helpers.calendar = {}};
 	var _HTTP = '';
 
 	(window.location.protocol == "https:") ? _HTTP="https://" : _HTTP="http://";
@@ -20,7 +20,7 @@ new function(_) {
 					Library.push(_HTTP+"ajax.googleapis.com/ajax/libs/yui/2.6.0/build/yahoo-dom-event/yahoo-dom-event.js"	);
 					Library.push(_HTTP+"ajax.googleapis.com/ajax/libs/yui/2.6.0/build/calendar/calendar-min.js"	);
 					
-					wFORMS.helpers.ext_js.loaded = function(){wFORMS.helpers.calender.calender_init();};
+					wFORMS.helpers.ext_js.loaded = function(){wFORMS.helpers.calendar.calendar_init();};
 					wFORMS.helpers.ext_js.add(Library);
 					
 					break;
@@ -65,7 +65,7 @@ new function(_) {
 	}
 }	
 
-	wFORMS.helpers.calender.calender_init = function(){
+	wFORMS.helpers.calendar.calendar_init = function(){
 
 	YAHOO.namespace("formmanager.calendar");
 	
@@ -95,13 +95,12 @@ new function(_) {
 	YAHOO.formmanager.calendar.mindate = (YAHOO.formmanager.calendar.today.getMonth()+1) + "/" + YAHOO.formmanager.calendar.today.getDate() + "/" + YAHOO.formmanager.calendar.today.getFullYear();
 	
 	YAHOO.formmanager.calendar.showCal = function (e,f) {
-	//Clear any other open calenders
+	//Clear any other open calendars
 		for(var i=0; i< YAHOO.formmanager.calendar.calendars_array.length; i++)
 		{
 			if(YAHOO.formmanager.calendar.calendars_array[i] != f)
 				YAHOO.formmanager.calendar.calendars_array[i].hide();
 		}
-
 		var location = YAHOO.util.Dom.getRegion(this.oDomContainer.previousSibling.id);
 		this.oDomContainer.style.left = (location[0] + (location.right - location.left)) + "px";
 		this.oDomContainer.style.top =  (location[1]) + "px";
@@ -115,10 +114,10 @@ new function(_) {
 	}
 	
 	YAHOO.formmanager.calendar.setLocale = function(cal) {
-		if(wFORMS.helpers.calender && wFORMS.helpers.calender.locale){
-			for(property in wFORMS.helpers.calender.locale){
+		if(wFORMS.helpers.calendar && wFORMS.helpers.calendar.locale){
+			for(property in wFORMS.helpers.calendar.locale){
 				if(cal.Locale[property]){
-					cal.Locale[property] = wFORMS.helpers.calender.locale[property];
+					cal.Locale[property] = wFORMS.helpers.calendar.locale[property];
 				}
 			}
 		}
@@ -126,7 +125,7 @@ new function(_) {
 
 	
 	YAHOO.formmanager.calendar.calendars_array = Array();
-	wFORMS.helpers.calender.cal_init = function(){
+	wFORMS.helpers.calendar.cal_init = function(){
 		
 		var forms=document.getElementsByTagName("FORM");
 	
@@ -143,9 +142,9 @@ new function(_) {
 
 				dateField.parentNode.insertBefore( newdiv, dateField.nextSibling );
 
-				if(wFORMS.helpers.calender && wFORMS.helpers.calender.title)
+				if(wFORMS.helpers.calendar && wFORMS.helpers.calendar.title)
 				{
-					var title_name = wFORMS.helpers.calender.title;
+					var title_name = wFORMS.helpers.calendar.title;
 				}else{
 					var title_name = "Please select a date";
 				}
@@ -170,7 +169,7 @@ new function(_) {
 		}
 	}
 	
-	wFORMS.helpers.calender.cal_init();
+	wFORMS.helpers.calendar.cal_init();
 }
 
 }();
