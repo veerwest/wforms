@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Test wForms Date Field Calendar Customization</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+	<link href="http://app.formassembly.com/wForms/3.0/css/wforms-jsonly.css" rel="alternate stylesheet" title="This stylesheet activated by javascript" type="text/css"></link>
+
+	<link href="http://app.formassembly.com/wForms/3.0/css/wforms-layout.css" rel="stylesheet" type="text/css"></link>
+	<!--[if IE 7]>
+	<link href="http://app.formassembly.com/wForms/3.0/css/wforms-layout-ie7.css" rel="stylesheet" type="text/css"></link>
+	<![endif]-->
+	<script type="text/javascript" src="../../lib/base2/beta2/base2-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2/beta2/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../../wforms_core.js"></script>
+	<script type="text/javascript" src="../../wforms_validation.js"></script>
+	<script type="text/javascript" src="../../wforms_paging.js"></script>
+	<script type="text/javascript" src="../../wforms_repeat.js"></script>
+	<script type="text/javascript" src="../../wforms_hint.js"></script>
+
+	<script type="text/javascript" src="http://app.formassembly.com/wForms/3.0/js/localization-es.js"></script>
+	
+	<style type="text/css">
+		#content {
+			height:auto !important;
+			min-height:450px;
+			padding-bottom:20px;
+			position:relative;
+			width:784px;
+		}
+	</style>
+</head>
+<body>
+
+<div id="main">
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<div id="content" style="margin: 0 auto; width: 700px">
+        <div class="data">
+		  <h1>Formulario de confirmación de pagos</h1>
+            <p>Utilice el siguiente formulario para confirmar la realización de su pago. Recuerde que en el caso de haber abonado a través de Pago Fácil / Rapipago, no es necesaria la confirmación ya que su pago será acreditado automáticamente a las 72 horas hábiles.</p>
+
+<div style="width: 40px; float:left; height:400px">&nbsp;</div>
+<div class="wFormContainer">
+	<div class="wForm wFormWidth">
+<div class="codesection" id="code-">
+	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.6.0/build/calendar/assets/skins/sam/calendar.css">
+	<link type="text/css" rel="stylesheet" href="http://app.formassembly.com/js/yui/build/calendar/assets/calendar.css" />
+	<script type="text/javascript" src="wforms_date.js"></script>
+	<style type="text/css">
+	.yui-calcontainer {position: absolute !important;}
+	.yui-calendar {border-collapse: separate !important;}
+	</style>
+</div>
+<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="id2809437" class="labelsLeftAligned hintsTooltip">
+<div id="tfa_Emaildeltitular-D" class="oneField labelsLeftAligned">
+<label class="preField" for="tfa_Emaildeltitular">Email del titular <span class="reqMark">*</span></label> <input type="text" id="tfa_Emaildeltitular" name="tfa_Emaildeltitular" value="" size="" class="validate-email required"> <br><span class="errMsg" id="tfa_Emaildeltitular-E"> </span>
+
+</div>
+<div id="tfa_Seleccionelaform-D" class="oneField labelsLeftAligned">
+<label class="preField" for="tfa_Seleccionelaform">Forma de pago <span class="reqMark">*</span></label> <select id="tfa_Seleccionelaform" name="tfa_Seleccionelaform" class="required"><option value="">Seleccione...</option>
+<option value="tfa_TransferenciaBan" class="switch-c">Transferencia Bancaria</option>
+<option value="tfa_DepsitoBancario" class="">Depósito Bancario</option>
+<option value="tfa_PagoFcilRapipago" class="">Pago Fácil / Rapipago</option>
+<option value="tfa_Paypal" class="switch-b">Paypal</option>
+<option value="tfa_7702146868747" class="">Tarjeta de Crédito</option>
+
+<option value="tfa_DineroMail" class="switch-d">DineroMail</option>
+<option value="tfa_WesternUnion" class="switch-e">Western Union</option></select> <br><span class="errMsg" id="tfa_Seleccionelaform-E"> </span>
+</div>
+<div id="tfa_Fecha-D" class="oneField">
+<label class="preField" for="tfa_Fecha">Fecha <span class="reqMark">*</span></label> <input type="text" id="tfa_Fecha" name="tfa_Fecha" value="" size="40" class="validate-date required"> <br><span class="errMsg" id="tfa_Fecha-E"> </span>
+</div>
+<div id="tfa_Bancodeorigen-D" class="offstate-c oneField">
+<label class="preField" for="tfa_Bancodeorigen">Banco de origen <span class="reqMark">*</span></label> <select id="tfa_Bancodeorigen" name="tfa_Bancodeorigen" class="required"><option value="">Seleccione...</option>
+
+<option value="tfa_BBVABancoFrancs" class="">BBVA Banco Francés</option>
+<option value="tfa_StandardBank" class="">Standard Bank</option>
+<option value="tfa_SantanderRo" class="">Santander Río</option>
+<option value="tfa_Galicia" class="">Galicia</option>
+<option value="tfa_Citi" class="">Citi</option>
+<option value="tfa_Patagonia" class="">Patagonia</option>
+<option value="tfa_Macro" class="">Macro</option>
+<option value="tfa_Supervielle" class="">Supervielle</option>
+<option value="tfa_HSBC" class="">HSBC</option>
+
+<option value="tfa_Ita" class="">Itaú</option>
+<option value="tfa_Comafi" class="">Comafi</option>
+<option value="tfa_Credicoop" class="">Credicoop</option>
+<option value="tfa_Otro" class="switch-a">Otro</option></select> <br><span class="errMsg" id="tfa_Bancodeorigen-E"> </span>
+</div>
+<div id="tfa_Otro1-D" class="offstate-a oneField">
+<label class="preField" for="tfa_Otro1">Otro <span class="reqMark">*</span></label> <input type="text" id="tfa_Otro1" name="tfa_Otro1" value="" size="" class="required"> <br><span class="errMsg" id="tfa_Otro1-E"> </span>
+
+</div>
+<div id="tfa_NmerodeControlMT-D" class="offstate-e oneField">
+<label class="preField" for="tfa_NmerodeControlMT">Número de Control (MTCN) <span class="reqMark">*</span></label> <input type="text" id="tfa_NmerodeControlMT" name="tfa_NmerodeControlMT" value="" size="40" class="required"> <br><span class="errMsg" id="tfa_NmerodeControlMT-E"> </span>
+</div>
+<div id="tfa_Ciudaddesdedonde-D" class="offstate-e oneField">
+<label class="preField" for="tfa_Ciudaddesdedonde">Ciudad desde donde realiza el pago <span class="reqMark">*</span></label> <input type="text" id="tfa_Ciudaddesdedonde" name="tfa_Ciudaddesdedonde" value="" size="40" class="required"> <br><span class="errMsg" id="tfa_Ciudaddesdedonde-E"> </span>
+</div>
+
+<div id="tfa_Pasdesdedonderea-D" class="offstate-e oneField">
+<label class="preField" for="tfa_Pasdesdedonderea">País desde donde realiza el pago <span class="reqMark">*</span></label> <input type="text" id="tfa_Pasdesdedonderea" name="tfa_Pasdesdedonderea" value="" size="40" class="required"> <br><span class="errMsg" id="tfa_Pasdesdedonderea-E"> </span>
+</div>
+<div id="tfa_Emaildeorigen-D" class="offstate-b offstate-d oneField">
+<label class="preField" for="tfa_Emaildeorigen">Email de origen <span class="reqMark">*</span></label> <input type="text" id="tfa_Emaildeorigen" name="tfa_Emaildeorigen" value="" size="" class="validate-email required"> <br><span class="errMsg" id="tfa_Emaildeorigen-E"> </span>
+</div>
+<div id="tfa_Importe-D" class="oneField">
+
+<label class="preField" for="tfa_Importe">Importe <span class="reqMark">*</span></label> <input type="text" id="tfa_Importe" name="tfa_Importe" value="" size="" class="validate-float required"> <br><span class="errMsg" id="tfa_Importe-E"> </span>
+</div>
+<div id="tfa_Comentarios-D" class="oneField">
+<label class="preField" for="tfa_Comentarios">Comentarios</label> <textarea cols="50" rows="4" id="tfa_Comentarios" name="tfa_Comentarios" class=""></textarea> <br><span class="errMsg" id="tfa_Comentarios-E"> </span>
+</div>
+
+<div id="tfa_Fecha-D" class="oneField">
+<label class="preField" for="tfa_Fecha2">Fecha 2<span class="reqMark">*</span></label> <input type="text" id="tfa_Fecha2" name="tfa_Fecha2" value="" size="20" class="validate-date required">
+<span class="field-hint-inactive" id="tfa_Fecha2-H"><span>Field Hint </span></span> <br><span class="errMsg" id="tfa_Fecha2-E"> </span>
+</div>
+
+
+<div class="actions">
+	<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="Confirmar">
+</div>
+</form>
+</div>
+	<p class="supportInfo">
+		<a href="http://app.formassembly.com/forms/help/4084" target="new">
+			¿Necesita ayuda con éste formulario?		</a>
+	</p>
+</div>
+  </div></div><!-- content -->
+
+	
+    </div>
+</body>
+</html>

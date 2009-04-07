@@ -69,8 +69,9 @@ new function(_) {
 
 	YAHOO.namespace("formmanager.calendar");
 	
-	YAHOO.formmanager.calendar.handler = function(type,args,obj) {
+	YAHOO.formmanager.calendar.handler = function(type,args,cal) {
 		if(type=='select') {	
+		
 			var dates = this.getSelectedDates();
 			if(dates){
 				//var selectedDate = (dates[0].getMonth()+1) + "/" + dates[0].getDate() + "/" + dates[0].getFullYear();
@@ -82,33 +83,41 @@ new function(_) {
 				
 				
 				var selectedDate = selectedDateArray.join(seperator);
-				document.getElementById(this.oDomContainer.previousSibling.id).value = selectedDate;
+				cal._targetField.value = selectedDate;
 				this.hide();
 			}
 		}
 		else if(type=='deselect') {			
-				document.getElementById(this.oDomContainer.previousSibling.id).value = "";
+				cal._targetField.value = "";
 		}
 	};
 	
 	YAHOO.formmanager.calendar.today   = new Date();
 	YAHOO.formmanager.calendar.mindate = (YAHOO.formmanager.calendar.today.getMonth()+1) + "/" + YAHOO.formmanager.calendar.today.getDate() + "/" + YAHOO.formmanager.calendar.today.getFullYear();
 	
-	YAHOO.formmanager.calendar.showCal = function (e,f) {
-	//Clear any other open calendars
-		for(var i=0; i< YAHOO.formmanager.calendar.calendars_array.length; i++)
-		{
-			if(YAHOO.formmanager.calendar.calendars_array[i] != f)
-				YAHOO.formmanager.calendar.calendars_array[i].hide();
-		}
-		var location = YAHOO.util.Dom.getRegion(this.oDomContainer.previousSibling.id);
-		this.oDomContainer.style.left = (location[0] + (location.right - location.left)) + "px";
-		this.oDomContainer.style.top =  (location[1]) + "px";
-	this.show();
+	YAHOO.formmanager.calendar.showCal = function (e, cal) {
+		
+		var field  = e.target;
+		cal._targetField = field;
+		var caldiv = cal.oDomContainer;
+
+		caldiv.style.display='block';
+		var fp = wFORMS.helpers.position(field);
+		var cp = wFORMS.helpers.position(caldiv);
+		
+		var diff = {
+			left: fp.left - cp.left + 10,
+			top: fp.top - cp.top
+		};
+		caldiv.style.left = caldiv.offsetLeft + diff.left + field.offsetWidth +'px';
+		caldiv.style.top = caldiv.offsetTop + diff.top +'px';
+								
+		this.show();
 	}
 
 	YAHOO.formmanager.calendar.hideCal = function (e,f) {
 		if(f.over_cal == false){
+			f._targetField = null;
 			f.hide();
 		}
 	}
@@ -124,48 +133,44 @@ new function(_) {
 	}
 
 	
-	YAHOO.formmanager.calendar.calendars_array = Array();
 	wFORMS.helpers.calendar.cal_init = function(){
 		
 		var forms=document.getElementsByTagName("FORM");
 	
 		for(i =0; i < forms.length; i++){
-		base= base2.DOM.bind(forms[i]);
-		var datesList = base.querySelectorAll('.validate-date');
 		
-			datesList.forEach(function(f){
-		
-				var dateField = f;
+			if(!base.querySelectorAll) {
+				base= base2.DOM.bind(forms[i]);
+			}
+			var newdiv = document.createElement("div")
+			newdiv.id = forms[i].id+"_calContainer";
+			forms[i].appendChild(newdiv);
 				
-				var newdiv = document.createElement("div")
-				newdiv.id = dateField.id+"_calContainer";
+			if(wFORMS.helpers.calendar && wFORMS.helpers.calendar.title)
+			{
+				var title_name = wFORMS.helpers.calendar.title;
+			}else{
+				var title_name = "Please select a date";
+			}
 
-				dateField.parentNode.insertBefore( newdiv, dateField.nextSibling );
-
-				if(wFORMS.helpers.calendar && wFORMS.helpers.calendar.title)
-				{
-					var title_name = wFORMS.helpers.calendar.title;
-				}else{
-					var title_name = "Please select a date";
-				}
 			var cal = new YAHOO.widget.Calendar("cal",newdiv.id, { title: title_name, close:true});
 			YAHOO.formmanager.calendar.setLocale(cal);
 
-		
 			cal.selectEvent.subscribe(YAHOO.formmanager.calendar.handler, cal, true);
 			cal.deselectEvent.subscribe(YAHOO.formmanager.calendar.handler, cal, true);
 			cal.render();
 			cal.hide();
+			cal.over_cal = false;
 			
-			YAHOO.util.Event.addListener(dateField.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);
-			YAHOO.util.Event.addListener(dateField.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
-					
-					cal.over_cal = false;
 			YAHOO.util.Event.addListener(cal.containerId, "mouseover", function(){this.over_cal = true;},cal,true);
 			YAHOO.util.Event.addListener(cal.containerId, "mouseout", function(){this.over_cal = false;},cal,true);
-			YAHOO.formmanager.calendar.calendars_array.push(cal);
-			});
 			
+			var datesList = base.querySelectorAll('.validate-date');
+			
+			datesList.forEach(function(f){
+				YAHOO.util.Event.addListener(f.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);
+				YAHOO.util.Event.addListener(f.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
+			});			
 		}
 	}
 	
