@@ -125,9 +125,7 @@ new function(_) {
 	YAHOO.formmanager.calendar.setLocale = function(cal) {
 		if(wFORMS.helpers.calendar && wFORMS.helpers.calendar.locale){
 			for(property in wFORMS.helpers.calendar.locale){
-				if(cal.Locale[property]){
-					cal.Locale[property] = wFORMS.helpers.calendar.locale[property];
-				}
+				cal.cfg.setProperty(property, wFORMS.helpers.calendar.locale[property]); 
 			}
 		}
 	}
