@@ -59,10 +59,12 @@ new function(_) {
 					fileref.setAttribute("href", url);
 			
 				document.getElementsByTagName("head")[0].appendChild(fileref);
-				
-				var scriptref = document.createElement('style');
-				scriptref.innerHTML = ".yui-calcontainer {position: absolute !important;} \n .yui-calendar {border-collapse: separate !important;}";
-				document.getElementsByTagName("head")[0].appendChild(scriptref);
+		
+			//IE refuses to accept innerHTML CSS assignment
+		//		var scriptref = document.createElement('style');
+		//		base2.DOM.bind(scriptref);
+		//		scriptref.innerHTML = ".yui-calcontainer {position: absolute !important;} \n .yui-calendar {border-collapse: separate !important;}";
+		//		document.getElementsByTagName("head")[0].appendChild(scriptref);
 			});			
 		}
 		wFORMS.helpers.ext_js.remove = function(){
