@@ -49,6 +49,21 @@ new function(_) {
 					base2.DOM.Element.addEventListener(fileref,"load",wFORMS.helpers.ext_js.remove);
 					base2.DOM.Element.addEventListener(fileref,"readystatechange",wFORMS.helpers.ext_js.remove);
 			});
+			
+			
+			var array_css = Array("http://yui.yahooapis.com/2.6.0/build/calendar/assets/skins/sam/calendar.css","http://app.formassembly.com/js/yui/build/calendar/assets/calendar.css");
+			base2.DOM.Element.forEach(array_css,function(url) {
+				var fileref=document.createElement('link');
+					fileref.setAttribute("type","text/css");
+					fileref.setAttribute("rel","stylesheet");
+					fileref.setAttribute("href", url);
+			
+				document.getElementsByTagName("head")[0].appendChild(fileref);
+				
+				var scriptref = document.createElement('style');
+				scriptref.innerHTML = ".yui-calcontainer {position: absolute !important;} \n .yui-calendar {border-collapse: separate !important;}";
+				document.getElementsByTagName("head")[0].appendChild(scriptref);
+			});			
 		}
 		wFORMS.helpers.ext_js.remove = function(){
 			if(this.readyState){	//IE Hack
