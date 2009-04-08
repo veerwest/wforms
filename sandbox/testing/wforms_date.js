@@ -96,7 +96,8 @@ new function(_) {
 	YAHOO.formmanager.calendar.mindate = (YAHOO.formmanager.calendar.today.getMonth()+1) + "/" + YAHOO.formmanager.calendar.today.getDate() + "/" + YAHOO.formmanager.calendar.today.getFullYear();
 	
 	YAHOO.formmanager.calendar.showCal = function (e, cal) {
-		
+			if(!e.target){e.target = e.srcElement;};	//Clean IE's weird nomenclature
+	
 		var field  = e.target;
 		cal._targetField = field;
 		var caldiv = cal.oDomContainer;
