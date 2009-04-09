@@ -45,7 +45,9 @@ new function(_) {
 			
 				document.getElementsByTagName("head")[0].appendChild(fileref);
 				wFORMS.helpers.ext_js.count = wFORMS.helpers.ext_js.count+1;
-			
+				//Opera fires multiple 'loaded' events per loading cycle (different from other browsers) and a differing numbers per reload/refresh cycle
+				//	if(navigator.userAgent.search(/Opera/) != -1){wFORMS.helpers.ext_js.count = wFORMS.helpers.ext_js.count+1};
+				
 					base2.DOM.Element.addEventListener(fileref,"load",wFORMS.helpers.ext_js.remove);
 					base2.DOM.Element.addEventListener(fileref,"readystatechange",wFORMS.helpers.ext_js.remove);
 			});
@@ -76,8 +78,10 @@ new function(_) {
 				wFORMS.helpers.ext_js.count = wFORMS.helpers.ext_js.count-1;
 			}
 			
-		if(wFORMS.helpers.ext_js.count == 0){
-			wFORMS.helpers.ext_js.loaded();
+		if(wFORMS.helpers.ext_js.count <= 0){
+			try{	//If loaded() function fails, then YAHOO is undefined and should be tried again next cycle (Opera work around)  TODO
+				wFORMS.helpers.ext_js.loaded();
+			}catch(e){};
 		}
 	}
 }	
