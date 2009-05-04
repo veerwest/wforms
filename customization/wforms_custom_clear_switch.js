@@ -120,6 +120,12 @@ wFORMS.helpers.clearFieldValues = function(element) {
 		if(b) {
 			b.run(null,element);	
 		}
+		// If switch behavior is set, run it to update dependant switches
+		var _b = wFORMS.getBehaviorInstance(element.form,"switch");
+		if(_b){
+		//TODO: Check for infinite loop of triggers
+			_b.run(null,element);
+		}
 	}		
 }
 
