@@ -123,7 +123,7 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 	}
 	
 	var _run = function(element) { 
-								
+					
 		// Workaround for apparent bug in querySelectorAll not being limited to descendants of 'element':
 		// See bug #172 - Check if the element is not on the current page of a multi-page form			
 		if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(element)) {
@@ -314,14 +314,24 @@ wFORMS.behaviors.validation.instance.prototype.isEmpty = function(s) {
  * @returns {boolean} 
  */
 wFORMS.behaviors.validation.instance.prototype.validateRequired = function(element, value) {
+		
 	switch(element.tagName) {
 		case "INPUT":
-			var inputType = element.getAttribute("type");
+			var inputType = element.getAttribute("type");					
 			if(!inputType) inputType = 'text'; 
 			switch(inputType.toLowerCase()) {
 				case "checkbox":
 				case "radio":
 					return element.checked; 
+					break;
+				case "file":
+					// allows form to pass validation if a file has already been uploaded 
+					// (tfa_uploadDelete_xx checkbox exists and is not checked)					
+					var deleteCheckbox=document.getElementById('tfa_uploadDelete_'+element.id);
+					if(this.isEmpty(value)) {
+						return (deleteCheckbox && !deleteCheckbox.checked);						
+					}
+					return true;
 					break;
 				default:
 					return !this.isEmpty(value);
@@ -359,6 +369,15 @@ wFORMS.behaviors.validation.instance.prototype.validateOneRequired = function(el
 				case "checkbox":
 				case "radio":
 					return element.checked; 
+					break;
+				case "file":
+					// allows form to pass validation if a file has already been uploaded 
+					// (tfa_uploadDelete_xx checkbox exists and is not checked)
+					var deleteCheckbox=document.getElementById('tfa_uploadDelete_'+element.id);
+					if(this.isEmpty(wFORMS.helpers.getFieldValue(element))) {
+						return (deleteCheckbox && !deleteCheckbox.checked);						
+					}
+					return true;
 					break;
 				default:
 					return !this.isEmpty(wFORMS.helpers.getFieldValue(element));

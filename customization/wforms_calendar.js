@@ -8,7 +8,9 @@ new function(_) {
 	if(wFORMS.behaviors.validation) {
 		//Store old onApply behavior for reuse.	
 		var _onApply = wFORMS.behaviors.validation.instance.prototype.onApply;
-			
+				 
+		wFORMS.behaviors.validation.rules.isDate.selector  = ".validate-date, .validate-datecal";
+				
 		wFORMS.behaviors.validation.instance.prototype.onApply = function(){
 		
 			var	Library = Array();
@@ -163,7 +165,7 @@ new function(_) {
 				YAHOO.util.Event.addListener(cal.containerId, "mouseover", function(){this.over_cal = true;},cal,true);
 				YAHOO.util.Event.addListener(cal.containerId, "mouseout", function(){this.over_cal = false;},cal,true);
 				
-				var datesList = forms[i].querySelectorAll('.validate-date');
+				var datesList = forms[i].querySelectorAll('.validate-datecal');
 				
 				datesList.forEach(function(f){
 					YAHOO.util.Event.addListener(f.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);

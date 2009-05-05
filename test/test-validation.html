@@ -40,13 +40,43 @@
 				r.parentNode.removeChild(r);
 			}
 		}
+	
+		function testValidateFileRequired() {
+			// setup
+			var testForm  = document.getElementById('testForm');
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField').className='';
+			document.getElementById('testField2').className='';
+			
+			var testField3 = document.getElementById('testField3');
+			var deleteFieldDiv = testForm.appendChild(document.createElement('div'));
+			deleteFieldDiv.innerHTML = '<input type="checkbox" id="tfa_uploadDelete_testField3" value="testField3" name="tfa_uploadDelete_testField3" />';
+			
+			var deleteFieldCb = deleteFieldDiv.firstChild;
+			deleteFieldCb.checked = false;
+			
+			wFORMS.behaviors.validation.messages.isRequired = "my error message";
+			testField3.className='required';
+			// Test validation rule
+			assertTrue('Should pass required validation because the tfa_uploadDelete_tfa_File checkbox indicates a file was already uploaded.', bInstance.run(null, testForm)); 
+			
+			deleteFieldCb.checked = true;
+			assertFalse('Should fail required validation because the tfa_uploadDelete_tfa_File checkbox indicates a file already uploaded is set to be deleted.', bInstance.run(null, testForm)); 
+			
+			deleteFieldCb.parentNode.removeChild(deleteFieldCb);
+		}
+				
+            
 		
 		function testValidateAlpha() {
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
-			 
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			wFORMS.behaviors.validation.messages.isAlpha = "my error message";
+			
 			testField.className='validate-alpha';
 			testField.value='999';
 			
@@ -68,6 +98,9 @@
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			
 			wFORMS.behaviors.validation.messages.isAlphanum = "my error message";
 			testField.className='validate-alphanum';
@@ -95,6 +128,9 @@
 			wFORMS.behaviors.validation.messages.isRequired = "my error message";
 			testField.className='required';
 			testField.value=' ';
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			
 			// Test validation rule
 			assertFalse(bInstance.run(null, testForm)); 
@@ -110,18 +146,22 @@
 			assertNull(document.getElementById('testField-E'));			
 		}
 		
+
 		function testValidateOneRequired() {
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
 			
 			document.getElementById('testDiv').className='required';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			wFORMS.behaviors.validation.messages.isRequired = "my error message";
 			testField.className='';
 			testField.value=' ';
 			
+			
 			// Test validation rule
-			assertFalse(bInstance.run(null, testForm)); 
+			assertFalse('should fail one required validation',bInstance.run(null, testForm)); 
 			// Test error message creation
 			assertNotNull(document.getElementById('testDiv-E'));
 			// Test error message content
@@ -142,6 +182,8 @@
 			wFORMS.behaviors.validation.messages.isDate = "my error message";
 			testField.className='validate-date';
 			testField.value='not a date';
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField3').className='';
 			
 			// Test validation rule
 			assertFalse(bInstance.run(null, testForm)); 
@@ -165,6 +207,9 @@
 			wFORMS.behaviors.validation.messages.isEmail = "my error message";
 			testField.className='validate-email';
 			testField.value='not@an_email';
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			
 			// Test validation rule
 			assertFalse(bInstance.run(null, testForm)); 
@@ -214,6 +259,9 @@
 			// retrieve form and field
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			
 			// apply validation class to field
 			testField.className = 'validate-phone';
@@ -256,6 +304,9 @@
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			
 			wFORMS.behaviors.validation.messages.isInteger = "my error message";
 			testField.className='validate-integer';
@@ -283,6 +334,9 @@
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField2').className='';
+			document.getElementById('testField3').className='';
 			
 			wFORMS.behaviors.validation.messages.isFloat = "my error message";
 			testField.className='validate-float';
@@ -312,7 +366,10 @@
 			return				
 			// setup
 			var testForm  = document.getElementById('testForm');
-			var testField = document.getElementById('testField3');
+			var testField = document.getElementById('testField2');
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField').className='';
+			document.getElementById('testField3').className='';
 			
 			testField.className='validate-length 10';
 			testField.value='more than 10 characters long';
@@ -332,6 +389,8 @@
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
+			document.getElementById('testDiv').className='';
+			document.getElementById('testField3').className='';
 			
 			wFORMS.behaviors.validation.messages.isCustom = "my error message";
 			testField.className='validate-custom /^\\d\\d\\d$/';
@@ -363,9 +422,9 @@
             <div class="oneField" id="testDiv">
                 <label for="testField" class="preField">Test Field </label>
               	<input type="text" id="testField"  name="testField"  class="" value="" />
-				<input type="text" id="testField2" name="testField2" class="" value="" />
-				<textarea id="testField3"></textarea>
-               	<br />
+				<textarea id="testField2"></textarea>
+				<input type="file" id="testField3" name="testField3" class="required" value="" /><br/>
+				<br />
             </div>
 		</form>
 		 <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm2" >	
@@ -377,6 +436,7 @@
 			<div class="actions"><input type="submit" value="TEST" /></div>
         </form>
         
+       
     </body>
 </html>
 
