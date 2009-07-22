@@ -810,6 +810,9 @@ _i.prototype.removeHandled = function(elem){
  * @return	boolean
  */
 _b.isDuplicate = function(elem){
+		if(!elem.hasClass) { // no base2.DOM.bind to speed up function 
+			elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+		}
 	return elem.hasClass(this.CSS_REMOVEABLE);
 }
 
