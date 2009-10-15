@@ -497,7 +497,9 @@ wFORMS.behaviors.validation.instance.prototype.validatePhone = function(element,
 wFORMS.behaviors.validation.instance.prototype.validateCustom = function(element, value) {	
 	var pattern = new RegExp("\/(.*)\/([gi]*)");
 	var matches = element.className.match(pattern);
-	//console.log(matches);
+	if (this.isEmpty(value)) {
+		return true;
+	}	
 	if(matches && matches[0]) {										
 		var validationPattern = new RegExp(matches[1],matches[2]);
 		if(!value.match(validationPattern)) {
