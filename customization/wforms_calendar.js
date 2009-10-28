@@ -53,7 +53,7 @@ new function(_) {
 			var fileref=document.createElement('link');
 			fileref.setAttribute("type","text/css");
 			fileref.setAttribute("rel","stylesheet");
-			fileref.setAttribute("href", "http://app.formassembly.com/wForms/3.0/css/wforms_calendar.css");
+			fileref.setAttribute("href", _HTTP+"app.formassembly.com/wForms/3.0/css/wforms_calendar.css");
 		
 			document.getElementsByTagName("head")[0].appendChild(fileref);
 		
