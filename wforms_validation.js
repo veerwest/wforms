@@ -454,7 +454,7 @@ wFORMS.behaviors.validation.instance.prototype.validateEmail = function(element,
  * @returns {boolean} 
  */
 wFORMS.behaviors.validation.instance.prototype.validateInteger = function(element, value) {
-	var regexp = /^[+]?\d+$/;
+	var regexp = /^[\-+]?\d+$/;
 	return this.isEmpty(value) || regexp.test(value);
 }
 

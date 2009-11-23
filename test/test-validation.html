@@ -326,6 +326,15 @@
 			testField.value='44444';
 			// Test validation rule
 			assertTrue('Should pass integer validation', bInstance.run(null, testForm)); 
+
+			testField.value='-44444';
+			// Test validation rule
+			assertTrue('Should pass integer validation (-)', bInstance.run(null, testForm)); 			
+
+			testField.value='+44444';
+			// Test validation rule
+			assertTrue('Should pass integer validation (+)', bInstance.run(null, testForm)); 
+			
 			// Test error message removal
 			assertNull(document.getElementById('testField-E'));			
 		}
