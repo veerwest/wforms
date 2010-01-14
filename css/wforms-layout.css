@@ -79,7 +79,10 @@
 	margin-bottom: 0.75em; 	
 	width: 100%
 }
+/* multiple-choices wrapper */
+.wForm form .choices {
 
+}
 /* Radio/checkbox + label wrapper */
 .wForm form .oneChoice {
 	display: inline-block;					
@@ -221,6 +224,13 @@
 .wForm form .errMsg {							
 	color: #CC3333 !important;
 	display: block;
+}
+
+/*Styling to make calculated fields distinct from inputs. */
+.wForm form .readonly{
+	background-color: transparent;
+	border: none;
+	background-image: none;
 }
 
 /* Field Hints (Tooltips)  */
