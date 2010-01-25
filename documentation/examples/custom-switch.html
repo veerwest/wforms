@@ -1,0 +1,64 @@
+<html>
+<head>	
+	<title>wForms 3.0 - Calculation Behavior Test Suite</title>
+	
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+	<!-- Testing purposes -->
+	<link href="../../css/main.css" type="text/css" rel="stylesheet">
+	<link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet">
+	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet">
+	<script src="../../build/wforms.js"></script>
+    <script src="../../wforms_switch.js"></script>
+   
+    
+</head>
+
+<body>
+	<form id="testForm">
+		
+                <div class="oneField" >
+                    <label for=""dateOfBirth"" class="preField">Date of Birth:</label>
+                    <input type="text" value="" id="dateOfBirth" /> (enter '01/11/1974' to trigger the conditional section)
+               </div>
+               
+               <div id="conditional">
+                    Conditional Section Activated.
+               </div>
+	</form>
+    <script type="text/javascript">
+        
+        /* Designate conditional element by setting the 'offstate-z' class (using 'z' as switch name) */
+	    var c = document.getElementById('conditional');
+        c.className += 'offstate-z';
+        
+        /*  Designate trigger. (start on, wForms will automatically switch it off on first run)  */       
+        var c = document.getElementById('dateOfBirth');  
+        c.className += 'switch-z swtchIsOn';
+        
+        /* Add event handler (on blur) */
+        c.onblur = function(e) {
+          
+             // Get switch behavior instance
+             var b = wFORMS.getBehaviorInstance(document.getElementById('testForm'),'switch');         
+               
+             // Do some calculation here on the value entered and decide if the trigger is activated.
+             // ---
+             console.log(c.value);
+             var switchActivated = (c.value=='01/11/1974'); 
+             // ---
+             
+               
+             if(switchActivated && c.className.match(/swtchIsOff/)) {
+                    b.run(e, this); // turn it on.
+              }
+               
+             if(!switchActivated && c.className.match(/swtchIsOn/)) {
+                   b.run(e, this); // turn it off.
+             }
+       }
+
+    </script>
+</body>
+</html>
