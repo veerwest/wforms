@@ -202,7 +202,7 @@ wFORMS.behaviors['switch'].instance.prototype.setupTrigger = function(elem) {
 						this.behavior.handleElement(_elem);
 					}
 				}
-			} else {						
+			} else if(elem.type && elem.type == 'checkbox'){ 					
 				if (!this.behavior.isHandled(elem)) {
 					elem.addEventListener('click', function(event){
 						self.run(event, elem)
@@ -534,9 +534,15 @@ wFORMS.behaviors['switch'].instance.prototype.getTriggers = function(elems, incl
 							}						
 						}
 					}					
-				}else{
+				}else if(elem.type && elem.type == 'checkbox'){
 					if(elem.checked){
 						o.ON = o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+					}else{
+						o.OFF = o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
+					}
+				} else {
+				    if(elem.hasClass(this.behavior.CSS_ONSTATE_FLAG)){
+						o.ON  = o.ON.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
 					}else{
 						o.OFF = o.OFF.concat(this.behavior.getSwitchNamesFromTrigger(elem, includeSwitches));
 					}
@@ -762,7 +768,7 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 			
 			elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
 			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);			
-						
+							
 			var _triggers = this.getTriggersByTarget(elem);
 			
 			if(_triggers.ON.length == 0){				
