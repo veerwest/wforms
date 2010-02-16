@@ -263,7 +263,7 @@ wFORMS.behaviors.paging.instance.prototype.onPagePrevious = function(p) { this.b
  * instance-specific pageChange event handlers (can be overriden).
  * @param	{HTMLElement}	page element 
  */ 
- wFORMS.behaviors.paging.instance.prototype.onPageChange = function(p) { this.behavior.onPagePrevious(p);}
+ wFORMS.behaviors.paging.instance.prototype.onPageChange = function(p) { this.behavior.onPageChange(p);}
 
 
 /**
