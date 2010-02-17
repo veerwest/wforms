@@ -6,7 +6,9 @@
  This stylesheet and the associated images are Copyright (c) 2007-2008 Veer West LLC (http://www.veerwest.com)	
  and licensed under the Creative Commons Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/) 
 */
-
+.wFormTitle, .supportInfo {
+	padding: 10px;
+}
 .wForm form {
 	margin: .8em 0 1.6em 0; 
 	padding: 10px;
@@ -88,7 +90,6 @@
 	display: inline-block;					
 	white-space: nowrap; /* keeps checkbox/radio and label together */
 }
-
 .wForm form .oneChoice label {
 	white-space: normal; /* allows label to wrap if needed (ticket #242) */
 }
@@ -151,7 +152,7 @@
 }
 .wForm form td .oneField {
 	margin: 0;	
-	white-space: nowrap;		
+	white-space: nowrap;
 }
 
 .wForm form .uploadedFile  {
@@ -199,7 +200,7 @@
 .wForm form .uploadedFile .deleteUploadedFileCb {
 	display: none;
 }
- 
+
 /* Input Validation Rules */
 
 /* Asterisk on required fields */
@@ -210,19 +211,17 @@
 }
 /* Field with a validation error */
 .wForm form .errFld {							
-	border: 1px solid #FBB;
+	border-width: 1px;
+	border-style: solid;
 }
 .wForm form div.errFld {
-	background-color: #FEE;
 	margin: 0 -3px;
 	padding: 0 3px;
 }
-.wForm form span.errFld {
-	background-color: #FEE;	
-}
+.wForm form span.errFld {}
+
 /* Styling for message associated with a validation error. */
 .wForm form .errMsg {							
-	color: #CC3333 !important;
 	display: block;
 }
 
@@ -237,13 +236,13 @@
 
 /* Field Hint with focus (displayed on the side)*/
 .wForm form .field-hint {						
-	display: inline;	
-	color: #333;
+	display: inline-block;	
+	vertical-align:top;
 	white-space: normal !important;
 }
 .wForm form .field-hint-inactive {
-	display: inline;	
-	color: #CCC;
+	display: inline-block;	
+	vertical-align:top;
 	white-space: normal !important;
 }
 /* Field Hint with focus (displayed as a tooltip)*/
@@ -254,9 +253,6 @@
 	width: 180px;	
 	margin: 2px 0 0 10px;
 	padding: 4px;
-	background-color: #fffbb8;
-	color: #333;
-	border: 1px solid #ffc20d;	
 }
 
 .wForm .hintsTooltip .field-hint span {
@@ -344,6 +340,7 @@
 	color: #777;
 }
 .wForm form .actions .secondaryAction:hover {
+
 }
 .wForm form .wfPagingButtons .wfPagePreviousButton {
 	padding: 4px 15px;
@@ -396,28 +393,4 @@
 }
 .wForm .inlineSection:after, x:-moz-any-link { 		/* use :after pseudo-rule to clear floatting content */
 	content: "."; display: block; height: 0; clear: both; visibility:hidden; 
-}
-
-/* IE6 BUG FIXES ==================================================================== */
- /* IE Pick-a-boo bug fix */
-* html .wForm form {
-	height: 1%; 
-}
-/* Fixes IE 6 problem with fieldset+legend boundaries */
-* html .wForm form fieldset {	
-	position: relative; 
-	margin-top: 1em;
-	padding-top: 2em;
-}
-* html .wForm form fieldset legend {
-	position: absolute; 
-	top: -.5em; 
-	left: .5em;
-} 
-/* Fix min-width support */
-* html .wForm label.preField,
-* html .wForm .labelsLeftAligned  label.preField,
-* html .wForm .labelsRightAligned label.preField {
-	
-
 }
