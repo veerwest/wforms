@@ -127,11 +127,8 @@ new function(_) {
 				
 				var datesList = base2.DOM.Element.querySelectorAll(forms[i],'.validate-datecal');
 				datesList.forEach(function(f){
-                    if(i >= 0){
-                    console.log('a');
 					YAHOO.util.Event.addListener(f.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);
 					YAHOO.util.Event.addListener(f.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
-                    }
 				});
 			}
 		}
