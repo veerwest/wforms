@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html >
 <head>
 <!-- FORM: HEAD SECTION -->
 	<link href="http://app.formassembly.com/wForms/3.0/css/abstract-blue/wforms.css" rel="stylesheet" type="text/css">
@@ -16,8 +15,8 @@
 <link href="http://app.formassembly.com/wForms/3.0/css/wforms-layout-ie7.css" rel="stylesheet" type="text/css">
 <![endif]-->
 
-<script type="text/javascript" src="../lib/base2-p.js"></script>
-<script type="text/javascript" src="../lib/base2-dom-p.js"></script>
+<script type="text/javascript" src="../lib/base2/beta2/base2-p.js"></script>
+<script type="text/javascript" src="../lib/base2/beta2/base2-dom-p.js"></script>
 <script type="text/javascript" src="../wforms_core.js"></script>
 <script type="text/javascript" src="../wforms_validation.js"></script>
 <script type="text/javascript" src="../wforms_paging.js"></script>
@@ -26,31 +25,21 @@
 
 <link href="http://app.formassembly.com/css/form.css" rel="stylesheet" type="text/css"/>
 
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/yahoo/yahoo-min.js"></script>
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/event/event-min.js" ></script>
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/dom/dom-min.js" ></script>
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/connection/connection-min.js"></script>
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/calendar/calendar-min.js"></script>
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/container/container_core-min.js"></script>
-<script type="text/javascript" src="http://app.formassembly.com/js/yui/build/menu/menu.js"></script>
-<link type="text/css" rel="stylesheet" href="http://app.formassembly.com/js/yui/build/calendar/assets/calendar.css" /> 
+<script type="text/javascript" src="internal_facilities_reservation_form_files/yui-min.js"></script>
+<script type="text/javascript" src="../customization/wforms_calendar.js"></script>
+<link type="text/css" rel="stylesheet" href="https://www.tfaforms.com/wForms/3.0/css/wforms_calendar.css" /> 
 
-<style type="text/css">
-.yui-calcontainer {position: absolute !important;}
-.yui-calendar {border-collapse: separate !important;}
-</style>
-
-<script type="text/javascript" src="wforms_date.js"></script>
 
 </head>
 <body>
+<form>
+<input name="hello" />
+</form>
+
 <!-- FORM: BODY SECTION -->
 <div class="wFormContainer">
 	<div class="wForm">
-<div class="codesection" id="code-"><script type="text/javascript">
-wFORMS.behaviors.repeat.MESSAGES.ADD_CAPTION = "Add another attendee";
-</script></div>
+<div class="codesection" id="code-"></div>
 <form method="post" action="http://app.formassembly.com/responses/processor" id="id2557617" class="labelsAbove hintsSide">
 <div class="wfPage " id="wfPgIndex-1">
 <h3>New User Registation</h3>
@@ -73,7 +62,7 @@ wFORMS.behaviors.repeat.MESSAGES.ADD_CAPTION = "Add another attendee";
 <label class="preField" for="tfa_Password1">Password</label> <input type="password" id="tfa_Password1" name="tfa_Password1" value="" size="40" class=""> <br><span class="errMsg" id="tfa_Password1-E"></span>
 </div>
 <div id="tfa_Date-D" class="oneField">
-<label class="preField" for="tfa_Date">Date <span class="reqMark">*</span></label> <input type="text" id="tfa_Date" name="tfa_Date" value="" size="40" class="validate-date required"> <br><span class="errMsg" id="tfa_Date-E"></span>
+<label class="preField" for="tfa_Date">Date <span class="reqMark">*</span></label> <input type="text" id="tfa_Date" name="tfa_Date" value="" size="40" class="validate-datecal required"> <br><span class="errMsg" id="tfa_Date-E"></span>
 </div>
 </div>
 <div class="actions">

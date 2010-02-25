@@ -1,17 +1,22 @@
 new function(_) {
 
 	if(!wFORMS.helpers.calendar) {wFORMS.helpers.calendar = {}};
-	
-	if(wFORMS.behaviors.validation) {
-		//Store old onApply behavior for reuse.	
+	wFORMS.helpers.calendar.alreadyApplied = false;
+    		//Store old onApply behavior for reuse.	
 		var _onApply = wFORMS.behaviors.validation.instance.prototype.onApply;
-				 
+    
+	if(wFORMS.behaviors.validation) {
+    
 		wFORMS.behaviors.validation.rules.isDate.selector  = ".validate-date, .validate-datecal";
 				
 		wFORMS.behaviors.validation.instance.prototype.onApply = function(){
 	
-		wFORMS.helpers.calendar.calendar_init();
-			if(_onApply) _onApply.apply(this);
+        if(wFORMS.helpers.calendar.alreadyApplied == false){        //Ensure init is run only once
+            wFORMS.helpers.calendar.calendar_init();        
+            wFORMS.helpers.calendar.alreadyApplied = true;
+        }
+        
+		if(_onApply) _onApply.apply(this);
 		}
 	}
 		
@@ -122,8 +127,11 @@ new function(_) {
 				
 				var datesList = base2.DOM.Element.querySelectorAll(forms[i],'.validate-datecal');
 				datesList.forEach(function(f){
+                    if(i >= 0){
+                    console.log('a');
 					YAHOO.util.Event.addListener(f.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);
 					YAHOO.util.Event.addListener(f.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
+                    }
 				});
 			}
 		}
