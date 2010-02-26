@@ -93,12 +93,12 @@ new function(_) {
         
 			for(i =0; i < forms.length; i++){
             
-				if(!forms[i].querySelectorAll) {
+				if(!forms.item(i).querySelectorAll) {
 					base = base2.DOM.bind(forms[i]);
 				}
 				var newdiv = document.createElement("div")
-				newdiv.id = forms[i].id+"_calContainer";
-				forms[i].appendChild(newdiv);
+				newdiv.id = forms.item(i).id+"_calContainer";
+				forms.item(i).appendChild(newdiv);
 					
 				if(wFORMS.helpers.calendar && wFORMS.helpers.calendar.title)
 				{
@@ -125,7 +125,7 @@ new function(_) {
 				YAHOO.util.Event.addListener(cal.containerId, "mouseover", function(){this.over_cal = true;},cal,true);
 				YAHOO.util.Event.addListener(cal.containerId, "mouseout", function(){this.over_cal = false;},cal,true);
 				
-				var datesList = base2.DOM.Element.querySelectorAll(forms[i],'.validate-datecal');
+				var datesList = base2.DOM.Element.querySelectorAll(forms.item(i),'.validate-datecal');
 				datesList.forEach(function(f){
 					YAHOO.util.Event.addListener(f.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);
 					YAHOO.util.Event.addListener(f.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
