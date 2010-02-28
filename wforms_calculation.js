@@ -50,8 +50,31 @@ wFORMS.behaviors.calculation  = {
  * @return {object} an instance of the behavior 
  */	
 wFORMS.behaviors.calculation.applyTo = function(f) {
-	var b = new wFORMS.behaviors.calculation.instance(f);
+	
+	
+	while(f && f.tagName!='FORM') {
+		f = f.parentNode;
+	}
+	
 
+	
+	var b = wFORMS.getBehaviorInstance(f,'calculation');
+	if(!b) { 
+		b = new wFORMS.behaviors.calculation.instance(f);
+	} else {
+		b.calculations = [];
+	}
+	
+	if(wFORMS.behaviors.repeat && !b._repeatRemoveHandler) {
+		var _callback = wFORMS.behaviors.repeat.onRemove;
+		b._repeatRemoveHandler = function() {
+			wFORMS.behaviors.calculation.applyTo(f);
+			if(_callback) _callback();
+		}
+		wFORMS.behaviors.repeat.onRemove = b._repeatRemoveHandler; 
+	}
+	
+	
 	f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR).forEach(
 		function(elem){
 			// extract formula
@@ -133,8 +156,8 @@ wFORMS.behaviors.calculation.instance.prototype.onApply = function() {}
  * @param {event} event
  * @param {domElement} elem
  */
-wFORMS.behaviors.calculation.instance.prototype.run = function(event, element) { 
-	
+wFORMS.behaviors.calculation.instance.prototype.run = function(event, element) {
+
 	for(var i=0; i<this.calculations.length;i++) {		
 		var calc = this.calculations[i];
 		for(var j=0; j<calc.variables.length;j++) {		
@@ -200,6 +223,12 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 				var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+v.name+' ')!=-1);
 				if(!exactMatch) return;
 				
+				
+				if(!_self.inScope(calculation.field, variable)){
+					return;
+				}
+				
+				
 				// If field value has a different purpose, the value for the calculation can be set in the
 				// class attribute, prefixed with CHOICE_VALUE_SELECTOR_PREFIX
 				if(_self.hasValueInClassName(variable)) {
@@ -259,6 +288,7 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 	// If the calculated field is also a variable, recursively update dependant calculations
 	if(calculation.field.className && (calculation.field.className.indexOf(this.behavior.VARIABLE_SELECTOR_PREFIX)!=-1)) {
 		// TODO: Check for infinite loops?
+		//console.log('rec',this);
 		this.run(null,calculation.field);
 	} 
 }
@@ -335,3 +365,44 @@ wFORMS.behaviors.calculation.instance.prototype.getValueFromClassName = function
 	} 	 
 	return null; 
 }
+ 
+ wFORMS.behaviors.calculation.instance.prototype.inScope = function(formula, variable) {
+		
+		var br = wFORMS.behaviors.repeat;
+		if(br) {
+			var formulaRepeat = formula;
+			if(!formulaRepeat.hasClass) {
+				wFORMS.standardizeElement(formulaRepeat);
+			}
+			while (formulaRepeat && !formulaRepeat.hasClass(br.CSS_REMOVEABLE) &&  !formulaRepeat.hasClass(br.CSS_REPEATABLE)) {						
+				formulaRepeat = formulaRepeat.parentNode;
+				if(formulaRepeat) {
+					wFORMS.standardizeElement(formulaRepeat);
+				}			
+			}
+			
+			if (formulaRepeat) {
+				// formula is in a repeated section. Check if variable belong to same.
+				
+				var isInRepeat = false;			
+				while(variable) {
+					if(!variable.hasClass) {
+						wFORMS.standardizeElement(variable);
+					}
+					if(variable.hasClass(br.CSS_REMOVEABLE) ||  variable.hasClass(br.CSS_REPEATABLE)) {
+						isInRepeat = true;
+					}
+					if(variable==formulaRepeat) {
+						return true;
+					}
+					variable = variable.parentNode;
+					if(variable) {
+						wFORMS.standardizeElement(variable);
+					}	
+				}
+				
+				return !isInRepeat;
+			}
+		}
+		return true;
+	}

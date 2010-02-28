@@ -7,17 +7,34 @@
 
 	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
 	<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="../../lib/base2-p.js"></script>
-	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2/beta2/base2-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2/beta2/base2-dom-p.js"></script>
 	
 	<script src="../../wforms_core.js"></script>
 	<script src="../../wforms_calculation.js"></script>
+	<script src="../../wforms_repeat.js"></script>
 </head>
 
 <body>
 
 <form id="testForm">
+	
+	<fieldset class="repeat" id="test1">
+		<div class="oneField">
+			<label for="testInputField" class="preField">QUANTITY:</label> 
+			<input id="testInputField" type="" value="10" class="calc-RA" />
 		
+			<label for="totalRG" class="preField">SubTotal QTYx10=:</label>
+			<input type="text" readonly="readonly" value="0" id="totalRG" class="formula=RA*10 calc-SUBRA" />
+		</div>
+	</fieldset>
+	
+	<div class="oneField" style="font-weight:bold; border-top:2px solid #333;margin-top:6px;">
+			<label for="totalGRG" class="preField">Grand Total SUM(QTY)x10=:</label>
+			<input type="text" readonly="readonly" value="0" id="totalGRG" class="formula=SUBRA" />
+		</div>
+	<hr/>
+	<br/><br/><br/><br/><br/>
 	<fieldset id="calculationFieldset" style="width:45%;float:left"><legend>Calculation Examples</legend>
 			<div class="oneField">
 				<label for="testInputField" class="preField">Text input (A):</label> 

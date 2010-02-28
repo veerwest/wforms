@@ -26,16 +26,58 @@
   	
 	function setUpPage() {}
   
-  	function setUp() {
-		document.getElementById('testInputField').value = '10';	
-		document.getElementById('testTextarea').value = '40';	
-		document.getElementById('totalAB').className = 'formula=A+B';
-		wFORMS.behaviors.calculation.applyTo(document.getElementById('testForm'));	
-	}
+  	function setUp() {}
+
 	
 	function tearDown() {}
 	
-	function testApplyTo() {}
+	function testRepeatedCalculations() {
+		var subtotal = document.getElementById('tfa_subtotal');
+		var total = document.getElementById('tfa_Total');
+
+		document.getElementById('tfa_Size').selectedIndex = 2;
+		document.getElementById('tfa_Quantity').value = '10';	
+		bInstance.run(null,document.getElementById('tfa_Quantity'));
+		assertEquals('140', subtotal.value);
+
+		document.getElementById('tfa_Size').selectedIndex = 4;
+		bInstance.run(null,document.getElementById('tfa_Quantity'));
+		assertEquals('120', subtotal.value);
+		assertEquals('120', total.value);
+		
+		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_TShirts'), 'repeat');
+		rInstance.run();
+
+		var subtotal2 = document.getElementById('tfa_subtotal[1]');
+		document.getElementById('tfa_Size[1]').selectedIndex = 2;
+		document.getElementById('tfa_Quantity[1]').value = '5';	
+		bInstance.run(null,document.getElementById('tfa_Quantity[1]'));
+		assertEquals('120', subtotal.value);
+		assertEquals('70', subtotal2.value);
+		assertEquals('190', total.value);
+
+		rInstance.run();
+		
+		var subtotal3 = document.getElementById('tfa_subtotal[2]');
+		document.getElementById('tfa_Size[2]').selectedIndex = 3;
+		document.getElementById('tfa_Quantity[2]').value = '2';	
+		bInstance.run(null,document.getElementById('tfa_Quantity[2]'));
+		assertEquals('120', subtotal.value);
+		assertEquals('70', subtotal2.value);
+		assertEquals('24', subtotal3.value);
+		assertEquals('214', total.value);
+
+
+		bInstance.run(null,document.getElementById('tfa_Quantity[0]'));
+		assertEquals('120', subtotal.value);
+		assertEquals('70', subtotal2.value);
+		assertEquals('24', subtotal3.value);
+		assertEquals('214', total.value);
+
+		rInstance.removeSection(document.getElementById('tfa_TShirts[1]'));
+		assertEquals('144', total.value);
+		
+	}
 	
 	
 	
@@ -57,33 +99,50 @@
 					</th>
 		</tr>
 		<tr id="tfa_TShirts" class="repeat alternate-0">
-		<th>T-Shirt:&nbsp;</th>
-		<td><div class="oneField"><select id="tfa_Size" name="tfa_Size" class="calc-SIZE"><option value="">Please select...</option>
-		<option value="tfa_XXL1" class="calcval-14">XXL</option>
-		<option value="tfa_XL" class="calcval-14">XL</option>
-		<option value="tfa_L" class="calcval-12">L</option>
-		<option value="tfa_M" class="calcval-12">M</option>
-		<option value="tfa_S" class="calcval-12">S</option>
-		
-		<option value="tfa_XS" class="calcval-12">XS</option></select><span class="errMsg" id="tfa_Size-E"></span>
-		</div></td>
-		<td><div class="oneField"><input type="text" id="tfa_Quantity1" name="tfa_Quantity1" value="" size="3" class="validate-integer calc-QTY"><span class="errMsg" id="tfa_Quantity1-E"></span>
-		</div></td>
-		<td>&nbsp;
-						<span class="duplicateSpan"><a id="tfa_TShirts-wfDL" class="duplicateLink" href="#">add another t-shirt</a></span>
-		</td>
+			<th>T-Shirt:&nbsp;</th>
+			<td>
+			
+			<div class="oneField">
+				<select id="tfa_Size" name="tfa_Size" class="calc-SIZE">
+					<option value="">Please select...</option>
+					<option value="tfa_XXL1" class="calcval-14">XXL ($14)</option>
+					<option value="tfa_XL" class="calcval-14">XL ($14)</option>
+					<option value="tfa_L" class="calcval-12">L ($12)</option>
+					<option value="tfa_M" class="calcval-12">M ($12)</option>
+					<option value="tfa_S" class="calcval-12">S ($12)</option>		
+					<option value="tfa_XS" class="calcval-12">XS ($12)</option>
+				</select>
+			</div>
+			</td>
+			<td><div class="oneField">
+				<input type="text" id="tfa_Quantity" value="" size="3" class="calc-QTY">
+			</div></td>
+			<td><div class="oneField">
+				<input type="text" readonly id="tfa_subtotal" value="" size="3" class="formula=SIZE*QTY calc-SUBTOTAL">
+			</div></td>
+			<td>&nbsp;
+				<span class="duplicateSpan">
+					<a id="tfa_TShirts-wfDL" class="duplicateLink" href="#">add another t-shirt</a>
+				</span>
+			</td>
 		</tr>
 		<tr id="tfa_3152937421805" class="alternate-1">
-		<th>Total:&nbsp;</th>
-		<td></td>
-		<td><div class="oneField"><input type="text" id="tfa_Total1" name="tfa_Total1" value="" size="3" readonly class="formula=SIZE*QTY"><span class="errMsg" id="tfa_Total1-E"></span>
-		</div></td>
-		
-		<td><div id="tfa_3152937742718" class=""></div></td>
+			<th>Total:&nbsp;</th>
+			<td></td>
+			<td></td>
+			<td><div class="oneField">
+				<input type="text" id="tfa_Total" value="" size="3" readonly class="formula=SUBTOTAL">			
+			</div></td>
+			
+			<td></td>
 		</tr>
 		</table>
 	
 	
 	</form>
+	
+	<p>
+		<a href="#" onclick="testRepeatedCalculations(); return false;">RUN TEST</a>
+	</p>
 </body>
 </html>

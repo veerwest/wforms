@@ -323,7 +323,7 @@ _i.prototype.createRemoveLink = function(id){
 	linkElem.appendChild(spanElem);
 
 	var _self = this;
-	linkElem.onclick = function(event) { _self.onRemoveLinkClick(event, linkElem); };	
+	linkElem.onclick = function(event) { _self.onRemoveLinkClick(event, linkElem); return false; };	
 
 	// Wraps in a span for better CSS positionning control.
 	var spanElem = document.createElement('span');
@@ -356,19 +356,22 @@ _i.prototype.duplicateSection = function(elem){
 	// Insert in DOM		
 	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
 	
-	// 36.815ms 2425 calls.
-	// 2520 189000 calls
 	wFORMS.applyBehaviors(newElem);
-		
+		/*
 	// Associates repeated input sections with their calculations.
 	if(wFORMS.behaviors.calculation) {
 		_c = wFORMS.behaviors.calculation;
 		inputItem = newElem.querySelector('input');
 		if(inputItem) {
-			if(inputItem.className.search(_c.VARIABLE_SELECTOR_PREFIX) != -1) 
-			_c.applyTo(inputItem.form);
+			if(inputItem.className.search(_c.VARIABLE_SELECTOR_PREFIX) != -1) {
+//				var b1 = wFORMS.getBehaviorInstance(inputItem.form,'calculation');
+				console.log('repeat applyto');
+				var b2 =_c.applyTo(inputItem.form);
+//				console.log(b2);
+			}
 		}
 	}
+	*/
 	// Calls custom function
 	this.behavior.onRepeat(newElem);
 	
