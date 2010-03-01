@@ -257,7 +257,8 @@ _i.prototype.getOrCreateRepeatLink = function(elem){
 			}
 			tdElem.appendChild(spanElem);
 		}else{
-			elem.appendChild(spanElem)
+			// elem.appendChild(spanElem);
+			elem.parentNode.insertBefore(spanElem, elem.nextSibling);
 		}
 	}
 
@@ -514,7 +515,7 @@ _i.prototype.updateDuplicatedSection = function(elem, index, suffix){
 		var _preserveRadioName = true;
 	else
 		var _preserveRadioName = this.behavior.preserveRadioName;
-	
+		
 	this.updateSectionChildNodes(elem, suffix, _preserveRadioName);
 }
 
@@ -684,7 +685,9 @@ _i.prototype.updateAttributes = function(e, idSuffix, preserveRadioName){
 	if(wFORMS.behaviors['switch'] && wFORMS.behaviors['switch'].isHandled(e)){
 		wFORMS.behaviors['switch'].removeHandle(e);
 	}
-
+	if(wFORMS.behaviors['calculation'] && wFORMS.behaviors['calculation'].isHandled(e)){
+		wFORMS.behaviors['calculation'].removeHandledFlag(e);
+	}
 	// Iterates over updateable attribute names
 	var l = this.behavior.UPDATEABLE_ATTR_ARRAY.length;
 	for(var i = 0; i < l; i++){

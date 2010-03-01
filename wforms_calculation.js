@@ -56,8 +56,6 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 		f = f.parentNode;
 	}
 	
-
-	
 	var b = wFORMS.getBehaviorInstance(f,'calculation');
 	if(!b) { 
 		b = new wFORMS.behaviors.calculation.instance(f);
@@ -102,7 +100,7 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 							if(!exactMatch) return;
 							
 							// listen for value changes
-							if(!variable._wforms_calc_handled) {
+							if(!wFORMS.behaviors.calculation.isHandled(variable)){
 								var t = variable.tagName.toLowerCase();
 								if (t == 'input' || t == 'textarea') {
 									
@@ -110,18 +108,18 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 									var y = variable.type.toLowerCase();
 									if (t == 'input' && (y == 'radio' || y == 'checkbox')) {
 										variable.addEventListener('click', function(e){ return b.run(e, this)}, false);
-										variable._wforms_calc_handled = true;
+										wFORMS.behaviors.calculation.setHandledFlag(variable);
 									
 									// text entry fields
 									} else {
 										variable.addEventListener('blur', function(e){ return b.run(e, this)}, false);
-										variable._wforms_calc_handled = true;
+										wFORMS.behaviors.calculation.setHandledFlag(variable);
 									}
 									
 								// select boxes
 								} else if (t == 'select') {
 									variable.addEventListener('change',  function(e){ return b.run(e, this)}, false);
-									variable._wforms_calc_handled = true;
+									wFORMS.behaviors.calculation.setHandledFlag(variable);
 									
 								// unsupported elements	
 								} else {
@@ -365,6 +363,35 @@ wFORMS.behaviors.calculation.instance.prototype.getValueFromClassName = function
 	} 	 
 	return null; 
 }
+
+
+/**
+ * Checks if element is already handled
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+wFORMS.behaviors['calculation'].isHandled = function(elem){
+	return (elem._wforms_calc_handled === true);
+}
+
+/**
+ * set element as already handled
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+wFORMS.behaviors['calculation'].setHandledFlag = function(elem){
+	elem._wforms_calc_handled = true;
+}
+
+/**
+ * Removes handle attribute from element
+ * @param	{HTMLElement}	elem
+ * @return	boolean
+ */
+wFORMS.behaviors['calculation'].removeHandledFlag = function(elem){
+	delete elem._wforms_calc_handled;
+}
+
  
  wFORMS.behaviors.calculation.instance.prototype.inScope = function(formula, variable) {
 		
