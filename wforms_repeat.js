@@ -257,8 +257,8 @@ _i.prototype.getOrCreateRepeatLink = function(elem){
 			}
 			tdElem.appendChild(spanElem);
 		}else{
-			// elem.appendChild(spanElem);
-			elem.parentNode.insertBefore(spanElem, elem.nextSibling);
+			elem.appendChild(spanElem);
+			// elem.parentNode.insertBefore(spanElem, elem.nextSibling);
 		}
 	}
 
