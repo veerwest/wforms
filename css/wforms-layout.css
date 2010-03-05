@@ -6,12 +6,18 @@
  This stylesheet and the associated images are Copyright (c) 2007-2008 Veer West LLC (http://www.veerwest.com)	
  and licensed under the Creative Commons Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/) 
 */
-.wFormTitle, .supportInfo {
-	padding: 10px;
+.wFormContainer {
+	padding: 30px 20px 20px 20px;
+}
+.wFormContainer .wFormTitle {
+	margin: 0;
+}
+.wFormContainer .supportInfo {
+	margin: 0;
+	line-height:37px; /* accomodate 'powered by' logo */
 }
 .wForm form {
 	margin: .8em 0 1.6em 0; 
-	padding: 10px;
 }
 .wForm fieldset {
 	margin: 0 0 1em 0;
