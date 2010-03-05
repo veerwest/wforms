@@ -7,7 +7,7 @@ try{
 }catch(e){};
 
 try{
-	if( StaticNodeList && !(StaticNodeList.prototype.forEach)){
+	if(typeof StaticNodeList !='undefined' && !(StaticNodeList.prototype.forEach)){
 		StaticNodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
 	}
 }catch(e){};
