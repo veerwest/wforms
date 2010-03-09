@@ -20,8 +20,9 @@ version: 2.6.0
 .wForm .yui-calendar .calbody a:hover{background:inherit;}
 
 .wForm .yui-calcontainer { padding:5px; background-color:#F7F9FB; border:1px solid #aaa; }
-.wForm .yui-calcontainer .title { display: none; }
-.wForm .yui-calcontainer .close-icon{display: none;}
+.wForm .yui-calcontainer .title { width: 160px; padding-bottom: 4px; }
+.wForm .yui-calcontainer .calclose { background:transparent url(https://ajax.googleapis.com/ajax/libs/yui/2.8.0r4/build/assets/skins/sam/sprite.png) no-repeat scroll 0 -300px; cursor:pointer; height:15px; right:0.4em; top:0.4em; width:25px; }
+.wForm .yui-calcontainer .close-icon { overflow:hidden; position:absolute; text-indent:-10000em; z-index:1; }
 .wForm .yui-calendar .calnavleft  { background:url(https://ajax.googleapis.com/ajax/libs/yui/2.6.0/build/assets/skins/sam/sprite.png) no-repeat 0 -450px;width:25px;height:15px;top:4px;bottom:0;left:-6px;margin-left:.4em;cursor:pointer;}
 .wForm .yui-calendar .calnavright { background:url(https://ajax.googleapis.com/ajax/libs/yui/2.6.0/build/assets/skins/sam/sprite.png) no-repeat 0 -500px;width:25px;height:15px;top:4px;bottom:0;right:-6px;margin-right:.4em;cursor:pointer;}
 .wForm .yui-calendar td.calcell { padding:.1em .2em; border:1px solid #E0E0E0; text-align:center; }
