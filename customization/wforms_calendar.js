@@ -29,7 +29,7 @@ new function(_) {
 		wFORMS.behaviors.repeat.onRepeat = function(e){
 			if(_onRepeat) _onRepeat.apply(e);
         
-            cal = wFORMS.helpers.calendar.instance[wFORMS.helpers.calendar.instance.length-1];
+            	var cal = wFORMS.helpers.calendar.instance[wFORMS.helpers.calendar.instance.length-1];
                 
 			var datesList = base2.DOM.Element.querySelectorAll(e,'.validate-datecal');
 			datesList.forEach(function(f){
