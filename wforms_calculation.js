@@ -389,7 +389,11 @@ wFORMS.behaviors['calculation'].setHandledFlag = function(elem){
  * @return	boolean
  */
 wFORMS.behaviors['calculation'].removeHandledFlag = function(elem){
-	delete elem._wforms_calc_handled;
+	try {
+		delete elem._wforms_calc_handled;
+	} catch(e) {
+		elem._wforms_calc_handled = undefined; // Workaround  for <IE8
+	}
 }
 
  
