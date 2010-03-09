@@ -1,9 +1,12 @@
 new function(_) {
-
+	
+	if(typeof YAHOO == 'undefined') { return false; }
+	
 	if(!wFORMS.helpers.calendar) {wFORMS.helpers.calendar = {}};
 	wFORMS.helpers.calendar.alreadyApplied = false;
-    		//Store old onApply behavior for reuse.	
-		var _onApply = wFORMS.behaviors.validation.instance.prototype.onApply;
+    
+	//Store old onApply behavior for reuse.	
+	var _onApply = wFORMS.behaviors.validation.instance.prototype.onApply;
     
 	if(wFORMS.behaviors.validation) {
     
@@ -11,12 +14,12 @@ new function(_) {
 				
 		wFORMS.behaviors.validation.instance.prototype.onApply = function(){
 	
-        if(wFORMS.helpers.calendar.alreadyApplied == false){        //Ensure init is run only once
-            wFORMS.helpers.calendar.calendar_init();        
-            wFORMS.helpers.calendar.alreadyApplied = true;
-        }
-        
-		if(_onApply) _onApply.apply(this);
+	        if(wFORMS.helpers.calendar.alreadyApplied == false){        //Ensure init is run only once
+	            wFORMS.helpers.calendar.calendar_init();        
+	            wFORMS.helpers.calendar.alreadyApplied = true;
+	        }
+	        
+			if(_onApply) _onApply.apply(this);
 		}
 	}
     
@@ -24,19 +27,20 @@ new function(_) {
 		var _onRepeat = wFORMS.behaviors.repeat.onRepeat;	
     
 		wFORMS.behaviors.repeat.onRepeat = function(e){
-        if(_onRepeat) _onRepeat.apply(e);
+			if(_onRepeat) _onRepeat.apply(e);
         
             cal = wFORMS.helpers.calendar.instance[wFORMS.helpers.calendar.instance.length-1];
                 
-				var datesList = base2.DOM.Element.querySelectorAll(e,'.validate-datecal');
-				datesList.forEach(function(f){
-					YAHOO.util.Event.addListener(f.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);
-					YAHOO.util.Event.addListener(f.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
-				});      
+			var datesList = base2.DOM.Element.querySelectorAll(e,'.validate-datecal');
+			datesList.forEach(function(f){
+				YAHOO.util.Event.addListener(f.id, "focus", YAHOO.formmanager.calendar.showCal, cal, true);
+				YAHOO.util.Event.addListener(f.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
+			});      
 		}
 	}    
 		
 	wFORMS.helpers.calendar.calendar_init = function(){
+		
 		YAHOO.namespace("formmanager.calendar");
 		
 		YAHOO.formmanager.calendar.handler = function(type,args,cal) {
@@ -147,9 +151,7 @@ new function(_) {
 					YAHOO.util.Event.addListener(f.id, "blur", YAHOO.formmanager.calendar.hideCal, cal, true);
 				});
 			}
-		}
-        
+		}      
         wFORMS.helpers.calendar.cal_init();
 	}
-
 }();
