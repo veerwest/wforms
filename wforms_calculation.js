@@ -67,7 +67,7 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 		var _callback = wFORMS.behaviors.repeat.onRemove;
 		b._repeatRemoveHandler = function() {
 			wFORMS.behaviors.calculation.applyTo(f);
-			if(_callback) _callback();
+			if(_callback) _callback.apply(this, arguments);
 		}
 		wFORMS.behaviors.repeat.onRemove = b._repeatRemoveHandler; 
 	}
