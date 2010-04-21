@@ -15,18 +15,21 @@ if (typeof(wFORMS.behaviors['switch']) == "undefined") {
 	throw new Error("wFORMS switch behavior not found. This behavior depends on the wFORMS switch behavior.");
 }
 
+	wFORMS.behaviors['switch'].blacklist = {"tfa_resumeLater":""};
+
 /**
  * Handler for the 'switchOff' event.
  */
 new function(_) {
-
 	// preserve any existing handler
 	if(wFORMS.behaviors['switch'].onSwitchOff)
 		var _onSwitchOff = wFORMS.behaviors['switch'].onSwitchOff;
 		
 	wFORMS.behaviors['switch'].onSwitchOff = function(element) {			
 		// clear field values
-		wFORMS.helpers.clearFieldValues(element);
+		if( !(element.id in wFORMS.behaviors['switch'].blacklist) ){
+			wFORMS.helpers.clearFieldValues(element);
+		}
 		// run any other existing handler
 		if (_onSwitchOff) _onSwitchOff(element);
 	}
@@ -78,7 +81,8 @@ new function(_) {
  * @param	DOMElement	the element clear
  */		
 wFORMS.helpers.clearFieldValues = function(element) {
-	if(!element) return;
+	if(!element || (element.id in wFORMS.behaviors['switch'].blacklist)) return;
+	
 	switch(element.tagName) {
 		case "INPUT":
 			if(element.type=='checkbox' || element.type=='radio') {
