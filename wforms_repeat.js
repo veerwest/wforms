@@ -179,7 +179,7 @@ _b.applyTo = function(f) {
 	
 	if(!f.querySelectorAll) base2.DOM.bind(f);
 	
-	f.querySelectorAll(this.SELECTOR_REPEAT).forEach(
+	f.querySelectorAll(_self.SELECTOR_REPEAT).forEach(
 		function(elem){
 			if(_self.isHandled(elem)){
 				return ;
@@ -632,7 +632,7 @@ _i.prototype.createSuffix = function(e, index){
 	var suffix = '[' + (index ? index : '0' ) + ']';
     var reg = /\[(\d+)\]$/;
 	e = e.parentNode;
-	while(e){
+	while(e && e.tagName){
 		if(!e.hasClass) { // no base2.DOM.bind to speed up function 
 			e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 		}
@@ -650,7 +650,7 @@ _i.prototype.createSuffix = function(e, index){
 /**
  * Removes row counters from ID
  * @param	id	Current element id
- * @return	DOMString
+ * @return	string
  * 
  * repeated field ID is: 			fieldid[n]...[n]
  * repeated hint ID is:				fieldid[n]...[n]-H

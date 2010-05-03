@@ -45,24 +45,24 @@
 		var fieldHint = document.getElementById('testInput0-H');
 		var placeholder = document.getElementById('testInput0-E');
 		
-		var bInstance = wFORMS.getBehaviorInstance(document.getElementsByTagName('DIV')[1], 'repeat');		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('test1'), 'repeat');		
 		bInstance.run();
 		
 		// Check  field hint
 		assertEquals('testInput0[0][0]-H',fieldHint.id);
-		assertNotNull(document.getElementById('testInput0[0][1]-H'));
+		assertNotNull('testInput0[0][1]-H should exists (#1)', document.getElementById('testInput0[0][1]-H'));
 		
 		// Check placeholder for validation behavior 
 		assertEquals('testInput0[0][0]-E', placeholder.id);
 		assertNotNull('Error Placeholder Id should be properly constructed', document.getElementById('testInput0[0][1]-E'));
 		
-		var bInstance = wFORMS.getBehaviorInstance(document.getElementsByTagName('DIV')[0], 'repeat');		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('test0'), 'repeat');		
 		bInstance.run();
 		
 		assertEquals('testInput0[0][0]-H',fieldHint.id);
-		assertNotNull(document.getElementById('testInput0[1][0]-H'));
-		assertNotNull(document.getElementById('testInput0[0][1]-H'));
-		assertNotNull(document.getElementById('testInput0[0][0]-H'));
+		assertNotNull('testInput0[1][0]-H should exists',document.getElementById('testInput0[1][0]-H'));
+		assertNotNull('testInput0[0][1]-H should exists (#2)',document.getElementById('testInput0[0][1]-H'));
+		assertNotNull('testInput0[0][0]-H should exists',document.getElementById('testInput0[0][0]-H'));
 		
 		assertNotNull('Error Placeholder with id testInput0[1][0]-E should exists', document.getElementById('testInput0[1][0]-E'));
 	}
@@ -85,7 +85,7 @@
 				<div id="testInput0-E" class="errMsg">error placeholder</div>
 			</div>
 		</div>	
-		<a href="#" onclick="testFieldsetRepeatWithErrorPlaceholders(); return false;">Test</a>
+		<a href="#" onclick="try{testFieldsetRepeatWithFieldHints(); } catch(x){ console.log(x);}; return false;">Test</a>
 	</form>
 </body>
 </html>

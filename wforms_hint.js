@@ -90,7 +90,8 @@ wFORMS.behaviors.hint.instance.prototype.run = function(event, element) {
 	
 	var hint = this.getHintElement(element);
 	if(!hint) return;
-
+	if(!hint.removeClass) base2.DOM.bind(hint);
+	
 	if(event.type == 'focus' || event.type == 'mouseover'){
 		hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
 		hint.addClass(wFORMS.behaviors.hint.CSS_ACTIVE);

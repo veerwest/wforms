@@ -17,11 +17,33 @@ if (typeof(base2) == "undefined") {
 	throw new Error("Base2 not found. wForms 3 depends on the base2 library.");
 }
 
+/* Base2 beta2 backward compatibility. 
+ */
+base2.DOM.HTMLElement.implement({
+  hasClass : function($node, $class) {
+	if($node.classList) return $node.classList.contains($class);
+	else return $node.className.match(new RegExp('(\\s|^)'+$class+'(\\s|$)'));
+  },
+  removeClass : function($node, $class) {
+	if($node.classList) return $node.classList.remove($class);
+	else if (base2.DOM.HTMLElement.hasClass($node,$class)) {
+    	var reg = new RegExp('(\\s|^)'+$class+'(\\s|$)');
+    	$node.className=$node.className.replace(reg,' ').replace(/^\s+|\s+$/g,"");
+	}
+  },
+  addClass : function($node, $class) {
+	if($node.classList) $node.classList.add($class);
+	else if (!base2.DOM.HTMLElement.hasClass($node,$class)) {
+		$node.className = ($node.className+" "+$class).replace(/^\s+|\s+$/g,"");
+	}
+  }
+}); 
+
 if (typeof(wFORMS) == "undefined") {
 	wFORMS = {};
 }
 wFORMS.NAME 	= "wFORMS";
-wFORMS.VERSION 	= "3.1";
+wFORMS.VERSION 	= "3.2";
 wFORMS.__repr__ = function () {
 	return "[" + this.NAME + " " + this.VERSION + "]";
 };
@@ -433,6 +455,10 @@ wFORMS.getBehaviorInstance = function(f, behaviorName) {
 base2.DOM.Element.addEventListener(document, 'DOMContentLoaded',wFORMS.onLoadHandler,false);
 // document.addEventListener('DOMContentLoaded',wFORMS.onLoadHandler,false);
 
-// Attach JS only stylesheet.
+// Enable JS only stylesheet.
 wFORMS.helpers.activateStylesheet('wforms-jsonly.css');
 
+// Enable user-agent specific stylesheets
+if(navigator.userAgent.match(/iPad/i)){
+	wFORMS.helpers.activateStylesheet('wforms-layout-ipad.css');
+}

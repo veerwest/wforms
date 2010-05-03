@@ -1,0 +1,65 @@
+/* 
+ wFORMS Extension Stylesheet - formassembly.com					
+ To be used along with wforms.css
+ This stylesheet and the associated images are Copyright (c) 2005 Cedric Savarese (http://www.formassembly.com)	
+ and licensed under the Creative Commons Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/) 
+*/
+
+
+/* Scales all of the fonts on the page  */
+html {-webkit-text-size-adjust:110%}
+/* Changes the width of the form to scale depending on rotation */
+.default .wFormContainer { width:95%; }
+/* Ajusts the fontsize to increase the hit area for each input field */
+.wForm input { font-size: 110%; }
+.wForm input[type="checkbox"] { 
+   width: 30px;
+   height: 30px;
+}
+.wForm input[type="radio"] {
+   width: 30px;
+   height: 30px;
+}
+.wForm select { 
+	font-size: 100%;
+	padding: 0 0 0 10px;
+}
+
+h3{
+	text-shadow: 0px 1px 1px #fff;
+}
+
+fieldset {
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+}
+
+.wForm form .actions .primaryAction {
+   margin-top: 20px;
+}
+
+.wForm .yui-calendar{
+   font-size: 2em;
+}
+
+.wForm .yui-calendar .calheader{
+   line-height: 40px;
+}
+
+.wForm .yui-calendar .calnavleft {
+   height: 30px;
+   width: 40px;
+}
+
+.wForm .yui-calendar .calnavright {
+   height: 30px;
+   width: 40px;
+}
+
+.wForm .yui-calcontainer .close-icon {
+   height: 30px;
+   width: 40px;
+}
+
+</style>

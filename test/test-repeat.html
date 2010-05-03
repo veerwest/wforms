@@ -244,7 +244,7 @@
 		
 		// duplicate repeated nested section
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest1[1]'), 'repeat');
-        assertNotNull('no repeat instance for repeated nested section', bInstance);
+        assertNotNull('no repeat instance for repeated nested section (#1)', bInstance);
 		bInstance.run();
 		
         // check IDs
@@ -295,12 +295,12 @@
 
 		// check repeated fieldset id		
 		assertNotNull('id should be: nestedTest3[1]',document.getElementById('nestedTest3[1]'));
-		assertNotNull('id should be: nestedTest3[1]',document.getElementById('nestedTest2[0]'));  
-		assertNotNull('id should be: nestedTest3[1]',document.getElementById('nestedTest2[1]'));
+		assertNotNull('id should be: nestedTest2[0]',document.getElementById('nestedTest2[0]'));  
+		assertNotNull('id should be: nestedTest2[1]',document.getElementById('nestedTest2[1]'));
 		
 		// duplicate repeated nested section
 		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest3[1]'), 'repeat');
-        assertNotNull('no repeat instance for repeated nested section', bInstance);
+        assertNotNull('no repeat instance for repeated nested section (#2)', bInstance);
          
 		bInstance.run();
 		
@@ -329,7 +329,7 @@
 
 <body class="wForm">
 
-<a href="#" onclick="testNestedRepeat(); return false">Run Test</a>
+
 
 
 	<h2>Repeat Behavior Test Suite</h2>
@@ -410,7 +410,7 @@
 			<input type="button" value="run test" onclick="testSecondNestedRepeat()"/> 
 		</fieldset>
 		
-		
+		<a href="#" onclick="testSecondNestedRepeat(); return false">Run Test</a>
 		
 		
 		<div class="repeat" id="linkCreationTest1">			 
