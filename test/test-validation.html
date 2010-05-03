@@ -9,6 +9,7 @@
 
 	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
     <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	<link href="../css/nicerblank/wforms.css" rel="stylesheet" type="text/css"></link>
 	
 	<script type="text/javascript" src="../lib/base2/beta2/src/base2.js"></script>
 	<script type="text/javascript" src="../lib/base2/beta2/src/base2-dom.js"></script>
@@ -85,7 +86,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'))
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='AAA';
 			// Test validation rule
@@ -111,7 +112,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='A99';
 			// Test validation rule
@@ -137,7 +138,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='text';
 			// Test validation rule
@@ -165,7 +166,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testDiv-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testDiv-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testDiv-E').firstChild.innerHTML);
 			
 			testField.value='text';
 			// Test validation rule
@@ -190,7 +191,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='2/2/2008';
 			// Test validation rule
@@ -216,7 +217,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='test@test.co.uk';
 			// Test validation rule
@@ -294,7 +295,7 @@
 					assertEquals(
 						'"'+ value +'" did not receive the correct error message.',
 						error,
-						m.innerHTML
+						m.firstChild.innerHTML
 					);
 				}
 			}
@@ -317,7 +318,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='4.5';			
 			// Test validation rule
@@ -356,7 +357,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='4.5';			
 			// Test validation rule
@@ -387,7 +388,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField3-E'));
 			// Test error message content
-			assertEquals('This text is too long',document.getElementById('testField-E').innerHTML);			
+			assertEquals('This text is too long',document.getElementById('testField-E').firstChild.innerHTML);			
 			
 			testField.value='Ten chars!';
 			assertTrue(bInstance.run(null, testForm)); 			
@@ -410,7 +411,7 @@
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').innerHTML);
+			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
 			testField.value='4444';
 			// Test validation rule
@@ -422,11 +423,116 @@
 			// Test error message removal
 			assertNull(document.getElementById('testField-E'));			
 		}
+
+		function testValidateCSS() {
+
+		}
 		
 		
 	</script>
 	</head>
-	<body class="wForm" style="padding:5px; margin:10px;">
+<body class="default wFormWebPage">
+
+<div id="sidebar" style="float: left; width: 100px; height: 1000px; background-color: #f4f4f4"> dummy sidebar
+</div>
+
+	<div id="tfaContent" style="float: left">
+		
+		<div class="wFormContainer">
+				<h3 class="wFormTitle"><span>Validation Layout Test Form</span></h3>
+		<div class="wForm wFormWidth"><form method="post" action="http://local.app/responses/processor" id="id448770" class="labelsAbove hintsSide">
+<div id="tfa_TextInput-D" class="oneField">
+
+<label class="preField" for="tfa_TextInput">Text Input <span class="reqMark">*</span></label> <input type="text" id="tfa_TextInput" name="tfa_TextInput" value="" size="20" class="validate-date required"> <br>
+</div>
+<div id="tfa_Choices-D" class="oneField">
+<label class="preField">Choices <span class="reqMark">*</span></label> <span id="tfa_Choices" class="choices required"><span class="oneChoice"><input type="checkbox" value="tfa_A1" class="" id="tfa_A1" name="tfa_A1"><label for="tfa_A1" class="postField">A</label></span><span class="oneChoice"><input type="checkbox" value="tfa_B1" class="" id="tfa_B1" name="tfa_B1"><label for="tfa_B1" class="postField">B</label></span><span class="oneChoice"><input type="checkbox" value="tfa_C1" class="" id="tfa_C1" name="tfa_C1"><label for="tfa_C1" class="postField">C</label></span><span class="oneChoice"><input type="checkbox" value="tfa_D" class="" id="tfa_D" name="tfa_D"><label for="tfa_D" class="postField">D</label></span></span> <br>
+</div>
+
+<div id="tfa_OneRequiredDivSe" class="required-one"><div id="tfa_TestField3-D" class="repeat oneField">
+	<label class="preField" for="tfa_TestField3">Repeated Field (one required):</label> 
+	<input type="text" id="tfa_TestField3" name="tfa_TestField3" value="" size="20" class=""> 
+	<br>
+	<span class="duplicateSpan"><a id="tfa_TestField3-D-wfDL" class="duplicateLink" href="#">Repeat</a></span>
+</div></div>
+<div id="tfa_OneRequiredInlin" class="inlineSection required-one">
+<label class="preField">Inline Section (one required)</label><div id="tfa_TestField4-D" class="oneField">
+<label class="inlineLabel" for="tfa_TestField4">Inline Field A</label> <input type="text" id="tfa_TestField4" name="tfa_TestField4" value="" size="20" class=""> </div>
+<div id="tfa_InlineFieldB-D" class="oneField">
+<label class="inlineLabel" for="tfa_InlineFieldB">Inline Field B</label> <input type="text" id="tfa_InlineFieldB" name="tfa_InlineFieldB" value="" size="40" class=""> </div>
+
+</div>
+<div id="tfa_InlineSectionall" class="inlineSection">
+<label class="preField">Inline Section (all required)</label><div id="tfa_InlineFieldA-D" class="oneField">
+<label class="inlineLabel" for="tfa_InlineFieldA">Inline Field A <span class="reqMark">*</span></label> <input type="text" id="tfa_InlineFieldA" name="tfa_InlineFieldA" value="" size="20" class="required"> </div>
+<div id="tfa_InlineFieldB1-D" class="oneField">
+<label class="inlineLabel" for="tfa_InlineFieldB1">Inline Field B <span class="reqMark">*</span></label> <input type="text" id="tfa_InlineFieldB1" name="tfa_InlineFieldB1" value="" size="40" class="required"> </div>
+</div>
+<div id="tfa_InlineSectionwit" class="inlineSection">
+
+<label class="preField">Inline Section with Multiple-Choices</label><div id="tfa_Choices1-D" class="oneField">
+<label class="inlineLabel">Choices 1 <span class="reqMark">*</span></label> <span id="tfa_Choices1" class="choices required"><span class="oneChoice"><input type="checkbox" value="tfa_A2" class="" id="tfa_A2" name="tfa_A2"><label for="tfa_A2" class="postField">A</label></span><span class="oneChoice"><input type="checkbox" value="tfa_B2" class="" id="tfa_B2" name="tfa_B2"><label for="tfa_B2" class="postField">B</label></span><span class="oneChoice"><input type="checkbox" value="tfa_C2" class="" id="tfa_C2" name="tfa_C2"><label for="tfa_C2" class="postField">C</label></span><span class="oneChoice"><input type="checkbox" value="tfa_D1" class="" id="tfa_D1" name="tfa_D1"><label for="tfa_D1" class="postField">D</label></span></span> </div>
+<div id="tfa_Choices2-D" class="oneField">
+<label class="inlineLabel" for="tfa_Choices2">Choices 2 <span class="reqMark">*</span></label> <select id="tfa_Choices2" name="tfa_Choices2" class="required"><option value="">Please select...</option>
+
+<option value="tfa_AA" class="">AA</option>
+<option value="tfa_BB" class="">BB</option>
+<option value="tfa_CC" class="">CC</option>
+<option value="tfa_DD" class="">DD</option></select> </div>
+<div id="tfa_Choices3-D" class="oneField">
+<label class="inlineLabel">Choices 3 <span class="reqMark">*</span></label> <span id="tfa_Choices3" class="choices required"><span class="oneChoice"><input type="radio" value="tfa_AAA2" class="" id="tfa_AAA2" name="tfa_Choices3"><label for="tfa_AAA2" class="postField">AAA</label></span><span class="oneChoice"><input type="radio" value="tfa_BBB2" class="" id="tfa_BBB2" name="tfa_Choices3"><label for="tfa_BBB2" class="postField">BBB</label></span><span class="oneChoice"><input type="radio" value="tfa_CCC" class="" id="tfa_CCC" name="tfa_Choices3"><label for="tfa_CCC" class="postField">CCC</label></span><span class="oneChoice"><input type="radio" value="tfa_DDD" class="" id="tfa_DDD" name="tfa_Choices3"><label for="tfa_DDD" class="postField">DDD</label></span></span> </div>
+
+</div>
+<fieldset id="tfa_OneRequiredField" class="required-one">
+<legend>Fieldset (one required)</legend>
+<div id="tfa_TestField-D" class="oneField">
+<label class="preField" for="tfa_TestField">Test Field:</label> <input type="text" id="tfa_TestField" name="tfa_TestField" value="" size="20" class=""> <br>
+</div>
+</fieldset>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th>Grid Field A </th>
+
+<th>Grid Field B </th>
+</tr>
+<tr id="tfa_Gridonerequired" class="required-one alternate-0">
+<th>Grid (one required) </th>
+<td><div id="tfa_GridFieldA-D" class="oneField"> <input type="text" id="tfa_GridFieldA" name="tfa_GridFieldA" value="" size="40" class=""> </div></td>
+<td><div id="tfa_GridFieldB-D" class="oneField"> <span id="tfa_GridFieldB" class="choices"><span class="oneChoice"><input type="checkbox" value="tfa_AAA" class="" id="tfa_AAA" name="tfa_AAA"><label for="tfa_AAA" class="postField">AAA</label></span><span class="oneChoice"><input type="checkbox" value="tfa_BBB" class="" id="tfa_BBB" name="tfa_BBB"><label for="tfa_BBB" class="postField">BBB</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Gridallrequired" class="alternate-1">
+<th>Grid (all required) </th>
+
+<td><div id="tfa_GridFieldA1-D" class="oneField"> <input type="text" id="tfa_GridFieldA1" name="tfa_GridFieldA1" value="" size="40" class="required"> </div></td>
+<td><div id="tfa_GridFieldB1-D" class="oneField"> <span id="tfa_GridFieldB1" class="choices required"><span class="oneChoice"><input type="checkbox" value="tfa_AAA1" class="" id="tfa_AAA1" name="tfa_AAA1"><label for="tfa_AAA1" class="postField">AAA</label></span><span class="oneChoice"><input type="checkbox" value="tfa_BBB1" class="" id="tfa_BBB1" name="tfa_BBB1"><label for="tfa_BBB1" class="postField">BBB</label></span></span> </div></td>
+</tr>
+</table>
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="190-33817c9373245700755e42e9e1ba57d1" name="tfa_dbCounters" id="tfa_dbCounters"><input type="hidden" value="3" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="961331d28db1c09248d143c00797cfec" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="1268178571" name="tfa_dbTimeStarted" id="tfa_dbTimeStarted"><input type="hidden" value="http://local.app/forms/edit/publish?data[Form][id]=3" name="tfa_referrer" id="tfa_referrer"><input type="hidden" value="3" name="tfa_dbVersionId" id="tfa_dbVersionId">
+</div>
+</form></div>
+		<p class="supportInfo" >
+						<a href="http://local.app/forms/help/3" target="new" style="font-size: 0.7em;">
+
+				Need assistance with this form?			</a>
+
+            		</p>
+
+
+
+
+	</div>
+	</div>
+
+
+
+
+	
+	
+	
+	
+	
         <form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
             <div class="oneField" id="testDiv">
                 <label for="testField" class="preField">Test Field </label>
@@ -444,6 +550,13 @@
 			
 			<div class="actions"><input type="submit" value="TEST" /></div>
         </form>
+        
+        <h3>Test Error Message Position and Styling</h3>
+        
+        
+
+
+
         
        
     </body>

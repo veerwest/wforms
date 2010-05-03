@@ -15,7 +15,8 @@ wFORMS.behaviors.validation = {
 	
 	
 	rules: {	
-		isRequired	: { selector: ".required", 			  check: 'validateRequired'}, 
+		oneRequired	: { selector: ".required-one", 		  check: 'validateOneRequired'},
+	    isRequired	: { selector: ".required", 			  check: 'validateRequired'}, 
 		isAlpha		: { selector: ".validate-alpha", 	  check: 'validateAlpha'},
 		isAlphanum	: { selector: ".validate-alphanum",	  check: 'validateAlphanum'}, 
 		isDate		: { selector: ".validate-date", 	  check: 'validateDate'}, 
@@ -33,7 +34,8 @@ wFORMS.behaviors.validation = {
 	},
 	
 	messages: {
-		isRequired 		: "This field is required. ",
+		oneRequired 	: "This section is required.",
+		isRequired 		: "This field is required.",
 		isAlpha 		: "The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",
 		isEmail 		: "This does not appear to be a valid email address.",
 		isInteger 		: "Please enter an integer.",
@@ -60,8 +62,8 @@ wFORMS.behaviors.validation = {
 		}
 	},
 	
-	onPass: function(f) {},
-	onFail: function(f) {}
+	onPass: function(f,e) {},
+	onFail: function(f,e) {}
 }
 
 /**
@@ -191,10 +193,10 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  		if(e) {
  			e.preventDefault?e.preventDefault():e.returnValue = false;
  		}
- 		if(this.behavior.onFail) this.behavior.onFail(this);
+ 		if(this.behavior.onFail) this.behavior.onFail(this, e);
  		return false;
  	}
- 	if(this.behavior.onPass) this.behavior.onPass(this);
+ 	if(this.behavior.onPass) this.behavior.onPass(this, e);
  	return true; 
 }
 
@@ -207,8 +209,16 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  */
 wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName) { 
 
+	//  field wrapper DIV. (-D suffix)
+	var div = document.getElementById(element.id+'-D');
+	
 	// set class to show that the field has an error
-	element.addClass(this.behavior.styling.fieldError);
+	if(div) {	
+		if(!div.hasClass) base2.DOM.bind(div);
+		div.addClass(this.behavior.styling.fieldError);			
+	} else {
+		element.addClass(this.behavior.styling.fieldError);
+	}
 	// show error message.
 	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
 },
@@ -230,7 +240,8 @@ wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(elemen
 	if (!element.id) element.id = wFORMS.helpers.randomId(); 
 	
 	// Prepare error message
-	var txtNode = document.createTextNode(message);
+	var txtNode = document.createElement('span');
+	txtNode.appendChild(document.createTextNode(message));
 	
 	// Find error message placeholder.
 	var p = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
@@ -238,9 +249,26 @@ wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(elemen
 		p = document.createElement("div"); 
 		p.setAttribute('id', element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
 		if(element.tagName=="TR") {
-			p = (element.getElementsByTagName('TD')[0]).appendChild(p);
-		} else {		
-			p = element.parentNode.insertBefore(p,element.nextSibling);
+			// If this is a table row, add error message to first cell.		
+			if(element.getElementsByTagName('TH').length>0) {
+				p = (element.getElementsByTagName('TH')[0]).appendChild(p);
+			} else {
+				p = (element.getElementsByTagName('TD')[0]).appendChild(p);
+			}
+		} 
+		else if(element.tagName=='DIV' || element.tagName=='FIELDSET' || element.tagName=='SPAN' ) {
+			// If this is a field wrapper, append error message
+			p = element.appendChild(p);
+		}
+		else {
+			// If we find a field wrapper, append error message to it.
+			var div = document.getElementById(element.id+'-D');
+			if(div) {
+				p = div.appendChild(p);
+			} else {
+				// last resort, place the error message just after the field.
+				p = element.parentNode.insertBefore(p,element.nextSibling);
+			}
 		}
 	}
 	// Finish the error message.
@@ -254,14 +282,24 @@ wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(elemen
  * @param {domElement} element 
  */
 wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(element) { 
+	
+	//  field wrapper DIV. (-D suffix)
+	var div = document.getElementById(element.id+'-D');
+	
 	if(!element.hasClass) base2.DOM.bind(element);
+	if(div && !div.hasClass) base2.DOM.bind(div);
+	
 	if(element.hasClass(this.behavior.styling.fieldError)) {
 		element.removeClass(this.behavior.styling.fieldError);
-		var errorMessage  = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
-		if(errorMessage)  {				
-			errorMessage.parentNode.removeChild(errorMessage); 
-		}
 	}
+	if(div && div.hasClass(this.behavior.styling.fieldError)) {
+		div.removeClass(this.behavior.styling.fieldError);
+	}
+	var errorMessage  = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+	if(errorMessage)  {				
+		errorMessage.parentNode.removeChild(errorMessage); 
+	}
+	
 }
 
 /**

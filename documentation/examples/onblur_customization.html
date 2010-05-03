@@ -8,17 +8,14 @@
 	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
 	<link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
 	
-	<script src="../../lib/base2-p.js"></script>
-	<script src="../../lib/base2-dom-p.js"></script>
-	<script src="../../wforms_core.js"></script>
-	<script src="../../wforms_validation.js"></script>
+	<script src="../../build/wforms.js"></script>
 	<script src="../../customization/wforms_onblur_validation.js"></script>
 </head>
 
 <body class="wForm">
 
 	<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testForm" >
-       <div class="oneField" id="testDiv">
+       <div class="oneField" id="testField">
        		<label for="testField" class="preField">Test Field 1</label>
        		<input type="text" id="testField"  name="testField"  class="validate-alpha" value="" />  (validate-alpha)<br/>
 		</div>
