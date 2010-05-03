@@ -177,9 +177,11 @@ _b.applyTo = function(f) {
 	var _self = this;
 	var b = new Array();
 	
-	if(!f.querySelectorAll) base2.DOM.bind(f);
-	
-	f.querySelectorAll(_self.SELECTOR_REPEAT).forEach(
+	if(!!base2.DOM.bind[f.base2ID]) {
+		base2.DOM.bind(f);
+	}
+
+	f.querySelectorAll(this.SELECTOR_REPEAT).forEach(
 		function(elem){
 			if(_self.isHandled(elem)){
 				return ;
@@ -195,7 +197,7 @@ _b.applyTo = function(f) {
 	);
 	
 	if(!f.hasClass) {
-		f = base2.DOM.bind(f);	
+		f.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 	}
 	
 	if(f.hasClass(this.CSS_REMOVEABLE)){
@@ -261,7 +263,6 @@ _i.prototype.getOrCreateRepeatLink = function(elem){
 			// elem.parentNode.insertBefore(spanElem, elem.nextSibling);
 		}
 	}
-
 	return base2.DOM.bind(e);
 }
 
@@ -400,7 +401,7 @@ _i.prototype.getInsertNode = function(elem) {
  	var insertNode = elem.nextSibling;
  	
  	if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
-		insertNode = base2.DOM.bind(insertNode); 
+		insertNode.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 	}
   	
 	while(insertNode && 
@@ -410,7 +411,7 @@ _i.prototype.getInsertNode = function(elem) {
 		insertNode = insertNode.nextSibling;
 		
 		if(insertNode && insertNode.nodeType==1 && !insertNode.hasClass) {
-			insertNode = base2.DOM.bind(insertNode);
+			insertNode.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 		}
 	}
 	return insertNode;

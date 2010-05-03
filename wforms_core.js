@@ -21,18 +21,18 @@ if (typeof(base2) == "undefined") {
  */
 base2.DOM.HTMLElement.implement({
   hasClass : function($node, $class) {
-	if($node.classList) return $node.classList.contains($class);
+	if($node.classList && $node.classList.contains) return $node.classList.contains($class);
 	else return $node.className.match(new RegExp('(\\s|^)'+$class+'(\\s|$)'));
   },
   removeClass : function($node, $class) {
-	if($node.classList) return $node.classList.remove($class);
+	if($node.classList && $node.classList.remove) return $node.classList.remove($class);
 	else if (base2.DOM.HTMLElement.hasClass($node,$class)) {
     	var reg = new RegExp('(\\s|^)'+$class+'(\\s|$)');
     	$node.className=$node.className.replace(reg,' ').replace(/^\s+|\s+$/g,"");
 	}
   },
   addClass : function($node, $class) {
-	if($node.classList) $node.classList.add($class);
+	if($node.classList && $node.classList.add) $node.classList.add($class);
 	else if (!base2.DOM.HTMLElement.hasClass($node,$class)) {
 		$node.className = ($node.className+" "+$class).replace(/^\s+|\s+$/g,"");
 	}
@@ -373,9 +373,13 @@ wFORMS.standardizeElement = function(elem) {
  */	
 wFORMS.applyBehaviors = function(f) {
 	
-	if(!f.querySelectorAll) {
+	// Test if base2 already applied.
+	//   see: http://code.google.com/p/base2/issues/detail?id=111#c2 for  
+	// reapply anyway for Opera 10 (unit tests fail otherwise in Opera 10.53)  
+	if(!!base2.DOM.bind[f.base2ID] || window.opera) {
 		base2.DOM.bind(f);
 	}
+	
 	// switch must run before paging behavior
 	if(wFORMS.behaviors['switch']){
 		var b = wFORMS.behaviors['switch'].applyTo(f);
