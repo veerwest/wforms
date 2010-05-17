@@ -209,6 +209,7 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  */
 wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName) { 
 
+	/*
 	//  field wrapper DIV. (-D suffix)
 	var div = document.getElementById(element.id+'-D');
 	
@@ -219,6 +220,10 @@ wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName
 	} else {
 		element.addClass(this.behavior.styling.fieldError);
 	}
+	*/
+	// set class to show that the field has an error
+	element.addClass(this.behavior.styling.fieldError);
+	
 	// show error message.
 	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
 },
