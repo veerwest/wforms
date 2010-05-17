@@ -139,16 +139,17 @@ wFORMS.behaviors.paging = {
  * @return {object} an instance of the behavior 
  */	
 wFORMS.behaviors.paging.applyTo = function(f) {
-	var b = new wFORMS.behaviors.paging.instance(f)
+	var b = null;
 	var behavior = wFORMS.behaviors.paging;
 	var isValidationAccepted = (wFORMS.behaviors.validation && wFORMS.behaviors.paging.runValidationOnPageNext);
-	// Shows that form contains paging
-	var isPagingApplied = false;
+	
 	
 	// Iterates over the elements with specified class names
 	f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR).forEach(
-		function(elem){			
-			isPagingApplied = true;
+		function(elem){
+			if(!b) {
+				b = new wFORMS.behaviors.paging.instance(f)
+			}			
 			// Creates placeholder for buttons
 			var ph = b.getOrCreatePlaceHolder(elem);
 			var index = wFORMS.behaviors.paging.getPageIndex(elem);
@@ -191,7 +192,7 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		}
 	);
 	// Looking for the first active page from 0. 0 is a "fake page"
-	if(isPagingApplied){		
+	if(b){		
 		p = b.findNextPage(0);
 		b.currentPageIndex = 0;
 		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
