@@ -89,14 +89,9 @@
 	font-size: 80%;
 	}
 /* checkbox / radio input */
-.wForm .oneChoice {
-	padding: 2px 0 2px 3px;
-}	
 .wForm .oneChoice input {
 	border: none !important;
 	background: none !important;
-	padding: 0 !important;
-	margin: 0 !important;
 }
 .wForm select {
 	padding: 2px 0 2px 3px;
@@ -138,25 +133,12 @@
 
 /* Field w/ a validation error */
 .wForm form .errFld {	
-	border-color: #FCC;
-	border-width: 1px;
-	border-style: solid;
-	background-color:#FFf1f1;	
+	border: 1px solid #FFBBBB;	
 }
-.wForm form div.errFld, .wForm form span.errFld {
-	margin-left: -3px !important;
-	margin-right: -3px;
-	padding-left: 3px !important;
-	padding-right: 3px;
-} 
-
-.wForm form fieldset.errFld, .wForm form tr.errFld   {
-		
-}
+.wForm form div.errFld { }
 /* Styling for message associated with a validation error. */
-.wForm form .errMsg span {	
-	color: #F00 !important;
-	font-weight: normal;
+.wForm form .errMsg {	
+	color: #CC3333 !important;
 }
 
 

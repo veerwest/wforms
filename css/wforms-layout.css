@@ -216,12 +216,30 @@
 	margin-left: 5px;
 }
 /* Field with a validation error */
-.wForm form .errFld {}
+.wForm form .errFld {							
+	border-width: 1px;
+	border-style: solid;
+}
+.wForm .errFld { /* low specificity for easy override in theme editor */
+	border-color: #FFBBBB;
+}	
+.wForm form tr.errFld td, .wForm form tr.errFld th {
+	border-top: 1px solid #FFBBBB;
+	border-bottom: 1px solid #FFBBBB;	
+}
+.wForm form div.errFld {
+	margin: 0 -3px;
+	padding: 0 3px;
+}
 .wForm form span.errFld {}
 
 /* Styling for message associated with a validation error. */
 .wForm form .errMsg {							
 	display: block;	
+}
+.wForm .errMsg { /* low specificity for easy override in theme editor */
+	color:#CC3333;
+	font-weight: normal;
 }
 .wForm form .inlineSection .errMsg {
 	clear: left;

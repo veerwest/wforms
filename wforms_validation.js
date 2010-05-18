@@ -260,12 +260,7 @@ wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(elemen
 			} else {
 				p = (element.getElementsByTagName('TD')[0]).appendChild(p);
 			}
-		} 
-		else if(element.tagName=='DIV' || element.tagName=='FIELDSET' || element.tagName=='SPAN' ) {
-			// If this is a field wrapper, append error message
-			p = element.appendChild(p);
-		}
-		else {
+		} else {	
 			// If we find a field wrapper, append error message to it.
 			var div = document.getElementById(element.id+'-D');
 			if(div) {
