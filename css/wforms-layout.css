@@ -85,7 +85,6 @@
 	display: block;
 	padding: 2px 0;
 	margin-bottom: 0.75em; 	
-	width: 100%
 }
 /* multiple-choices wrapper */
 .wForm form .choices {
@@ -98,6 +97,8 @@
 }
 .wForm form .oneChoice label {
 	white-space: normal; /* allows label to wrap if needed (ticket #242) */
+	display: inline-block;	
+	vertical-align: text-top;
 }
 /* Place the label and checkbox/radio on its own line */
 .wForm form .oneChoicePerLine .oneChoice {						
@@ -110,7 +111,6 @@
 
 /* Inline section */
 .wForm form .inlineSection {
-	width: 100%;
 	overflow: hidden;
 	padding: 2px 0;
 }
@@ -228,8 +228,8 @@
 	border-bottom: 1px solid #FFBBBB;	
 }
 .wForm form div.errFld {
-	margin: 0 -3px;
-	padding: 0 3px;
+	margin: 1px 0;
+	padding: 1px 3px !important;
 }
 .wForm form span.errFld {}
 

@@ -375,8 +375,8 @@ wFORMS.applyBehaviors = function(f) {
 	
 	// Test if base2 already applied.
 	//   see: http://code.google.com/p/base2/issues/detail?id=111#c2 for  
-	// reapply anyway for Opera 10 (unit tests fail otherwise in Opera 10.53)  
-	if(!!base2.DOM.bind[f.base2ID] || window.opera) {
+	// reapply anyway for Opera 10 and IE <= 7 (unit tests fail otherwise)  
+	if(!!base2.DOM.bind[f.base2ID] || window.opera || navigator.userAgent.match(/MSIE [567]/)) {
 		base2.DOM.bind(f);
 	}
 	

@@ -209,7 +209,7 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  */
 wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName) { 
 
-	/*
+	
 	//  field wrapper DIV. (-D suffix)
 	var div = document.getElementById(element.id+'-D');
 	
@@ -220,9 +220,9 @@ wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName
 	} else {
 		element.addClass(this.behavior.styling.fieldError);
 	}
-	*/
+	
 	// set class to show that the field has an error
-	element.addClass(this.behavior.styling.fieldError);
+	// element.addClass(this.behavior.styling.fieldError);
 	
 	// show error message.
 	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
@@ -260,14 +260,18 @@ wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(elemen
 			} else {
 				p = (element.getElementsByTagName('TD')[0]).appendChild(p);
 			}
-		} else {	
-			// If we find a field wrapper, append error message to it.
-			var div = document.getElementById(element.id+'-D');
-			if(div) {
-				p = div.appendChild(p);
-			} else {
-				// last resort, place the error message just after the field.
-				p = element.parentNode.insertBefore(p,element.nextSibling);
+		} else {
+			if(element.hasClass("wfSection") || element.hasClass("inlineSection")) {
+				p = element.appendChild(p);				
+			} else {	
+				// If we find a field wrapper, append error message to it.
+				var div = document.getElementById(element.id+'-D');
+				if(div) {
+					p = div.appendChild(p);
+				} else {
+					// last resort, place the error message just after the field.
+					p = element.parentNode.insertBefore(p,element.nextSibling);
+				}
 			}
 		}
 	}
