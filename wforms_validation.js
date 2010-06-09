@@ -506,7 +506,8 @@ wFORMS.behaviors.validation.instance.prototype.validateInteger = function(elemen
  * @returns {boolean} 
  */
 wFORMS.behaviors.validation.instance.prototype.validateFloat = function(element, value) {
-	return this.isEmpty(value) || !isNaN(parseFloat(value));
+	var regexp = /^((([1-9]\d*|0)?\.\d+)|([1-9]\d*))$/;
+	return this.isEmpty(value) || regexp.test(value);
 }
 
 /**

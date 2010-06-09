@@ -320,6 +320,10 @@
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
+			testField.value='554654dfg565';			
+			// Test validation rule
+			assertFalse(bInstance.run(null, testForm));
+			
 			testField.value='4.5';			
 			// Test validation rule
 			assertFalse(bInstance.run(null, testForm)); 
@@ -359,6 +363,18 @@
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
+			testField.value='4a.5';			
+			// Test validation rule
+			assertFalse('4a.5 should fail float validation',bInstance.run(null, testForm))
+			
+			testField.value='4.a5';			
+			// Test validation rule
+			assertFalse('4.a5 should fail float validation',bInstance.run(null, testForm))
+			
+			testField.value='1a.a';			
+			// Test validation rule
+			assertFalse('1a.a should fail float validation',bInstance.run(null, testForm))
+						
 			testField.value='4.5';			
 			// Test validation rule
 			assertTrue('4.5 should pass float validation',bInstance.run(null, testForm)); 
@@ -366,6 +382,15 @@
 			testField.value='44';
 			// Test validation rule
 			assertTrue('44 should pass float validation', bInstance.run(null, testForm)); 
+			
+			testField.value='0.45';
+			// Test validation rule
+			assertTrue('0.45 should pass float validation', bInstance.run(null, testForm));
+			
+			testField.value='.45';
+			// Test validation rule
+			assertTrue('.45 should pass float validation', bInstance.run(null, testForm)); 
+			
 			// Test error message removal
 			assertNull(document.getElementById('testField-E'));
 		}
