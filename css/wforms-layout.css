@@ -408,3 +408,8 @@
 .wForm .inlineSection:after, x:-moz-any-link { 		/* use :after pseudo-rule to clear floatting content */
 	content: "."; display: block; height: 0; clear: both; visibility:hidden; 
 }
+
+/* OPERA BUG FIXES ================================================================= */
+.wForm input[type='checkbox'], input[type="radio"]{
+	padding: inherit !important;
+}

@@ -123,9 +123,11 @@ wFORMS.helpers.getComputedStyle = function(element, styleName){
  */
 wFORMS.helpers.getForm = function (e) {
 	if (e.form) {
+		wFORMS.standardizeElement(e.form);
 		return e.form;
 	} else if (e.parentNode) {
 		if (e.parentNode.tagName.toLowerCase() == 'form') {
+			wFORMS.standardizeElement(e.parentNode);
 			return e.parentNode;
 		} else {
 			return this.getForm(e.parentNode);
