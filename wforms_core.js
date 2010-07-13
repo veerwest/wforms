@@ -375,10 +375,10 @@ wFORMS.standardizeElement = function(elem) {
  */	
 wFORMS.applyBehaviors = function(f) {
 	
-	// Test if base2 already applied.
+	// Test if base2 already applied. Prevents stack overflow error in test suite with IE8 standard mode.
 	//   see: http://code.google.com/p/base2/issues/detail?id=111#c2 for  
-	// reapply anyway for Opera 10 and IE <= 7 (unit tests fail otherwise)  
-	if(!!base2.DOM.bind[f.base2ID] || window.opera || navigator.userAgent.match(/MSIE [567]/)) {
+	// reapply anyway for Opera 10 and IE <= 7 or IE8 quirk mode (unit tests fail otherwise)  
+	if(!!base2.DOM.bind[f.base2ID] || window.opera || navigator.userAgent.match(/MSIE [567]/) || (navigator.userAgent.match(/MSIE 8/) && document.compatMode=='BackCompat') ) {
 		base2.DOM.bind(f);
 	}
 	
