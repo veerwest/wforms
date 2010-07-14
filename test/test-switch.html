@@ -16,125 +16,186 @@
 	<script type="text/javascript" src="../wforms_switch.js"></script>
 	<script type="text/javascript">
 	
-	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {	
+	wFORMS.behaviors['switch'].instance.onApply = function() {	
 		setUpPageStatus = 'complete';		
-	} 
+	}; 
 	
 	function setUpPage() {}
   
-  	function setUp() {}
+  	function setUp() {
+          base2.DOM.bind(document);
+    }
 	
 	function tearDown() {}
 	
 	function testApplyTo() {
-		var f = document.getElementById('testform1');
-		var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
-		
+        var f = document.getElementById('testform1');
+        wFORMS.behaviors['switch'].applyTo(f);
+        f = document.getElementById('testform2');
+        wFORMS.behaviors['switch'].applyTo(f);
+  
 		// Test default setting
-		assertEquals('onstate-z', document.getElementById('casez').className);
+		assertTrue(hasClass(document.querySelector('#casez').className, 'onstate'));
 	}
+    
 	function testRadioSwitch() {
 		var f = document.getElementById('testform1');
-		var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
-		
-		assertEquals('offstate-a', document.getElementById('casea').className);
+		var bInstance = wFORMS.behaviors['switch'].instance;
+
+        assertTrue(hasClass(document.querySelector('#casea').className, 'offstate'));
+
 		document.getElementById('switcha').checked=true;
-		bInstance.run(null, document.getElementById('switcha'));
-		assertEquals('onstate-a', document.getElementById('casea').className.replace(/^\s+/,''));
-		assertEquals('offstate-b', document.getElementById('caseb').className);
-		
+		bInstance.run();
+        assertTrue(hasClass(document.querySelector('#casea').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#caseb').className, 'offstate'));
+  
 		document.getElementById('switchb').checked=true;
-		bInstance.run(null, document.getElementById('switchb'));
-		assertEquals('offstate-a', document.getElementById('casea').className.replace(/^\s+/,''));
-		assertEquals('onstate-b', document.getElementById('caseb').className);
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#casea').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#caseb').className, 'onstate'));
 	}
+    
 	function testLinkSwitch() {
 		var f = document.getElementById('testform1');
-		var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
-		
-		bInstance.run(null, document.getElementById('switchc'));
-		assertEquals('switch-c swtchIsOn', document.getElementById('switchc').className);
-		assertEquals('onstate-c', document.getElementById('casec').className.replace(/^\s+/,''));
-		bInstance.run(null, document.getElementById('switchc'));		
-		assertEquals('switch-c swtchIsOff', document.getElementById('switchc').className);
-		assertEquals('offstate-c', document.getElementById('casec').className.replace(/^\s+/,''));
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
+        assertTrue(hasClass(document.querySelector('#casec').className, 'offstate'));
+
+        fireEvent(document.querySelector('#switchc'), 'click');
+        assertTrue(hasClass(document.querySelector('#casec').className, 'onstate'));
+
+        fireEvent(document.querySelector('#switchc'), 'click');
+        assertTrue(hasClass(document.querySelector('#casec').className, 'offstate'));
 	}
+    
 	function testSelectSwitch() {
 		var f = document.getElementById('testform1');
-		var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
-		
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
 		var s = document.getElementById('selectTest');
 		s.selectedIndex=0;
-		bInstance.run(null, s);
-		assertEquals('onstate-d', document.getElementById('cased').className);
-		assertEquals('onstate-e', document.getElementById('casee').className);
-		assertEquals('offstate-f', document.getElementById('casef').className);
-		assertEquals('offstate-g', document.getElementById('caseg').className);
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#cased').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#casee').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#casef').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#caseg').className, 'offstate'));
+
 		s.selectedIndex=1;
-		bInstance.run(null, s);
-		assertEquals('offstate-d', document.getElementById('cased').className.replace(/^\s+/,''));
-		assertEquals('offstate-e', document.getElementById('casee').className.replace(/^\s+/,''));
-		assertEquals('onstate-f', document.getElementById('casef').className);
-		assertEquals('offstate-g', document.getElementById('caseg').className);
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#cased').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#casee').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#casef').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#caseg').className, 'offstate'));
+		
 		s.selectedIndex=2;
-		bInstance.run(null, s);
-		assertEquals('offstate-d', document.getElementById('cased').className.replace(/^\s+/,''));
-		assertEquals('offstate-e', document.getElementById('casee').className.replace(/^\s+/,''));
-		assertEquals('offstate-f', document.getElementById('casef').className.replace(/^\s+/,''));
-		assertEquals('onstate-g', document.getElementById('caseg').className.replace(/^\s+/,''));		
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#cased').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#casee').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#casef').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#caseg').className, 'onstate'));
+        
 		s.selectedIndex=3;
-		bInstance.run(null, s);
-		assertEquals('offstate-d', document.getElementById('cased').className.replace(/^\s+/,''));
-		assertEquals('offstate-e', document.getElementById('casee').className.replace(/^\s+/,''));
-		assertEquals('offstate-f', document.getElementById('casef').className.replace(/^\s+/,''));
-		assertEquals('offstate-g', document.getElementById('caseg').className.replace(/^\s+/,''));	
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#cased').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#casee').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#casef').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#caseg').className, 'offstate'));
+
 		s.selectedIndex=-1;
 	}
-	
-	
+
 	function testMultipleSwitch() {
-		var f = document.getElementById('testform2');
-		var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
-		
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
 		document.getElementById('swA').checked=true;
-		bInstance.run(null, document.getElementById('swA'));
-		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
-		assertEquals('1st','offstate-c offstate-b', document.getElementById('target2').className.replace(/^\s+/,''));
-		assertEquals('1st','offstate-d offstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
-		
-		document.getElementById('swC').checked=true;	
-		bInstance.run(null, document.getElementById('swC'));
-		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
-		assertEquals('2nd','offstate-b onstate-c', document.getElementById('target2').className.replace(/^\s+/,''));
-		assertEquals('2nd','offstate-d offstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
-		
-		document.getElementById('swB').checked=true;	
-		bInstance.run(null, document.getElementById('swB'));
-		assertEquals('offstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
-		assertEquals('3rd','onstate-c onstate-b', document.getElementById('target2').className.replace(/^\s+/,''));
-		assertEquals('3rd','offstate-d onstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
-			
-		document.getElementById('swA').checked=true;	
-		bInstance.run(null, document.getElementById('swA'));
-		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
-		assertEquals('4th','onstate-c offstate-b', document.getElementById('target2').className.replace(/^\s+/,''));
-		assertEquals('4th','offstate-d offstate-b', document.getElementById('target3').className.replace(/^\s+/,''));
-	
-		document.getElementById('swD').checked=true;	
-		bInstance.run(null, document.getElementById('swD'));
-		assertEquals('onstate-a', document.getElementById('target1').className.replace(/^\s+/,''));
-		assertEquals('5th','offstate-b offstate-c', document.getElementById('target2').className.replace(/^\s+/,''));
-		assertEquals('5th','offstate-b onstate-d', document.getElementById('target3').className.replace(/^\s+/,''));
-		
+		bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target1').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target3').className, 'offstate'));
+
+		document.getElementById('swC').checked=true;
+		bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target1').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target2').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target3').className, 'offstate'));
+
+		document.getElementById('swB').checked=true;
+        bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target1').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#target2').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target3').className, 'onstate'));
+
+        document.getElementById('swA').checked=true;
+        bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target1').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target2').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target3').className, 'offstate'));
+
+        document.getElementById('swD').checked=true;
+        bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target1').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target2').className, 'offstate'));
+        assertTrue(hasClass(document.querySelector('#target3').className, 'onstate'));
+
 	}
+
+    function testAndLogic(){
+        var bInstance = wFORMS.behaviors['switch'].instance;
+        
+        document.getElementById('swA').checked=true;
+        document.getElementById('swD').checked=true;
+        bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target4').className, 'offstate'));
+
+        document.getElementById('swB').checked=true;
+        bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target4').className, 'offstate'));
+
+        document.getElementById('swC').checked=true;
+        bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#target4').className, 'onstate'));
+    }
 	</script>
-	
+
+    <script type="text/javascript">
+
+//        base2.DOM.Element.addEventListener(document, 'DOMContentLoaded', function(){
+//            setUp();
+//
+//            testApplyTo();
+//            testRadioSwitch();
+//            testLinkSwitch();
+//            testSelectSwitch();
+//            testMultipleSwitch();
+//            testAndLogic();
+//        },false);
+
+        function  fireEvent(element,event){
+            base2.DOM.bind(element);
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent(event, true, true ); // event type,bubbling,cancelable
+            return !element.dispatchEvent(evt);
+        }
+
+        function hasClass(className, theClass){
+            return className.indexOf(theClass) != -1;
+        }
+
+    </script>
+
 </head>
 
 <body class="wForm">
 	<form id="testform1">
 		<input name="fooz" type="checkbox" class="switch-z" id="switchz" checked="checked" />Z Switch <br/>
-		<div id="casez" class="offstate-z">This is Z state</div>
+		<div id="casez" class="target" rule="or[#switchz]">This is Z state</div>
 		
 		
 		<input name="foo" type="radio" class="switch-a" id="switcha" />A Switch <br/>
@@ -143,18 +204,20 @@
 	
 		<select id="selectTest">
 			<option class="switch-d switch-e">D &amp; E</option>
-			<option class="switch-f">F</option>
-			<option class="switch-g">G</option>
+			<option id="opt2" class="switch-f">F</option>
+			<option id="opt3" class="switch-g">G</option>
 			<option>Test 4</option>
 		</select>
 
-		<div id="casea" class="offstate-a">This is A state</div>
-		<div id="caseb" class="offstate-b">This is B state</div>
-		<div id="casec" class="offstate-c">This is C state</div>
-		<div id="cased" class="offstate-d">This is D state</div>
-		<div id="casee" class="offstate-e">This is E state</div>
-		<div id="casef" class="offstate-f">This is F state</div>
-		<div id="caseg" class="offstate-g">This is G state</div>
+		<div id="casea" class="target" rule="or[#switcha|#switchb]">This is A state</div>
+		<div id="caseb" class="target" rule="or[#switchb]">This is B state</div>
+		<div id="casec" class="target" rule="or[#switchc]">This is C state</div>
+		<div id="cased" class="target" rule="or[#selectTest :first-child]">This is D state</div>
+		<div id="casee" class="target" rule="or[#selectTest :first-child]">This is E state</div>
+        <!--:nth-child(?) does not work for IE? -->
+		<div id="casef" class="target" rule="or[#opt2]">This is F state</div>
+		<div id="caseg" class="target" rule="or[#opt3]">This is G state</div>
+        
 		<a href="#" onclick="invalidateCache('testform1')">Reset Cache</a>
 	</form>
 	<hr/>
@@ -162,13 +225,13 @@
 		
 		<label>A or B?</label>
 		<input type="radio" value="A" class="switch-a" id="swA" name="AB"/>
-		<label for="A">A</label>
+		<label for="swA">A</label>
 		<input type="radio" value="B" class="switch-b" id="swB" name="AB"/>
-		<label for="B">B</label>
+		<label for="swB">B</label>
 		
 		<br/>
 		
-		<div class="offstate-a" id="target1">
+		<div class="target" id="target1" rule="or[#swA]">
 			<label>C or D?</label>
 			
 			<span class="oneChoice">
@@ -182,16 +245,21 @@
 			
 		</div>
 	
-	
-		<div class="offstate-c offstate-b" id="target2">
+		<div class="target" id="target2" rule="or[#swB|#swC]">
 			<fieldset id="tfa_BC" class="">
 				<legend>B or C</legend>
 			</fieldset>
 		</div>
 			
-		<div class="offstate-d offstate-b" id="target3">
+		<div class="target" id="target3" rule="or[#swB|#swD]">
 			<fieldset id="tfa_BD" class="">
 				<legend>B or D</legend>
+			</fieldset>
+		</div>
+
+        <div class="target" id="target4" rule="and[#swB|#swC]">
+			<fieldset id="tfa_BandC" class="">
+				<legend>B and C</legend>
 			</fieldset>
 		</div>
 	
@@ -204,7 +272,7 @@
 			if(typeof f=='string') {
 				f = document.getElementById(f);
 			}			
-			b = wFORMS.getBehaviorInstance(f, 'switch')
+			b = wFORMS.getBehaviorInstance(f, 'switch');
 			b.invalidateCache();			
 		}
 	

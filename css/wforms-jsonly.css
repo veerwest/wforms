@@ -24,7 +24,8 @@
 .offstate-aw, .offstate-ax, .offstate-ay, .offstate-az,
 .offstate-ba, .offstate-bb, .offstate-bc, .offstate-bd,
 .offstate-be, .offstate-bf, .offstate-bg, .offstate-bh,
-.offstate-bi, .offstate-bj, .offstate-bk, .offstate-bl { 
+.offstate-bi, .offstate-bj, .offstate-bk, .offstate-bl,
+.target.offstate{
 	display: none !important;
 }
 html .wForm form .wfPage, html .wForm form .wfHideSubmit { 
@@ -36,6 +37,11 @@ html .wForm form .saveAndResume .actions  .wfHideSubmit {
 html .wForm form .wfCurrentPage {
 	display: block !important;
 }
+
+.target.onstate{
+    display: block !important;
+}
+
 
 .offstate-resumelater {
 	display: none !important;
