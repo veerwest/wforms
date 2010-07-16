@@ -12,8 +12,9 @@
    
 	<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
 	<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+    <script type="text/javascript" src="helper/test_helper.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
-	<script type="text/javascript" src="../wforms_switch.js"></script>
+    <script type="text/javascript" src="../wforms_switch.js"></script>
 	<script type="text/javascript">
 	
 	wFORMS.behaviors['switch'].instance.onApply = function() {	
@@ -107,10 +108,12 @@
 	function testMultipleSwitch() {
         var bInstance = wFORMS.behaviors['switch'].instance;
 
-		document.getElementById('swA').checked=true;
+        document.getElementById('swA').checked=true;
+        document.getElementById('swC').checked=true;
 		bInstance.run();
 
         assertTrue(hasClass(document.querySelector('#target1').className, 'onstate'));
+        assertTrue(hasClass(document.querySelector('#target2').className, 'onstate'));
         assertTrue(hasClass(document.querySelector('#target3').className, 'offstate'));
 
 		document.getElementById('swC').checked=true;
@@ -163,33 +166,7 @@
         assertTrue(hasClass(document.querySelector('#target4').className, 'onstate'));
     }
 	</script>
-
-    <script type="text/javascript">
-
-//        base2.DOM.Element.addEventListener(document, 'DOMContentLoaded', function(){
-//            setUp();
-//
-//            testApplyTo();
-//            testRadioSwitch();
-//            testLinkSwitch();
-//            testSelectSwitch();
-//            testMultipleSwitch();
-//            testAndLogic();
-//        },false);
-
-        function  fireEvent(element,event){
-            base2.DOM.bind(element);
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent(event, true, true ); // event type,bubbling,cancelable
-            return !element.dispatchEvent(evt);
-        }
-
-        function hasClass(className, theClass){
-            return className.indexOf(theClass) != -1;
-        }
-
-    </script>
-
+    
 </head>
 
 <body class="wForm">

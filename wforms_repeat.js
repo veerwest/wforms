@@ -683,9 +683,9 @@ _i.prototype.updateAttributes = function(e, idSuffix, preserveRadioName){
 		this.removeHandled(e)
 	}
 
-	if(wFORMS.behaviors['switch'] && wFORMS.behaviors['switch'].isHandled(e)){
-		wFORMS.behaviors['switch'].removeHandle(e);
-	}
+//	if(wFORMS.behaviors['switch'] && wFORMS.behaviors['switch'].isHandled(e)){
+//		wFORMS.behaviors['switch'].removeHandle(e);
+//	}
 	if(wFORMS.behaviors['calculation'] && wFORMS.behaviors['calculation'].isHandled(e)){
 		wFORMS.behaviors['calculation'].removeHandledFlag(e);
 	}

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Hooks Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+	
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+
+	
+	<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+    <script type="text/javascript" src="helper/test_helper.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+
+	<script type="text/javascript">
+
+		wFORMS.behaviors.onApplyAll = function() {
+			setUpPageStatus = 'complete';
+		}
+		
+		function setUpPage() {
+		}
+	  
+	  	function setUp() {
+		}
+		
+		function tearDown() {
+			wFORMS.removeBehavior(document.getElementById('testForm'), 'paging');
+		}
+
+		function testHook() {
+            var variable = 1;
+
+            wFORMS.hooks.addHook('behavior1', 'hook_event1', function(){ variable+=1;})
+
+            wFORMS.hooks.triggerHook('behavior1', 'hook_event1')
+
+		    assertEquals(2, variable);
+		}
+
+        function testRemoveHook() {
+            var variable = 1;
+
+            var hookHandler1 = function(){ variable+=1;};
+
+            wFORMS.hooks.addHook('behavior1', 'hook_event2', hookHandler1)
+            wFORMS.hooks.removeHook('behavior1', 'hook_event2', hookHandler1)
+
+            wFORMS.hooks.triggerHook('behavior1', 'hook_event2')
+
+		    assertEquals(1, variable);
+		}
+
+        function testMultipleHookHandler(){
+            var variable = 1;
+
+            wFORMS.hooks.addHook('behavior2', 'hook_event3', function(){ variable+=1;})
+            wFORMS.hooks.addHook('behavior2', 'hook_event3', function(){ variable+=2;})
+
+            wFORMS.hooks.triggerHook('behavior2', 'hook_event3')
+
+		    assertEquals(4, variable);
+        }
+
+        function testHookParameters(){
+            var variable = 1;
+
+            wFORMS.hooks.addHook('behavior3', 'hook_event4', function(x, y){ variable+= (x - y);})
+            wFORMS.hooks.addHook('behavior3', 'hook_event4', function(x, y){ variable+= (2*x - y);})
+
+            wFORMS.hooks.triggerHook('behavior3', 'hook_event4', 2 , 1)
+
+		    assertEquals(5, variable);
+        }
+
+	</script>
+ 
+	</head>
+	<body class="wForm" style="padding:5px; margin:10px;" >
+        <form id="testform1">
+		
+	    </form>
+
+    </body>
+	
+</html>

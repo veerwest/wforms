@@ -131,7 +131,6 @@ wFORMS.behaviors['switch'] =  {
                     }
                 }
             }
-
         };
 
         /*

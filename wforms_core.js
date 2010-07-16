@@ -54,7 +54,77 @@ wFORMS.toString = function () {
 wFORMS.behaviors = {};
 wFORMS.helpers   = {}
 wFORMS.instances = []; // keeps track of behavior instances
+wFORMS.hooks = new function(){
+    var behaviors = {};
 
+    var hookClass = function(){
+        var events = {};
+
+        this.addHandler = function(event, handler){
+            if(events[event] == null){
+                events[event] = [];
+            }
+
+            events[event].push(handler);
+        }
+
+        this.removeHandler = function(event, handler){
+            if(events[event] == null){
+                return;
+            }
+
+            for(var i = 0; i < events[event].length; i++){
+                if(events[event][i] == handler){
+                    events[event].splice(i, 1);
+                };
+            }
+        }
+
+        this.callHookHandlers = function(event){
+            if(events[event] == null){
+                return;
+            }
+
+            var args = [];
+
+            for(var i = 1; i < arguments.length; i++){
+                args.push(arguments[i]);
+            }
+
+            for(var i = 0; i < events[event].length; i++){
+                events[event][i].apply(events[event][i], args);
+            }
+        }
+    }
+
+    this.addHook = function(behavior, event, handler){
+        if(behaviors[behavior] == null){
+            behaviors[behavior] = new hookClass();    
+        }
+        behaviors[behavior].addHandler(event, handler);
+    };
+
+    this.removeHook = function(behavior, event, handler){
+        if(behaviors[behavior] == null){
+            return;
+        }
+        behaviors[behavior].removeHandler(event, handler);
+    };
+
+    this.triggerHook = function(behavior, event){
+        if(behaviors[behavior] == null){
+            return;
+        }
+
+        var args = [];
+
+        for(var i = 1; i < arguments.length; i++){
+            args.push(arguments[i]);   
+        }
+
+        behaviors[behavior].callHookHandlers.apply(behaviors[behavior], args);
+    }
+};
 
 /**
  * Helper method.
@@ -340,7 +410,7 @@ wFORMS.onLoadHandler = function() {
 				}, 1);	
 			}			
 		}(forms[i]);
-	}	
+	}
 }
 /**
  * note: should be in wFORMS.helpers

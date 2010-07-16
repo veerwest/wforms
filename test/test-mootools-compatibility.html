@@ -13,6 +13,7 @@
 	
 	<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
 	<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+    <script type="text/javascript" src="helper/test_helper.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../wforms_hint.js"></script>	
@@ -21,14 +22,14 @@
 	<script type="text/javascript" src="../wforms_switch.js"></script>	
 	<script type="text/javascript" src="../wforms_calculation.js"></script>	
 	<script type="text/javascript" src="compatibility/mootools-release-1.11.js"></script>
-		<script type="text/javascript" src="../wforms_core.js"></script>
-	<script type="text/javascript" src="../wforms_repeat.js"></script>	
+    <script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_repeat.js"></script>
 	<script type="text/javascript" src="../wforms_hint.js"></script>	
 	<script type="text/javascript" src="../wforms_validation.js"></script>	
 	<script type="text/javascript" src="../wforms_paging.js"></script>	
 	<script type="text/javascript" src="../wforms_switch.js"></script>	
 	<script type="text/javascript" src="../wforms_calculation.js"></script>	
-	  
+
 	<script type="text/javascript">
 		
 		wFORMS.behaviors.onApplyAll = function() {
@@ -47,31 +48,32 @@
 
 		function testApplyTo() {
 			var f = document.getElementById('testform1');
-			var bInstance = wFORMS.getBehaviorInstance(f, 'switch');
+            wFORMS.behaviors['switch'].applyTo(f);
+
+			var bInstance = wFORMS.behaviors['switch'].instance;
 			assertNotNull('instance should exist',bInstance);
-			
-			assertEquals('onstate-z', document.getElementById('casez').className);
-			
-		
-			assertEquals('offstate-a', document.getElementById('casea').className);
+
+            assertTrue(hasClass(document.querySelector('#casez').className, 'onstate'));
+
+            assertTrue(hasClass(document.querySelector('#casea').className, 'offstate'));
+
 			document.getElementById('switcha').checked=true;
-			bInstance.run(null, document.getElementById('switcha'));
-			assertEquals('onstate-a', document.getElementById('casea').className.replace(/^\s+/,''));
-			assertEquals('offstate-b', document.getElementById('caseb').className);
+			bInstance.run();
+
+            assertTrue(hasClass(document.querySelector('#casea').className, 'onstate'));
+            assertTrue(hasClass(document.querySelector('#caseb').className, 'offstate'));
 		}		
-					
-	
 
 	</script>
 	</head>
 	<body class="wForm" style="padding:5px; margin:10px;" >
         	<form id="testform1">
 		<input name="fooz" type="checkbox" class="switch-z" id="switchz" checked="checked" />Z Switch <br/>
-		<div id="casez" class="offstate-z">This is A state</div>
+		<div id="casez" class="target" rule="or[#switchz]">This is A state</div>
 		
 		
-		<input name="foo" type="radio" class="switch-a" id="switcha" />A Switch <br/>
-		<input name="foo" type="radio" class="switch-b" id="switchb"  />B Switch <br/>	
+		<input name="foo" type="radio" id="switcha" />A Switch <br/>
+		<input name="foo" type="radio" id="switchb" />B Switch <br/>	
 		<a href="#" class="switch-c swtchIsOff" id="switchc" >C Switch</a> <br/>
 	
 		<select id="selectTest">
@@ -81,8 +83,8 @@
 			<option>Test 4</option>
 		</select>
 
-		<div id="casea" class="offstate-a">This is A state</div>
-		<div id="caseb" class="offstate-b">This is B state</div>
+		<div id="casea" class="target" rule="or[#switcha|#switchb]" >This is A state</div>
+		<div id="caseb" class="target" rule="or[#switchb]">This is B state</div>
 		<div id="casec" class="offstate-c">This is C state</div>
 		<div id="cased" class="offstate-d">This is D state</div>
 		<div id="casee" class="offstate-e">This is E state</div>
