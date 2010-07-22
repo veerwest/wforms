@@ -59,6 +59,16 @@ new function(_) {
 					var selectedDate = selectedDateArray.join(seperator);
 					cal._targetField.value = selectedDate;
 					this.hide();
+					//Find parentForm and rerun calculations
+					//TODO: replace with onchange event trigger
+					//http://jehiah.cz/archive/firing-javascript-events-properly
+					try{
+						var thisform = wFORMS.helpers.getForm(cal._targetField);
+						var calcInstance = wFORMS.getBehaviorInstance(thisform,'calculation');
+						if(calcInstance)
+							calcInstance.run(null,cal._targetField); //Run calcInstance(event,element)
+					}catch(e){}
+					//
 				}
 			}
 			else if(type=='deselect') {			
