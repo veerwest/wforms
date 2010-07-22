@@ -195,51 +195,74 @@
 			
 			testField.value='2/2/2008';
 			// Test validation rule
-			assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+			 assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 			// Test error message removal
 			assertNull(document.getElementById('testField-E'));
 
 
             //case 2
             testField.value='Mar/2/2008';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 3
             testField.value='Apr-2-2008';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 4
             testField.value='jan 2008';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 5
             testField.value='2008-3-25';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 6
             testField.value='21/August 2012';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 7
             testField.value='21 October 23 3:22:55';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 8
             testField.value='21 October 23 3:22';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 9
             testField.value='21 2009 3-22';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
              //case 10
             testField.value='3:22 Jun 09';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
             //case 11
             testField.value='2010/7/21 17:44:23';
-            assertTrue('Should pass one required validation', bInstance.run(null, testForm));
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 
+          	//case 12
+            testField.value='August 11, 2008';
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
+
+          	//case 13
+            testField.value='2008.08.11';
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
+
+          	//case 14
+            testField.value='';
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
+
+        	//case 15
+            testField.value='qwerty';
+            assertFalse('Should not pass date validation:'+testField.value, bInstance.run(null, testForm));
+
+          	//case 16
+            testField.value='10!';
+            assertFalse('Should not pass date validation:'+testField.value, bInstance.run(null, testForm));
+
+            // case 17
+            testField.value='10/10/10*';
+            assertFalse('Should not pass date validation:'+testField.value, bInstance.run(null, testForm));
 		}
 		
 		function testValidateEmail() {
