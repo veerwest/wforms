@@ -73,7 +73,7 @@ wFORMS.behaviors.validation = {
         var year = '(\\d{1,4}|\\d{1,2})';
         var month = '(' + p_num + '|' + p_month + ')';
         var day = '\\d{1,2}((th)|(rd)|(nd)|(st))?';
-        var spliter = '\\s*[\\\\|\/-]?\\s*';
+        var spliter = '\\s*[-/\\\\|\\,\\.]?\\s*';
         var reg_month_day = '((' + month + spliter + day + ')|'
                 + '(' + day + spliter + month + ')|(' + month + '))';
 
