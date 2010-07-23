@@ -169,38 +169,58 @@
     function testDestroyBehavior(){
         var bInstance = wFORMS.behaviors['switch'].instance;
 
-        assertTrue(document.querySelector('#target5').hasClass('offstate'));
+        assertTrue(hasClass(document.querySelector('#target5').className, 'offstate'));
 
         //turn on
         document.querySelector('#cb1').click();
         document.querySelector('#cb2').click();
         document.querySelector('#cb3').click();
-        assertTrue(document.querySelector('#target5').hasClass('onstate'));
+        assertTrue(hasClass(document.querySelector('#target5').className, 'onstate'));
         
         //turn off
         document.querySelector('#cb1').click();
         document.querySelector('#cb2').click();
         document.querySelector('#cb3').click();
-        assertTrue(document.querySelector('#target5').hasClass('offstate'));
+        assertTrue(hasClass(document.querySelector('#target5').className, 'offstate'));
 
         bInstance.destroy(document.querySelector('#target5'));
         document.querySelector('#cb1').click();
         document.querySelector('#cb2').click();
         document.querySelector('#cb3').click();
-        assertTrue(document.querySelector('#target5').hasClass('offstate'));
+        assertTrue(hasClass(document.querySelector('#target5').className, 'offstate'));
     }
 
     function testTextBoxAndTextArea(){
         var bInstance = wFORMS.behaviors['switch'].instance;
 
-        assertTrue(document.querySelector('#target6').hasClass('offstate'));
+        assertTrue(hasClass(document.querySelector('#target6').className, 'offstate'));
 
         document.querySelector('#txt1').value = 'aaa';
         document.querySelector('#textarea1').value = 'bbb';
 
         bInstance.run();
 
-        assertTrue(document.querySelector('#target6').hasClass('onstate'));
+        assertTrue(hasClass(document.querySelector('#target6').className, 'onstate'));
+    }
+
+    function testFormula(){
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
+        assertTrue(hasClass(document.querySelector('#target7').className, 'offstate'));
+
+        document.querySelector('#txt2').value = '2';
+        document.querySelector('#textarea2').value = 'abc';
+
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#target7').className, 'offstate'));
+
+        // txt2 > 3
+        // textarea.length > 10
+        document.querySelector('#txt2').value = '4';
+        document.querySelector('#textarea2').value = 'abcdefghjkl';
+
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#target7').className, 'onstate'));
     }
         
     </script>
@@ -308,7 +328,21 @@
                 txt1 & textarea
 			</fieldset>
 		</div>
-    </form>    
+    </form>
+    <hr/>
+    <form id="testForm5">
+        <input type="text" id="txt2" formula="parseInt(this.value) > 3"/>
+        <textarea rows="3" id="textarea2" formula="this.value.length > 10">
+        </textarea>
+
+        <div class="target" id="target7" rule="and[#txt2|#textarea2]">
+			<fieldset class="">
+				<legend>Collective AND</legend>
+                txt2 & textarea2
+			</fieldset>
+		</div>
+    </form>
+
 	
 	<script type="text/javascript">
 		function invalidateCache(f) {

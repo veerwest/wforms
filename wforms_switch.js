@@ -21,6 +21,7 @@ wFORMS.behaviors['switch'] =  {
     TARGET_INDENTIFIER: 'target',
 
     RULE_ATTRIBUTE_NAME : 'rule',
+    FORMULA_ATTRIBUTE_NAME : 'formula',
 
     /**
      * pattern for trigger info in target host in the css style list
@@ -170,7 +171,6 @@ wFORMS.behaviors['switch'] =  {
             }
 
             var m = rule.match(wFORMS.behaviors['switch'].TRIGGER_RULES);
-
             if ( m == null){
                 return;
             }
@@ -243,6 +243,14 @@ wFORMS.behaviors['switch'] =  {
          * @param  element {domElement} trigger html element
          */
         function reportTriggerStatusByElement(element){
+            var formula = element.getAttribute(wFORMS.behaviors['switch'].FORMULA_ATTRIBUTE_NAME);
+            if(formula != null){
+                try{
+                    return computeFormula(element, formula);
+                }catch(e){
+                    //if error occurred, then still try to judge on/off status with default behaviors    
+                }
+            }
             var elementType = wFORMS.helpers.getElementType(element);
             return reportTriggerStatusByElementType(elementType, element);
         }
@@ -263,14 +271,20 @@ wFORMS.behaviors['switch'] =  {
                 case 'input.radio':
                     return elem.checked;
                 case 'input.text':
-                    return elem.value.trim().length != 0;
+                    return base2.JavaScript.String2.trim(elem.value).length != 0;
                 case 'option':
                     return elem.selected;
                 case 'textarea':
-                    return elem.value.trim().length != 0;
+                    return base2.JavaScript.String2.trim(elem.value).length != 0;
                 default:
                     return false;
             }
+        }
+
+        function computeFormula(element, formula){
+            return (function(){
+                return eval(formula);
+            }).apply(element);
         }
 
         /**
