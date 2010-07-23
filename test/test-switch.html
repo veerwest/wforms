@@ -189,6 +189,19 @@
         document.querySelector('#cb3').click();
         assertTrue(document.querySelector('#target5').hasClass('offstate'));
     }
+
+    function testTextBoxAndTextArea(){
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
+        assertTrue(document.querySelector('#target6').hasClass('offstate'));
+
+        document.querySelector('#txt1').value = 'aaa';
+        document.querySelector('#textarea1').value = 'bbb';
+
+        bInstance.run();
+
+        assertTrue(document.querySelector('#target6').hasClass('onstate'));
+    }
         
     </script>
 
@@ -268,7 +281,7 @@
 		<a href="#" onclick="invalidateCache('testform2')">Reset Cache</a>
 		
 	</form>
-
+    <hr/>
     <form id="testForm3">
         <input type="checkbox" value="A" class="switch-a" id="cb1" name="AB"/>
         <input type="checkbox" value="A" class="switch-a" id="cb2" name="AB"/>
@@ -281,6 +294,21 @@
 			</fieldset>
 		</div>
     </form>
+
+    <hr/>
+    <form id="testForm4">
+        <input type="text" value="A" id="txt1"/>
+        <textarea rows="3" id="textarea1">
+            
+        </textarea>
+
+        <div class="target" id="target6" rule="and[#txt1|#textarea1]">
+			<fieldset class="">
+				<legend>Collective AND</legend>
+                txt1 & textarea
+			</fieldset>
+		</div>
+    </form>    
 	
 	<script type="text/javascript">
 		function invalidateCache(f) {

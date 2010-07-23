@@ -267,7 +267,7 @@ wFORMS.behaviors['switch'] =  {
                 case 'option':
                     return elem.selected;
                 case 'textarea':
-                    return elem.innerHTML.trim().length != 0;
+                    return elem.value.trim().length != 0;
                 default:
                     return false;
             }
@@ -447,6 +447,7 @@ wFORMS.behaviors['switch'] =  {
 
             'textarea' : function(elem, eventHandler){
                 elem.addEventListener('keypress', eventHandler, false);
+                elem.addEventListener('blur', eventHandler, false);
             },
 
             'other' : function(elem){
@@ -493,6 +494,7 @@ wFORMS.behaviors['switch'] =  {
 
             'textarea' : function(elem, eventHandler){
                 elem.removeEventListener('keypress', eventHandler, false);
+                elem.removeEventListener('blur', eventHandler, false);
             },
 
             'other' : function(elem, eventHandler){
