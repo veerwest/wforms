@@ -16,7 +16,9 @@ wFORMS.behaviors['switch'] =  {
      * @see	http://www.w3.org/TR/css3-selectors/
 
 	 */
-    SELECTOR : '.target',
+    TARGET_SELECTOR : '.target',
+
+    TARGET_INDENTIFIER: 'target',
 
     RULE_ATTRIBUTE_NAME : 'rule',
 
@@ -95,18 +97,21 @@ wFORMS.behaviors['switch'] =  {
 	 */
 	instance : new function(f){
 		this.behavior = wFORMS.behaviors['switch']; 
-//		this.target   = f;
 		var cache = ( this.cache = []);
         /*
          Public methods
          */
         this.applyTo = function(f){
+            wFORMS.standardizeElement(f);
             getTargets(f).forEach(function (element){
                 if(typeof element == 'undefined'){
                     return;
                 }
                 analyzeRule(element);
             });
+            if(f.hasClass(wFORMS.behaviors['switch'].TARGET_INDENTIFIER)){
+                analyzeRule(f);
+            }
         };
 
         this.onApply = function(){
@@ -115,14 +120,21 @@ wFORMS.behaviors['switch'] =  {
 
         this.destroy = function(f){
             getTargets(f).forEach(function (element){
-                for(var i = 0; i < cache.length; i++){
-                    if(cache[i].target == element){
-                        cache[i].destroy();
-                        cache.splice(i, 1);
-                    }
-                }
+                _destroy(element);
             });
+            if(f.hasClass(wFORMS.behaviors['switch'].TARGET_INDENTIFIER)){
+                _destroy(f);
+            }
         };
+
+        function _destroy(element){
+            for(var i = 0; i < cache.length; i++){
+                if(cache[i].target == element){
+                    cache[i].destroy();
+                    cache.splice(i, 1);
+                }
+            }
+        }
 
         /**
          * Update the condition entries with UI presentation, if they are not consistent
@@ -143,7 +155,7 @@ wFORMS.behaviors['switch'] =  {
 
         /* Private methods */
         var getTargets = function(f){
-            return f.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR);
+            return f.querySelectorAll(wFORMS.behaviors['switch'].TARGET_SELECTOR);
         };
 
         /**
@@ -299,7 +311,7 @@ wFORMS.behaviors['switch'] =  {
          * @param newNode
          */
         function cloneSection(originalNode, newNode){
-            var result = originalNode.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR);
+            var result = originalNode.querySelectorAll(wFORMS.behaviors['switch'].TARGET_SELECTOR);
             var originalTargets = [];
             result.forEach(function(element){
                 originalTargets.push(element);
@@ -445,10 +457,10 @@ wFORMS.behaviors['switch'] =  {
         //for destruction process
         var removeEventHandlerFromTrigger = {
             'a' : function(elem, eventHandler){
-                elem.removeEventListener('click', eventHandler);
+                elem.removeEventListener('click', eventHandler, false);
             },
             'input.checkbox' : function(elem, eventHandler){
-                elem.removeEventListener('click', eventHandler);
+                elem.removeEventListener('click', eventHandler, false);
             },
 
             'input.radio' : function(elem, eventHandler){
@@ -466,7 +478,7 @@ wFORMS.behaviors['switch'] =  {
             },
 
             'input.text' : function(elem, eventHandler){
-                elem.removeEventListener('change', eventHandler);
+                elem.removeEventListener('change', eventHandler, false);
             },
 
             'option' : function(elem, eventHandler){
@@ -476,11 +488,11 @@ wFORMS.behaviors['switch'] =  {
                     node = node.parentNode;
                 }
                 //so node is the parent select object
-                node.removeEventListener('change', eventHandler);
+                node.removeEventListener('change', eventHandler, false);
             },
 
             'textarea' : function(elem, eventHandler){
-                elem.removeEventListener('keypress', eventHandler);
+                elem.removeEventListener('keypress', eventHandler, false);
             },
 
             'other' : function(elem, eventHandler){

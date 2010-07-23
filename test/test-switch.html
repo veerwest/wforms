@@ -165,12 +165,31 @@
 
         assertTrue(hasClass(document.querySelector('#target4').className, 'onstate'));
     }
-	</script>
 
-    <script type="text/javascript">
-        setTimeout(function(){
-            testApplyTo();
-        }, 100);
+    function testDestroyBehavior(){
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
+        assertTrue(document.querySelector('#target5').hasClass('offstate'));
+
+        //turn on
+        document.querySelector('#cb1').click();
+        document.querySelector('#cb2').click();
+        document.querySelector('#cb3').click();
+        assertTrue(document.querySelector('#target5').hasClass('onstate'));
+        
+        //turn off
+        document.querySelector('#cb1').click();
+        document.querySelector('#cb2').click();
+        document.querySelector('#cb3').click();
+        assertTrue(document.querySelector('#target5').hasClass('offstate'));
+
+        bInstance.destroy(document.querySelector('#target5'));
+        document.querySelector('#cb1').click();
+        document.querySelector('#cb2').click();
+        document.querySelector('#cb3').click();
+        assertTrue(document.querySelector('#target5').hasClass('offstate'));
+    }
+        
     </script>
 
 </head>
@@ -249,6 +268,19 @@
 		<a href="#" onclick="invalidateCache('testform2')">Reset Cache</a>
 		
 	</form>
+
+    <form id="testForm3">
+        <input type="checkbox" value="A" class="switch-a" id="cb1" name="AB"/>
+        <input type="checkbox" value="A" class="switch-a" id="cb2" name="AB"/>
+        <input type="checkbox" value="A" class="switch-a" id="cb3" name="AB"/>
+
+        <div class="target" id="target5" rule="and[#cb1|#cb2|#cb3]">
+			<fieldset class="">
+				<legend>Collective AND</legend>
+                Cb1 & Cb2 & Cb3
+			</fieldset>
+		</div>
+    </form>
 	
 	<script type="text/javascript">
 		function invalidateCache(f) {
