@@ -374,6 +374,9 @@ _i.prototype.duplicateSection = function(elem){
 		}
 	}
 	*/
+    //trigger external hooks
+    wFORMS.hooks.triggerHook('repeat', 'repeat', elem, newElem);
+
 	// Calls custom function
 	this.behavior.onRepeat(newElem);
 	

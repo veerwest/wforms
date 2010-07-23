@@ -35,6 +35,7 @@
 		"wforms_paging",
 		"wforms_repeat",
 		"wforms_switch",
+		"wforms_switch_clear",
 		"wforms_validation",
 		"wforms_calculation"
 	];

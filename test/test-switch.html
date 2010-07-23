@@ -166,7 +166,13 @@
         assertTrue(hasClass(document.querySelector('#target4').className, 'onstate'));
     }
 	</script>
-    
+
+    <script type="text/javascript">
+        setTimeout(function(){
+            testApplyTo();
+        }, 100);
+    </script>
+
 </head>
 
 <body class="wForm">

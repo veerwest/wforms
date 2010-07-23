@@ -99,7 +99,7 @@ wFORMS.hooks = new function(){
 
     this.addHook = function(behavior, event, handler){
         if(behaviors[behavior] == null){
-            behaviors[behavior] = new hookClass();    
+            behaviors[behavior] = new hookClass();
         }
         behaviors[behavior].addHandler(event, handler);
     };
@@ -119,7 +119,7 @@ wFORMS.hooks = new function(){
         var args = [];
 
         for(var i = 1; i < arguments.length; i++){
-            args.push(arguments[i]);   
+            args.push(arguments[i]);
         }
 
         behaviors[behavior].callHookHandlers.apply(behaviors[behavior], args);
@@ -446,45 +446,47 @@ wFORMS.applyBehaviors = function(f) {
 	// Test if base2 already applied.
 	//   see: http://code.google.com/p/base2/issues/detail?id=111#c2 for  
 	// reapply anyway for Opera 10 and IE <= 7 (unit tests fail otherwise)  
-	if(!!base2.DOM.bind[f.base2ID] || window.opera || navigator.userAgent.match(/MSIE [567]/)) {
-		base2.DOM.bind(f);
+	if(!!base2.DOM.bind[f.base2ID] || window.opera || navigator.userAgent.match(/MSIE [567]/)
+            || (navigator.userAgent.match(/MSIE 8/) && document.compatMode=='BackCompat')) {
+        base2.DOM.bind(f);
 	}
-	
+
 	// switch must run before paging behavior
 	if(wFORMS.behaviors['switch']){
-		var b = wFORMS.behaviors['switch'].applyTo(f);
-		if(!wFORMS.instances['switch']) {
-			wFORMS.instances['switch'] = [b];
-		} else {
-			wFORMS.removeBehavior(f, 'switch');
-			wFORMS.instances['switch'].push(b);
-		}		
+        wFORMS.behaviors['switch'].applyTo(f);
+//		if(!wFORMS.instances['switch']) {
+//			wFORMS.instances['switch'] = [b];
+//		} else {
+//			wFORMS.removeBehavior(f, 'switch');
+//			wFORMS.instances['switch'].push(b);
+//		}		
 	}
-	for(var behaviorName in wFORMS.behaviors) {
-		if(behaviorName == 'switch'){
-			continue;
-		}		
-		if(wFORMS.behaviors[behaviorName].applyTo) {
-			// It is a behavior.
-			
-			var b = wFORMS.behaviors[behaviorName].applyTo(f);
-			
-			// behaviors may create several instances
-			// if single instance returned, convert it to an array
-			if(b && b.constructor != Array) {
-				b=[b];			
-			} 
-			
-			for(var i=0;b && i<b.length;i++) {
-				if(!wFORMS.instances[behaviorName]) {
-					wFORMS.instances[behaviorName] = [b[i]];
-				} else {
-					wFORMS.removeBehavior(f, behaviorName);
-					wFORMS.instances[behaviorName].push(b[i]);
-				}
-			}
-		}
-	}
+
+    for(var behaviorName in wFORMS.behaviors) {
+        if(behaviorName == 'switch'){
+            continue;
+        }
+        if(wFORMS.behaviors[behaviorName].applyTo) {
+            // It is a behavior.
+
+            var b = wFORMS.behaviors[behaviorName].applyTo(f);
+
+            // behaviors may create several instances
+            // if single instance returned, convert it to an array
+            if(b && b.constructor != Array) {
+                b=[b];
+            }
+
+            for(var i=0;b && i<b.length;i++) {
+                if(!wFORMS.instances[behaviorName]) {
+                    wFORMS.instances[behaviorName] = [b[i]];
+                } else {
+                    wFORMS.removeBehavior(f, behaviorName);
+                    wFORMS.instances[behaviorName].push(b[i]);
+                }
+            }
+        }
+    }
 	if(wFORMS.behaviors.onApplyAll) {
 		wFORMS.behaviors.onApplyAll(f);
 	}
@@ -493,8 +495,8 @@ wFORMS.applyBehaviors = function(f) {
 wFORMS.removeBehavior = function(f, behaviorName) {
 	
 	return null;
-	
-	if(!wFORMS.instances[behaviorName]) 
+
+	if(!wFORMS.instances[behaviorName])
 		return null;
 
 	for(var i=0; i < wFORMS.instances[behaviorName].length; i++) {

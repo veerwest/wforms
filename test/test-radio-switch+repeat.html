@@ -11,13 +11,14 @@
     <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
 	<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
 	<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+    <script type="text/javascript" src="helper/test_helper.js"></script>
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../wforms_switch.js"></script>
 	
 	<script type="text/javascript">
 	
-	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {
+	wFORMS.behaviors['switch'].instance.onApply = function() {
 		setUpPageStatus = 'complete';		
 	} 
 	
@@ -31,34 +32,33 @@
 	
 	function testSwitch(){
 		
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
+		var sInstance = wFORMS.behaviors['switch'].instance;	
 		document.getElementById('switchy1').checked = true;
 		sInstance.run(null, document.getElementById('switchy1'));
 		
-		assertEquals("onstate-y", document.getElementById('testy').className);
+        assertTrue(document.querySelector('#testy').hasClass('onstate'));
 		
 		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat'),'repeat');
-		rInstance.run();			
-		
-		assertEquals("onstate-y", document.getElementById('testy[0]').className);
-		assertEquals("offstate-y", document.getElementById('testy[1]').className);
-		
+		rInstance.run();
+
+        assertTrue(hasClass(document.getElementById('testy[0]').className, 'onstate'));
+        assertTrue(hasClass(document.getElementById('testy[1]').className, 'offstate'));
+
 		document.getElementById('switchy1[1]').checked = true;
-		sInstance.run(null, document.getElementById('switchy1[1]'));
-		assertEquals("onstate-y", document.getElementById('testy[1]').className);
-		
+		sInstance.run();
+        assertTrue(hasClass(document.getElementById('testy[1]').className, 'onstate'));
+
 		document.getElementById('switchy2[1]').checked = true;
-		sInstance.run(null, document.getElementById('switchy2[1]'));
-		assertEquals("offstate-y", document.getElementById('testy[1]').className);
-		
+		sInstance.run();
+        assertTrue(hasClass(document.getElementById('testy[1]').className, 'offstate'));
+
 		document.getElementById('switchy2[0]').checked = true;
-		sInstance.run(null, document.getElementById('switchy2[0]'));
-		assertEquals("offstate-y", document.getElementById('testy[0]').className);
-		
+		sInstance.run();
+        assertTrue(hasClass(document.getElementById('testy[0]').className, 'offstate'));
+
 		document.getElementById('switchy1[1]').checked = true;
-		sInstance.run(null, document.getElementById('switchy1[1]'));
-		assertEquals("onstate-y", document.getElementById('testy[1]').className);
-		
+		sInstance.run();
+        assertTrue(hasClass(document.getElementById('testy[1]').className, 'onstate'));
 	}
 	</script>
 	
@@ -72,7 +72,7 @@
 			<input type="radio" name="switchy" class="switch-y" id="switchy1" />Switch Y ON<br/>
 			<input type="radio" name="switchy" class="" id="switchy2" />Switch Y OFF<br/>
 			
-			<div id="testy" class="offstate-y">Y STATE</div>
+			<div id="testy" class="target" rule="or[#switchy1]">Y STATE</div>
 		</fieldset >
 	
 		<input type="radio" name="testradio[0]" id="testradio" />

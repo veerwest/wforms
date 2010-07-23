@@ -72,6 +72,11 @@ wFORMS.behaviors['switch'] =  {
     applyTo : function(f){
         wFORMS.behaviors['switch'].instance.applyTo(f);
         wFORMS.behaviors['switch'].onApply();
+
+        if(!wFORMS.instances['switch']) {
+			wFORMS.instances['switch'] = wFORMS.behaviors['switch'].instance;
+		}
+
         return wFORMS.behaviors['switch'].instance;
     },
 
@@ -96,9 +101,11 @@ wFORMS.behaviors['switch'] =  {
          Public methods
          */
         this.applyTo = function(f){
-            base2.DOM.bind(f);
             getTargets(f).forEach(function (element){
-                createConditionEntry(element)
+                if(typeof element == 'undefined'){
+                    return;
+                }
+                analyzeRule(element);
             });
         };
 
@@ -111,6 +118,7 @@ wFORMS.behaviors['switch'] =  {
                 for(var i = 0; i < cache.length; i++){
                     if(cache[i].target == element){
                         cache[i].destroy();
+                        cache.splice(i, 1);
                     }
                 }
             });
@@ -133,9 +141,7 @@ wFORMS.behaviors['switch'] =  {
             }
         };
 
-        /*
-            Private methods
-         */
+        /* Private methods */
         var getTargets = function(f){
             return f.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR);
         };
@@ -144,7 +150,7 @@ wFORMS.behaviors['switch'] =  {
          *
          * @param {domElement} target
          */
-        var createConditionEntry = function(target){
+        function analyzeRule(target){
             var rule = target.getAttribute(wFORMS.behaviors['switch'].RULE_ATTRIBUTE_NAME);
 
             if(rule == null){
@@ -158,9 +164,32 @@ wFORMS.behaviors['switch'] =  {
             }
 
             var logic = m[1], // 'and' or 'or'
-                targets = m[4].split('|'); // trigger elements
+                triggersCssSelectors = m[4].split('|'),
+                triggers = []; // trigger elements
 
+            for(var i = 0; i < triggersCssSelectors.length; i++){
+                var cssSelector = triggersCssSelectors[i];
+                var triggerElement = document.querySelector(cssSelector);
+                
+                if(triggerElement == null){ // then the trigger actually does not exist, skip this rule
+                    continue;
+                }
+
+                triggers.push(triggerElement);
+            }
+
+            createConditionEntry(target, triggers, logic);
+        }
+
+        /**
+         * create condition entry, which is used to maintain the triggers' status and trigger-target relationship
+         * @param target
+         * @param triggers
+         * @param logic
+         */
+        function createConditionEntry(target, triggers, logic){
             var conditionEntry = null, temp;
+            wFORMS.standardizeElement(target);
 
             //check whether a condition entry for the target has already existed
             if( !(temp = conditionEntryCacheExisted(target, logic) )){
@@ -173,19 +202,15 @@ wFORMS.behaviors['switch'] =  {
 
             if (conditionEntry == null) return;
 
-            for(var i = 0; i < targets.length; i++){
-                var cssSelector = targets[i];
-                var triggerElement = base2.DOM.Element.querySelector(document, cssSelector);
-
-                if(triggerElement == null){ // then the trigger actually does not exist, skip this rule
-                    continue;
-                }
+            for(var i = 0; i < triggers.length; i++){
+                var triggerElement = triggers[i];
+                wFORMS.standardizeElement(triggerElement);
 
                 //generate event handler for triggerElement( store it now for later destruction purpose)
-                var eventHandler = generateEventHandlerForTrigger(cssSelector, triggerElement, conditionEntry);
+                var eventHandler = generateEventHandlerForTrigger(triggerElement, conditionEntry);
 
                 //add trigger to condition entry
-                var triggerExisted = conditionEntry.addTrigger(cssSelector, triggerElement, eventHandler);
+                var triggerExisted = conditionEntry.addTrigger(triggerElement, eventHandler);
 
                 if(!triggerExisted){
                     //bind event handler to each target
@@ -195,43 +220,10 @@ wFORMS.behaviors['switch'] =  {
 
             //to keep consistency of page layout, run and synchronize the condition entry and the page presentation.
             conditionEntry.run();
-        };
-
-        function setupTrigger(element, eventHandler){
-            bindEventHandlerToTrigger[getTriggerElementType(element)](element, eventHandler)    
         }
 
-        /**
-         *
-         * @param element {domElement}
-         * @return {String} return a string as the the following possible values:
-         *  'a'
-         *  'input.checkbox'
-         *  'input.radio'
-         *  'input.text'
-         *  'textarea'
-         *  'option'
-         *  'other'
-         */
-        function getTriggerElementType(element){
-            var tagName = element.tagName.toLowerCase();
-            switch(element.tagName.toLowerCase()){
-                case 'input':
-                    if(element.type == 'radio'){
-                        return 'input.radio'
-                    }else if(element.type == 'checkbox'){
-                        return 'input.checkbox'
-                    }else if(element.type == 'text'){
-                        return 'input.text'
-                    }
-                    break;
-                case 'option':
-                case 'textarea':
-                case 'a':
-                    return tagName;
-                default:
-                    return 'other';
-            }
+        function setupTrigger(element, eventHandler){
+            bindEventHandlerToTrigger[wFORMS.helpers.getElementType(element)](element, eventHandler)
         }
 
         /**
@@ -239,7 +231,7 @@ wFORMS.behaviors['switch'] =  {
          * @param  element {domElement} trigger html element
          */
         function reportTriggerStatusByElement(element){
-            var elementType = getTriggerElementType(element);
+            var elementType = wFORMS.helpers.getElementType(element);
             return reportTriggerStatusByElementType(elementType, element);
         }
 
@@ -249,9 +241,9 @@ wFORMS.behaviors['switch'] =  {
         function reportTriggerStatusByElementType(elementType, elem){
             switch(elementType){
                 case 'a':
-                    var status = base2.DOM.Element.getAttribute(elem, 'status');
+                    var status = elem.getAttribute('status');
                     if(status == null){
-                        base2.DOM.Element.setAttribute(elem, 'status', 'off');
+                        elem.setAttribute('status', 'off');
                         return false;
                     }
                     return status == 'on';
@@ -276,44 +268,137 @@ wFORMS.behaviors['switch'] =  {
          * @param triggerElement {domElement} trigger dom element
          * @param conditionEntry
          */
-        function generateEventHandlerForTrigger(cssSelector, triggerElement, conditionEntry){
-            var elementType = getTriggerElementType(triggerElement);
+        function generateEventHandlerForTrigger(triggerElement, conditionEntry){
+            var elementType = wFORMS.helpers.getElementType(triggerElement);
+            var context = {
+               dom: triggerElement,
+               condition_entry: conditionEntry
+            };
             switch(elementType){
                 case 'a':
                     return base2.JavaScript.Function2.bind(function(){
-                        var status = base2.DOM.Element.getAttribute(this['dom'], 'status');
+                        var status = this['dom'].getAttribute('status');
                         if(status == null){
                             status = false;
                         }else{
                             status = (status == 'on');
                         }
-                        base2.DOM.Element.setAttribute(this['dom'], 'status', !status ? 'on' : 'off');
-                        this['condition_entry'].updateEntry(this['trigger_css_selector'])
-                    }, {
-                       dom: triggerElement,
-                       trigger_css_selector: cssSelector,
-                       condition_entry: conditionEntry
-                    });
+                        this['dom'].setAttribute('status', !status ? 'on' : 'off');
+                        this['condition_entry'].updateEntry(this['dom'])
+                    }, context);
                 default:
                     return base2.JavaScript.Function2.bind(function(){
-                        this['condition_entry'].updateEntry(this['trigger_css_selector'])
-                    }, {
-                       trigger_css_selector: cssSelector,
-                       condition_entry: conditionEntry
-                    });
+                        this['condition_entry'].updateEntry(this['dom']);
+                    }, context);
             }
         }
+
+        /**
+         * Apply the switch rules in originalNode to newNode, originalNode and newNode must have same tree structure.
+         * @param originalNode
+         * @param newNode
+         */
+        function cloneSection(originalNode, newNode){
+            var result = originalNode.querySelectorAll(wFORMS.behaviors['switch'].SELECTOR);
+            var originalTargets = [];
+            result.forEach(function(element){
+                originalTargets.push(element);
+            });
+
+            //if originalNode is also a target
+            for(var i = 0, l = cache.length; i < l; i++){
+                if(cache[i].target == originalNode){
+                    originalTargets.push(originalNode);
+                    break;
+                }
+            }
+            
+            result = buildTargetTriggersMapping(originalTargets);
+            var mapping = result[0], triggersSet = result[1], targetSet = result[2];
+            //dual-walk dom tree
+            traverseDom(originalNode, newNode);
+
+            function traverseDom(originalNode, newNode){
+                if(base2.JavaScript.Array2.contains(targetSet, originalNode)){ //if current node appears in the targets list
+                    replaceTarget(originalNode, newNode);
+                }
+
+                if(base2.JavaScript.Array2.contains(triggersSet, originalNode)){//if current node appears in the triggers list
+                    replaceTrigger(originalNode, newNode);
+                }
+                var originalChildren = originalNode.childNodes,
+                    newChildren = newNode.childNodes;
+
+                for(var i = 0, l = originalChildren.length; i < l; i++){
+                    traverseDom(originalChildren[i], newChildren[i]);
+                }
+            }
+
+            function replaceTarget(originalNode, newNode){
+                for(var i = 0, l = mapping.length; i < l ; i++){
+                    if(mapping[i].target == originalNode){
+                        mapping[i].target = newNode;
+                        break;
+                    }
+                }
+            }
+
+            function replaceTrigger(originalNode, newNode){
+                for(var i = 0, l = mapping.length; i < l ; i++){
+                    var triggers = mapping[i].triggers;
+                    for(var j = 0, m = triggers.length; j < m; j++){
+                        if(triggers[j] == originalNode){
+                            triggers[j] = newNode;
+                        }
+                    }
+                }
+            }
+
+            //realize switch behavior according to mapping
+            for(var i = 0, l = mapping.length; i < l; i++){
+                createConditionEntry(mapping[i].target, mapping[i].triggers, mapping[i].logic);
+            }
+        }
+
+        function buildTargetTriggersMapping(targets){
+            var mapping = [], triggersSet = [], targetsSet = [];
+
+            for(var h = 0, k = targets.length; h < k; h++){
+                var element = targets[h];
+                var entry = {target: element, triggers: [], logic: null};
+                for(var i = 0, l = cache.length; i < l; i++){
+                    if(cache[i].target == element){
+                       var triggers = cache[i].triggers;
+                       entry.logic = cache[i].conditionType;
+                       for(var j = 0, m = triggers.length; j < m; j++){
+                           var triggerElement = triggers[j]['dom'];
+                            entry.triggers.push(triggerElement);
+                            if(!base2.JavaScript.Array2.contains(triggersSet, triggerElement)){
+                               triggersSet.push(triggerElement);
+                            }
+                       }
+                       break;
+                    }
+                }
+                targetsSet.push(element);
+                mapping.push(entry);
+            }
+
+            return [mapping, triggersSet, targetsSet];
+        }
+
+        wFORMS.hooks.addHook('repeat', 'repeat', cloneSection);
 
         /**
          * This function group defines how to bind event handler to different types of html elements.
          */
         var bindEventHandlerToTrigger = {
             'a' : function(elem, eventHandler){
-                base2.DOM.Element.addEventListener(elem, 'click', eventHandler, false);
+                elem.addEventListener('click', eventHandler, false);
             },
 
             'input.checkbox' : function(elem, eventHandler){
-                base2.DOM.Element.addEventListener(elem, 'click', eventHandler, false);
+                elem.addEventListener('click', eventHandler, false);
             },
 
             'input.radio' : function(elem, eventHandler){
@@ -323,15 +408,18 @@ wFORMS.behaviors['switch'] =  {
                     node = node.parentNode;
                 }
 
-                var radioGroup = base2.DOM.Element.querySelectorAll(node, "input[name=\""+elem.name+"\"]");
+                var radioGroup = node.querySelectorAll("input[name=\""+elem.name+"\"]");
 
                 radioGroup.forEach(function(element){
-                    base2.DOM.Element.addEventListener(element, 'click', eventHandler, false);
+                    if(!element.addEventListener){
+                        wFORMS.standardizeElement(element);
+                    }
+                    element.addEventListener('click', eventHandler, false);
                 });
             },
 
             'input.text' : function(elem, eventHandler){
-                base2.DOM.Element.addEventListener(elem, 'change', eventHandler, false);
+                elem.addEventListener('change', eventHandler, false);
             },
 
             'option' : function(elem, eventHandler){
@@ -340,12 +428,13 @@ wFORMS.behaviors['switch'] =  {
                 while(node.tagName.toLowerCase() != 'select'){
                     node = node.parentNode;
                 }
+                wFORMS.standardizeElement(node);
                 //so node is the parent select object
-                base2.DOM.Element.addEventListener(node, 'change', eventHandler, false);
+                node.addEventListener('change', eventHandler, false);
             },
 
             'textarea' : function(elem, eventHandler){
-                base2.DOM.Element.addEventListener(elem, 'keypress', eventHandler, false);
+                elem.addEventListener('keypress', eventHandler, false);
             },
 
             'other' : function(elem){
@@ -356,10 +445,10 @@ wFORMS.behaviors['switch'] =  {
         //for destruction process
         var removeEventHandlerFromTrigger = {
             'a' : function(elem, eventHandler){
-                base2.DOM.Element.removeEventListener(elem, 'click', eventHandler);
+                elem.removeEventListener('click', eventHandler);
             },
             'input.checkbox' : function(elem, eventHandler){
-                base2.DOM.Element.removeEventListener(elem, 'click', eventHandler);
+                elem.removeEventListener('click', eventHandler);
             },
 
             'input.radio' : function(elem, eventHandler){
@@ -369,15 +458,15 @@ wFORMS.behaviors['switch'] =  {
                     node = node.parentNode;
                 }
 
-                var radioGroup = base2.DOM.Element.querySelectorAll(node, "input[name=\""+elem.name+"\"]");
+                var radioGroup = node.querySelectorAll("input[name=\""+elem.name+"\"]");
 
                 radioGroup.forEach(function(element){
-                    base2.DOM.Element.removeEventListener(element, 'click', eventHandler, false);
+                    element.removeEventListener('click', eventHandler, false);
                 });
             },
 
             'input.text' : function(elem, eventHandler){
-                base2.DOM.Element.removeEventListener(elem, 'change', eventHandler);
+                elem.removeEventListener('change', eventHandler);
             },
 
             'option' : function(elem, eventHandler){
@@ -387,11 +476,11 @@ wFORMS.behaviors['switch'] =  {
                     node = node.parentNode;
                 }
                 //so node is the parent select object
-                base2.DOM.Element.removeEventListener(node, 'change', eventHandler);
+                node.removeEventListener('change', eventHandler);
             },
 
             'textarea' : function(elem, eventHandler){
-                base2.DOM.Element.removeEventListener(elem, 'keypress', eventHandler);
+                elem.removeEventListener('keypress', eventHandler);
             },
 
             'other' : function(elem, eventHandler){
@@ -439,11 +528,17 @@ wFORMS.behaviors['switch'] =  {
             this.conditionType = conditionType;
 
             //triggers cache
-            var triggers = (this.triggers = {});
+            var triggers = (this.triggers = []);
 
-            this.updateEntry = function(trigger_css_selector){
-                var triggerEntry = this.triggers[trigger_css_selector];
+            this.updateEntry = function(triggerElement){
+                var triggerEntry = null;
 
+                for(var i = 0; i < this.triggers.length; i++){
+                    if(this.triggers[i]['dom'] == triggerElement){
+                        triggerEntry = this.triggers[i];
+                    }
+                }
+                
                 if(triggerEntry == null){
                     return;
                 }
@@ -452,8 +547,8 @@ wFORMS.behaviors['switch'] =  {
             };
 
             this.updateEntries = function(){
-                for(var key in this.triggers){
-                    var triggerEntry = this.triggers[key];
+                for(var i = 0; i < this.triggers.length; i++){
+                    var triggerEntry = this.triggers[i];
                     triggerEntry.status = reportTriggerStatusByElement(triggerEntry['dom']);
                 }
                 this.run();
@@ -464,17 +559,17 @@ wFORMS.behaviors['switch'] =  {
              * @param triggerElement {domElement} trigger
              * @return whether the trigger has already registered.
              */
-            this.addTrigger = function(cssSelector, triggerElement, eventHandler){
+            this.addTrigger = function(triggerElement, eventHandler){
                 //check whether the trigger has already existed
                 if(triggerElementRegistered(triggerElement)){
                     return true; // then skip
                 }
 
-                this.triggers[cssSelector] = {
+                this.triggers.push({
                     'dom':  triggerElement,
                     'status': reportTriggerStatusByElement(triggerElement),
                     'event_handler': eventHandler
-                };
+                });
                 
                 return false;
             };
@@ -483,24 +578,27 @@ wFORMS.behaviors['switch'] =  {
                 if(logic[this.conditionType]()){ // if conditional rules meet
                     target.addClass(wFORMS.behaviors['switch'].CSS_ONSTATE);
                     target.removeClass(wFORMS.behaviors['switch'].CSS_OFFSTATE);
+                    wFORMS.hooks.triggerHook('switch', 'switch_on', target);
                 }else{
                     target.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE);
                     target.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE);
+                    wFORMS.hooks.triggerHook('switch', 'switch_off', target);
                 }
             };
 
             this.destroy = function(){
-                for(var key in this.triggers){
-                    removeEventHandlerFromTrigger[getTriggerElementType(this.triggers[key].dom)](this.triggers[key].dom,
-                            this.triggers[key].event_handler);
+                for(var i = 0; i < this.triggers.length; i++){
+                    var triggerEntry = this.triggers[i];
+                    removeEventHandlerFromTrigger[wFORMS.helpers.getElementType(triggerEntry['dom'])](triggerEntry['dom'],
+                            triggerEntry['event_handler']);
                 }
                 this.triggers = null;
             };
 
             var logic = {
                 'and': function(){
-                    for(var key in triggers){
-                        if(!triggers[key].status){
+                    for(var i = 0; i < triggers.length; i++){
+                        if(!triggers[i].status){
                             return false;
                         }
                     }
@@ -508,8 +606,8 @@ wFORMS.behaviors['switch'] =  {
                 },
 
                 'or': function(){
-                    for(var key in triggers){
-                        if(triggers[key].status){
+                    for(var i = 0; i < triggers.length; i++){
+                        if(triggers[i].status){
                             return true;
                         }
                     }
@@ -518,13 +616,47 @@ wFORMS.behaviors['switch'] =  {
             };
 
             function triggerElementRegistered(triggerElement){
-                for(var key in triggers){
-                    if (triggers[key]['dom'] == triggerElement){
+                for(var i = 0; i < triggers.length; i++){
+                    if(triggers[i]['dom'] == triggerElement){
                         return true;
                     }
-                }
+                }              
                 return false;
             }
         }
 	}    
+};
+
+/**
+     *
+     * @param element {domElement}
+     * @return {String} return a string as the the following possible values:
+     *  'a'
+     *  'input.checkbox'
+     *  'input.radio'
+     *  'input.text'
+     *  'textarea'
+     *  'option'
+     *  'other'
+     */
+wFORMS.helpers.getElementType = function(element){
+        var tagName = element.tagName.toLowerCase();
+        switch(element.tagName.toLowerCase()){
+            case 'input':
+                if(element.type == 'radio'){
+                    return 'input.radio'
+                }else if(element.type == 'checkbox'){
+                    return 'input.checkbox'
+                }else if(element.type == 'text'){
+                    return 'input.text'
+                }
+                break;
+            case 'option':
+            case 'textarea':
+            case 'a':
+            case 'select':
+                return tagName;
+            default:
+                return 'other';
+        }
 };

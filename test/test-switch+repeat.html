@@ -1,274 +1,194 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>	
-	<title>wForms 3.0 - Switch Behavior Test Suite</title>
-	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
-	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
-	
-	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
-	
-	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
-    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+<head>
+    <title>wForms 3.0 - Switch Behavior Test Suite</title>
+    <meta name="Description"
+          content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills."/>
+    <meta http-equiv="Keywords"
+          content="form, web form, html form, online form, wForms, input validation, field validation, javascript library"/>
+
+    <script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+    <link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet"/>
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet"/>
     <style type="text/css">
- 		.offstate-z { display:none;}
- 		.offstate-y { display:none;}
-	</style> 
-	<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
-	<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
-	<script type="text/javascript" src="../wforms_core.js"></script>
-	<script type="text/javascript" src="../wforms_repeat.js"></script>	
-	<script type="text/javascript" src="../wforms_switch.js"></script>
-	
-	<script type="text/javascript">
-	
-	wFORMS.behaviors['switch'].instance.prototype.onApply = function() {
-		setUpPageStatus = 'complete';		
-	} 
-	
-	function setUpPage() {}
-  
-  	function setUp() {
-  		
-  	}
-	
-	function tearDown() {}
-	
-	function testApplyTo() {
-		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat'),'repeat');
-		// repeat
-		rInstance.run();
-		// turn switch on
-		document.getElementById('switcha[1]').checked = true;	
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
-		sInstance.run(null, document.getElementById('switcha[1]'));
-		// check
-		assertEquals("onstate-a", document.getElementById('casea[1]').className);
-		assertEquals('targets a',2, sInstance.cache['a'].targets.length);		
-	}
-	function testSwitchCacheInvalidation() {
-		
-		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat3'),'repeat');
-		// repeat
-		rInstance.run();
-		// turn switch on
-		document.getElementById('switchc').checked = true;	
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');	
-		sInstance.run(null, document.getElementById('switchc'));
-		
-		// check
-		assertEquals("onstate-c", document.getElementById('casec[0]').className);
-		assertEquals("onstate-c", document.getElementById('casec[1]').className);
-		
-		// check cache
-		var expected = { a:'',b:'',c:'',d:'',e:'',y:'',z:'' };
-		for(var i in sInstance.cache) {
-			assertEquals("string", typeof expected[i]);
-			delete expected[i];			
-		}
-		var i=0;
-		for(i in expected);		
-		assertEquals(0, i);
-		
-		assertEquals('targets b',1, sInstance.cache['b'].targets.length);
-		assertEquals('b',1, sInstance.cache['b'].triggers.length);
-		assertEquals('targets c',2, sInstance.cache['c'].targets.length);
-		assertEquals('c',1, sInstance.cache['c'].triggers.length);
-		
-		rInstance.run();
-		assertEquals('targets c',3, sInstance.cache['c'].targets.length);
-		assertEquals('c',1, sInstance.cache['c'].triggers.length);
-		
-		rInstance.run();
-		assertEquals('targets c',4, sInstance.cache['c'].targets.length);
-		assertEquals('c',1, sInstance.cache['c'].triggers.length);
-	}
-	
-	function testSwitchScope(){
-		
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform'),'switch');
-		
-			
-		document.getElementById('switchd').checked = true;
-		sInstance.run(null, document.getElementById('switchd'));
-		assertEquals("repeat onstate-d", document.getElementById('cased').className);
-		
-		var rInstance = wFORMS.getBehaviorInstance(document.getElementById('cased'),'repeat');
-		rInstance.run();
-		
-		assertEquals(2,sInstance.cache.d.targets.length);
-		
-		document.getElementById('switche[0][0]').checked = true;
-		sInstance.run(null, document.getElementById('switche[0][0]'));
-		
-		assertEquals("onstate-e", document.getElementById('casee[0][0]').className);
-		assertEquals("offstate-e", document.getElementById('casee[0][1]').className);
-	
-		
-			
-		document.getElementById('switchd').checked = false;
-		sInstance.run(null, document.getElementById('switchd'));
-		assertEquals("repeat offstate-d", document.getElementById('cased[0][0]').className);
-		assertEquals("removeable offstate-d", document.getElementById('cased[0][1]').className);
-		
-		
-			
-	}
-	
-	function testSwitchMerge() {
+        .offstate-z {
+            display: none;
+        }
 
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('testform2'),'switch');	
+        .offstate-y {
+            display: none;
+        }
+    </style>
+    <script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
+    <script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+    <script type="text/javascript" src="helper/test_helper.js"></script>
+    <script type="text/javascript" src="../wforms_core.js"></script>
+    <script type="text/javascript" src="../wforms_repeat.js"></script>
+    <script type="text/javascript" src="../wforms_switch.js"></script>
 
-		var f  = document.getElementById('testform2');
-		var d2 = document.getElementById('div2');
-		
-		// check cache
-		var expected = { e:''};
-		for(var i in sInstance.cache) {
-			assertEquals("string", typeof expected[i]);
-			delete expected[i];			
-		}
-		var i=0;
-		for(i in expected);		
-		assertEquals(0, i);
-			
-		d2 = f.appendChild(d2);
-		wFORMS.behaviors['switch'].applyTo(d2);
-		
-		// check cache
-		var expected = { e:'', f:''};
-		for(var i in sInstance.cache) {
-			assertEquals("string", typeof expected[i]);
-			delete expected[i];			
-		}
-		var i=0;
-		for(i in expected);		
-		assertEquals(0, i);
+    <script type="text/javascript">
 
-		
-		assertEquals('e',1, sInstance.cache['e'].targets.length);
-		assertEquals('e',1, sInstance.cache['e'].triggers.length);
-		assertEquals('f',1, sInstance.cache['f'].targets.length);
-		assertEquals('f',1, sInstance.cache['f'].triggers.length);
-		
-		var d4 = document.getElementById('div4');
-		d4 = f.appendChild(d4);
-		wFORMS.behaviors['switch'].applyTo(d4);
-		
-		// check unchanged cache
-		var expected = { e:'', f:''};
-		for(var i in sInstance.cache) {
-			assertEquals("string", typeof expected[i]);
-			delete expected[i];			
-		}
-		var i=0;
-		for(i in expected);		
-		assertEquals(0, i);
+        wFORMS.behaviors['switch'].onApply = function() {
+            setUpPageStatus = 'complete';
+        }
 
-		
-		assertEquals('e',1, sInstance.cache['e'].targets.length);
-		assertEquals('e',1, sInstance.cache['e'].triggers.length);
-		assertEquals('f',1, sInstance.cache['f'].targets.length);
-		assertEquals('f',1, sInstance.cache['f'].triggers.length);
-		
-	}
-	
-	function testRepeatedRadioSwitch(){
-		var sInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_radio-D[0]'),'repeat');
-	
-	try{
-		var parent = base2.DOM.bind(document.getElementById('tfa_radio-D[0]').parentNode);
-		var count = parent.querySelectorAll("div").length;		//Count number of repeated sections
-			assertEquals(1,count);	
-			
-		sInstance.run(null, document.getElementById('tfa_radio-D[0]'));
-		sInstance.onRemoveLinkClick(null,document.getElementById('tfa_radio-D[1]-wfDL'));
-		sInstance.run(null, document.getElementById('tfa_radio-D[0]'));
-		//Add -remove -add cycle
-		
-		count = parent.querySelectorAll("div").length;
-			assertEquals(2,count);	//Verify that two sections now exist.
-		
-	}catch(err){
-		assertEquals("Add/remove/add fails for radio buttons",true,false);
-		//force failure if error thrown (as from elem.form is null)
-	}
-	
-	}
-	</script>
-	
+        function setUpPage() {
+        }
+
+        function setUp() {
+
+        }
+
+        function tearDown() {
+        }
+
+        function testApplyTo() {
+            var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat'), 'repeat');
+            //		// repeat
+            rInstance.run();
+            // turn switch on
+            var sInstance = wFORMS.behaviors['switch'].instance;
+
+            document.getElementById('switcha[1]').checked = true;
+            sInstance.run();
+
+            assertTrue(hasClass(document.getElementById('casea[1]').className, 'onstate'));
+
+            document.getElementById('switchy1[1]').checked = true;
+            sInstance.run();
+            //		// check
+            assertTrue(hasClass(document.getElementById('testy[1]').className, 'onstate'));
+        }
+
+        function testSharedTrigger() {
+
+            var rInstance = wFORMS.getBehaviorInstance(document.getElementById('testrepeat3'), 'repeat');
+            // repeat
+            rInstance.run();
+            // turn switch on
+            document.getElementById('switchc').checked = true;
+            var sInstance = wFORMS.behaviors['switch'].instance;
+            sInstance.run();
+
+            // check
+            assertTrue(hasClass(document.getElementById('testrepeat3[0]').className, 'onstate'));
+            assertTrue(hasClass(document.getElementById('testrepeat3[1]').className, 'onstate'));
+        }
+
+        function testSeperatedTriggers() {
+
+            var sInstance = wFORMS.behaviors['switch'].instance;
+            ;
+
+
+            document.getElementById('switchd').checked = true;
+            sInstance.run();
+            assertTrue(hasClass(document.getElementById('cased').className, 'onstate'));
+
+            var rInstance = wFORMS.getBehaviorInstance(document.getElementById('cased'), 'repeat');
+            rInstance.run();
+
+            document.getElementById('switche[0][0]').checked = true;
+            sInstance.run();
+
+            assertTrue(hasClass(document.getElementById('casee[0][0]').className, 'onstate'));
+            assertTrue(hasClass(document.getElementById('casee[0][1]').className, 'offstate'));
+       
+            //		document.getElementById('switchd').checked = false;
+            //		sInstance.run(null, document.getElementById('switchd'));
+            //		assertEquals("repeat offstate-d", document.getElementById('cased[0][0]').className);
+            //		assertEquals("removeable offstate-d", document.getElementById('cased[0][1]').className);
+        }
+
+        function testRepeatedRadioSwitch() {
+            var sInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_radio-D[0]'), 'repeat');
+
+            try {
+                var parent = base2.DOM.bind(document.getElementById('tfa_radio-D[0]').parentNode);
+                var count = parent.querySelectorAll("div").length;		//Count number of repeated sections
+                assertEquals(1, count);
+
+                sInstance.run(null, document.getElementById('tfa_radio-D[0]'));
+                sInstance.onRemoveLinkClick(null, document.getElementById('tfa_radio-D[1]-wfDL'));
+                sInstance.run(null, document.getElementById('tfa_radio-D[0]'));
+                //Add -remove -add cycle
+
+                count = parent.querySelectorAll("div").length;
+                assertEquals(2, count);	//Verify that two sections now exist.
+
+            } catch(err) {
+                assertEquals("Add/remove/add fails for radio buttons", true, false);
+                //force failure if error thrown (as from elem.form is null)
+            }
+
+        }
+    </script>
+
 </head>
 
 <body class="wForm">
-	<form id="testform">
-		<fieldset class="repeat" id="testrepeat">
-			<input type="checkbox" class="switch-a" id="switcha" />Switch A<br/>
-			<div id="casea" class="offstate-a">This is A state</div>
-			
-			<input type="radio" name="switchy" class="switch-y" id="switchy1" />Switch Y ON<br/>
-			<input type="radio" name="switchy" class="" id="switchy2" />Switch Y OFF<br/>
-			
-			<div id="testy" class="offstate-y">Y STATE</div>
-		</fieldset >
-		<hr/>
-		<input type="checkbox" class="switch-z" id="switchz" />Switch Z<br/>
-	
-		<div class="offstate-z">
-			<fieldset  class="repeat" id="testrepeat2">
-				<select id="switchb">
-					<option>--</option>
-					<option class="switch-b" >Switch B</option>
-				</select>
-				<div id="caseb" class="offstate-b">This is B state</div>
-			</fieldset>
-		</div>
-		<hr/>
-		<input type="checkbox" class="switch-c" id="switchc" />Switch C<br/>
-		<fieldset  class="repeat" id="testrepeat3">
-			<div id="casec" class="offstate-c">This is C state</div>
-		</fieldset>
-		<hr/>
-		
-		<fieldset  class="repeat" id="testrepeat4">
-			<input type="checkbox" class="switch-d" id="switchd" />Switch D<br/>
-			<fieldset id="cased" class="offstate-d repeat">
-				<input type="checkbox" class="switch-e" id="switche" />Switch E<br/>
-				<div id="casee" class="offstate-e">This is E state</div>
-			</fieldset>
-		</fieldset>
-	</form>
-	<a href="#" onclick='testSwitchScope(); return false;'>test scope</a>
-	
-	
-	
-	<form id="testform2">
-	
-		<input type="checkbox" class="switch-e" id="switche" />Switch E<br/>
-		<div id="div1" class="offstate-e">offstate-e</div>
-	</form>
+<form id="testform">
+    <fieldset class="repeat" id="testrepeat">
+        <input type="checkbox" class="switch-a" id="switcha"/>Switch A<br/>
 
-	<div id="div2">
-		<input type="checkbox" class="switch-f" id="switchf" />Switch F<br/>
-		<div id="div3" class="offstate-f">offstate-f</div>
-	</div>
-	
-	<div id="div4">
-		Nothing
-	</div>
+        <div id="casea" class="target" rule="or[#switcha]">This is A state</div>
 
-	<a href="#" onclick='testSwitchMerge(); return false;'>test merge</a>
-	
-	
-	<form id="testform3">
-	<fieldset class="" id="tfa_0693953105672" >
-		<div class="repeat oneField" id="tfa_radio-D[0]" >
+        <input type="radio" name="switchy" class="switch-y" id="switchy1"/>Switch Y ON<br/>
+        <input type="radio" name="switchy" class="" id="switchy2"/>Switch Y OFF<br/>
+
+        <div id="testy" class="target" rule="or[#switchy1]">Y STATE</div>
+    </fieldset>
+    <hr/>
+    <input type="checkbox" class="switch-z" id="switchz"/>Switch Z<br/>
+
+    <div class="offstate-z">
+        <fieldset class="repeat" id="testrepeat2">
+            <select id="switchb">
+                <option>--</option>
+                <option class="switch-b">Switch B</option>
+            </select>
+
+            <div id="caseb" class="offstate-b">This is B state</div>
+        </fieldset>
+    </div>
+    <hr/>
+    <input type="checkbox" class="switch-c" id="switchc"/>Switch C<br/>
+    <fieldset class="repeat target" id="testrepeat3" rule="or[#switchc]">
+        <div id="casec" class="offstate-c">This is C state</div>
+    </fieldset>
+    <hr/>
+
+    <fieldset class="repeat" id="testrepeat4">
+        <input type="checkbox" class="switch-d" id="switchd"/>Switch D<br/>
+        <fieldset id="cased" class="offstate-d repeat target" rule="or[#switchd]">
+            <input type="checkbox" class="switch-e" id="switche"/>Switch E<br/>
+
+            <div id="casee" class="offstate-e target" rule="or[#switche]">This is E state</div>
+        </fieldset>
+    </fieldset>
+</form>
+<a href="#" onclick='testSwitchScope(); return false;'>test scope</a>
+
+<form id="testform3">
+    <fieldset class="" id="tfa_0693953105672">
+        <div class="repeat oneField" id="tfa_radio-D[0]">
 			<span class="choices" id="tfa_radio[0]">
-				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_one[0]" class="switch-a" value="tfa_one" rel=" wfHandled"/><label class="postField" for="tfa_one[0][0]">one</label></span>
-				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_two[0]" class="" value="tfa_two" rel=" wfHandled"/><label class="postField" for="tfa_two[0][0]">two</label></span>
-				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_three[0]" class="" value="tfa_three" rel=" wfHandled"/><label class="postField" for="tfa_three[0][0]">three</label></span>
+				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_one[0]" class="switch-a"
+                                               value="tfa_one" rel=" wfHandled"/><label class="postField"
+                                                                                        for="tfa_one[0][0]">one</label></span>
+				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_two[0]" class=""
+                                               value="tfa_two" rel=" wfHandled"/><label class="postField"
+                                                                                        for="tfa_two[0][0]">two</label></span>
+				<span class="oneChoice"><input type="radio" name="tfa_radio[0][0]" id="tfa_three[0]" class=""
+                                               value="tfa_three" rel=" wfHandled"/><label class="postField"
+                                                                                          for="tfa_three[0][0]">three</label></span>
 			</span>
-		</div>
-	</fieldset>
-	</form>
+        </div>
+    </fieldset>
+</form>
+
 </body>
 </html>
 

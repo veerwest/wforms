@@ -23,9 +23,10 @@ modules = (
 	'wforms_hint.js',
 	'wforms_paging.js',
 	'wforms_repeat.js',
-	'wforms_switch.js',
+    'wforms_switch.js',
+    'wforms_switch_clear.js',
 	'wforms_validation.js',
-	'wforms_calculation.js'
+    'wforms_calculation.js'
 )
 
 compilation = []
