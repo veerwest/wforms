@@ -91,6 +91,8 @@ wFORMS.behaviors.paging = {
 		CAPTION_UNLOAD : 'Any data entered on ANY PAGE of this form will be LOST.'
 	},
 
+    HISTORY_UPDATE_CHECK_INTERVAL: 100,
+    
 	/**
      * Indicates that form should be validated on Next clicked
      * TODO		Possible refactor functionality with validation
@@ -118,8 +120,12 @@ wFORMS.behaviors.paging = {
 	 * custom 'Page Change' event handler (either next or previous) (to be overridden) 
      * @param	{HTMLElement}	elem	new page
 	 */
-	 onPageChange: function() {}, 
-	   
+	 onPageChange: function() {},
+
+    history: [],
+    currentHistoryIndex: -1,
+    intervalCheckIdentifier: null,
+
 	/**
 	 * Creates new instance of the behavior
      * @param	{HTMLElement}	f	Form element
@@ -202,6 +208,9 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 			window.onbeforeunload = function() { 
 				if(b.behavior.warnOnUnload)
 					return b.behavior.MESSAGES.CAPTION_UNLOAD;
+                if(wFORMS.behaviors.paging.intervalCheckIdentifier != null){
+                    clearInterval(wFORMS.behaviors.paging.intervalCheckIdentifier);
+                }
 				// don't return anything to skip the warning 
 			};
 		}
@@ -210,7 +219,62 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 		// intercept the submit event
 		base2.DOM.Element.addEventListener(f, 'submit', function (e) {b.onSubmit(e, b)});	
 	}
+
+    if(wFORMS.behaviors.paging.historyFrameWindow == null){
+        wFORMS.behaviors.paging.establishNavigationMonitor();
+    }
+
 	return b;
+}
+
+wFORMS.behaviors.paging.establishNavigationMonitor = function(){
+    //establish interval checking for hidden frame changes
+    wFORMS.behaviors.paging.intervalCheckIdentifier = setInterval(function(){
+        wFORMS.behaviors.paging.synchronizeHistory();
+    }, wFORMS.behaviors.paging.HISTORY_UPDATE_CHECK_INTERVAL);
+}
+
+wFORMS.behaviors.paging.synchronizeHistory = function(){
+    var history = wFORMS.behaviors.paging.history;
+    var currentHistory = wFORMS.behaviors.paging.currentHistoryIndex;
+
+    var  urlIndicatedHistory;
+
+    //extract the history index
+    var m = /#(\d+)/.exec(window.location.href);
+    if(!m){
+        urlIndicatedHistory = -1; // initial history index
+    }else{
+        urlIndicatedHistory = parseInt(m[1]);
+    }
+
+    if( urlIndicatedHistory == currentHistory){ // already synchronized
+        return
+    }
+
+    var increasement =  urlIndicatedHistory > currentHistory ? 1 : -1; 
+    //walk through the difference
+    //todo: delay execution!
+    var i = currentHistory, bInstance, entry, goToIndex;
+    while(true){
+        if(increasement > 0){//move history forward
+            entry = history[i + 1];
+            if(entry == null){ // if history is lost from multi-page navigations(has ever left current page before)
+                break;
+            }
+            goToIndex = entry.newIndex;
+        }else{//move history backward
+            entry = history[i];
+            goToIndex = entry.oldIndex;
+        }
+        bInstance = wFORMS.getBehaviorInstance(entry.target, 'paging');
+        bInstance.activatePage(goToIndex);
+        i+=increasement;
+        wFORMS.behaviors.paging.currentHistoryIndex = i;
+        if(i < 0 || i ==  urlIndicatedHistory){
+            break;
+        }
+    }
 }
 
 /**
@@ -279,9 +343,7 @@ wFORMS.behaviors.paging.getPageIndex = function(elem){
 
 		index = parseInt(index);
 		return !isNaN(index) ? index : false;
-
 	}
-
 	return false;
 }
 
@@ -641,15 +703,40 @@ wFORMS.behaviors.paging.instance.prototype.findPreviousPage = function(index){
 	return p ? p : false;
 }
 
-
-
-
-
 /**
  * Executes the behavior
  * @param {event} e 
  * @param {domElement} element
  */
 wFORMS.behaviors.paging.instance.prototype.run = function(e, element){
-	this.activatePage(element.getAttribute(wFORMS.behaviors.paging.ATTR_INDEX));
+    var history = wFORMS.behaviors.paging.history;
+    var pageIndex = element.getAttribute(wFORMS.behaviors.paging.ATTR_INDEX);
+    wFORMS.behaviors.paging.currentHistoryIndex ++;
+    var entry = {
+        target: this.target,
+        oldIndex: this.currentPageIndex,
+        newIndex: parseInt(pageIndex)
+    }
+    if(wFORMS.behaviors.paging.currentHistoryIndex == history.length){
+        history.push(entry);
+    }else{
+        history[wFORMS.behaviors.paging.currentHistoryIndex] = entry;
+    }
+
+    window.location = wFORMS.behaviors.paging.generateHashUrl( wFORMS.behaviors.paging.currentHistoryIndex );
+    
+	this.activatePage(pageIndex);
+};
+
+wFORMS.behaviors.paging.generateHashUrl = function(frameIndex){
+    var r = /(\#.*)($|\?)/;
+    var url = window.location.href;
+    if(r.exec(url)){
+        url = url.replace(r, function($0, $1, $2){
+            return '#' + frameIndex + $2;
+        })
+    }else{
+        url += '#' + frameIndex;        
+    }
+    return url;
 }

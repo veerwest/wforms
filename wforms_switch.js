@@ -668,23 +668,23 @@ wFORMS.behaviors['switch'] =  {
      *  'other'
      */
 wFORMS.helpers.getElementType = function(element){
-        var tagName = element.tagName.toLowerCase();
-        switch(element.tagName.toLowerCase()){
-            case 'input':
-                if(element.type == 'radio'){
-                    return 'input.radio'
-                }else if(element.type == 'checkbox'){
-                    return 'input.checkbox'
-                }else if(element.type == 'text'){
-                    return 'input.text'
-                }
-                break;
-            case 'option':
-            case 'textarea':
-            case 'a':
-            case 'select':
-                return tagName;
-            default:
-                return 'other';
-        }
+    var tagName = element.tagName.toLowerCase();
+    switch(element.tagName.toLowerCase()){
+        case 'input':
+            if(element.type == 'radio'){
+                return 'input.radio'
+            }else if(element.type == 'checkbox'){
+                return 'input.checkbox'
+            }else if(element.type == 'text'){
+                return 'input.text'
+            }
+            break;
+        case 'option':
+        case 'textarea':
+        case 'a':
+        case 'select':
+            return tagName;
+        default:
+            return 'other';
+    }
 };
