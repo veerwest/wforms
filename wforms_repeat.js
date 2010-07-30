@@ -249,18 +249,25 @@ _i.prototype.getOrCreateRepeatLink = function(elem){
 		var spanElem = document.createElement('span');
 		spanElem.className = this.behavior.CSS_DUPLICATE_SPAN;
 		e = spanElem.appendChild(e);
-		
+
 		if(elem.tagName.toUpperCase() == 'TR'){
-			var tdElem = elem.getElementsByTagName('TD');
-			if(!tdElem){
-				tdElem = elem.appendChild(document.createElement('TD'));
-			} else {
-				tdElem = tdElem[tdElem.length-1]; 
-			}
-			tdElem.appendChild(spanElem);
+            var tdCount = 0;
+            for(var i = 0, l = elem.childNodes.length; i < elem.childNodes.length; i++){
+                var tagName = elem.childNodes[i].tagName;
+                if(tagName && tagName.toUpperCase()  == 'TD'){
+                    tdCount ++;    
+                }
+            }
+
+            var tr = document.createElement('TR');
+            var td = document.createElement('TD');
+            td.colSpan = tdCount;
+            tr.appendChild(td);
+            td.appendChild(spanElem);
+
+            elem.parentNode.insertBefore(tr, elem.nextSibling);
 		}else{
-			elem.appendChild(spanElem);
-			// elem.parentNode.insertBefore(spanElem, elem.nextSibling);
+            elem.parentNode.insertBefore(spanElem, elem.nextSibling);
 		}
 	}
 	return base2.DOM.bind(e);
