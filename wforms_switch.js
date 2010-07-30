@@ -21,7 +21,7 @@ wFORMS.behaviors['switch'] =  {
     TARGET_INDENTIFIER: 'target',
 
     RULE_ATTRIBUTE_NAME : 'rule',
-    FORMULA_ATTRIBUTE_NAME : 'formula',
+    TRIGGER_CONDITION_ATTRIBUTE_NAME : 'triggerrule',
 
     /**
      * pattern for trigger info in target host in the css style list
@@ -259,7 +259,7 @@ wFORMS.behaviors['switch'] =  {
          * @param  element {domElement} trigger html element
          */
         function reportTriggerStatusByElement(element){
-            var formula = element.getAttribute(wFORMS.behaviors['switch'].FORMULA_ATTRIBUTE_NAME);
+            var formula = element.getAttribute(wFORMS.behaviors['switch'].TRIGGER_CONDITION_ATTRIBUTE_NAME);
             if(formula != null){
                 try{
                     return computeFormula(element, formula);

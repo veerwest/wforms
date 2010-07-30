@@ -203,7 +203,7 @@
         assertTrue(hasClass(document.querySelector('#target6').className, 'onstate'));
     }
 
-    function testFormula(){
+    function testTriggerRule(){
         var bInstance = wFORMS.behaviors['switch'].instance;
 
         assertTrue(hasClass(document.querySelector('#target7').className, 'offstate'));
@@ -331,8 +331,8 @@
     </form>
     <hr/>
     <form id="testForm5">
-        <input type="text" id="txt2" formula="parseInt(this.value) > 3"/>
-        <textarea rows="3" id="textarea2" formula="this.value.length > 10">
+        <input type="text" id="txt2" triggerrule="parseInt(this.value) > 3"/>
+        <textarea rows="3" id="textarea2" triggerrule="this.value.length > 10">
         </textarea>
 
         <div class="target" id="target7" rule="and[#txt2|#textarea2]">
