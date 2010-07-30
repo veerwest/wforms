@@ -717,7 +717,7 @@ wFORMS.behaviors.paging.instance.prototype.run = function(e, element){
         oldIndex: this.currentPageIndex,
         newIndex: parseInt(pageIndex)
     }
-    if(wFORMS.behaviors.paging.currentHistoryIndex == history.length){
+    if(wFORMS.behaviors.paging.currentHistoryIndex == history.length){//extend the queue length when needed
         history.push(entry);
     }else{
         history[wFORMS.behaviors.paging.currentHistoryIndex] = entry;

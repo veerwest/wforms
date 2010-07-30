@@ -421,6 +421,11 @@ wFORMS.standardizeElement = function(elem) {
 			base2.DOM.Element.addEventListener(this,event,handler,p);
 		}
 	}
+    if(!elem.removeEventListener) {
+		elem.removeEventListener = function(event,handler,p) {
+			base2.DOM.Element.removeEventListener(this,event,handler,p);
+		}
+	}
 	if(!elem.hasClass) {
 		elem.hasClass = function(className) { 
 			if((' ' + this.className + ' ').indexOf(' ' + className +' ') != -1) {

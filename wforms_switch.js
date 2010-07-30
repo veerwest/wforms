@@ -99,6 +99,7 @@ wFORMS.behaviors['switch'] =  {
 	instance : new function(f){
 		this.behavior = wFORMS.behaviors['switch']; 
 		var cache = ( this.cache = []);
+        var backUpCache = []; //temporarily store deleted cache for later recovery purpose
         /*
          Public methods
          */
@@ -108,10 +109,10 @@ wFORMS.behaviors['switch'] =  {
                 if(typeof element == 'undefined'){
                     return;
                 }
-                analyzeRule(element);
+                establishBinding(element);
             });
             if(f.hasClass(wFORMS.behaviors['switch'].TARGET_INDENTIFIER)){
-                analyzeRule(f);
+                establishBinding(f);
             }
         };
 
@@ -132,7 +133,7 @@ wFORMS.behaviors['switch'] =  {
             for(var i = 0; i < cache.length; i++){
                 if(cache[i].target == element){
                     cache[i].destroy();
-                    cache.splice(i, 1);
+                    backUpCache.push(cache.splice(i, 1)[0]);
                 }
             }
         }
@@ -158,6 +159,21 @@ wFORMS.behaviors['switch'] =  {
         var getTargets = function(f){
             return f.querySelectorAll(wFORMS.behaviors['switch'].TARGET_SELECTOR);
         };
+
+        function establishBinding(target){
+            //first check whether the binding has been created before
+            for(var i = 0; i < backUpCache.length; i++){
+                if(backUpCache[i].target == target){
+                    var entry = backUpCache.splice(i, 1)[0];
+                    //reactivate cache
+                    entry.recover();
+                    cache.push(entry);
+                    return;
+                }
+            }
+            //otherwise create from stretch
+            analyzeRule(target);
+        }
 
         /**
          *
@@ -437,9 +453,7 @@ wFORMS.behaviors['switch'] =  {
                 var radioGroup = node.querySelectorAll("input[name=\""+elem.name+"\"]");
 
                 radioGroup.forEach(function(element){
-                    if(!element.addEventListener){
-                        wFORMS.standardizeElement(element);
-                    }
+                    wFORMS.standardizeElement(element);
                     element.addEventListener('click', eventHandler, false);
                 });
             },
@@ -488,6 +502,7 @@ wFORMS.behaviors['switch'] =  {
                 var radioGroup = node.querySelectorAll("input[name=\""+elem.name+"\"]");
 
                 radioGroup.forEach(function(element){
+                    wFORMS.standardizeElement(element);
                     element.removeEventListener('click', eventHandler, false);
                 });
             },
@@ -503,6 +518,7 @@ wFORMS.behaviors['switch'] =  {
                     node = node.parentNode;
                 }
                 //so node is the parent select object
+                wFORMS.standardizeElement(node);
                 node.removeEventListener('change', eventHandler, false);
             },
 
@@ -620,7 +636,15 @@ wFORMS.behaviors['switch'] =  {
                     removeEventHandlerFromTrigger[wFORMS.helpers.getElementType(triggerEntry['dom'])](triggerEntry['dom'],
                             triggerEntry['event_handler']);
                 }
-                this.triggers = null;
+            };
+
+            this.recover = function(){
+                for(var i = 0; i < this.triggers.length; i++){
+                    var triggerEntry = this.triggers[i];
+                    bindEventHandlerToTrigger[wFORMS.helpers.getElementType(triggerEntry['dom'])](triggerEntry['dom'],
+                            triggerEntry['event_handler']);
+                }
+                this.updateEntries();
             };
 
             var logic = {

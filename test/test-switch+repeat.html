@@ -32,7 +32,7 @@
 
         wFORMS.behaviors['switch'].onApply = function() {
             setUpPageStatus = 'complete';
-        }
+        };
 
         function setUpPage() {
         }
@@ -80,8 +80,6 @@
         function testSeperatedTriggers() {
 
             var sInstance = wFORMS.behaviors['switch'].instance;
-            ;
-
 
             document.getElementById('switchd').checked = true;
             sInstance.run();
@@ -96,10 +94,6 @@
             assertTrue(hasClass(document.getElementById('casee[0][0]').className, 'onstate'));
             assertTrue(hasClass(document.getElementById('casee[0][1]').className, 'offstate'));
        
-            //		document.getElementById('switchd').checked = false;
-            //		sInstance.run(null, document.getElementById('switchd'));
-            //		assertEquals("repeat offstate-d", document.getElementById('cased[0][0]').className);
-            //		assertEquals("removeable offstate-d", document.getElementById('cased[0][1]').className);
         }
 
         function testRepeatedRadioSwitch() {
@@ -123,6 +117,32 @@
                 //force failure if error thrown (as from elem.form is null)
             }
 
+        }
+
+        function testDestroyAndRecoverRepeatedSection(){
+            var fieldSet = document.querySelector("#testform4 fieldset");
+            var rInstance = wFORMS.getBehaviorInstance(fieldSet, 'repeat');
+            var sInstance = wFORMS.behaviors['switch'].instance;
+
+            rInstance.run(null, fieldSet);
+
+            var clonedFieldSet = document.querySelectorAll("#testform4 fieldSet").item(1);
+            var target = clonedFieldSet.querySelector('div');
+            sInstance.destroy(clonedFieldSet);
+            clonedFieldSet.querySelectorAll("input").item(0).checked = true;
+            sInstance.run();
+
+            //the switch behavior should be disabled
+            assertTrue(hasClass(target.className, 'offstate'));
+
+            //recover the switch behavior
+            sInstance.applyTo(clonedFieldSet);
+
+            clonedFieldSet.querySelectorAll("input").item(0).checked = true;
+            sInstance.run();
+
+            //the switch behavior should take effect now
+            assertTrue(hasClass(target.className, 'onstate'));
         }
     </script>
 
@@ -189,6 +209,14 @@
     </fieldset>
 </form>
 
+<hr/>
+
+<form id="testform4">
+    <fieldset class="repeat" id="tfa_0693953105673">
+        <input id="group_rd1" type="radio" name="group" /><input id="group_rd2" type="radio" name="group" />
+        <div class="target" rule="or[#group_rd1]">One</div>
+    </fieldset>
+</form>
 </body>
 </html>
 
