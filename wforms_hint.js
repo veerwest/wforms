@@ -52,7 +52,9 @@ wFORMS.behaviors.hint.applyTo = function(f) {
 	var b = new wFORMS.behaviors.hint.instance(f);
 	// Selects all hints elements using predefined selector and attaches
 	// event listeners to related HTML elements for each hint
+	if(!f.querySelectorAll) base2.DOM.bind(f);
 	var elems = f.querySelectorAll(wFORMS.behaviors.hint.HINT_SELECTOR);
+	
 	if(!elems.forEach){
 		//Make sure elems have forEach property since Opera doesn't let us override
 		//StaticNodeList.prototype
