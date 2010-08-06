@@ -196,8 +196,7 @@ wFORMS.behaviors['switch'] =  {
                 triggers = []; // trigger elements
 
             for(var i = 0; i < triggersCssSelectors.length; i++){
-                var cssSelector = triggersCssSelectors[i];
-                var triggerElement = document.querySelector(cssSelector);
+                var triggerElement = document.querySelector(triggersCssSelectors[i]);
                 
                 if(triggerElement == null){ // then the trigger actually does not exist, skip this rule
                     continue;

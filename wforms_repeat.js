@@ -187,12 +187,33 @@ _b.applyTo = function(f) {
 				return ;
 			}
 			if(!elem.id) elem.id = wFORMS.helpers.randomId();
-			
+
 			var _b = new _self.instance(elem);
 			var e = _b.getOrCreateRepeatLink(elem);
 			e.addEventListener('click', function(event) { _b.run(event, e)}, false);
 			_b.setElementHandled(elem);
-			b.push(_b);							
+			b.push(_b);
+
+            //prepare to add hook handler for turn on and off for the Create Repeat link
+            var span = e.parentNode;
+            if(span && !span.handled && span.tagName.toLowerCase() == 'span' && wFORMS.behaviors['switch']){
+                var container = span;
+                wFORMS.standardizeElement(container);
+                wFORMS.hooks.addHook('switch', 'switch_on', function(element){
+                    if(element == elem){
+                        container.addClass(wFORMS.behaviors['switch'].CSS_ONSTATE);
+                        container.removeClass(wFORMS.behaviors['switch'].CSS_OFFSTATE);
+                    }
+                });
+                wFORMS.hooks.addHook('switch', 'switch_off', function(element){
+                    if(element == elem){
+                        container.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE);
+                        container.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE);
+                    }
+                });
+                wFORMS.behaviors['switch'].applyTo(elem);
+                span.handled = true;
+            }
 		}
 	);
 	
@@ -244,18 +265,19 @@ _i.prototype.getOrCreateRepeatLink = function(elem){
 	var e = document.getElementById(id);
 	if(!e || e == ''){
 		e = this.createRepeatLink(id);
-		
+
 		// Wraps in a span for better CSS positionning control.
 		var spanElem = document.createElement('span');
 		spanElem.className = this.behavior.CSS_DUPLICATE_SPAN;
 		e = spanElem.appendChild(e);
+        var container;
 
 		if(elem.tagName.toUpperCase() == 'TR'){
             var tdCount = 0;
             for(var i = 0, l = elem.childNodes.length; i < elem.childNodes.length; i++){
                 var tagName = elem.childNodes[i].tagName;
                 if(tagName && tagName.toUpperCase()  == 'TD'){
-                    tdCount ++;    
+                    tdCount ++;
                 }
             }
 
@@ -265,10 +287,11 @@ _i.prototype.getOrCreateRepeatLink = function(elem){
             tr.appendChild(td);
             td.appendChild(spanElem);
 
-            elem.parentNode.insertBefore(tr, elem.nextSibling);
+            container = tr;
 		}else{
-            elem.parentNode.insertBefore(spanElem, elem.nextSibling);
+            container = spanElem;
 		}
+        elem.parentNode.insertBefore(container, elem.nextSibling);
 	}
 	return base2.DOM.bind(e);
 }
