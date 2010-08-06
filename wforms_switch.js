@@ -66,6 +66,16 @@ wFORMS.behaviors['switch'] =  {
 	onSwitch: function(form){  
 	},
 
+    isSwitchedOn: function(element){
+        wFORMS.standardizeElement(element);
+        return element.hasClass(wFORMS.behaviors['switch'].CSS_ONSTATE);
+    },
+
+    isSwitchedOff: function(element){
+        wFORMS.standardizeElement(element);
+        return element.hasClass(wFORMS.behaviors['switch'].CSS_OFFSTATE);
+    },
+
     /**
      * Factory Method.
      * Applies the behavior to the given HTML element by setting the appropriate event handlers.
