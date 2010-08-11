@@ -121,9 +121,6 @@
 	padding: 0;
 	width: auto;
 }
-.wForm form .inlineSection .preField {
-	margin-right: 4px;
-}
 .wForm form .inlineSection .inlineLabel,
 .wForm .labelsLeftAligned  .inlineSection .inlineLabel,
 .wForm .labelsRightAligned .inlineSection .inlineLabel {
@@ -247,9 +244,9 @@
 
 /*Styling to make calculated fields distinct from inputs. */
 .wForm form .readonly{
-	background-color: transparent;
-	border: none;
-	background-image: none;
+	background-color: transparent !important;
+	border: none !important;
+	background-image: none !important;
 }
 
 /* Field Hints (Tooltips)  */
