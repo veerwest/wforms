@@ -39,7 +39,7 @@ wFORMS.behaviors.validation = {
 		isAlpha 		: "The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",
 		isEmail 		: "This does not appear to be a valid email address.",
 		isInteger 		: "Please enter a number (without decimals)",
-		isFloat 		: "Please enter a number (ex. 1.9).",
+		isFloat 		: "Please enter a number (e.g. 1.9).",
 		isAlphanum 		: "Please use alpha-numeric characters only [a-z 0-9].",
 		isDate 			: "This does not appear to be a valid date.",
 		isPhone			: "Please enter a valid phone number.",
