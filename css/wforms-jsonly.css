@@ -25,7 +25,7 @@
 .offstate-ba, .offstate-bb, .offstate-bc, .offstate-bd,
 .offstate-be, .offstate-bf, .offstate-bg, .offstate-bh,
 .offstate-bi, .offstate-bj, .offstate-bk, .offstate-bl,
-.target.offstate{
+.target.offstate, .hiddenTriggers{
 	display: none !important;
 }
 html .wForm form .wfPage, html .wForm form .wfHideSubmit { 
