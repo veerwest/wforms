@@ -407,7 +407,14 @@ wFORMS.behaviors['switch'] =  {
 
             //realize switch behavior according to mapping
             for(var i = 0, l = mapping.length; i < l; i++){
-                createConditionEntry(mapping[i].target, mapping[i].triggers, mapping[i].logic);
+                var triggers = mapping[i].triggers;
+                var logic = mapping[i].logic;
+                //update trigger rule definition
+                var triggerRule = generateTriggerRule(triggers, logic);
+                if(triggerRule != null){
+                    mapping[i].target.setAttribute('rule', triggerRule);    
+                }
+                createConditionEntry(mapping[i].target, triggers, logic);
             }
         }
 
@@ -436,6 +443,19 @@ wFORMS.behaviors['switch'] =  {
             }
 
             return [mapping, triggersSet, targetsSet];
+        }
+
+        function generateTriggerRule(triggers, logic){
+            var s = logic + '[';
+            for(var i = 0, mark = false, l = triggers.length; i < l; i++ ){
+                var id = triggers[i].getAttribute('id');
+                if(id != null){
+                    s+='#' + id +"|";
+                    mark = true;
+                }
+                s = s.replace(/\|$/, ']');
+            }
+            return mark ? s : null;
         }
 
         wFORMS.hooks.addHook('repeat', 'repeat', cloneSection);
