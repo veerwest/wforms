@@ -380,8 +380,18 @@ wFORMS.behaviors['switch'] =  {
                 var originalChildren = originalNode.childNodes,
                     newChildren = newNode.childNodes;
 
-                for(var i = 0, l = originalChildren.length; i < l; i++){
-                    traverseDom(originalChildren[i], newChildren[i]);
+                for(var i = 0, j = 0, l = originalChildren.length; i < l; i++){
+                    var originalNode = originalChildren[i],
+                        newNode = newChildren[j];
+                    if(originalNode.nodeType == 3){
+                        j++;//skip                         
+                    }else {
+                        base2.DOM.bind(originalNode);
+                        if(!originalNode.hasClass(wFORMS.behaviors.repeat['CSS_REMOVEABLE']) && newNode){
+                            traverseDom(originalChildren[i], newNode);
+                            j++;
+                        } //otherwise skip
+                    }
                 }
             }
 
