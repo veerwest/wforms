@@ -222,7 +222,14 @@
         bInstance.run();
         assertTrue(hasClass(document.querySelector('#target7').className, 'onstate'));
     }
-        
+
+    function testEscapeCSSSelector(){
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
+        bInstance.run();
+        assertTrue(hasClass(document.querySelector('#target8').className, 'offstate'));
+    }
+
     </script>
 
 </head>
@@ -234,7 +241,7 @@
 		
 		
 		<input name="foo" type="radio" class="switch-a" id="switcha" />A Switch <br/>
-		<input name="foo" type="radio" class="switch-b" id="switchb"  />B Switch <br/>	
+		<input name="foo" type="radio" class="switch-b" id="switchb"  />B Switch <br/>
 		<a href="#" class="switch-c swtchIsOff" id="switchc" >C Switch</a> <br/>
 	
 		<select id="selectTest">
@@ -339,6 +346,17 @@
 			<fieldset class="">
 				<legend>Collective AND</legend>
                 txt2 & textarea2
+			</fieldset>
+		</div>
+    </form>
+
+    <form id="testForm6">
+        <input name="bar" type="radio" class="switch-a" id="switcha[0]" />A Switch <br/>
+		<input name="bar" type="radio" class="switch-b" id="switchb[0]"  />B Switch <br/>
+
+        <div class="target" id="target8" rule="and[#switcha[0]|#switchb[0]]">
+			<fieldset class="">
+				square id
 			</fieldset>
 		</div>
     </form>

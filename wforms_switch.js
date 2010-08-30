@@ -27,7 +27,7 @@ wFORMS.behaviors['switch'] =  {
      * pattern for trigger info in target host in the css style list
      * @param elem
      */
-    TRIGGER_RULES: /((and)|(or))\[(.*)\]/,
+    TRIGGER_RULES: /((and)|(or))\[(.*)\]$/,
 
     /**
 	 * CSS class prefix for the off state of the target element
@@ -40,6 +40,12 @@ wFORMS.behaviors['switch'] =  {
      * @final
 	 */
 	CSS_ONSTATE : 'onstate',
+
+    /**
+     * this is used to work around ids of form #id[number], which will be treated as an integral id, square [] part will
+     *  not have special semantics.
+     */
+    CSS_ID_PATTERN: /#(.*)\[(\d)+\]$/,
 
 	/**
 	 * Custom function that could be overridden. 
@@ -202,7 +208,7 @@ wFORMS.behaviors['switch'] =  {
             }
 
             var logic = m[1], // 'and' or 'or'
-                triggersCssSelectors = m[4].split('|'),
+                triggersCssSelectors = escapeCssSelectors(m[4].split('|')),
                 triggers = []; // trigger elements
 
             for(var i = 0; i < triggersCssSelectors.length; i++){
@@ -216,6 +222,16 @@ wFORMS.behaviors['switch'] =  {
             }
 
             createConditionEntry(target, triggers, logic);
+        }
+
+        function escapeCssSelectors(triggersCssSelectors){
+            for(var i = 0, l = triggersCssSelectors.length; i< l; i++){
+                var selector = triggersCssSelectors[i];
+                if(selector.match(wFORMS.behaviors['switch'].CSS_ID_PATTERN)){
+                    triggersCssSelectors[i] = triggersCssSelectors[i].replace('[', '\\[').replace(']', '\\]');
+                }
+            }
+            return triggersCssSelectors;
         }
 
         /**
