@@ -171,6 +171,15 @@ wFORMS.behaviors['switch'] =  {
             }
         };
 
+        /**
+         * update all 'target's within a given section
+         */ 
+        this.update = function(f){
+            getTargets(f).forEach(function (element){
+                wFORMS.behaviors['switch'].instance.run(element);
+            });
+        };
+
         /* Private methods */
         var getTargets = function(f){
             return f.querySelectorAll(wFORMS.behaviors['switch'].TARGET_SELECTOR);

@@ -19,6 +19,7 @@ wFORMS.behaviors['switch_clear'] =  {
             fields.forEach(function(elem){
                 clearValue(elem);
             });
+            wFORMS.behaviors['switch'].instance.update(element);
         }
 
         /**

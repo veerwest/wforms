@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="../wforms_core.js"></script>
 	<script type="text/javascript" src="../wforms_switch.js"></script>
 	<script type="text/javascript" src="../wforms_switch_clear.js"></script>
+    <script type="text/javascript" src="helper/test_helper.js"></script>
 	<script type="text/javascript">
 	
 	wFORMS.behaviors['switch'].instance.onApply = function() {	
@@ -33,7 +34,7 @@
 		var f = document.getElementById('testform1');
         var bInstance = wFORMS.behaviors['switch'].instance;
 		var s = document.getElementById('switcha');
-		
+
 //		assertEquals('value1', f.test1a.value);
 //		assertEquals('value2', f.test1b.value);
 //		assertEquals(true, f.test2a.checked);
@@ -53,16 +54,34 @@
 //		assertEquals(false, f.test3.checked);
 //		assertEquals(-1, f.test4.selectedIndex);
 //		assertEquals('should revert to first option when the option has no value set',0, f.test5.selectedIndex);
-//		assertEquals(-1, f.test6.selectedIndex);				
+//		assertEquals(-1, f.test6.selectedIndex);
 	}
-	
+
+    function testCollectiveReset(){
+        var f = document.getElementById('testform7');
+        var bInstance = wFORMS.behaviors['switch'].instance;
+
+        document.querySelector('#switcha\\[1\\]').checked = true;
+
+        bInstance.run();
+
+        document.querySelector('#switcha\\[2\\]').checked = true;
+
+        bInstance.run();
+
+        document.querySelector('#switchb\\[1\\]').checked = true;
+
+        bInstance.run();
+
+        document.querySelector('#switcha\\[1\\]').checked = true;
+
+        bInstance.run();
+
+        assertTrue(hasClass(document.querySelector('#test7').className, 'offstate'));
+    }
+
 	</script>
 
-    <script type="text/javascript">
-        setTimeout(function(){
-            testClearSwitch();
-        }, 100)
-    </script>
 	<style type="text/css">
 		.wForm form .offstate {
 			display: block !important;
@@ -117,6 +136,22 @@
 	
 	</form>
 	<hr/>
+
+    <form id="testForm7">
+        <input name="bar" type="radio" id="switcha[1]" />A Switch <br/>
+		<input name="bar" type="radio" id="switchb[1]"  />B Switch <br/>
+
+        <div class="target" id="target8" rule="or[#switcha[1]]">
+			<fieldset class="">
+                Parent Section
+				<input name="bar2" type="radio" class="" id="switcha[2]"/>A Switch <br/>
+		        <input name="bar2" type="radio" class="switch-b" id="switchb[2]"/>B Switch <br/>
+                <fieldset id="test7" class="target" rule="or[#switcha[2]]">
+                    Child Section
+                </fieldset>
+			</fieldset>
+		</div>
+    </form>
 	
 </body>
 </html>
