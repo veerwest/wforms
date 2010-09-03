@@ -120,6 +120,10 @@ wFORMS.behaviors['switch'] =  {
          Public methods
          */
         this.applyTo = function(f){
+            //document.querySelector is used to find triggers globally
+            if(typeof document.querySelector == 'undefined'){ //fix support issue for IE 6/7
+                base2.DOM.bind(document);
+            }
             wFORMS.standardizeElement(f);
             getTargets(f).forEach(function (element){
                 if(typeof element == 'undefined'){
@@ -221,6 +225,7 @@ wFORMS.behaviors['switch'] =  {
                 triggers = []; // trigger elements
 
             for(var i = 0; i < triggersCssSelectors.length; i++){
+                
                 var triggerElement = document.querySelector(triggersCssSelectors[i]);
                 
                 if(triggerElement == null){ // then the trigger actually does not exist, skip this rule
