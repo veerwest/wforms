@@ -375,7 +375,7 @@
 	.captcha input 		{ width: 108px; }
 .wForm fieldset.captcha 
 	legend 				{ display: none; }
-.wForm .captchaHelp 	{ font-size: 0.75em; }
+.wForm .captchaHelp 	{ font-size: 12px; }
 
 /* form builder HTML Section */
 .wForm .htmlsection {
