@@ -11,6 +11,14 @@ try{
 		StaticNodeList.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
 	}
 }catch(e){};
+
+try{
+	//IE9 doesn't seem to respect the StaticNodeList prototype setup above
+	//best way I've found so far to add the forEach to querySelectorAll calls
+	if(!(document.querySelectorAll('a').constructor.prototype.forEach)){
+		document.querySelectorAll('a').constructor.prototype.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
+	}
+}catch(e){};
 //
 
 if (typeof(base2) == "undefined") {

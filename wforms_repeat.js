@@ -477,9 +477,9 @@ _i.prototype.updateMasterElements  = function(elem, suffix){
 				} else if(attrName=='id' && n.id.indexOf(this.behavior.ID_SUFFIX_DUPLICATE_LINK) != -1){
 					n.id = value.replace(new RegExp("(.*)(" + this.behavior.ID_SUFFIX_DUPLICATE_LINK + ')$'), "$1" + suffix + "$2");
 				} else if(attrName=='id'){ 
-					n.id = value + suffix;		// do not use setAttribute for the id property (doesn't work in IE6)	
+					n.id = value + suffix;		// do not use setAttribute for the id property (doesn't work in IE6)
 				} else if(attrName=='name'){ 
-					n.name = value + suffix;	// do not use setAttribute for the name property (doesn't work in IE6)	
+					n.name = value + suffix;	// do not use setAttribute for the name property (doesn't work in IE6)
 				} else {
 					n.setAttribute(attrName, value + suffix);	
 				}
@@ -577,8 +577,19 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 		// Fix #152 - Radio name with IE6+
 		if(e.tagName == 'INPUT' && e.type == 'radio' && document.all && !window.opera && !preserveRadioName) {
 			// Create a radio input that works in IE and insert it before the input it needs to replace
-			var tagHtml = "<INPUT type=\"radio\" name=\""+e.name+suffix+"\"></INPUT>";
-			var fixedRadio = e.parentNode.insertBefore(document.createElement(tagHtml),e);
+			try{
+				var tagHtml = "<INPUT type=\"radio\" name=\""+e.name+suffix+"\"></INPUT>";
+				var fixedRadio = e.parentNode.insertBefore(document.createElement(tagHtml),e);
+			}catch(exception){
+				//	IE9 will not accept creation method shown above.  document.createElement
+				//	throws a DOM ERR 5 - invalid character, due to trying to parse the
+				//	value passed to createElement as XML.  Catch that error and try again
+				//	using traditional XML creation scheme.
+				var tag = document.createElement('input');
+				tag.type="radio";
+				tag.name=e.name+suffix;
+				var fixedRadio = e.parentNode.insertBefore(tag,e);
+			}
 		
 			// Clone other attributes
 			fixedRadio.id = e.id;
@@ -661,8 +672,20 @@ _i.prototype.createSuffix = function(e, index){
 _i.prototype.clearSuffix = function(value){
 	if(!value){
 		return;
-	}	
-    value = value.replace(/(\[\d+\])+(\-[HE])?$/,"$2");    
+	}
+	
+	//IE9 beta has a regexp bug:
+	//	value = value.replace(/(\[\d+\])+(\-[HE])?$/,"$2");
+	//	returns values like tfa_test$2[0]
+	//	looks like the regexp groupings aren't implemented corrected
+	
+	//Workaround for IE9 bug
+	if(/(\[\d+\])+/.test(value)){
+		value_suffix = value.match(/((\-H)|(\-E))$/);
+		value = value.replace(/(\[\d+\])+(\-[HE])?$/,""); //Modified to support IE9 bugginess in regexp
+		if(value_suffix && value_suffix[0])
+			value += value_suffix[0];
+	}
 	return value;
 }
 

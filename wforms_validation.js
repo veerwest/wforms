@@ -201,8 +201,13 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  		var rule = this.behavior.rules[ruleName];
    		var _self = this;
 
+		//Seems to be an IE9 issue with DOM.bind, switched to standardizeElement instead
 		if(!element.matchesSelector)
-			base2.DOM.bind(element);
+			wFORMS.standardizeElement(element);
+		//IE9 doesn't implement Element.matchesSelector ... oh wait
+		//yes it does, it just calls it msMatchesSelector
+		if(!element.matchesSelector && element.msMatchesSelector)
+			element.matchesSelector = element.msMatchesSelector;
 	
 		/* run validation if rule matches current element */
 		if(element.matchesSelector(rule.selector)) { 
@@ -239,7 +244,7 @@ wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName
 	
 	// set class to show that the field has an error
 	if(div) {	
-		if(!div.hasClass) base2.DOM.bind(div);
+		if(!div.hasClass) wFORMS.standardizeElement(div);
 		div.addClass(this.behavior.styling.fieldError);			
 	} else {
 		element.addClass(this.behavior.styling.fieldError);
@@ -301,7 +306,7 @@ wFORMS.behaviors.validation.instance.prototype.addErrorMessage = function(elemen
 	}
 	// Finish the error message.
 	p.appendChild(txtNode);
-	base2.DOM.bind(p);  
+	wFORMS.standardizeElement(p);  
 	p.addClass(this.behavior.styling.errorMessage);							
 }
 
@@ -314,8 +319,8 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 	//  field wrapper DIV. (-D suffix)
 	var div = document.getElementById(element.id+'-D');
 	
-	if(!element.hasClass) base2.DOM.bind(element);
-	if(div && !div.hasClass) base2.DOM.bind(div);
+	if(!element.hasClass) wFORMS.standardizeElement(element);
+	if(div && !div.hasClass) wFORMS.standardizeElement(div);
 	
 	if(element.hasClass(this.behavior.styling.fieldError)) {
 		element.removeClass(this.behavior.styling.fieldError);
