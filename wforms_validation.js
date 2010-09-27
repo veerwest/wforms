@@ -204,6 +204,9 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 		//Seems to be an IE9 issue with DOM.bind, switched to standardizeElement instead
 		if(!element.matchesSelector)
 			wFORMS.standardizeElement(element);
+		if(!element.matchesSelector)
+			element = base2.DOM.bind(element);	
+
 		//IE9 doesn't implement Element.matchesSelector ... oh wait
 		//yes it does, it just calls it msMatchesSelector
 		if(!element.matchesSelector && element.msMatchesSelector)
