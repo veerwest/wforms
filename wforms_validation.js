@@ -207,15 +207,23 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 		if(!element.matchesSelector)
 			element = base2.DOM.bind(element);	
 
+		//Maybe move this to crossbrowser hacks?
 		//IE9 doesn't implement Element.matchesSelector ... oh wait
 		//yes it does, it just calls it msMatchesSelector
 		if(!element.matchesSelector && element.msMatchesSelector)
-			element.matchesSelector = element.msMatchesSelector;
-	
+				element.matchesSelector = element.msMatchesSelector;
+		if(!element.matchesSelector && element.mozMatchesSelector)
+				element.matchesSelector = element.mozMatchesSelector;
+		if(!element.matchesSelector && element.webkitMatchesSelector)
+				element.matchesSelector = element.webkitMatchesSelector;
+		if(!element.matchesSelector)
+				element.matchesSelector = base2.DOM.Element.matchesSelector;
+				
 		/* run validation if rule matches current element */
 		if(element.matchesSelector(rule.selector)) { 
-			_run(element);			
+				_run(element);                  
 		}
+		
 		
 		/* check descendant nodes and run validation on matching elements */
  		element.querySelectorAll(rule.selector).forEach(_run);
