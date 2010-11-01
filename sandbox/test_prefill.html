@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Test SF</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+
+
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+	<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	
+	<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+	
+	
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_prefill.js"></script>
+</head>
+<body class="default wFormWebPage">
+
+
+	
+	<div id="tfaContent">
+		
+		<div class="wFormContainer">
+				<h3 class="wFormTitle"><span>Test SF</span></h3>
+		<div class="wForm wFormdefaultWidth"><form method="post" action="http://local.app/responses/processor" id="id1816293" class="labelsAbove hintsTooltip" enctype="multipart/form-data">
+<input type="hidden" name="MAX_FILE_SIZE" value="10485760"><div class="saveAndResume"><div class="oneField">
+<span class="oneChoice"><input type="checkbox" id="tfa_saveForLater" name="tfa_saveForLater" value="1" class="switch-resumelater"><label for="tfa_saveForLater" class="postField">Save my progress and resume later</label></span>
+				
+				| <a href="http://local.app/forms/resume/24" onclick="return confirm('Are you sure you want to resume a previous response? Any information you just entered on this page will be discarded.');">resume a previously saved form</a>
+</div></div>
+<div class="saveAndResume" id="saveAndResumeFieldset"><fieldset class="offstate-resumelater">
+<legend>Resume Later</legend>
+<p class="instructions">In order to be able to resume this form later, please enter your email and choose a password.</p>
+<div class="oneField">
+<label class="preField" for="tfa_resumeEmail">Your Email:</label><input type="text" value="" name="tfa_resumeEmail" id="tfa_resumeEmail">
+</div>
+<div class="oneField">
+<label class="preField" for="tfa_resumePassword">A Password:</label><input type="password" value="" name="tfa_resumePassword" id="tfa_resumePassword">
+</div>
+<div class="actions"><input type="button" class="primaryAction" id="tfa_resumeLater" name="tfa_resumeLater" value="Save"></div>
+</fieldset></div>
+<div id="tfa_Name-D" class="oneField">
+<label class="preField" for="tfa_Name">First Name</label> <input type="text" id="tfa_Name" name="tfa_Name" value="" size="40" class=""> <br>
+</div>
+<div id="tfa_LastName-D" class="oneField">
+<label class="preField" for="tfa_LastName">Last Name</label> <input type="text" id="tfa_LastName" name="tfa_LastName" value="" size="40" class=""> <br>
+</div>
+<div id="tfa_Email-D" class="oneField">
+<label class="preField" for="tfa_Email">Email</label> <input type="text" id="tfa_Email" name="tfa_Email" value="nobody@nowhere.com" size="40" class=""> <br>
+</div>
+<div id="tfa_Company-D" class="oneField">
+<label class="preField" for="tfa_Company">Company</label> <input type="text" id="tfa_Company" name="tfa_Company" value="" size="40" class=""> <br>
+</div>
+<div id="tfa_Comment-D" class="oneField">
+<label class="preField" for="tfa_Comment">Comment</label> <textarea cols="40" rows="4" id="tfa_Comment" name="tfa_Comment" class=""></textarea> <br>
+</div>
+<div id="tfa_Attachment-D" class="oneField">
+<label class="preField" for="tfa_Attachment">Attachment</label> <input type="file" id="tfa_Attachment" name="tfa_Attachment" size="40" class=""> <br>
+</div>
+<div id="tfa_DropDown-D" class="oneField">
+<label class="preField" for="tfa_DropDown">Drop-Down</label> <select id="tfa_DropDown" name="tfa_DropDown" class=""><option value="">Please select...</option>
+<option value="tfa_1" class="">1</option>
+<option value="tfa_2" class="">2</option>
+<option value="tfa_3" class="">3</option>
+<option value="tfa_4" class="">4</option>
+<option value="tfa_5" class="">5</option></select> <br>
+</div>
+<div id="tfa_Checkboxes-D" class="oneField">
+<label class="preField">Checkboxes</label> <span id="tfa_Checkboxes" class="choices"><span class="oneChoice"><input type="checkbox" value="tfa_a" class="" id="tfa_a" name="tfa_a"><label for="tfa_a" class="postField">red</label></span><span class="oneChoice"><input type="checkbox" value="tfa_b" class="" id="tfa_b" name="tfa_b"><label for="tfa_b" class="postField">blue</label></span><span class="oneChoice"><input type="checkbox" value="tfa_c" class="" id="tfa_c" name="tfa_c"><label for="tfa_c" class="postField">yellow</label></span><span class="oneChoice"><input type="checkbox" value="tfa_d" class="" id="tfa_d" name="tfa_d"><label for="tfa_d" class="postField">black</label></span><span class="oneChoice"><input type="checkbox" value="tfa_redpurple" class="" id="tfa_redpurple" name="tfa_redpurple"><label for="tfa_redpurple" class="postField">red; purple</label></span></span> <br>
+</div>
+<div id="tfa_State-D" class="oneField">
+<label class="preField" for="tfa_State">State</label> <select id="tfa_State" name="tfa_State" class=""><option value="">Please select...</option>
+<option value="AL" class="">Alabama</option>
+<option value="AK" class="">Alaska</option>
+<option value="AZ" class="">Arizona</option>
+<option value="AR" class="">Arkansas</option>
+<option value="CA" class="">California</option>
+<option value="CO" class="">Colorado</option>
+<option value="CT" class="">Connecticut</option>
+<option value="DE" class="">Delaware</option>
+<option value="DC" class="">District Of Columbia</option>
+<option value="FL" class="">Florida</option>
+<option value="GA" class="">Georgia</option>
+<option value="HI" class="">Hawaii</option>
+<option value="ID" class="">Idaho</option>
+<option value="IL" class="">Illinois</option>
+<option value="IN" class="">Indiana</option>
+<option value="IA" class="">Iowa</option>
+<option value="KS" class="">Kansas</option>
+<option value="KY" class="">Kentucky</option>
+<option value="LA" class="">Louisiana</option>
+<option value="ME" class="">Maine</option>
+<option value="MD" class="">Maryland</option>
+<option value="MA" class="">Massachusetts</option>
+<option value="MI" class="">Michigan</option>
+<option value="MN" class="">Minnesota</option>
+<option value="MS" class="">Mississippi</option>
+<option value="MO" class="">Missouri</option>
+<option value="MT" class="">Montana</option>
+<option value="NE" class="">Nebraska</option>
+<option value="NV" class="">Nevada</option>
+<option value="NH" class="">New Hampshire</option>
+<option value="NJ" class="">New Jersey</option>
+<option value="NM" class="">New Mexico</option>
+<option value="NY" class="">New York</option>
+<option value="NC" class="">North Carolina</option>
+<option value="ND" class="">North Dakota</option>
+<option value="OH" class="">Ohio</option>
+<option value="OK" class="">Oklahoma</option>
+<option value="OR" class="">Oregon</option>
+<option value="PA" class="">Pennsylvania</option>
+<option value="RI" class="">Rhode Island</option>
+<option value="SC" class="">South Carolina</option>
+<option value="SD" class="">South Dakota</option>
+<option value="TN" class="">Tennessee</option>
+<option value="TX" class="">Texas</option>
+<option value="UT" class="">Utah</option>
+<option value="VT" class="">Vermont</option>
+<option value="VA" class="">Virginia</option>
+<option value="WA" class="">Washington</option>
+<option value="WV" class="">West Virginia</option>
+<option value="WI" class="">Wisconsin</option>
+<option value="WY" class="">Wyoming</option>
+<option value="PR" class="">Puerto Rico</option>
+<option value="VI" class="">Virgin Island</option>
+<option value="MP" class="">Northern Mariana Islands</option>
+<option value="GU" class="">Guam</option>
+<option value="AS" class="">American Samoa</option>
+<option value="PW" class="">Palau</option></select> <br>
+</div>
+<div id="tfa_Country-D" class="oneField">
+<label class="preField" for="tfa_Country">Country</label> <select id="tfa_Country" name="tfa_Country" class=""><option value="">Please select...</option>
+<option value="AF" class="">Afghanistan</option>
+<option value="tfa_Albania" class="">Albania</option>
+<option value="DZ" class="">Algeria</option>
+<option value="tfa_AmericanSamoa" class="">American Samoa</option>
+<option value="AD" class="">Andorra</option>
+<option value="AO" class="">Angola</option>
+<option value="AI" class="">Anguilla</option>
+<option value="AQ" class="">Antarctica</option>
+<option value="AG" class="">Antigua and Barbuda</option>
+<option value="tfa_Argentina" class="">Argentina</option>
+<option value="AM" class="">Armenia</option>
+<option value="AW" class="">Aruba</option>
+<option value="AU" class="">Australia</option>
+<option value="AT" class="">Austria</option>
+<option value="tfa_Azerbaijan" class="">Azerbaijan</option>
+<option value="BS" class="">Bahamas</option>
+<option value="BH" class="">Bahrain</option>
+<option value="BD" class="">Bangladesh</option>
+<option value="BB" class="">Barbados</option>
+<option value="BY" class="">Belarus</option>
+<option value="BE" class="">Belgium</option>
+<option value="BZ" class="">Belize</option>
+<option value="BJ" class="">Benin</option>
+<option value="BM" class="">Bermuda</option>
+<option value="BT" class="">Bhutan</option>
+<option value="BO" class="">Bolivia</option>
+<option value="BA" class="">Bosnia and Herzegovina</option>
+<option value="BW" class="">Botswana</option>
+<option value="BV" class="">Bouvet Island</option>
+<option value="BR" class="">Brazil</option>
+<option value="IO" class="">British Indian Ocean Territory</option>
+<option value="BN" class="">Brunei</option>
+<option value="BG" class="">Bulgaria</option>
+<option value="BF" class="">Burkina Faso</option>
+<option value="BI" class="">Burundi</option>
+<option value="KH" class="">Cambodia</option>
+<option value="CM" class="">Cameroon</option>
+<option value="tfa_Canada" class="">Canada</option>
+<option value="CV" class="">Cape Verde</option>
+<option value="tfa_CaymanIslands" class="">Cayman Islands</option>
+<option value="CF" class="">Central African Republic</option>
+<option value="TD" class="">Chad</option>
+<option value="CL" class="">Chile</option>
+<option value="CN" class="">China</option>
+<option value="CX" class="">Christmas Island</option>
+<option value="CC" class="">Cocos ( Keeling ) Islands</option>
+<option value="tfa_Colombia" class="">Colombia</option>
+<option value="KM" class="">Comoros</option>
+<option value="CG" class="">Congo</option>
+<option value="CK" class="">Cook Islands</option>
+<option value="CR" class="">Costa Rica</option>
+<option value="CI" class="">Côte d ' Ivoire</option>
+<option value="HR" class="">Croatia ( Hrvatska )</option>
+<option value="CU" class="">Cuba</option>
+<option value="CY" class="">Cyprus</option>
+<option value="CZ" class="">Czech Republic</option>
+<option value="CD" class="">Congo ( DRC )</option>
+<option value="DK" class="">Denmark</option>
+<option value="DJ" class="">Djibouti</option>
+<option value="DM" class="">Dominica</option>
+<option value="DO" class="">Dominican Republic</option>
+<option value="TP" class="">East Timor</option>
+<option value="EC" class="">Ecuador</option>
+<option value="EG" class="">Egypt</option>
+<option value="SV" class="">El Salvador</option>
+<option value="GQ" class="">Equatorial Guinea</option>
+<option value="ER" class="">Eritrea</option>
+<option value="EE" class="">Estonia</option>
+<option value="ET" class="">Ethiopia</option>
+<option value="FK" class="">Falkland Islands ( Islas Malvinas )</option>
+<option value="FO" class="">Faroe Islands</option>
+<option value="FJ" class="">Fiji Islands</option>
+<option value="FI" class="">Finland</option>
+<option value="FR" class="">France</option>
+<option value="GF" class="">French Guiana</option>
+<option value="PF" class="">French Polynesia</option>
+<option value="TF" class="">French Southern and Antarctic Lands</option>
+<option value="tfa_Gabon" class="">Gabon</option>
+<option value="GM" class="">Gambia</option>
+<option value="GE" class="">Georgia</option>
+<option value="tfa_Germany" class="">Germany</option>
+<option value="GH" class="">Ghana</option>
+<option value="GI" class="">Gibraltar</option>
+<option value="GR" class="">Greece</option>
+<option value="GL" class="">Greenland</option>
+<option value="GD" class="">Grenada</option>
+<option value="GP" class="">Guadeloupe</option>
+<option value="tfa_Guam" class="">Guam</option>
+<option value="GT" class="">Guatemala</option>
+<option value="GN" class="">Guinea</option>
+<option value="GW" class="">Guinea-Bissau</option>
+<option value="GY" class="">Guyana</option>
+<option value="HT" class="">Haiti</option>
+<option value="HM" class="">Heard Island and McDonald Islands</option>
+<option value="HN" class="">Honduras</option>
+<option value="HK" class="">Hong Kong SAR</option>
+<option value="HU" class="">Hungary</option>
+<option value="IS" class="">Iceland</option>
+<option value="tfa_India" class="">India</option>
+<option value="tfa_Indonesia" class="">Indonesia</option>
+<option value="IR" class="">Iran</option>
+<option value="IQ" class="">Iraq</option>
+<option value="IE" class="">Ireland</option>
+<option value="tfa_Israel" class="">Israel</option>
+<option value="IT" class="">Italy</option>
+<option value="JM" class="">Jamaica</option>
+<option value="JP" class="">Japan</option>
+<option value="JO" class="">Jordan</option>
+<option value="KZ" class="">Kazakhstan</option>
+<option value="KE" class="">Kenya</option>
+<option value="KI" class="">Kiribati</option>
+<option value="KR" class="">Korea</option>
+<option value="KW" class="">Kuwait</option>
+<option value="KG" class="">Kyrgyzstan</option>
+<option value="tfa_Laos" class="">Laos</option>
+<option value="LV" class="">Latvia</option>
+<option value="LB" class="">Lebanon</option>
+<option value="LS" class="">Lesotho</option>
+<option value="LR" class="">Liberia</option>
+<option value="LY" class="">Libya</option>
+<option value="LI" class="">Liechtenstein</option>
+<option value="LT" class="">Lithuania</option>
+<option value="LU" class="">Luxembourg</option>
+<option value="tfa_MacaoSAR" class="">Macao SAR</option>
+<option value="MK" class="">Macedonia, Former Yugoslav Republic of</option>
+<option value="MG" class="">Madagascar</option>
+<option value="MW" class="">Malawi</option>
+<option value="MY" class="">Malaysia</option>
+<option value="MV" class="">Maldives</option>
+<option value="ML" class="">Mali</option>
+<option value="tfa_Malta" class="">Malta</option>
+<option value="MH" class="">Marshall Islands</option>
+<option value="MQ" class="">Martinique</option>
+<option value="MR" class="">Mauritania</option>
+<option value="MU" class="">Mauritius</option>
+<option value="YT" class="">Mayotte</option>
+<option value="MX" class="">Mexico</option>
+<option value="FM" class="">Micronesia</option>
+<option value="tfa_Moldova" class="">Moldova</option>
+<option value="MC" class="">Monaco</option>
+<option value="tfa_Mongolia" class="">Mongolia</option>
+<option value="tfa_Montserrat" class="">Montserrat</option>
+<option value="tfa_Morocco" class="">Morocco</option>
+<option value="MZ" class="">Mozambique</option>
+<option value="MM" class="">Myanmar</option>
+<option value="NA" class="">Namibia</option>
+<option value="NR" class="">Nauru</option>
+<option value="NP" class="">Nepal</option>
+<option value="NL" class="">Netherlands</option>
+<option value="AN" class="">Netherlands Antilles</option>
+<option value="tfa_NewCaledonia" class="">New Caledonia</option>
+<option value="NZ" class="">New Zealand</option>
+<option value="NI" class="">Nicaragua</option>
+<option value="tfa_Niger" class="">Niger</option>
+<option value="NG" class="">Nigeria</option>
+<option value="NU" class="">Niue</option>
+<option value="NF" class="">Norfolk Island</option>
+<option value="KP" class="">North Korea</option>
+<option value="tfa_NorthernMarianaI" class="">Northern Mariana Islands</option>
+<option value="NO" class="">Norway</option>
+<option value="OM" class="">Oman</option>
+<option value="PK" class="">Pakistan</option>
+<option value="tfa_Palau" class="">Palau</option>
+<option value="tfa_Panama" class="">Panama</option>
+<option value="PG" class="">Papua New Guinea</option>
+<option value="PY" class="">Paraguay</option>
+<option value="PE" class="">Peru</option>
+<option value="PH" class="">Philippines</option>
+<option value="PN" class="">Pitcairn Islands</option>
+<option value="PL" class="">Poland</option>
+<option value="PT" class="">Portugal</option>
+<option value="tfa_PuertoRico" class="">Puerto Rico</option>
+<option value="QA" class="">Qatar</option>
+<option value="RE" class="">Reunion</option>
+<option value="RO" class="">Romania</option>
+<option value="RU" class="">Russia</option>
+<option value="RW" class="">Rwanda</option>
+<option value="WS" class="">Samoa</option>
+<option value="SM" class="">San Marino</option>
+<option value="ST" class="">São Tomé and Prìncipe</option>
+<option value="SA" class="">Saudi Arabia</option>
+<option value="SN" class="">Senegal</option>
+<option value="YU" class="">Serbia and Montenegro</option>
+<option value="tfa_Seychelles" class="">Seychelles</option>
+<option value="SL" class="">Sierra Leone</option>
+<option value="SG" class="">Singapore</option>
+<option value="SK" class="">Slovakia</option>
+<option value="SI" class="">Slovenia</option>
+<option value="SB" class="">Solomon Islands</option>
+<option value="SO" class="">Somalia</option>
+<option value="ZA" class="">South Africa</option>
+<option value="GS" class="">South Georgia and the South Sandwich Islands</option>
+<option value="ES" class="">Spain</option>
+<option value="LK" class="">Sri Lanka</option>
+<option value="SH" class="">St. Helena</option>
+<option value="KN" class="">St. Kitts and Nevis</option>
+<option value="LC" class="">St. Lucia</option>
+<option value="PM" class="">St. Pierre and Miquelon</option>
+<option value="VC" class="">St. Vincent and the Grenadines</option>
+<option value="tfa_Sudan" class="">Sudan</option>
+<option value="SR" class="">Suriname</option>
+<option value="SJ" class="">Svalbard and Jan Mayen</option>
+<option value="SZ" class="">Swaziland</option>
+<option value="SE" class="">Sweden</option>
+<option value="CH" class="">Switzerland</option>
+<option value="SY" class="">Syria</option>
+<option value="TW" class="">Taiwan</option>
+<option value="TJ" class="">Tajikistan</option>
+<option value="TZ" class="">Tanzania</option>
+<option value="TH" class="">Thailand</option>
+<option value="TG" class="">Togo</option>
+<option value="TK" class="">Tokelau</option>
+<option value="TO" class="">Tonga</option>
+<option value="TT" class="">Trinidad and Tobago</option>
+<option value="tfa_Tunisia" class="">Tunisia</option>
+<option value="TR" class="">Turkey</option>
+<option value="TM" class="">Turkmenistan</option>
+<option value="TC" class="">Turks and Caicos Islands</option>
+<option value="TV" class="">Tuvalu</option>
+<option value="UG" class="">Uganda</option>
+<option value="UA" class="">Ukraine</option>
+<option value="AE" class="">United Arab Emirates</option>
+<option value="UK" class="">United Kingdom</option>
+<option value="US" class="">United States</option>
+<option value="UM" class="">United States Minor Outlying Islands</option>
+<option value="UY" class="">Uruguay</option>
+<option value="UZ" class="">Uzbekistan</option>
+<option value="VU" class="">Vanuatu</option>
+<option value="tfa_VaticanCity" class="">Vatican City</option>
+<option value="VE" class="">Venezuela</option>
+<option value="VN" class="">Viet Nam</option>
+<option value="VG" class="">Virgin Islands ( British )</option>
+<option value="tfa_VirginIslands" class="">Virgin Islands</option>
+<option value="WF" class="">Wallis and Futuna</option>
+<option value="YE" class="">Yemen</option>
+<option value="ZM" class="">Zambia</option>
+<option value="ZW" class="">Zimbabwe</option></select> <br>
+</div>
+<div id="tfa_NoLabelonChoice-D" class="oneField">
+<label class="preField">No Label on Choice</label> <span id="tfa_NoLabelonChoice" class="choices"><span class="oneChoice"><input type="checkbox" value="tfa_7673757437176" class="" id="tfa_7673757437176" name="tfa_7673757437176"><label for="tfa_7673757437176" class="postField"></label></span></span> <br>
+</div>
+<div id="tfa_multipleselect-D" class="oneField">
+<label class="preField" for="tfa_multipleselect">multiple select</label> <select id="tfa_multipleselect" multiple name="tfa_multipleselect[]" class=""><option value="">Please select...</option>
+<option value="tfa_water" class="">water</option>
+<option value="tfa_wine" class="">wine</option>
+<option value="tfa_beer" class="">beer</option>
+<option value="tfa_rootbeer" class="">root beer</option>
+<option value="tfa_coke" class="">coke</option>
+<option value="tfa_lemonsugarwater" class="">lemon; sugar; water</option></select> <br>
+</div>
+<div id="tfa_Radio-D" class="oneField">
+<label class="preField">Radio</label> <span id="tfa_Radio" class="choices"><span class="oneChoice"><input type="radio" value="tfa_testa" class="" id="tfa_testa" name="tfa_Radio"><label for="tfa_testa" class="postField">testa</label></span><span class="oneChoice"><input type="radio" value="tfa_testb" class="" id="tfa_testb" name="tfa_Radio"><label for="tfa_testb" class="postField">testb</label></span><span class="oneChoice"><input type="radio" value="tfa_testc" class="" id="tfa_testc" name="tfa_Radio"><label for="tfa_testc" class="postField">testc</label></span></span> <br>
+</div>
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="24" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="627293b463bdf39ff926a42abea4f763" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="11" name="tfa_dbVersionId" id="tfa_dbVersionId">
+</div>
+<div class="saveAndResume"><div class="oneField">
+<a href="#" id="tfa_saveForLaterLink">Save my progress and resume later</a>
+				
+				| <a href="http://local.app/forms/resume/24" onclick="return confirm('Are you sure you want to resume a previous response? Any information you just entered on this page will be discarded.');">resume a previously saved form</a>
+</div></div>
+</form>
+<script type="text/javascript" src="http://local.app/js/populate_form.js"></script></div>
+		<p class="supportInfo" >
+						<a href="http://local.app/forms/help/24" target="new" style="font-size: 0.7em;">
+				Need assistance with this form?			</a>
+
+            		</p>
+
+
+
+
+	</div>
+	</div>
+
+	
+
+</body>
+</html>
