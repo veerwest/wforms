@@ -43,7 +43,7 @@ if (typeof(wFORMS) == "undefined") {
 	wFORMS = {};
 }
 wFORMS.NAME 	= "wFORMS";
-wFORMS.VERSION 	= "3.2";
+wFORMS.VERSION 	= "3.3";
 wFORMS.__repr__ = function () {
 	return "[" + this.NAME + " " + this.VERSION + "]";
 };
