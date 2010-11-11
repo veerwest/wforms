@@ -9,7 +9,8 @@
        
 	   function wFormsTestSuite() {
             var suite = new top.jsUnitTestSuite();			
-			
+
+            suite.addTestPage("../test-prefill.html");
 			suite.addTestPage("../test-mootools-compatibility.html");
 			suite.addTestPage("../test-jquery-compatibility.html");
         	suite.addTestPage("../test-calculations.html");       
@@ -25,8 +26,7 @@
 			suite.addTestPage("../test-speed.html");				
 			suite.addTestPage("../test-paging.html"); 
 			suite.addTestPage("../test-build.html"); 
-						
-           	return suite;
+			return suite;
         }
 		
 		function suite() {

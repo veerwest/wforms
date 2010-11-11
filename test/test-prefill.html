@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>wForms 3.0 - Prefilling  Behavior Test Suite</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+
+<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+
+
+<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
+<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+
+
+<script type="text/javascript" src="../wforms_core.js"></script>
+<script type="text/javascript" src="../wforms_prefill.js"></script>
+
+ 
+<script type="text/javascript">
+
+	wFORMS.behaviors.prefill.instance.prototype.onApply = function() {} 
+
+	function setUpPage() {
+
+		// override the getParameters method to feed our own test query string.
+		var qs = "tfa_a=1&tfa_Checkboxes=blue; tfa_c&tfa_Name=test&tfa_Radio=tfa_testc&tfa_multipleselect=wine; root beer&tfa_Comment=test 2&tfa_DropDown=2";
+				
+		var params = wFORMS.behaviors.prefill.instance.prototype.getParameters(qs);
+		wFORMS.behaviors.prefill.instance.prototype.getParameters = function() { return params; }	
+		
+		bInstance = wFORMS.behaviors.prefill.applyTo(document.getElementById('testForm'));
+		setUpPageStatus = 'complete';
+	}
+  
+  	function setUp() {}
+	
+	function tearDown() {}
+
+	function test_getParameters() {
+		var test = bInstance.getParameters();
+		assertEquals('object', typeof test);
+		assertEquals('1', test['tfa_a']);
+		assertEquals('blue; tfa_c', test['tfa_Checkboxes']);
+		assertEquals('test', test['tfa_Name']);
+		assertEquals('test', test['tfa_Name']);
+		assertEquals('tfa_testc', test['tfa_Radio']);
+		assertEquals('wine; root beer', test['tfa_multipleselect']);		
+	}
+
+	function test_textinput() {
+		var fld = document.getElementById('tfa_Name');
+		assertEquals('test', fld.value);
+	}
+
+	function test_checkboxes() {
+		// prefilling by setting the checkbox id to 1 directly.
+		var fld = document.getElementById('tfa_a');
+		assertTrue(fld.checked);
+		// prefilling by giving a wrapper id and the correct checkbox label 
+		var fld = document.getElementById('tfa_b');
+		assertTrue(fld.checked);
+		// prefilling by giving a wrapper id and the correct checkbox id
+		var fld = document.getElementById('tfa_c');
+		assertTrue(fld.checked);
+		// not prefilled
+		var fld = document.getElementById('tfa_d');
+		assertFalse(fld.checked);
+		// not prefilled
+		var fld = document.getElementById('tfa_redpurple');
+		assertFalse(fld.checked);
+	}
+
+	function test_radio() {
+		var fld = document.getElementById('tfa_testc');
+		assertTrue(fld.checked);
+		var fld = document.getElementById('tfa_testa');
+		assertFalse(fld.checked);
+		var fld = document.getElementById('tfa_testb');
+		assertFalse(fld.checked);
+	}
+
+	function test_textarea() {
+		var fld = document.getElementById('tfa_Comment');
+		assertEquals('test 2', fld.value);
+	}
+
+	function test_select() {
+		var fld = document.getElementById('tfa_DropDown');
+		assertEquals(2, fld.selectedIndex);
+		var opt = fld.options[1];
+		assertFalse(opt.selected);
+		var opt = fld.options[2];
+		assertTrue(opt.selected);
+	}
+
+	function test_selectmultiple() {
+		var fld = document.getElementById('tfa_multipleselect');
+		assertFalse(fld.options[0].selected);
+		assertFalse(fld.options[1].selected);
+		assertTrue(fld.options[2].selected);
+		assertFalse(fld.options[3].selected);
+		assertTrue(fld.options[4].selected);
+		assertFalse(fld.options[5].selected);
+		assertFalse(fld.options[6].selected);
+
+	}
+	
+</script>
+</head>
+<body>
+
+<form method="post" action="" enctype="multipart/form-data" id="testForm">
+	<div id="tfa_Name-D" class="oneField">
+		<label class="preField" for="tfa_Name">First Name</label> 
+		<input type="text" id="tfa_Name" name="tfa_Name" value="" size="40" class=""> <br>
+	</div>
+
+	<div id="tfa_Comment-D" class="oneField">
+		<label class="preField" for="tfa_Comment">Comment</label> 
+		<textarea cols="40" rows="4" id="tfa_Comment" name="tfa_Comment" class=""></textarea> <br>
+	</div>
+		
+	<div id="tfa_DropDown-D" class="oneField">
+		<label class="preField" for="tfa_DropDown">Drop-Down</label> 
+		<select id="tfa_DropDown" name="tfa_DropDown" class="">
+			<option value="">Please select...</option>
+			<option value="tfa_1" class="">1</option>
+			<option value="tfa_2" class="">2</option>
+			<option value="tfa_3" class="">3</option>
+			<option value="tfa_4" class="">4</option>
+			<option value="tfa_5" class="">5</option>
+		</select> <br>
+	</div>
+	<div id="tfa_Checkboxes-D" class="oneField">
+		<label class="preField">Checkboxes</label> 
+		<span id="tfa_Checkboxes" class="choices">
+			<span class="oneChoice">
+				<input type="checkbox" value="tfa_a" class="" id="tfa_a" name="tfa_a">
+				<label for="tfa_a" class="postField">red</label>
+			</span>
+			<span class="oneChoice">
+				<input type="checkbox" value="tfa_b" class="" id="tfa_b" name="tfa_b">
+				<label for="tfa_b" class="postField">blue</label>
+			</span>
+			<span class="oneChoice">
+				<input type="checkbox" value="tfa_c" class="" id="tfa_c" name="tfa_c">
+				<label for="tfa_c" class="postField">yellow</label>
+			</span>
+			<span class="oneChoice">
+				<input type="checkbox" value="tfa_d" class="" id="tfa_d" name="tfa_d">
+				<label for="tfa_d" class="postField">black</label>
+			</span>
+			<span class="oneChoice">
+				<input type="checkbox" value="tfa_redpurple" class="" id="tfa_redpurple" name="tfa_redpurple">
+				<label for="tfa_redpurple" class="postField">red; purple</label>
+			</span>
+		</span> <br>
+	</div>
+	
+	<div id="tfa_NoLabelonChoice-D" class="oneField">
+		<label class="preField">No Label on Choice</label> 
+		<span id="tfa_NoLabelonChoice" class="choices">
+			<span class="oneChoice">
+				<input type="checkbox" value="tfa_7673757437176" class="" id="tfa_7673757437176" name="tfa_7673757437176">
+				<label for="tfa_7673757437176" class="postField"></label>
+			</span>
+		</span> <br>
+	</div>
+
+	<div id="tfa_multipleselect-D" class="oneField">
+		<label class="preField" for="tfa_multipleselect">multiple select</label> 
+		<select id="tfa_multipleselect" multiple name="tfa_multipleselect[]" class="">
+			<option value="">Please select...</option>
+			<option value="tfa_water" class="">water</option>
+			<option value="tfa_wine" class="">wine</option>
+			<option value="tfa_beer" class="">beer</option>
+			<option value="tfa_rootbeer" class="">root beer</option>
+			<option value="tfa_coke" class="">coke</option>
+			<option value="tfa_lemonsugarwater" class="">lemon; sugar; water</option>
+		</select> <br>
+	</div>
+	<div id="tfa_Radio-D" class="oneField">
+		<label class="preField">Radio</label> 
+		<span id="tfa_Radio" class="choices">
+			<span class="oneChoice">
+				<input type="radio" value="tfa_testa" class="" id="tfa_testa" name="tfa_Radio">
+				<label for="tfa_testa" class="postField">testa</label>
+			</span>
+			<span class="oneChoice">
+				<input type="radio" value="tfa_testb" class="" id="tfa_testb" name="tfa_Radio">
+				<label for="tfa_testb" class="postField">testb</label>
+			</span>
+			<span class="oneChoice">
+				<input type="radio" value="tfa_testc" class="" id="tfa_testc" name="tfa_Radio">
+				<label for="tfa_testc" class="postField">testc</label>
+			</span>
+		</span> <br>
+	</div>
+	
+<script>
+
+</script>
+</body>
