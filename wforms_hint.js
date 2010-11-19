@@ -52,7 +52,7 @@ wFORMS.behaviors.hint.applyTo = function(f) {
 	var b = new wFORMS.behaviors.hint.instance(f);
 	// Selects all hints elements using predefined selector and attaches
 	// event listeners to related HTML elements for each hint
-	if(!f.querySelectorAll) base2.DOM.bind(f);
+	if(!f.querySelectorAll) wFORMS.standardizeElement(f);
 	var elems = f.querySelectorAll(wFORMS.behaviors.hint.HINT_SELECTOR);
 	
 	if(!elems.forEach){
@@ -69,7 +69,7 @@ wFORMS.behaviors.hint.applyTo = function(f) {
 			// if(!elem.id) { return ; }
 			var e = b.getElementByHintId(elem.id);
 			if(e){
-				if(!e.addEventListener) base2.DOM.bind(e);
+				if(!e.addEventListener) wFORMS.standardizeElement(e);
 				if(e.tagName == "SELECT" || e.tagName == "TEXTAREA" || (e.tagName == "INPUT" && e.type != "radio" && e.type != "checkbox")){							
 					e.addEventListener('focus', function(event) { b.run(event, this)}, false);
 					e.addEventListener('blur',  function(event) { b.run(event, this)}, false);	
@@ -99,7 +99,7 @@ wFORMS.behaviors.hint.instance.prototype.run = function(event, element) {
 	
 	var hint = this.getHintElement(element);
 	if(!hint) return;
-	if(!hint.removeClass) base2.DOM.bind(hint);
+	if(!hint.removeClass) wFORMS.standardizeElement(hint);
 	
 	if(event.type == 'focus' || event.type == 'mouseover'){
 		hint.removeClass(wFORMS.behaviors.hint.CSS_INACTIVE)
@@ -130,7 +130,7 @@ wFORMS.behaviors.hint.instance.prototype.getElementByHintId = function(hintId){
  */
 wFORMS.behaviors.hint.instance.prototype.getHintElement = function(element){
 	var e = document.getElementById(element.id + this.behavior.HINT_SUFFIX);
-	if(e && !e.hasClass){base2.DOM.bind(e);}
+	if(e && !e.hasClass){wFORMS.standardizeElement(e);}
 	return e && e != '' ? e : null;
 }
 
