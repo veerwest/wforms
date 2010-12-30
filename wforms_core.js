@@ -367,6 +367,9 @@ wFORMS.standardizeElement = function(elem) {
 	if(!elem.addClass) {
 		elem.addClass = function(className) { return base2.DOM.HTMLElement.addClass(this,className) };	
 	}
+	if(!elem.forEach){
+		elem.forEach = function (a, b) { for (var i = 0; i < this.length; i++) { a.call(b, this.item(i), i, this); } };
+	}	
 }
 /**
  * Initialization routine. Automatically applies all behaviors to the given element.

@@ -73,7 +73,9 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 	}
 	
 	
-	f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR).forEach(
+	var fc = f.querySelectorAll(wFORMS.behaviors.calculation.CALCULATION_SELECTOR);
+	if(!fc.forEach){wFORMS.standardizeElement(fc);};
+	fc.forEach(
 		function(elem){
 			// extract formula
 			var formula = elem.className.substr(elem.className.indexOf('formula=')+8).split(' ')[0];
@@ -90,7 +92,9 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 						f.querySelectorAll("*[class*=\"...\"]");
 					Library call works fine: base2.DOM.Document.querySelectorAll(...) 
 					*/
-					base2.DOM.Document.querySelectorAll(f,"*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+"\"]").forEach(
+					var ff = base2.DOM.Document.querySelectorAll(f,"*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+"\"]");
+					if(!ff.forEach){wFORMS.standardizeElement(ff);};
+					ff.forEach(
 						function(variable){
 							if(!variable.addEventListener) {
 								base2.DOM.bind(variable);
@@ -214,7 +218,9 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 			f.querySelectorAll("*[class*=\"...\"]");
 		Library call works fine: base2.DOM.Document.querySelectorAll(...) 
 		*/
-		base2.DOM.Document.querySelectorAll(f,"*[class*=\""+_self.behavior.VARIABLE_SELECTOR_PREFIX+v.name+"\"]").forEach(
+		var ff = base2.DOM.Document.querySelectorAll(f,"*[class*=\""+_self.behavior.VARIABLE_SELECTOR_PREFIX+v.name+"\"]");
+		if(!ff.forEach){wFORMS.standardizeElement(ff);};
+		ff.forEach(
 			function(variable){
 								
 				// make sure the variable is an exact match.

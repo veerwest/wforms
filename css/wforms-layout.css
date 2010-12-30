@@ -263,7 +263,9 @@
 	white-space: normal !important;
 }
 /* Field Hint with focus (displayed as a tooltip)*/
-.wForm .hintsTooltip .field-hint {		
+.wForm .hintsTooltip .field-hint {
+	background-color:#FFFBB8;
+	border:1px solid #FFC20D;		
 	position: absolute;
 	z-index: 50;
 	display: block;

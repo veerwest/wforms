@@ -58,7 +58,7 @@ wFORMS.behaviors.hint.applyTo = function(f) {
 	if(!elems.forEach){
 		//Make sure elems have forEach property since Opera doesn't let us override
 		//StaticNodeList.prototype
-		elems.forEach = NodeList.prototype.forEach;
+		wFORMS.standardizeElement(elems);
 	}
 	
 	elems.forEach(
@@ -69,6 +69,7 @@ wFORMS.behaviors.hint.applyTo = function(f) {
 			// if(!elem.id) { return ; }
 			var e = b.getElementByHintId(elem.id);
 			if(e){
+				wFORMS.standardizeElement(e);
 				if(!e.addEventListener) base2.DOM.bind(e);
 				if(e.tagName == "SELECT" || e.tagName == "TEXTAREA" || (e.tagName == "INPUT" && e.type != "radio" && e.type != "checkbox")){							
 					e.addEventListener('focus', function(event) { b.run(event, this)}, false);
@@ -99,6 +100,7 @@ wFORMS.behaviors.hint.instance.prototype.run = function(event, element) {
 	
 	var hint = this.getHintElement(element);
 	if(!hint) return;
+	wFORMS.standardizeElement(hint);
 	if(!hint.removeClass) base2.DOM.bind(hint);
 	
 	if(event.type == 'focus' || event.type == 'mouseover'){

@@ -225,7 +225,9 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 		}
 		
 		/* check descendant nodes and run validation on matching elements */
- 		element.querySelectorAll(rule.selector).forEach(_run);
+		var ee = element.querySelectorAll(rule.selector);
+		if(!ee.forEach){wFORMS.standardizeElement(ee);};	
+ 		ee.forEach(_run);
  	}
 	
  	if(errorCount > 0) {

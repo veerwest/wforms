@@ -145,7 +145,9 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 	
 	
 	// Iterates over the elements with specified class names
-	f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR).forEach(
+	var pp = f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR);
+	if(!pp.forEach){wFORMS.standardizeElement(pp);};
+	pp.forEach(
 		function(elem){
 			if(!b) {
 				b = new wFORMS.behaviors.paging.instance(f)

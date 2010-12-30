@@ -181,7 +181,9 @@ _b.applyTo = function(f) {
 		base2.DOM.bind(f);
 	}
 
-	f.querySelectorAll(this.SELECTOR_REPEAT).forEach(
+	var fr = f.querySelectorAll(this.SELECTOR_REPEAT);
+	if(!fr.forEach){wFORMS.standardizeElement(fr);};
+	fr.forEach(
 		function(elem){
 			if(_self.isHandled(elem)){
 				return ;
@@ -210,7 +212,9 @@ _b.applyTo = function(f) {
 		}
 	}
 	
-	f.querySelectorAll(this.SELECTOR_REMOVEABLE).forEach(function(e){
+	var fr = f.querySelectorAll(this.SELECTOR_REMOVEABLE);
+	if(!fr.forEach){wFORMS.standardizeElement(fr);};
+	fr.forEach(function(e){
 		var m  = wFORMS.behaviors.repeat.getMasterSection(e);
 		var _i = wFORMS.getBehaviorInstance(m, 'repeat');
 		if(_i) {
