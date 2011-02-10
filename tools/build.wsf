@@ -7,7 +7,7 @@
 	var cwd = FileSystem.GetParentFolderName(WScript.ScriptFullName);
 	var srcDir = cwd + "/../";
 
-	var base2_version = "v1.0";
+	var base2_version = "v1.0.1";
 	
 	var outfile = cwd + "/../build/wforms.js";
 	var outfile_packed  = cwd + "/../build/wforms_pack.js";

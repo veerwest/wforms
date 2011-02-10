@@ -14,7 +14,7 @@ For more information, visit: http://www.formassembly.com/wForms
 wForms version 3.0 by Demid Nikitin and Cedric Savarese.
 wForms 3.0 requires base2 - copyright 2007, Dean Edwards. */'''
 
-base2_version = "beta2";
+base2_version = "v1.0.1";
 
 modules = (
 	'lib/base2/'+base2_version+'/src/base2.js',
