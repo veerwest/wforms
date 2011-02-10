@@ -69,6 +69,20 @@
 				}
 			}
 		}
+
+		function testRun() {
+			var form = document.getElementById('testForm');
+			var behavior = wFORMS.getBehaviorInstance(form, 'hint');
+			var h = document.getElementById('test-field-0-H');
+
+			assertEquals(h.className, 'field-hint-inactive');
+						
+			behavior.run({type:'focus'}, document.getElementById('test-field-0'));
+			assertEquals(h.className, 'field-hint');
+
+			behavior.run({type:'blur'}, document.getElementById('test-field-0'));
+			assertEquals(h.className, 'field-hint-inactive');		
+		}
 		
 	</script>
 	</head>
@@ -130,6 +144,7 @@
 			<p id="test-field-5">Not a field</p>
 			<div class="field-hint-inactive" id="test-field-5-H"><span>Yes</span></div>
             
+            <a href="#" onclick="testRun(); return false;">test</a>
         </form>
     </body>
 </html>
