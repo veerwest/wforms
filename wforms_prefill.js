@@ -36,13 +36,13 @@ wFORMS.behaviors.prefill.applyTo = function(f) {
     	} else {
     	    // Allow checkbox selection by providing the id of a wrapper element and a list of labels or ids for the check boxes.
     	    var div = document.getElementById(fieldName);
-    	    if(div) {
-    	        var flds = div.querySelectorAll('input[type=checkbox]').forEach(function(fld) {
-    	        	bi.populateField(fld, params[fieldName], _bs, _bc);
-    	        });
-    	    }
-    	}
-    	
+    	    var flds = div.getElementsByTagName('input');
+    	    for(var i=0;i<flds.length;i++) {
+    	    	if(flds[i].getAttribute('type')=='checkbox') {   
+    	    		bi.populateField(flds[i], params[fieldName], _bs, _bc);
+    	    	}
+    	    }    	   
+    	}    	
     }	
 	bi.onApply();
 	return bi;	   

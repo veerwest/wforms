@@ -12,8 +12,8 @@
 <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
 
 
-<script type="text/javascript" src="../lib/base2/v1.0/src/base2.js"></script>
-<script type="text/javascript" src="../lib/base2/v1.0/src/base2-dom.js"></script>
+<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2.js"></script>
+<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2-dom.js"></script>
 
 
 <script type="text/javascript" src="../wforms_core.js"></script>
@@ -21,26 +21,32 @@
 
  
 <script type="text/javascript">
+	base2.DOM.Element.removeEventListener(document,"DOMContentLoaded",wFORMS.onLoadHandler,false);
 
-	wFORMS.behaviors.prefill.instance.prototype.onApply = function() {} 
+	wFORMS.behaviors.prefill.instance.prototype.onApply = function() {  } 
+	// override the getParameters method to feed our own test query string.
+	var qs = "tfa_a=1&tfa_Checkboxes=blue; tfa_c&tfa_Name=test&tfa_Radio=tfa_testc&tfa_multipleselect=wine; root beer&tfa_Comment=test 2&tfa_DropDown=2";
+			
+	var params = wFORMS.behaviors.prefill.instance.prototype.getParameters(qs);
+	wFORMS.behaviors.prefill.instance.prototype.getParameters = function() { return params; }
 
-	function setUpPage() {
-
-		// override the getParameters method to feed our own test query string.
-		var qs = "tfa_a=1&tfa_Checkboxes=blue; tfa_c&tfa_Name=test&tfa_Radio=tfa_testc&tfa_multipleselect=wine; root beer&tfa_Comment=test 2&tfa_DropDown=2";
-				
-		var params = wFORMS.behaviors.prefill.instance.prototype.getParameters(qs);
-		wFORMS.behaviors.prefill.instance.prototype.getParameters = function() { return params; }	
-		
-		bInstance = wFORMS.behaviors.prefill.applyTo(document.getElementById('testForm'));
-		setUpPageStatus = 'complete';
-	}
+	
+	function setUpPage() {}
   
   	function setUp() {}
 	
 	function tearDown() {}
 
+	function test_applyto() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+		assertEquals(typeof bInstance, 'object'); 
+	}
+	
 	function test_getParameters() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+
 		var test = bInstance.getParameters();
 		assertEquals('object', typeof test);
 		assertEquals('1', test['tfa_a']);
@@ -52,11 +58,17 @@
 	}
 
 	function test_textinput() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+		
 		var fld = document.getElementById('tfa_Name');
 		assertEquals('test', fld.value);
 	}
 
 	function test_checkboxes() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+		
 		// prefilling by setting the checkbox id to 1 directly.
 		var fld = document.getElementById('tfa_a');
 		assertTrue(fld.checked);
@@ -75,6 +87,9 @@
 	}
 
 	function test_radio() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+		
 		var fld = document.getElementById('tfa_testc');
 		assertTrue(fld.checked);
 		var fld = document.getElementById('tfa_testa');
@@ -84,11 +99,17 @@
 	}
 
 	function test_textarea() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+		
 		var fld = document.getElementById('tfa_Comment');
 		assertEquals('test 2', fld.value);
 	}
 
 	function test_select() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+		
 		var fld = document.getElementById('tfa_DropDown');
 		assertEquals(2, fld.selectedIndex);
 		var opt = fld.options[1];
@@ -98,6 +119,9 @@
 	}
 
 	function test_selectmultiple() {
+		var f = document.getElementById('testForm');
+		var bInstance =  wFORMS.behaviors.prefill.applyTo(f);
+		
 		var fld = document.getElementById('tfa_multipleselect');
 		assertFalse(fld.options[0].selected);
 		assertFalse(fld.options[1].selected);
@@ -201,7 +225,6 @@
 		</span> <br>
 	</div>
 	
-<script>
-
-</script>
+	<a href="#" onclick="test_applyto();  return false;">Test</a>
+ 	<script>setUpPageStatus = 'complete';</script>
 </body>
