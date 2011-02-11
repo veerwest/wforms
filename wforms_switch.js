@@ -759,16 +759,15 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 					
 		for(var j=0; j<this.cache[switchName].targets.length;j++) {
 			var elem = this.cache[switchName].targets[j];
+			
 						
-			if(!this.inScope(element,elem)) {
+			if(!this.inScope(element,elem)) {				
 				continue;
 			}
 						
 			wFORMS.standardizeElement(elem);
-			
 			elem.addClass(wFORMS.behaviors['switch'].CSS_OFFSTATE_PREFIX + switchName);
 			elem.removeClass(wFORMS.behaviors['switch'].CSS_ONSTATE_PREFIX + switchName);			
-							
 			var _triggers = this.getTriggersByTarget(elem);
 			
 			if(_triggers.ON.length == 0){				
@@ -778,10 +777,9 @@ wFORMS.behaviors['switch'].instance.prototype.run = function(e, element){
 	}
 	for(var i=0; i<triggers.ON.length;i++) {
 		var switchName = triggers.ON[i];
-		for(var j=0; j<this.cache[switchName].targets.length;j++) {			
+		for(var j=0; j<this.cache[switchName].targets.length;j++) {
 			var elem = this.cache[switchName].targets[j];
-			
-			
+						
 			if(!this.inScope(element,elem)) {
 				continue;
 			}

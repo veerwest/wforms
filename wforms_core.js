@@ -24,16 +24,14 @@ base2.DOM.HTMLElement.implement({
 	if($node.classList && $node.classList.contains) return $node.classList.contains($class);
 	else return $node.className.match(new RegExp('(\\s|^)'+$class+'(\\s|$)'));
   },
-  removeClass : function($node, $class) {
-	if($node.classList && $node.classList.remove) return $node.classList.remove($class);
-	else if (base2.DOM.HTMLElement.hasClass($node,$class)) {
-    	var reg = new RegExp('(\\s|^)'+$class+'(\\s|$)');
-    	$node.className=$node.className.replace(reg,' ').replace(/^\s+|\s+$/g,"");
-	}
+  removeClass : function($node, $class) {  
+	if (base2.DOM.HTMLElement.hasClass($node,$class)) {
+		var reg = new RegExp('(\\s|^)'+$class+'(\\s|$)');
+		$node.className=$node.className.replace(reg,' ').replace(/^\s+|\s+$/g,"");
+	} 
   },
   addClass : function($node, $class) {
-	if($node.classList && $node.classList.add) $node.classList.add($class);
-	else if (!base2.DOM.HTMLElement.hasClass($node,$class)) {
+	if (!base2.DOM.HTMLElement.hasClass($node,$class)) {
 		$node.className = ($node.className+" "+$class).replace(/^\s+|\s+$/g,"");
 	}
   }

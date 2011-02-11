@@ -74,14 +74,14 @@ wFORMS.behaviors.prefill.instance.prototype.populateField = function(fld, value,
 	    			}	
 	    		}
 	    	}
-	    	if(fld.tagName=='SELECT' && !fld.hasAttribute('multiple')) {
+	    	if(fld.tagName=='SELECT' && !fld.multiple) {
 	    		for(var j=0; j<fld.options.length; j++) {
     	            if(fld.options[j].value == value || fld.options[j].text == value) {
     	                fld.options[j].selected=true;
     	            }
     	        }
 	    	}
-	    	if(fld.tagName=='SELECT' && fld.hasAttribute('multiple')) {
+	    	if(fld.tagName=='SELECT' && fld.multiple) {
 	    	    // allow multiple selections by providing a ';' separated list of labels or ids.
 	    	    var values = value.split(';');
 	    	    for(var j=0; j<fld.options.length; j++) {
@@ -134,7 +134,7 @@ wFORMS.behaviors.prefill.instance.prototype.getLabel = function(field) {
     var fieldId = field.getAttribute('id');
     l = field.form.querySelectorAll("label[for="+fieldId+"]");
     if(l && l.length>=1) {
-        return l[0].innerHTML;
+        return l.item(0).innerHTML;
     }
     return null;
 }

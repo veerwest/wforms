@@ -103,15 +103,11 @@
 		assertEquals("onstate-e", document.getElementById('casee[0][0]').className);
 		assertEquals("offstate-e", document.getElementById('casee[0][1]').className);
 	
-		
-			
 		document.getElementById('switchd').checked = false;
 		sInstance.run(null, document.getElementById('switchd'));
 		assertEquals("repeat offstate-d", document.getElementById('cased[0][0]').className);
 		assertEquals("removeable offstate-d", document.getElementById('cased[0][1]').className);
-		
-		
-			
+						
 	}
 	
 	function testSwitchMerge() {
