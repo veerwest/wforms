@@ -574,8 +574,9 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 			}
 		}
 		
-		// Fix #152 - Radio name with IE6+
-		if(e.tagName == 'INPUT' && e.type == 'radio' && document.all && !window.opera && !preserveRadioName) {
+		// Fix #152 - Radio name with IE6, IE7?
+		if(e.tagName == 'INPUT' && e.type == 'radio' && !preserveRadioName && /*@cc_on @if(@_jscript_version < 5.8)! @end @*/false) {
+				 
 			// Create a radio input that works in IE and insert it before the input it needs to replace
 			var tagHtml = "<INPUT type=\"radio\" name=\""+e.name+suffix+"\"></INPUT>";
 			var fixedRadio = e.parentNode.insertBefore(document.createElement(tagHtml),e);
