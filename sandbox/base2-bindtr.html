@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Stack Overflow Example</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2-dom.js"></script>
+	
+	<script type="text/javascript">
+		function test(){
+			var div = document.getElementById('div');			
+			base2.DOM.bind(div);
+			
+			var div2 = div.cloneNode(true);						
+			console.log(div2.querySelector);	
+			base2.DOM.bind(div2);		
+			
+			div2.querySelector('*');
+			return false;
+		}
+ 	</script>
+</head>
+<body>
+	
+	<div id='div'></div>				
+	<a href="#" onclick="return test();">Test stack overflow</a>
+	
+	
+</body>
+</html>

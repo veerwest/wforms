@@ -326,6 +326,7 @@ wFORMS.LOADER.create = function() {
  * Initialization routine. Automatically applies the behaviors to all web forms in the document.  
  */	
 wFORMS.onLoadHandler = function() {
+
 	var forms=document.getElementsByTagName("FORM");
 	
 	for(var i=0;i<forms.length;i++) {		
@@ -373,12 +374,9 @@ wFORMS.standardizeElement = function(elem) {
  */	
 wFORMS.applyBehaviors = function(f) {
 	
-	// Test if base2 already applied. Prevents stack overflow error in test suite with IE8 standard mode.
-	//   see: http://code.google.com/p/base2/issues/detail?id=111#c2 for  
-	// reapply anyway for Opera 10 and IE <= 7 or IE8 quirk mode (unit tests fail otherwise)  
-	if(!!base2.DOM.bind[f.base2ID] || window.opera || navigator.userAgent.match(/MSIE [567]/) || (navigator.userAgent.match(/MSIE 8/) && document.compatMode=='BackCompat') ) {
-		base2.DOM.bind(f);
-	}
+	// Prevents Base2 DOM binding in IE8+ to prevent a stack overflow bug in base2 when dealing with cloned nodes (created by repeat behavior)
+	var doBind = /*@cc_on @if(@_jscript_version >= 5.8)!@end @*/true;
+	if(doBind) base2.DOM.bind(f); 
 	
 	// switch must run before paging behavior
 	if(wFORMS.behaviors['switch']){

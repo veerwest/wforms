@@ -176,13 +176,9 @@ _b.applyTo = function(f) {
 	// If need create Add new section element
 	var _self = this;
 	var b = new Array();
-	
-	if(!!base2.DOM.bind[f.base2ID]) {
-		base2.DOM.bind(f);
-	}
 
 	f.querySelectorAll(this.SELECTOR_REPEAT).forEach(
-		function(elem){
+		function(elem){ 
 			if(_self.isHandled(elem)){
 				return ;
 			}
