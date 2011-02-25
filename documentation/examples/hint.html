@@ -7,9 +7,13 @@
 	
 	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
     <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+    	.field-hint-inactive { color: #CCC; }
+    	.field-hint { color: black; background-color:#FFC; }
+    </style>
 	
-	<script type="text/javascript" src="../../lib/base2-p.js"></script>
-	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2/v1.0.1/src/base2.js"></script>
+	<script type="text/javascript" src="../../lib/base2/v1.0.1/src/base2-dom.js"></script>
 	<script type="text/javascript" src="../../wforms_core.js"></script>
 	<script type="text/javascript" src="../../wforms_repeat.js"></script>	
 	<script type="text/javascript" src="../../wforms_hint.js"></script>
@@ -17,20 +21,25 @@
 	
 	<script type="text/javascript">
        function switchHintPosition() {
-           var f = document.getElementById('hintFieldset');            
+           var f = document.getElementById('testForm');            
            if(!f.hasClass)
            base2.DOM.bind(f);
-           if(f.hasClass('hintsTooltip')) 
-            f.removeClass('hintsTooltip');
-           else 
-               f.addClass('hintsTooltip');
+           if(f.hasClass('hintsTooltip')) { 
+             f.removeClass('hintsTooltip');
+             f.addClass('hintsSide');
+           }
+           else { 
+           	f.addClass('hintsTooltip');
+            f.removeClass('hintsSide');
+           }
            return false;
        }
 	</script>
 	</head>
 
-    <body class="wForm">
-        <form id="testForm">
+    <body>
+    	<div class="wForm">
+        <form id="testForm" class="labelsLeftAligned hintsSide">
             <p><a href="#" onclick="return switchHintPosition()">Switch Hint Position</a></p>
 
             <fieldset id="hintFieldset" >
@@ -41,7 +50,7 @@
                 <div class="oneField">
                     <label for="testInputField" class="preField">Text input:</label>
                     <input id="testInputField" type="text" />
-                    <span id="testInputField-H" class="field-hint-inactive">Sample text input hint 1</span>
+                    <span id="testInputField-H" class="field-hint-inactive"><span>Sample text input hint 1</span></span>
                 </div>
 
                 <div class="oneField">
@@ -261,6 +270,7 @@
                 </fieldset>
             </fieldset>
         </form>
+        </div>
     </body>
 </html>
 
