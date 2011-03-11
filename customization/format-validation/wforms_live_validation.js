@@ -48,7 +48,10 @@ new function(_) {
 					element.addEventListener('keyup', function(e){
 						// Keep a note of which key was pressed, so we don't force a reformat when using 'backspace'.
 						_validation._keyPressed = e?e.keyCode:window.event.keyCode; 
-						return _validation.run(e, element)
+						var result = _validation.run(e, element);
+						// Reset our keyPress note. 
+						_validation._keyPressed = null;
+						return result;
 					} ,false);
 				}
  			});
