@@ -177,14 +177,30 @@ _b.applyTo = function(f) {
 	var _self = this;
 	var b = new Array();
 
+	if(!f.querySelectorAll){base2.DOM.bind(f);}
+	
+	if(wFORMS.behaviors.repeat.getMasterSection(f)){
+		var masterArray = Array();
+		var masterSection = wFORMS.behaviors.repeat.getMasterSection(f);
+			if(!masterSection.querySelectorAll){base2.DOM.bind(masterSection);}
+			
+		var masterNodes = masterSection.querySelectorAll(this.SELECTOR_REPEAT);
+			masterNodes.forEach(function(elem){
+				masterArray.push(elem.querySelector(".duplicateLink").innerHTML);
+			});
+	}	
+	
 	f.querySelectorAll(this.SELECTOR_REPEAT).forEach(
-		function(elem){ 
+		function(elem,index){ 
 			if(_self.isHandled(elem)){
 				return ;
 			}
 			if(!elem.id) elem.id = wFORMS.helpers.randomId();
 			
 			var _b = new _self.instance(elem);
+			if(masterArray && masterArray[index]){
+				_b.behavior.MESSAGES.ADD_CAPTION = masterArray[index];
+			}
 			var e = _b.getOrCreateRepeatLink(elem);
 			e.addEventListener('click', function(event) { _b.run(event, e)}, false);
 			_b.setElementHandled(elem);
