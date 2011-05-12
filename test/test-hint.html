@@ -74,14 +74,20 @@
 			var form = document.getElementById('testForm');
 			var behavior = wFORMS.getBehaviorInstance(form, 'hint');
 			var h = document.getElementById('test-field-0-H');
-
+			var h_p = h.parentNode;
+			
+			
 			assertEquals(h.className, 'field-hint-inactive');
 						
 			behavior.run({type:'focus'}, document.getElementById('test-field-0'));
 			assertEquals(h.className, 'field-hint');
 
 			behavior.run({type:'blur'}, document.getElementById('test-field-0'));
-			assertEquals(h.className, 'field-hint-inactive');		
+			assertEquals(h.className, 'field-hint-inactive');
+
+
+			//Check that hint div didn't get moved with onFocus cycle.  Should be idempotent.
+			assertEquals("Hint element was moved in onFocus cycle",h_p,h.parentNode); 		
 		}
 		
 	</script>

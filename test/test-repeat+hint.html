@@ -40,6 +40,27 @@
   	function setUp() {  }
 	
 	function tearDown() {}
+
+	function testFieldsetRepeatHintsDisplay(){
+		var parent_element = document.getElementById('testInput0');
+		var hint_element = document.getElementById('testInput0-H');
+		var hint_parent_element = hint_element.parentNode;
+		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('testRepeatForm'), 'hint');
+		
+		//Test onFocus cycle
+		assertEquals("field-hint-inactive",hint_element.className);
+			//Simulate onfocus on repeatable field with hint.
+			bInstance.run({type:"focus"},parent_element);
+		assertEquals("field-hint",hint_element.className);
+			//Simulate loss of focus on repeatable field with hint.
+			bInstance.run({type:"blur"},parent_element);
+		assertEquals("field-hint-inactive",hint_element.className);
+		
+		//Check that hint div didn't get moved with onFocus cycle.  Should be idempotent.
+		assertEquals("Hint element was moved in onFocus cycle",hint_element.parentNode,hint_parent_element); 
+		
+	}
 	
 	function testFieldsetRepeatWithFieldHints() {
 		var fieldHint = document.getElementById('testInput0-H');
@@ -69,6 +90,30 @@
 	
 	</script>
 	
+<style>
+	.field-hint-inactive {
+		/* Theoretically for IE 8 & 9 (more valid) */
+        /* ...but not required as filter works too */
+        /* should come BEFORE filter */
+        -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+
+        /* This works in IE 8 & 9 too */
+        /* ... but also 5, 6, 7 */
+        filter: alpha(opacity=20);
+
+        /* Older than Firefox 0.9 */
+        -moz-opacity:0.2;
+
+        /* Safari 1.x (pre WebKit!) */
+        -khtml-opacity: 0.2;
+
+        /* Modern!
+        /* Firefox 0.9+, Safari 2?, Chrome any?
+        /* Opera 9+, IE 9+ */
+        opacity: 0.2;
+	}
+</style>	
+	
 </head>
 
 <body class="wForm">
@@ -80,7 +125,7 @@
 				<label for="testInput0" class="preField" style="min-width:5em">Date</label>
 				<input type="text" id="testInput0" name="testInput0" value="" size="" />
 				<div class="field-hint-inactive" id="testInput0-H">
-					<span>JJ/MM/AAAA </span>
+					<span>JJ/MM/AAAA</span>
 				</div>					
 				<div id="testInput0-E" class="errMsg">error placeholder</div>
 			</div>
