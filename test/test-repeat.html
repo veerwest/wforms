@@ -323,6 +323,19 @@
 		var r = document.getElementById('radioTestYes[1]');
 		assertEquals(false, r.checked);
 	}
+	
+	function testRepeatLabelRepeat(){
+
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('repeatLabelTest'), 'repeat');
+		bInstance.run();
+	
+		var repeatedElement = document.getElementById('repeatLabelTest2[1]-wfDL');
+		assertNotNull('id should be: repeatLabelTest2[1]-wfDL',repeatedElement.id);
+		
+		var label = repeatedElement.textContent;
+		assertEquals('Label should be "RepeatNested_TEST"','RepeatNested_TEST',label);
+	
+	}
 	</script>
 	
 </head>
@@ -506,6 +519,26 @@
 		 			<label class="postField">No</label>
 		 		</span>
 			</div>			
+		</fieldset>
+
+
+		<fieldset id="repeatLabelTestParent"><legend>Parent Repeat - Label persistance</legend>
+			<fieldset class="repeat" id="repeatLabelTest"><legend>Repeat</legend>
+				<div class="oneField">
+					<input id="repeatLabelTest1" type="text" size="40" />
+				</div>
+				<fieldset class="repeat" id="repeatLabelTest2"><legend>Nested Repeat</legend>
+					<div class="oneField">
+						<input id="repeatLabelTest3" type="text" size="40" />
+					</div>
+					<div class="oneField">
+						<input id="repeatLabelTest4" type="text" size="40" />
+					</div>
+					<span class="duplicateSpan"><a id="repeatLabelTest2-wfDL" class="duplicateLink" href="#">RepeatNested_TEST</a></span>
+				</fieldset>
+				<span class="duplicateSpan"><a id="repeatLabelTest-wfDL" class="duplicateLink" href="#">Repeat_TEST</a></span>
+			</fieldset>
+			<input type="button" value="run test" onclick="testRepeatLabelRepeat()"/> 
 		</fieldset>
 		
 	</form>
