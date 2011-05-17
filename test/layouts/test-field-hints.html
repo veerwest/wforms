@@ -6,7 +6,7 @@
 	<link href="../../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
     <link href="../../css/wforms-layout.css" type="text/css" rel="stylesheet" />
 	
-	<link href="../../css/goodmeasures/wforms.css" type="text/css" rel="alternate stylesheet" title="goodmeasures theme"  />
+	<!-- <link href="../../css/goodmeasures/wforms.css" type="text/css" rel="alternate stylesheet" title="goodmeasures theme"  /> -->
 	<link href="../../css/abstract-blue/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-blue theme"  />
     <link href="../../css/abstract-brown/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-brown theme"  />
     <link href="../../css/abstract-green/wforms.css" type="text/css" rel="alternate stylesheet" title="abstract-green theme"  />
@@ -15,11 +15,11 @@
     <link href="../../css/black/wforms.css" type="text/css" rel="alternate stylesheet" title="black theme"  />
     <link href="../../css/bureaucrat/wforms.css" type="text/css" rel="alternate stylesheet" title="bureaucrat theme"  />
     <link href="../../css/vhgdesign/wforms.css" type="text/css" rel="alternate stylesheet" title="vhgdesign theme"  />
-    <link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  />
+    <!-- <link href="../../css/white/wforms.css" type="text/css" rel="alternate stylesheet" title="white theme"  /> -->
      
    
-  	<script type="text/javascript" src="../../lib/base2-p.js"></script>
-	<script type="text/javascript" src="../../lib/base2-dom-p.js"></script>
+	<script type="text/javascript" src="../../lib/base2/v1.0.1/src/base2.js"></script>
+	<script type="text/javascript" src="../../lib/base2/v1.0.1/src/base2-dom.js"></script>
 	<script type="text/javascript" src="../../wforms_core.js"></script>
 	<script type="text/javascript" src="../../wforms_hint.js"></script>	
  
@@ -47,9 +47,33 @@
 			border-left:1px solid #FFC20D;
 			border-right:1px solid #FFC20D;
 			padding:4px;
-		}
-
+		}		
 	</style>
+	
+	<style>
+		.field-hint-inactive {
+			/* Theoretically for IE 8 & 9 (more valid) */
+			/* ...but not required as filter works too */
+			/* should come BEFORE filter */
+			-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+
+			/* This works in IE 8 & 9 too */
+			/* ... but also 5, 6, 7 */
+			filter: alpha(opacity=20);
+
+			/* Older than Firefox 0.9 */
+			-moz-opacity:0.2;
+
+			/* Safari 1.x (pre WebKit!) */
+			-khtml-opacity: 0.2;
+
+			/* Modern!
+			/* Firefox 0.9+, Safari 2?, Chrome any?
+			/* Opera 9+, IE 9+ */
+			opacity: 0.2;
+		}
+	</style>		
+	
 </head>
 <body>
 	Test Pages:
