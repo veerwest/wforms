@@ -74,6 +74,17 @@
 		}
 	</style>		
 	
+	<style>
+	/* Should be moved to actual CSS files */
+	.wForm .hintsTooltip .field-hint span {
+		background-color: #FFFBB8;
+		border-bottom: 1px solid #FFC20D;
+		border-left: 1px solid #FFC20D;
+		border-right: 1px solid #FFC20D;
+		padding: 4px;
+	}
+	</style>
+	
 </head>
 <body>
 	Test Pages:
@@ -217,46 +228,46 @@
 					
 					<div class="oneField">
 	                    <label class="preField">On a radio group:</label>
-	
-	                    <span class="oneChoice">
-	                       <input type="radio" id="radio4" name="radioGroup" />
-	                       <label for="radio4">First choice</label>
-						    <span id="radio4-H" class="field-hint-inactive">Radio #1 hint</span>
-	                    </span>
-	
-	                    <span class="oneChoice">
-	                        <input type="radio" id="radio5" name="radioGroup" />
-	                        <label for="radio5">Second choice</label>
-							 <span id="radio5-H" class="field-hint-inactive">Radio #2 hint</span>
-	                    </span>
-	
-	                    <span class="oneChoice">
-	                        <input type="radio" id="radio6" name="radioGroup" />
-	                        <label for="radio6">Third choice</label>
-							 <span id="radio6-H" class="field-hint-inactive">Radio #3 hint</span>
-	                    </span>
+						<span id="radio" class="choices">
+							<span class="oneChoice">
+							   <input type="radio" id="radio4" name="radioGroup" />
+							   <label for="radio4">First choice</label>
+							</span>
+		
+							<span class="oneChoice">
+								<input type="radio" id="radio5" name="radioGroup" />
+								<label for="radio5">Second choice</label>
+							</span>
+		
+							<span class="oneChoice">
+								<input type="radio" id="radio6" name="radioGroup" />
+								<label for="radio6">Third choice</label>
+							</span>
+						</span>
+						<span id="radio-H" class="field-hint-inactive"><span>Radio Group hint</span></span>
+						<br />
 	                </div>
 	
 	                <div class="oneField">
 	                    <label class="preField">On checkboxes:</label>
-	
-	                    <span class="oneChoice">
-	                        <input type="checkbox" id="checkbox4" />
-	                        <label for="checkbox4" class="postField">First choice</label>
-							<span id="checkbox4-H" class="field-hint-inactive">Checkbox #1 hint</span>
-	                    </span>
-	
-	                    <span class="oneChoice">
-	                        <input type="checkbox" id="checkbox5" name="radioGroup" />
-	                        <label for="checkbox5" class="postField">Second choice</label>
-							<span id="checkbox5-H" class="field-hint-inactive">Checkbox #2 hint</span>
-	                    </span>
-	
-	                    <span class="oneChoice">
-	                        <input type="checkbox" id="checkbox6" name="radioGroup" />
-	                        <label for="checkbox6" class="postField">Third choice</label>
-							<span id="checkbox6-H" class="field-hint-inactive">Checkbox #3 hint</span>
-	                    </span>
+						<span id="checkbox" class="choices">
+							<span class="oneChoice">
+								<input type="checkbox" id="checkbox4" />
+								<label for="checkbox4" class="postField">First choice</label>
+							</span>
+		
+							<span class="oneChoice">
+								<input type="checkbox" id="checkbox5" name="radioGroup" />
+								<label for="checkbox5" class="postField">Second choice</label>
+							</span>
+		
+							<span class="oneChoice">
+								<input type="checkbox" id="checkbox6" name="radioGroup" />
+								<label for="checkbox6" class="postField">Third choice</label>
+							</span>
+						</span>
+						<span id="checkbox-H" class="field-hint-inactive"><span>Checkbox Group hint</span></span>
+						<br />
 	                </div>
 				</fieldset>
 				 
