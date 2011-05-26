@@ -32,6 +32,26 @@ wFORMS.behaviors.calculation  = {
 	CALCULATION_ERROR_MESSAGE : "There was an error computing this field.",
 	
 	/**
+	 * The thousands seperator in the locale
+	 */
+	CALCULATION_THOUSANDS_SEPERATOR : ",",
+
+	/**
+	 * The decimal seperator in the locale
+	 */
+	CALCULATION_RADIX : ".",
+
+	/**
+	 * The level to which to round calculations after radix
+	 */
+	CALCULATION_RADIX_ROUND_LEVEL : "2",
+
+	/**
+	 * The level to which to round calculations after radix
+	 */
+	CALCULATION_ROUND : false,	
+	
+	/**
 	 * Creates new instance of the behavior
      * @constructor
 	 */
@@ -40,6 +60,47 @@ wFORMS.behaviors.calculation  = {
 		this.target = f;
 		this.calculations = [];
 		//this.variables = [];
+	},
+	
+	helpers : {
+	
+		isNumericValue : function (value){
+			if(!isNaN(parseFloat(value))){
+				var regexp = new RegExp('\\'+wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR,"g");
+				value = String(value).replace(regexp,'');
+				
+				if(wFORMS.behaviors.calculation.CALCULATION_RADIX != '.'){
+					var regexp = new RegExp('\\'+wFORMS.behaviors.calculation.CALCULATION_RADIX,"g");
+					value = String(value).replace(regexp,'.');
+				}				
+			}
+			return isFinite(value);
+		},
+		
+		getNumericValue : function (value){
+			if(wFORMS.behaviors.calculation.helpers.isNumericValue(value)){
+				var regexp = new RegExp('\\'+wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR,"g");
+				value = String(value).replace(regexp,'');
+				
+				if(wFORMS.behaviors.calculation.CALCULATION_RADIX != '.'){
+					var regexp = new RegExp('\\'+wFORMS.behaviors.calculation.CALCULATION_RADIX,"g");
+					value = String(value).replace(regexp,'.');
+				}
+			}
+			return parseFloat(value);
+		},
+		
+		formatAsCurrency : function(value){
+			x = String(number).split(wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR);
+			x1 = x[0];
+			x2 = x.length > 1 ? wFORMS.behaviors.calculation.CALCULATION_RADIX + x[1] : '';
+			
+			var rgx = /(\d+)(\d{3})/;
+			while (rgx.test(x1)) {
+				x1 = x1.replace(rgx, '$1' + wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR + '$2');
+			}
+			return x1 + x2;
+		}
 	}
 }
 
@@ -238,15 +299,25 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 				
 				if(value.constructor==Array) { // array (multiple select)
 					for(var j=0;j<value.length;j++) { 
-						if(String(value[j]).search(/^[\d\.,]*$/) != -1)
-							varval += parseFloat(value[j]);
-						else
+						if(String(value[j]).search(/^[\d\.,]*$/) != -1){
+							var temp_value = value[j];
+							if(_self.behavior.helpers.isNumericValue(temp_value)){
+								temp_value = _self.behavior.helpers.getNumericValue(temp_value);
+							}
+							
+							varval += parseFloat(temp_value);
+						}else
 							(!varval)?(varval=value[j]):(varval=String(varval).concat(value[j]));
 					}
 				} else {
-						if(String(value).search(/^[\d\.,]*$/) != -1) 
-							varval += parseFloat(value);
-						else
+						if(String(value).search(/^[\d\.,]*$/) != -1){
+							var temp_value = value;
+							if(_self.behavior.helpers.isNumericValue(temp_value)){
+								temp_value = _self.behavior.helpers.getNumericValue(temp_value);
+							}
+							
+							varval += parseFloat(temp_value);
+						}else
 							(!varval)?(varval=value):(varval=String(varval).concat(value));
 				}
 			}
@@ -281,6 +352,7 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 			validationBehavior.fail(calculation.field, 'calculation');
 		}
 	}
+	
 	calculation.field.value = result;
 	
 	// If the calculated field is also a variable, recursively update dependant calculations
@@ -288,7 +360,11 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 		// TODO: Check for infinite loops?
 		//console.log('rec',this);
 		this.run(null,calculation.field);
-	} 
+	}else{
+		if(_self.behavior.helpers.isNumericValue(result) && _self.behavior.CALCULATION_ROUND){
+			calculation.field.value = Number(result).toFixed(_self.behavior.CALCULATION_RADIX_ROUND_LEVEL);
+		}	
+	}
 }
 	
 wFORMS.behaviors.calculation.instance.prototype.hasValueInClassName = function(element) {

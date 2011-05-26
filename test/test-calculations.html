@@ -320,6 +320,96 @@
 		assertEquals('21', document.getElementById('inputWithLongFormula').value);		
 	}
 
+	function testIsNumericValue(){
+		var _bh = wFORMS.behaviors.calculation.helpers;
+	
+		assertTrue(_bh.isNumericValue('1001'));
+		assertTrue(_bh.isNumericValue('1,001'));
+		assertFalse(_bh.isNumericValue('100l'));
+		assertFalse(_bh.isNumericValue('l00l'));
+		
+		assertTrue(_bh.isNumericValue('1000.01'));
+		assertTrue(_bh.isNumericValue('1,000.01'));
+		assertFalse(_bh.isNumericValue('100.0l'));
+		assertFalse(_bh.isNumericValue('l00l.0l'));
+		assertFalse(_bh.isNumericValue('l,000.0l'));
+	}
+	
+	function testGetNumericValue(){
+		var _bh = wFORMS.behaviors.calculation.helpers;
+	
+		assertEquals(Number('100'),_bh.getNumericValue('100'));
+		assertEquals(Number('100'),_bh.getNumericValue('100l'));
+		assertTrue(isNaN(_bh.getNumericValue('l00l')));
+		
+		assertEquals(Number('100.01'),_bh.getNumericValue('100.01'));
+		assertEquals(Number('100.0'),_bh.getNumericValue('100.0l'));
+		assertFalse(isNaN(_bh.getNumericValue('100l.0l')));  //What should the behavior be with this case?
+		assertTrue(isNaN(_bh.getNumericValue('l00.0l')));
+	}
+	
+	function testThousandsValue(){
+		document.getElementById('testInputField').value = '1,050';
+		document.getElementById('testTextarea').value = '2001';		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testInputField'));
+		bInstance.run(null,document.getElementById('testTextarea'));
+		// Test
+		assertEquals('3051', document.getElementById('totalG').value);
+		
+		
+		document.getElementById('testInputField').value = '1,234.56';
+		document.getElementById('testTextarea').value = '1,234.562';		
+		// Update calculations
+		bInstance.run(null,document.getElementById('testInputField'));
+		bInstance.run(null,document.getElementById('testTextarea'));
+		// Test
+		assertEquals('2469.122', document.getElementById('totalG').value);		
+		
+		bInstance.behavior.CALCULATION_ROUND = true;
+			document.getElementById('a').value = '1,234.1234';
+			document.getElementById('b').value = '1234.123';		
+			// Update calculations
+			bInstance.run(null,document.getElementById('a'));
+			bInstance.run(null,document.getElementById('b'));
+			bInstance.run(null,document.getElementById('c'));
+			// Test
+			assertEquals('2468.25', document.getElementById('c').value);
+		bInstance.behavior.CALCULATION_ROUND = false;		
+	}
+	
+	function testForeignThousands(){
+
+		bInstance.behavior.CALCULATION_ROUND = true;
+			document.getElementById('a').value = '1,234.1234';
+			document.getElementById('b').value = '1234.123';		
+			// Update calculations
+			bInstance.run(null,document.getElementById('a'));
+			bInstance.run(null,document.getElementById('b'));
+			bInstance.run(null,document.getElementById('c'));
+			// Test
+			assertEquals('2468.25', document.getElementById('c').value);
+		bInstance.behavior.CALCULATION_ROUND = false;
+
+		bInstance.behavior.CALCULATION_ROUND = true;
+		bInstance.behavior.CALCULATION_THOUSANDS_SEPERATOR = ".";
+		bInstance.behavior.CALCULATION_RADIX = ",";
+		
+			document.getElementById('a').value = '1.234,1234';
+			document.getElementById('b').value = '1.234,123';		
+			// Update calculations
+			bInstance.run(null,document.getElementById('a'));
+			bInstance.run(null,document.getElementById('b'));
+			bInstance.run(null,document.getElementById('c'));
+			// Test
+			assertEquals('2468.25', document.getElementById('c').value);
+			
+			
+		bInstance.behavior.CALCULATION_ROUND = false;
+		bInstance.behavior.CALCULATION_THOUSANDS_SEPERATOR = ",";
+		bInstance.behavior.CALCULATION_RADIX = ".";	
+	}
+	
 </script>
 
 
