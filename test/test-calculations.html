@@ -403,9 +403,21 @@
 			bInstance.run(null,document.getElementById('c'));
 			// Test
 			assertEquals('2468.25', document.getElementById('c').value);
+
+
+			bInstance.behavior.FORMAT_OUTPUT = true;
+			document.getElementById('a').value = '1.234,1234';
+			document.getElementById('b').value = '1.234,123';		
+			// Update calculations
+			bInstance.run(null,document.getElementById('a'));
+			bInstance.run(null,document.getElementById('b'));
+			bInstance.run(null,document.getElementById('c'));
+			// Test
+			assertEquals('2.468,25', document.getElementById('c').value);
 			
 			
 		bInstance.behavior.CALCULATION_ROUND = false;
+		bInstance.behavior.FORMAT_OUTPUT = false;
 		bInstance.behavior.CALCULATION_THOUSANDS_SEPERATOR = ",";
 		bInstance.behavior.CALCULATION_RADIX = ".";	
 	}

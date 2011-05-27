@@ -50,6 +50,11 @@ wFORMS.behaviors.calculation  = {
 	 * The level to which to round calculations after radix
 	 */
 	CALCULATION_ROUND : false,	
+
+	/**
+	 * Format output according to RADIX and CALCULATION_THOUSANDS_SEPERATOR
+	 */	
+	FORMAT_OUTPUT : false,
 	
 	/**
 	 * Creates new instance of the behavior
@@ -90,16 +95,16 @@ wFORMS.behaviors.calculation  = {
 			return parseFloat(value);
 		},
 		
-		formatAsCurrency : function(value){
-			x = String(number).split(wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR);
-			x1 = x[0];
-			x2 = x.length > 1 ? wFORMS.behaviors.calculation.CALCULATION_RADIX + x[1] : '';
+		formatNumericOutput : function(value){
+			number_string_pieces = String(value).split(wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR);
+			thousands = number_string_pieces[0];
+			decimal = number_string_pieces.length > 1 ? wFORMS.behaviors.calculation.CALCULATION_RADIX + number_string_pieces[1] : '';
 			
 			var rgx = /(\d+)(\d{3})/;
-			while (rgx.test(x1)) {
-				x1 = x1.replace(rgx, '$1' + wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR + '$2');
+			while (rgx.test(thousands)) {
+				thousands = thousands.replace(rgx, '$1' + wFORMS.behaviors.calculation.CALCULATION_THOUSANDS_SEPERATOR + '$2');
 			}
-			return x1 + x2;
+			return thousands + decimal;
 		}
 	}
 }
@@ -361,10 +366,15 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 		//console.log('rec',this);
 		this.run(null,calculation.field);
 	}else{
-		if(_self.behavior.helpers.isNumericValue(result) && _self.behavior.CALCULATION_ROUND){
-			calculation.field.value = Number(result).toFixed(_self.behavior.CALCULATION_RADIX_ROUND_LEVEL);
+		if(_self.behavior.helpers.isNumericValue(calculation.field.value) && _self.behavior.CALCULATION_ROUND){
+			calculation.field.value = Number(calculation.field.value).toFixed(_self.behavior.CALCULATION_RADIX_ROUND_LEVEL);
 		}	
 	}
+	
+	if(_self.behavior.helpers.isNumericValue(calculation.field.value) && _self.behavior.FORMAT_OUTPUT){
+		calculation.field.value = _self.behavior.helpers.formatNumericOutput(calculation.field.value);
+	}
+	
 }
 	
 wFORMS.behaviors.calculation.instance.prototype.hasValueInClassName = function(element) {
