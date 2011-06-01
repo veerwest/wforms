@@ -20,7 +20,6 @@
 	<script type="text/javascript" src="../customization/wforms_validation_length.js"></script>
 	
 	<script type="text/javascript">
-		 
       
 		wFORMS.behaviors.repeat.instance.prototype.onApply = function() {
 			setUpPageStatus = 'complete';
@@ -37,7 +36,7 @@
 				if (r) {
 					r.parentNode.removeChild(r);
 				}
-			});
+			});	
 		}
 	
 		function testRepeatAndValidateCustomErrorMessage(){
@@ -63,8 +62,30 @@
 			assertNotNull(errorSpan);
 			assertNotEquals(-1,errorSpan.textContent.search(ERRORTEXT));
 		}
+
+		function testRepeatAndValidateErrorMessage(){
+			var ERRORTEXT = "Not 'ddd'";
+			var bRepeatInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_CustomValidation2-D'), 'repeat');
+				var form = wFORMS.helpers.getForm(document.getElementById('tfa_CustomValidation2-D'));
+			var bValidationInstance = wFORMS.getBehaviorInstance(form, 'validation');
+		
+			bValidationInstance.run({},form);
+			bRepeatInstance.run();
+			
+			var originalElement = document.getElementById('tfa_CustomValidation2[0]');
+			var duplicatedElement = document.getElementById('tfa_CustomValidation2[1]');
+			assertNotNull(originalElement);
+			assertNotNull(duplicatedElement);
+			
+			//Verify that custom error message is working
+			var errorSpan = document.getElementById('tfa_CustomValidation2[1]-E');
+			assertNull(errorSpan);
+		}
+		
+		
 	</script>
 	</head>
+	
 <body class="default wFormWebPage">
 
 <div id="sidebar" style="float: left; width: 100px; height: 1000px; background-color: #f4f4f4"> dummy sidebar
@@ -75,6 +96,7 @@
 		<div class="wFormContainer">
 				<h3 class="wFormTitle"><span>Validation Layout Test Form</span></h3>
 				<div class="wForm wFormdefaultWidth"><form method="post" action="http://test.dev.veerwest.com/responses/processor" id="id138067" class="labelsAbove hintsTooltip"> 
+				
 				<div id="tfa_CustomValidation-D" class="repeat oneField"> 
 				<label class="preField" for="tfa_CustomValidation">CustomValidation <span class="reqMark">*</span></label>
 				<input type="text" id="tfa_CustomValidation" name="tfa_CustomValidation" value="d" size="40" class="validate-custom /^ddd$/ required"> <script type="text/javascript"> 
@@ -85,7 +107,24 @@
 							}
 						}</script><br> 
 				</div>
+				</form>
+				
+				<hr />
+				
+				<form method="post" action="http://test.dev.veerwest.com/responses/processor" id="id138067" class="labelsAbove hintsTooltip"> 
+				<div id="tfa_CustomValidation2-D" class="repeat oneField"> 
+				<label class="preField" for="tfa_CustomValidation2">CustomValidation <span class="reqMark">*</span></label>
+				<input type="text" id="tfa_CustomValidation2" name="tfa_CustomValidation2" value="d" size="40" class="validate-custom /^ddd$/ required"> <script type="text/javascript"> 
+						if(typeof wFORMS != 'undefined') {
+							if(wFORMS.behaviors.validation) {
+								wFORMS.behaviors.validation.rules['customtfa_CustomValidation2'] =  { selector: '*[id="tfa_CustomValidation2"]', check: 'validateCustom'};
+								wFORMS.behaviors.validation.messages['customtfa_CustomValidation2'] = "Not 'ddd'";
+							}
+						}</script><br> 
 				</div>
+				</form>
+				
+				</div>				
 		</div>
 	</div>
 	
