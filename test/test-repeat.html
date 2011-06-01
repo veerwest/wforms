@@ -336,6 +336,32 @@
 		assertEquals('Label should be "RepeatNested_TEST"','RepeatNested_TEST',label);
 	
 	}
+	
+	function testInputRepeatRemove() {
+		
+		var bInstance = wFORMS.getBehaviorInstance(document.getElementById('test3'), 'repeat');
+		bInstance.run();
+
+		var originalElement = document.getElementById('test3');
+		assertNull(originalElement);
+		
+		var originalElement = document.getElementById('test3[0]');
+		assertNotNull(originalElement.id);
+
+		var repeatedElement = document.getElementById('test3[1]');
+		assertNotNull(repeatedElement.id);		
+		
+		var mockClick = {type:"click",preventDefault: function(){}};
+		bInstance.onRemoveLinkClick(mockClick,document.getElementById(repeatedElement.id+'-wfDL'));
+		
+		bInstance.run();
+		
+		var repeatedElement = document.getElementById('test3[1]');
+		assertNotNull(repeatedElement);
+		assertNotNull(repeatedElement.id);
+		
+	}	
+	
 	</script>
 	
 </head>
@@ -540,6 +566,17 @@
 			</fieldset>
 			<input type="button" value="run test" onclick="testRepeatLabelRepeat()"/> 
 		</fieldset>
+		
+		<div class="repeat" id="test3">
+			<div class="oneField">
+				<label for="testInput3" class="preField" style="min-width:5em">RepeatRemove</label>
+				<input type="text" id="testInput3" name="testInput3" value="" size="" />
+				<div class="field-hint-inactive" id="testInput3-H">
+					<span>Removable</span>
+				</div>						
+			</div>
+		</div>		
+		
 		
 	</form>
 </body>
