@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Input Validation Behavior Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2-dom.js"></script>
+	<script type="text/javascript" src="../wforms_core.js"></script>
+	<script type="text/javascript" src="../wforms_repeat.js"></script>	
+	<script type="text/javascript" src="../wforms_switch.js"></script>
+	<script type="text/javascript" src="../wforms_validation.js"></script>
+	
+	<script type="text/javascript" src="../customization/wforms_validation_length.js"></script>
+	
+	<script type="text/javascript">
+		 
+      
+		wFORMS.behaviors.repeat.instance.prototype.onApply = function() {
+			setUpPageStatus = 'complete';
+		}
+	
+		
+		function setUpPage() {}
+	  
+	  	function setUp() {}
+		
+		// remove any remaining error message
+		function tearDown() {
+			base2.DOM.Element.querySelectorAll(document,"*[id*='-E']").forEach(function(r){
+				if (r) {
+					r.parentNode.removeChild(r);
+				}
+			});
+		}
+	
+		function testRepeatAndValidateCustomErrorMessage(){
+			var ERRORTEXT = "Not 'ddd'";
+			var bRepeatInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_CustomValidation-D'), 'repeat');
+				var form = wFORMS.helpers.getForm(document.getElementById('tfa_CustomValidation-D'));
+			var bValidationInstance = wFORMS.getBehaviorInstance(form, 'validation');
+		
+			bRepeatInstance.run();
+		
+			var originalElement = document.getElementById('tfa_CustomValidation[0]');
+			var duplicatedElement = document.getElementById('tfa_CustomValidation[1]');
+			assertNotNull(originalElement);
+			assertNotNull(duplicatedElement);
+		
+			originalElement.value ="ddd";
+			duplicatedElement.value ="d";
+			
+			bValidationInstance.run({},form);
+			
+			//Verify that custom error message is working
+			var errorSpan = document.getElementById('tfa_CustomValidation[1]-E');
+			assertNotNull(errorSpan);
+			assertNotEquals(-1,errorSpan.textContent.search(ERRORTEXT));
+		}
+	</script>
+	</head>
+<body class="default wFormWebPage">
+
+<div id="sidebar" style="float: left; width: 100px; height: 1000px; background-color: #f4f4f4"> dummy sidebar
+</div>
+
+	<div id="tfaContent" style="float: left">
+		
+		<div class="wFormContainer">
+				<h3 class="wFormTitle"><span>Validation Layout Test Form</span></h3>
+				<div class="wForm wFormdefaultWidth"><form method="post" action="http://test.dev.veerwest.com/responses/processor" id="id138067" class="labelsAbove hintsTooltip"> 
+				<div id="tfa_CustomValidation-D" class="repeat oneField"> 
+				<label class="preField" for="tfa_CustomValidation">CustomValidation <span class="reqMark">*</span></label>
+				<input type="text" id="tfa_CustomValidation" name="tfa_CustomValidation" value="d" size="40" class="validate-custom /^ddd$/ required"> <script type="text/javascript"> 
+						if(typeof wFORMS != 'undefined') {
+							if(wFORMS.behaviors.validation) {
+								wFORMS.behaviors.validation.rules['customtfa_CustomValidation'] =  { selector: '*[id="tfa_CustomValidation"]', check: 'validateCustom'};
+								wFORMS.behaviors.validation.messages['customtfa_CustomValidation'] = "Not 'ddd'";
+							}
+						}</script><br> 
+				</div>
+				</div>
+		</div>
+	</div>
+	
+</body>
+</html>
+
