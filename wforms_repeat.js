@@ -33,6 +33,7 @@ wFORMS.behaviors.repeat = {
      * @final
 	 */
 	ID_SUFFIX_COUNTER : '-RC',
+	MASTER_ID_SUFFIX_COUNTER : '[0]'+'-RC',
 
 	/**
 	 * CSS class for duplicate span/link
@@ -154,7 +155,8 @@ wFORMS.behaviors.repeat = {
 	 */
 	instance : function(f) {
 		this.behavior = wFORMS.behaviors.repeat; 
-		this.target = f;		
+		this.target = f;
+		this.cache = {};
 	}
 }
 
@@ -346,7 +348,13 @@ _i.prototype.createRemoveLink = function(id){
 	
 	return spanElem;
 }
+_i.prototype.destroyRemoveLink = function(elem){
+	var removeLink = elem.querySelector("."+this.behavior.CSS_DELETE_SPAN);
 
+	if(removeLink){
+		removeLink.parentNode.removeChild(removeLink);
+	}
+}
 
 /**
  * Duplicates repeat section. Changes ID of the elements, adds event listeners
@@ -356,11 +364,11 @@ _i.prototype.duplicateSection = function(elem){
 	// Call custom function. By default return true
 	if(!this.behavior.allowRepeat(elem, this)){
 		return false;
-	}
+	}	
 	this.updateMasterSection(elem);
 	// Creates clone of the group
 	var newElem = elem.cloneNode(true);
-		
+	
 	// Update the ids, names and other attributes that must be changed.
 	// (do it before inserting the element back in the DOM to prevent reseting radio buttons, see bug #152)
 	var index  = this.getNextDuplicateIndex(this.target);
@@ -369,6 +377,14 @@ _i.prototype.duplicateSection = function(elem){
 	this.updateDuplicatedSection(newElem, index, suffix);
 	// Insert in DOM		
 	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
+	
+	//Create cache for elem if not already exists
+	var cacheId = this.clearSuffix(elem.id);
+	if(!(this.cache[cacheId])){
+		this.cache[cacheId] = Array();
+	}
+	//Insert into cache
+	this.cache[cacheId].push(newElem);
 	
 	wFORMS.applyBehaviors(newElem);
 		/*
@@ -400,10 +416,45 @@ _i.prototype.removeSection = function(elem){
 	if(elem){
 		// Removes section
 		var elem = elem.parentNode.removeChild(elem);
+		
+		// Remove from cache
+		var cacheId = this.clearSuffix(elem.id);
+		if(this.cache[cacheId]){
+			var len = this.cache[cacheId].length;
+			for(var i = 0; i<len; i++){
+				if(this.cache[cacheId][i].id == elem.id){
+					var removedElement = this.cache[cacheId].splice(i,1);
+					break;
+				}
+			};
+		}
+		
+		//Decrement counter
+		var c = document.getElementById(cacheId+this.behavior.MASTER_ID_SUFFIX_COUNTER);
+		var newValue = parseInt(c.value) - 1;
+		c.value = newValue;
+		//
+		
+		//Handle reindexing
+		if(cacheId && removedElement){
+			this.reindexFields(cacheId,removedElement);
+		}
+		//
+		
 		// Calls custom function
 		this.behavior.onRemove(elem);
 	}
 }
+
+_i.prototype.reindexFields = function(parentId,removedElement){
+
+	var length = this.cache[parentId].length;
+	for(var index = 0; index<length; index++){
+		var suffix = this.createSuffix(removedElement, index+1);		
+		this.updateDuplicatedSection(this.cache[parentId][index], index, suffix);
+	}
+}
+
 /**
  * Looking for the place where to insert the cloned element
  * @param 	{DOMElement} 	source element
@@ -511,25 +562,33 @@ _i.prototype.updateMasterElements  = function(elem, suffix){
  * @param	{string}		array-like notation, to be appended to attributes that must be unique.
  */
 _i.prototype.updateDuplicatedSection = function(elem, index, suffix){
+
+	if(!elem.hasClass) { // no base2.DOM.bind to speed up function 
+		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+	}
 	
-	// Caches master section ID in the dublicate
+	var cacheId = elem.id;
+	var isRemovable = elem.hasClass(this.behavior.CSS_REMOVEABLE);
+	
+	// Caches master section ID in the duplicate
 	elem[this.behavior.ATTR_MASTER_SECTION]=elem.id;
 		
 	// Updates element ID (possible problems when repeat element is Hint or switch etc)
 	elem.id = this.clearSuffix(elem.id) + suffix;
 	// Updates classname	
 	elem.className = elem.className.replace(this.behavior.CSS_REPEATABLE, this.behavior.CSS_REMOVEABLE);
-
-	if(!elem.hasClass) { // no base2.DOM.bind to speed up function 
-		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
-	}
+	
 	// Check for preserverRadioName override
 	if(elem.hasClass(this.behavior.CSS_PRESERVE_RADIO_NAME)) 
 		var _preserveRadioName = true;
 	else
 		var _preserveRadioName = this.behavior.preserveRadioName;
-		
-	this.updateSectionChildNodes(elem, suffix, _preserveRadioName);
+
+	this.updateSectionChildNodes(elem, suffix, _preserveRadioName,isRemovable);
+	if(isRemovable){
+		this.destroyRemoveLink(elem);
+		this.getOrCreateRemoveLink(elem);
+	}
 }
 
 
@@ -540,7 +599,7 @@ _i.prototype.updateDuplicatedSection = function(elem, index, suffix){
  * @param	elems	Array of the elements should be updated
  * @param	suffix	Suffix value should be added to attributes
  */
-_i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName){
+_i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName, preserveValues){
 	
 	/* Fix for Ticket #256 - id of nested repeated element not set properly */
 	if(elem.doItOnce) {		
@@ -563,7 +622,7 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 			e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 		}
 		// Removes created descendant duplicated group if any
-		if(this.behavior.isDuplicate(e)){
+		if(this.behavior.isDuplicate(e) && !preserveValues){
 			removeStack.push(e);
 			continue;
 		}
@@ -578,7 +637,7 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 		}
 				
 		// Clears value	(TODO: select?)
-		if((e.tagName == 'INPUT' && e.type != 'button') || e.tagName == 'TEXTAREA'){
+		if(((e.tagName == 'INPUT' && e.type != 'button') || e.tagName == 'TEXTAREA') && !preserveValues){
 			if(e.type != 'radio' && e.type != 'checkbox'){
 				e.value = '';
 			} else {
@@ -618,9 +677,9 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName)
 		this.updateAttributes(e, suffix, preserveRadioName);
 		
 		if(e.hasClass(this.behavior.CSS_REPEATABLE)){
-			this.updateSectionChildNodes(e, this.createSuffix(e), preserveRadioName);
+			this.updateSectionChildNodes(e, this.createSuffix(e), preserveRadioName, preserveValues);
 		} else{
-			this.updateSectionChildNodes(e, suffix, preserveRadioName);
+			this.updateSectionChildNodes(e, suffix, preserveRadioName, preserveValues);
 		}
    	}   
 	 
