@@ -416,14 +416,29 @@ _i.prototype.removeSection = function(elem){
 	if(elem){
 		// Removes section
 		var elem = elem.parentNode.removeChild(elem);
+
+		//Remove any counters for nested repeats
+		if(elem){			
+			var nestedElements = base2.DOM.HTMLElement.querySelectorAll(elem,"."+this.behavior.CSS_REPEATABLE);
+			var _self = this;
+			nestedElements.forEach(function(el){
+				var e = document.getElementById(el.id+_self.behavior.ID_SUFFIX_COUNTER);
+				if(e){
+					e.parentNode.removeChild(e);
+				}else{
+					throw new Exception();
+				}
+			});
+		}
+		//
 		
 		// Remove from cache
-		var cacheId = this.clearSuffix(elem.id);
+		var cacheId = this.clearLastSuffix(elem.id);
 		if(this.cache[cacheId]){
 			var len = this.cache[cacheId].length;
 			for(var i = 0; i<len; i++){
 				if(this.cache[cacheId][i].id == elem.id){
-					var removedElement = this.cache[cacheId].splice(i,1);
+					this.cache[cacheId].splice(i,1);
 					break;
 				}
 			};
@@ -436,8 +451,8 @@ _i.prototype.removeSection = function(elem){
 		//
 		
 		//Handle reindexing
-		if(cacheId && removedElement){
-			this.reindexFields(cacheId,removedElement);
+		if(cacheId && elem){
+			this.reindexFields(cacheId,elem);
 		}
 		//
 		
@@ -448,10 +463,12 @@ _i.prototype.removeSection = function(elem){
 
 _i.prototype.reindexFields = function(parentId,removedElement){
 
-	var length = this.cache[parentId].length;
-	for(var index = 0; index<length; index++){
-		var suffix = this.createSuffix(removedElement, index+1);		
-		this.updateDuplicatedSection(this.cache[parentId][index], index, suffix);
+	if(this.cache[parentId]){
+		var length = this.cache[parentId].length;
+		for(var index = 0; index<length; index++){
+			var suffix = this.createSuffix(removedElement, index+1);		
+			this.updateDuplicatedSection(this.cache[parentId][index], index, suffix);
+		}
 	}
 }
 
@@ -621,29 +638,34 @@ _i.prototype.updateSectionChildNodes = function(elem, suffix, preserveRadioName,
 		if(!e.hasClass) { // no base2.DOM.bind to speed up function 
 			e.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 		}
-		// Removes created descendant duplicated group if any
-		if(this.behavior.isDuplicate(e) && !preserveValues){
-			removeStack.push(e);
-			continue;
-		}
-		// Removes duplicate link
-		if(e.hasClass(this.behavior.CSS_DUPLICATE_SPAN)){
-			removeStack.push(e);
-			continue;
-		}
-		if(e.hasClass(this.behavior.CSS_DUPLICATE_LINK)){
-			removeStack.push(e);
-			continue;
-		}
-				
-		// Clears value	(TODO: select?)
-		if(((e.tagName == 'INPUT' && e.type != 'button') || e.tagName == 'TEXTAREA') && !preserveValues){
-			if(e.type != 'radio' && e.type != 'checkbox'){
-				e.value = '';
-			} else {
-				e.checked = false;
+		
+		//
+		if(!preserveValues){
+			// Removes created descendant duplicated group if any
+			if(this.behavior.isDuplicate(e)){
+				removeStack.push(e);
+				continue;
+			}
+			// Removes duplicate link
+			if(e.hasClass(this.behavior.CSS_DUPLICATE_SPAN)){
+				removeStack.push(e);
+				continue;
+			}
+			if(e.hasClass(this.behavior.CSS_DUPLICATE_LINK)){
+				removeStack.push(e);
+				continue;
+			}
+					
+			// Clears value	(TODO: select?)
+			if(((e.tagName == 'INPUT' && e.type != 'button') || e.tagName == 'TEXTAREA')){
+				if(e.type != 'radio' && e.type != 'checkbox'){
+					e.value = '';
+				} else {
+					e.checked = false;
+				}
 			}
 		}
+		
 		
 		// Fix #152 - Radio name with IE6, IE7?
 		if(e.tagName == 'INPUT' && e.type == 'radio' && !preserveRadioName && /*@cc_on @if(@_jscript_version < 5.8)! @end @*/false) {
@@ -735,6 +757,14 @@ _i.prototype.clearSuffix = function(value){
 		return;
 	}	
     value = value.replace(/(\[\d+\])+(\-[HE])?$/,"$2");    
+	return value;
+}
+
+_i.prototype.clearLastSuffix = function(value){
+	if(!value){
+		return;
+	}	
+    value = value.replace(/(\[\d+\])(\-[HE])?$/,"$2");    
 	return value;
 }
 
