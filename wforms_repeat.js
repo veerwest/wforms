@@ -379,7 +379,7 @@ _i.prototype.duplicateSection = function(elem){
 	newElem = elem.parentNode.insertBefore(newElem, this.getInsertNode(elem));
 	
 	//Create cache for elem if not already exists
-	var cacheId = this.clearSuffix(elem.id);
+	var cacheId = this.clearLastSuffix(elem.id);
 	if(!(this.cache[cacheId])){
 		this.cache[cacheId] = Array();
 	}
@@ -414,23 +414,21 @@ _i.prototype.duplicateSection = function(elem){
  */
 _i.prototype.removeSection = function(elem){
 	if(elem){
-		// Removes section
-		var elem = elem.parentNode.removeChild(elem);
-
 		//Remove any counters for nested repeats
 		if(elem){			
 			var nestedElements = base2.DOM.HTMLElement.querySelectorAll(elem,"."+this.behavior.CSS_REPEATABLE);
 			var _self = this;
 			nestedElements.forEach(function(el){
-				var e = document.getElementById(el.id+_self.behavior.ID_SUFFIX_COUNTER);
+				var e = document.getElementById(_self.clearLastSuffix(el.id)+_self.behavior.MASTER_ID_SUFFIX_COUNTER);
 				if(e){
 					e.parentNode.removeChild(e);
-				}else{
-					throw new Exception();
 				}
 			});
 		}
-		//
+		//	
+	
+		// Removes section
+		var elem = elem.parentNode.removeChild(elem);
 		
 		// Remove from cache
 		var cacheId = this.clearLastSuffix(elem.id);
@@ -466,8 +464,9 @@ _i.prototype.reindexFields = function(parentId,removedElement){
 	if(this.cache[parentId]){
 		var length = this.cache[parentId].length;
 		for(var index = 0; index<length; index++){
-			var suffix = this.createSuffix(removedElement, index+1);		
-			this.updateDuplicatedSection(this.cache[parentId][index], index, suffix);
+			var currentSuffix = parentId.replace(this.clearSuffix(parentId),"");
+			var suffix =  currentSuffix + this.createSuffix(removedElement, index+1);		
+			this.updateDuplicatedSection(this.cache[parentId][index], index+1, suffix);
 		}
 	}
 }
@@ -584,7 +583,6 @@ _i.prototype.updateDuplicatedSection = function(elem, index, suffix){
 		elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
 	}
 	
-	var cacheId = elem.id;
 	var isRemovable = elem.hasClass(this.behavior.CSS_REMOVEABLE);
 	
 	// Caches master section ID in the duplicate
