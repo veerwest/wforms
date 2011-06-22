@@ -432,38 +432,40 @@ _i.prototype.removeSection = function(elem){
 		
 		// Remove from cache
 		var cacheId = this.clearLastSuffix(elem.id);
+        var deletedIndex = 0;
 		if(this.cache[cacheId]){
 			var len = this.cache[cacheId].length;
 			for(var i = 0; i<len; i++){
 				if(this.cache[cacheId][i].id == elem.id){
 					this.cache[cacheId].splice(i,1);
+                    deletedIndex = i;
 					break;
 				}
 			};
 		}
-		
+
 		//Decrement counter
 		var c = document.getElementById(cacheId+this.behavior.MASTER_ID_SUFFIX_COUNTER);
 		var newValue = parseInt(c.value) - 1;
 		c.value = newValue;
 		//
-		
+
 		//Handle reindexing
 		if(cacheId && elem){
-			this.reindexFields(cacheId,elem);
+			this.reindexFields(cacheId, deletedIndex, elem);
 		}
 		//
-		
+
 		// Calls custom function
 		this.behavior.onRemove(elem);
 	}
 }
 
-_i.prototype.reindexFields = function(parentId,removedElement){
+_i.prototype.reindexFields = function(parentId, from, removedElement){
 
 	if(this.cache[parentId]){
 		var length = this.cache[parentId].length;
-		for(var index = 0; index<length; index++){
+		for(var index = from; index<length; index++){
 			var currentSuffix = parentId.replace(this.clearSuffix(parentId),"");
 			var suffix =  currentSuffix + this.createSuffix(removedElement, index+1);		
 			this.updateDuplicatedSection(this.cache[parentId][index], index+1, suffix);
