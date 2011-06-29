@@ -125,6 +125,29 @@ wFORMS.behaviors.validation.applyTo = function(f) {
 		v.onApply();
 	}
 	
+	if(wFORMS.behaviors.repeat && !wFORMS.behaviors.repeat.handlingRepeatedErrors){
+		wFORMS.behaviors.repeat.handlingRepeatedErrors = true;
+		var _onRepeatCallBack = wFORMS.behaviors.repeat.onRepeat;
+		wFORMS.behaviors.repeat.onRepeat = function(elem) {
+			if(elem){
+				if(!elem.hasClass){
+					elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+				}	
+				if(!elem.removeClass){
+					elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
+				}
+				if(elem.hasClass('errFld')){
+					elem.removeClass('errFld');
+					var errMsgs = base2.DOM.Element.querySelectorAll(elem,"*[class*='errMsg']").forEach(function(element){
+						element.parentNode.removeChild(element);
+					});
+				}
+			}
+			
+			if(_onRepeatCallBack) _onRepeatCallBack.apply(this, arguments);
+		}
+	}
+	
 	return v;	   
 }
  

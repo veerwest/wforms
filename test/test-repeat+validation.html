@@ -70,16 +70,17 @@
 			var bValidationInstance = wFORMS.getBehaviorInstance(form, 'validation');
 		
 			bValidationInstance.run({},form);
+			//Repeat of previous validated section should *NOT* have validation error already triggered.
 			bRepeatInstance.run();
 			
 			var originalElement = document.getElementById('tfa_CustomValidation2[0]');
 			var duplicatedElement = document.getElementById('tfa_CustomValidation2[1]');
-			assertNotNull(originalElement);
-			assertNotNull(duplicatedElement);
+			assertNotNull("Original element not found",originalElement);
+			assertNotNull("Duplicated element not found",duplicatedElement);
 			
 			//Verify that custom error message is working
 			var errorSpan = document.getElementById('tfa_CustomValidation2[1]-E');
-			assertNull(errorSpan);
+			assertNull("Error span element present",errorSpan);
 		}
 		
 		
@@ -102,7 +103,7 @@
 				<input type="text" id="tfa_CustomValidation" name="tfa_CustomValidation" value="d" size="40" class="validate-custom /^ddd$/ required"> <script type="text/javascript"> 
 						if(typeof wFORMS != 'undefined') {
 							if(wFORMS.behaviors.validation) {
-								wFORMS.behaviors.validation.rules['customtfa_CustomValidation'] =  { selector: '*[id="tfa_CustomValidation"]', check: 'validateCustom'};
+								wFORMS.behaviors.validation.rules['customtfa_CustomValidation'] =  { selector: '*[id^="tfa_CustomValidation"]', check: 'validateCustom'};
 								wFORMS.behaviors.validation.messages['customtfa_CustomValidation'] = "Not 'ddd'";
 							}
 						}</script><br> 
@@ -117,7 +118,7 @@
 				<input type="text" id="tfa_CustomValidation2" name="tfa_CustomValidation2" value="d" size="40" class="validate-custom /^ddd$/ required"> <script type="text/javascript"> 
 						if(typeof wFORMS != 'undefined') {
 							if(wFORMS.behaviors.validation) {
-								wFORMS.behaviors.validation.rules['customtfa_CustomValidation2'] =  { selector: '*[id="tfa_CustomValidation2"]', check: 'validateCustom'};
+								wFORMS.behaviors.validation.rules['customtfa_CustomValidation2'] =  { selector: '*[id^="tfa_CustomValidation2"]', check: 'validateCustom'};
 								wFORMS.behaviors.validation.messages['customtfa_CustomValidation2'] = "Not 'ddd'";
 							}
 						}</script><br> 
