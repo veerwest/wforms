@@ -66,7 +66,7 @@
 		function testRepeatAndValidateErrorMessage(){
 			var ERRORTEXT = "Not 'ddd'";
 			var bRepeatInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_CustomValidation2-D'), 'repeat');
-				var form = wFORMS.helpers.getForm(document.getElementById('tfa_CustomValidation2-D'));
+				var form = wFORMS.helpers.getForm(document.getElementById('tfa_CustomValidation2-D'));				
 			var bValidationInstance = wFORMS.getBehaviorInstance(form, 'validation');
 		
 			bValidationInstance.run({},form);
@@ -81,6 +81,13 @@
 			//Verify that custom error message is working
 			var errorSpan = document.getElementById('tfa_CustomValidation2[1]-E');
 			assertNull("Error span element present",errorSpan);
+			
+			var bRepeatInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_4938886618865'), 'repeat');		
+			bRepeatInstance.run();
+
+			var errorSpan = document.getElementById('tfa_Test123[1]-E');
+			assertNull("Error span element present",errorSpan);			
+			
 		}
 		
 		
@@ -123,6 +130,18 @@
 							}
 						}</script><br> 
 				</div>
+				
+				<fieldset id="tfa_4938886618865" class="repeat wfSection"><div id="tfa_Test123-D" class="oneField"> 
+				<label class="preField" for="tfa_Test123">Test 123 <span class="reqMark">*</span></label> <input type="text" id="tfa_Test123" name="tfa_Test123" value="" size="40" class="validate-custom /^ddd$/ required"> <script type="text/javascript"> 
+						if(typeof wFORMS != 'undefined') {
+							if(wFORMS.behaviors.validation) {
+								wFORMS.behaviors.validation.rules['customtfa_Test123'] =  { selector: '*[id="tfa_Test123"]', check: 'validateCustom'};
+								wFORMS.behaviors.validation.messages['customtfa_Test123'] = "test 123";
+							}
+						}</script><br> 
+				</div></fieldset> 				
+				
+				
 				</form>
 				
 				</div>				
