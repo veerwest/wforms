@@ -128,40 +128,21 @@ wFORMS.behaviors.validation.applyTo = function(f) {
 	if(wFORMS.behaviors.repeat && !wFORMS.behaviors.repeat.handlingRepeatedErrors){
 		wFORMS.behaviors.repeat.handlingRepeatedErrors = true;
 		var _onRepeatCallBack = wFORMS.behaviors.repeat.onRepeat;
-		
-		//Clear any repeated error messages.  
-		//Conflicts with unit tests in testFieldsetRepeatWithErrorPlaceholders and testFieldRepeatWithFieldHints
-		/*
 		wFORMS.behaviors.repeat.onRepeat = function(elem) {
 			if(elem){
+				if(!elem.hasClass){
+					elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
+				}	
 				if(!elem.removeClass){
 					elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
 				}
-				if(!elem.hasClass){
-					elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
-				}			
-			
-				var errFld = wFORMS.behaviors.validation.styling.fieldError;
-				var errMsg = wFORMS.behaviors.validation.styling.errorMessage;
-				
-				if(elem.hasClass(errFld)){
-					elem.removeClass(errFld);
+				if(elem.hasClass('errFld')){
+					elem.removeClass('errFld');
+					var errMsgs = base2.DOM.Element.querySelectorAll(elem,"*[class*='errMsg']").forEach(function(element){
+						element.parentNode.removeChild(element);
+					});
 				}
-				base2.DOM.Element.querySelectorAll(elem,"*[class*='"+errFld+"']").forEach(function(item){
-					if(!item.removeClass){
-						item.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
-					}
-					item.removeClass(errFld);
-				});
-				
-				if(elem.hasClass(errMsg)){
-					elem.parentNode.removeChild(errMsg);
-				}
-				base2.DOM.Element.querySelectorAll(elem,"*[class*='"+errMsg+"']").forEach(function(item){
-					item.parentNode.removeChild(item);
-				});				
 			}
-			*/
 			
 			if(_onRepeatCallBack) _onRepeatCallBack.apply(this, arguments);
 		}
