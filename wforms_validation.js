@@ -125,29 +125,6 @@ wFORMS.behaviors.validation.applyTo = function(f) {
 		v.onApply();
 	}
 	
-	if(wFORMS.behaviors.repeat && !wFORMS.behaviors.repeat.handlingRepeatedErrors){
-		wFORMS.behaviors.repeat.handlingRepeatedErrors = true;
-		var _onRepeatCallBack = wFORMS.behaviors.repeat.onRepeat;
-		wFORMS.behaviors.repeat.onRepeat = function(elem) {
-			if(elem){
-				if(!elem.hasClass){
-					elem.hasClass = function(className) { return base2.DOM.HTMLElement.hasClass(this,className) };
-				}	
-				if(!elem.removeClass){
-					elem.removeClass = function(className) { return base2.DOM.HTMLElement.removeClass(this,className) };
-				}
-				if(elem.hasClass('errFld')){
-					elem.removeClass('errFld');
-					var errMsgs = base2.DOM.Element.querySelectorAll(elem,"*[class*='errMsg']").forEach(function(element){
-						element.parentNode.removeChild(element);
-					});
-				}
-			}
-			
-			if(_onRepeatCallBack) _onRepeatCallBack.apply(this, arguments);
-		}
-	}
-	
 	return v;	   
 }
  
@@ -155,7 +132,20 @@ wFORMS.behaviors.validation.applyTo = function(f) {
  * Executed once the behavior has been applied to the document.
  * Can be overwritten.
  */
-wFORMS.behaviors.validation.instance.prototype.onApply = function() {} 
+wFORMS.behaviors.validation.instance.prototype.onApply = function() {
+	var _self = this;
+
+	if(wFORMS.behaviors.repeat && !wFORMS.behaviors.repeat.handlingRepeatedErrors){
+		wFORMS.behaviors.repeat.handlingRepeatedErrors = true;
+		var _onRepeatCallBack = wFORMS.behaviors.repeat.onRepeat;
+		wFORMS.behaviors.repeat.onRepeat = function(elem) {
+			if(elem){
+				_self.removeErrorMessage(elem);
+			}
+			//if(_onRepeatCallBack) _onRepeatCallBack.apply(this, arguments);
+		}
+	}
+} 
 
  
 /**
@@ -361,9 +351,17 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 	if(div && div.hasClass(this.behavior.styling.fieldError)) {
 		div.removeClass(this.behavior.styling.fieldError);
 	}
+	
 	var errorMessage  = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
-	if(errorMessage)  {				
+	if(errorMessage)  {
 		errorMessage.parentNode.removeChild(errorMessage); 
+	}else{
+		//Handle nested repeated sections
+		var name = element.id.split('-D');
+		var errorMessage  = document.getElementById(name[0] + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+		if(errorMessage)  {
+			errorMessage.parentNode.removeChild(errorMessage); 
+		}
 	}
 	
 }
