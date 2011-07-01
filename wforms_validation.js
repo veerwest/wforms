@@ -142,7 +142,11 @@ wFORMS.behaviors.validation.instance.prototype.onApply = function() {
 			if(elem){
 				_self.removeErrorMessage(elem);
 			}
-			//if(_onRepeatCallBack) _onRepeatCallBack.apply(this, arguments);
+			var errFld = "*[class*='"+wFORMS.behaviors.validation.styling.fieldError+"']";
+			base2.DOM.Element.querySelectorAll(elem,errFld).forEach(function(i){
+				_self.removeErrorMessage(i);
+			});
+			if(_onRepeatCallBack) _onRepeatCallBack.apply(this, arguments);
 		}
 	}
 } 
@@ -343,7 +347,9 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 	var div = document.getElementById(element.id+'-D');
 	
 	if(!element.hasClass) wFORMS.standardizeElement(element);
+	if(!element.removeClass) wFORMS.standardizeElement(element);
 	if(div && !div.hasClass) wFORMS.standardizeElement(div);
+	if(div && !div.removeClass) wFORMS.standardizeElement(div);
 	
 	if(element.hasClass(this.behavior.styling.fieldError)) {
 		element.removeClass(this.behavior.styling.fieldError);
@@ -357,10 +363,12 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 		errorMessage.parentNode.removeChild(errorMessage); 
 	}else{
 		//Handle nested repeated sections
-		var name = element.id.split('-D');
-		var errorMessage  = document.getElementById(name[0] + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
-		if(errorMessage)  {
-			errorMessage.parentNode.removeChild(errorMessage); 
+		if(element.id){
+			var name = element.id.split('-D').join('');
+			var errorMessage  = document.getElementById(name + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+			if(errorMessage)  {
+				errorMessage.parentNode.removeChild(errorMessage); 
+			}
 		}
 	}
 	
