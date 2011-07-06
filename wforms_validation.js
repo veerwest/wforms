@@ -275,7 +275,7 @@ wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName
 	
 	if(!div && wFORMS.behaviors.repeat) {
 		if(element.id){
-			var name = element.id.replace(/(\[\d+\])+(\-[HE])?$/,"$2");
+			var name = element.id.replace(/(\[\d+\])+(\-[HED])?$/,"$2");
 			var suffix = element.id.split(name).join('');
 			name += '-D';
 			if(suffix){

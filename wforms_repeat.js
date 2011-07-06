@@ -445,7 +445,7 @@ _i.prototype.removeSection = function(elem){
 		}
 
 		//Decrement counter
-		var c = document.getElementById(cacheId+this.behavior.MASTER_ID_SUFFIX_COUNTER);
+		var c = document.getElementById(this.clearLastSuffix(cacheId)+this.behavior.MASTER_ID_SUFFIX_COUNTER);
 		var newValue = parseInt(c.value) - 1;
 		c.value = newValue;
 		//
@@ -756,7 +756,7 @@ _i.prototype.clearSuffix = function(value){
 	if(!value){
 		return;
 	}	
-    value = value.replace(/(\[\d+\])+(\-[HE])?$/,"$2");    
+    value = value.replace(/(\[\d+\])+(\-[HED])?$/,"$2");    
 	return value;
 }
 
@@ -764,7 +764,7 @@ _i.prototype.clearLastSuffix = function(value){
 	if(!value){
 		return;
 	}	
-    value = value.replace(/(\[\d+\])(\-[HE])?$/,"$2");    
+    value = value.replace(/(\[\d+\])(\-[HED])?$/,"$2");    
 	return value;
 }
 
