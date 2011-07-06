@@ -263,22 +263,37 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  * fail
  * @param {domElement} element 
  */
+/**
+ * fail
+ * @param {domElement} element 
+ */
 wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName) { 
 
 	
 	//  field wrapper DIV. (-D suffix)
 	var div = document.getElementById(element.id+'-D');
 	
-	// set class to show that the field has an error
-	if(div) {	
-		if(!div.hasClass) wFORMS.standardizeElement(div);
-		div.addClass(this.behavior.styling.fieldError);			
-	} else {
-		element.addClass(this.behavior.styling.fieldError);
+	if(!div && wFORMS.behaviors.repeat) {
+		if(element.id){
+			var name = element.id.replace(/(\[\d+\])+(\-[HE])?$/,"$2");
+			var suffix = element.id.split(name).join('');
+			name += '-D';
+			if(suffix){
+				name += suffix;
+			}
+			div  = document.getElementById(name);
+		}
 	}
 	
 	// set class to show that the field has an error
-	// element.addClass(this.behavior.styling.fieldError);
+	if(div) {	
+		if(!div.hasClass) wFORMS.standardizeElement(div);
+		div.addClass(this.behavior.styling.fieldError);
+	}
+	
+	// set class to show that the field has an error
+	if(!element.hasClass) wFORMS.standardizeElement(element);
+	element.addClass(this.behavior.styling.fieldError);
 	
 	// show error message.
 	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
