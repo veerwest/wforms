@@ -445,7 +445,7 @@ _i.prototype.removeSection = function(elem){
 		}
 
 		//Decrement counter
-		var c = document.getElementById(this.clearLastSuffix(cacheId)+this.behavior.MASTER_ID_SUFFIX_COUNTER);
+		var c = document.getElementById(this.clearLastSuffix(elem.id)+this.behavior.MASTER_ID_SUFFIX_COUNTER);
 		var newValue = parseInt(c.value) - 1;
 		c.value = newValue;
 		//
