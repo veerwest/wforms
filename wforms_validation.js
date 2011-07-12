@@ -289,11 +289,11 @@ wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName
 	if(div) {	
 		if(!div.hasClass) wFORMS.standardizeElement(div);
 		div.addClass(this.behavior.styling.fieldError);
+	}else{
+		// set class to show that the field has an error
+		if(!element.hasClass) wFORMS.standardizeElement(element);
+		element.addClass(this.behavior.styling.fieldError);	
 	}
-	
-	// set class to show that the field has an error
-	if(!element.hasClass) wFORMS.standardizeElement(element);
-	element.addClass(this.behavior.styling.fieldError);
 	
 	// show error message.
 	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
