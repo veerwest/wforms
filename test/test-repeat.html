@@ -332,9 +332,10 @@
 		var repeatedElement = document.getElementById('repeatLabelTest2[1]-wfDL');
 		assertNotNull('id should be: repeatLabelTest2[1]-wfDL',repeatedElement.id);
 		
-		var label = repeatedElement.textContent;
-		if(!label){
-			label = repeatedElement.innerText;
+		if(!(repeatedElement.textContent)){
+			var label = repeatedElement.innerText;
+		}else{
+			var label = repeatedElement.textContent;
 		}
 		
 		assertEquals('Label should be "RepeatNested_TEST"','RepeatNested_TEST',label);

@@ -60,9 +60,11 @@
 			//Verify that custom error message is working
 			var errorSpan = document.getElementById('tfa_CustomValidation[1]-E');
 			assertNotNull(errorSpan);
-			var label = errorSpan.textContent;
-			if(!label){
-				label = errorSpan.innerText;
+			
+			if(!(errorSpan.textContent)){
+				var label = errorSpan.innerText;
+			}else{
+				var label = errorSpan.textContent;
 			}
 			assertNotEquals(-1,label.search(ERRORTEXT));
 		}
