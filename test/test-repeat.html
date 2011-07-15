@@ -333,6 +333,10 @@
 		assertNotNull('id should be: repeatLabelTest2[1]-wfDL',repeatedElement.id);
 		
 		var label = repeatedElement.textContent;
+		if(!label){
+			label = repeatedElement.innerText;
+		}
+		
 		assertEquals('Label should be "RepeatNested_TEST"','RepeatNested_TEST',label);
 	
 	}
