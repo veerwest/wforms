@@ -132,7 +132,24 @@ wFORMS.behaviors.validation.applyTo = function(f) {
  * Executed once the behavior has been applied to the document.
  * Can be overwritten.
  */
-wFORMS.behaviors.validation.instance.prototype.onApply = function() {} 
+wFORMS.behaviors.validation.instance.prototype.onApply = function() {
+	var _self = this;
+
+	if(wFORMS.behaviors.repeat && !wFORMS.behaviors.repeat.handlingRepeatedErrors){
+		wFORMS.behaviors.repeat.handlingRepeatedErrors = true;
+		var _onRepeatCallBack = wFORMS.behaviors.repeat.onRepeat;
+		wFORMS.behaviors.repeat.onRepeat = function(elem) {
+			if(elem){
+				_self.removeErrorMessage(elem);
+			}
+			var errFld = "*[class*='"+wFORMS.behaviors.validation.styling.fieldError+"']";
+			base2.DOM.Element.querySelectorAll(elem,errFld).forEach(function(i){
+				_self.removeErrorMessage(i);
+			});
+			if(_onRepeatCallBack) _onRepeatCallBack.apply(this, arguments);
+		}
+	}
+} 
 
  
 /**
@@ -246,22 +263,37 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  * fail
  * @param {domElement} element 
  */
+/**
+ * fail
+ * @param {domElement} element 
+ */
 wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName) { 
 
 	
 	//  field wrapper DIV. (-D suffix)
 	var div = document.getElementById(element.id+'-D');
 	
-	// set class to show that the field has an error
-	if(div) {	
-		if(!div.hasClass) wFORMS.standardizeElement(div);
-		div.addClass(this.behavior.styling.fieldError);			
-	} else {
-		element.addClass(this.behavior.styling.fieldError);
+	if(!div && wFORMS.behaviors.repeat) {
+		if(element.id){
+			var name = element.id.replace(/(\[\d+\])+(\-[HED])?$/,"$2");
+			var suffix = element.id.split(name).join('');
+			name += '-D';
+			if(suffix){
+				name += suffix;
+			}
+			div  = document.getElementById(name);
+		}
 	}
 	
 	// set class to show that the field has an error
-	// element.addClass(this.behavior.styling.fieldError);
+	if(div) {	
+		if(!div.hasClass) wFORMS.standardizeElement(div);
+		div.addClass(this.behavior.styling.fieldError);
+	}else{
+		// set class to show that the field has an error
+		if(!element.hasClass) wFORMS.standardizeElement(element);
+		element.addClass(this.behavior.styling.fieldError);	
+	}
 	
 	// show error message.
 	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
@@ -330,7 +362,9 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 	var div = document.getElementById(element.id+'-D');
 	
 	if(!element.hasClass) wFORMS.standardizeElement(element);
+	if(!element.removeClass) wFORMS.standardizeElement(element);
 	if(div && !div.hasClass) wFORMS.standardizeElement(div);
+	if(div && !div.removeClass) wFORMS.standardizeElement(div);
 	
 	if(element.hasClass(this.behavior.styling.fieldError)) {
 		element.removeClass(this.behavior.styling.fieldError);
@@ -338,9 +372,19 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 	if(div && div.hasClass(this.behavior.styling.fieldError)) {
 		div.removeClass(this.behavior.styling.fieldError);
 	}
+	
 	var errorMessage  = document.getElementById(element.id + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
-	if(errorMessage)  {				
+	if(errorMessage)  {
 		errorMessage.parentNode.removeChild(errorMessage); 
+	}else{
+		//Handle nested repeated sections
+		if(element.id){
+			var name = element.id.split('-D').join('');
+			var errorMessage  = document.getElementById(name + this.behavior.ERROR_PLACEHOLDER_SUFFIX);
+			if(errorMessage)  {
+				errorMessage.parentNode.removeChild(errorMessage); 
+			}
+		}
 	}
 	
 }
