@@ -414,6 +414,20 @@ _i.prototype.duplicateSection = function(elem){
  */
 _i.prototype.removeSection = function(elem){
 	if(elem){
+	
+		//Insert parent repeat node into cache if not already present.
+		var cacheId = this.clearLastSuffix(elem.id);
+		if(!(this.cache[cacheId])){
+			this.cache[cacheId] = Array();
+			//Insert all others into cache
+			var _self = this;
+			base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'\["][id$="\]"]').forEach(function(el){
+				if(el.id != cacheId+'[0]'){
+					_self.cache[cacheId].push(el);
+				}
+			});
+		}	
+	
 		//Remove any counters for nested repeats
 		if(elem){			
 			var nestedElements = base2.DOM.HTMLElement.querySelectorAll(elem,"."+this.behavior.CSS_REPEATABLE);
