@@ -382,9 +382,41 @@ _i.prototype.duplicateSection = function(elem){
 	var cacheId = this.clearLastSuffix(elem.id);
 	if(!(this.cache[cacheId])){
 		this.cache[cacheId] = Array();
+			//Insert all others into cache
+			var _self = this;
+			base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'\["][id$="\]"]').forEach(function(el){
+				if(el.id != cacheId+'[0]'){
+					var length = _self.cache[cacheId].length;
+					var found = false;
+					for(var i=0; i<length; i++){
+						console.log(_self.cache[cacheId][i].id == el.id);
+						if(_self.cache[cacheId][i].id == el.id){
+							found = true;
+							break;
+						}
+					}
+					if(!found){
+						console.log('el:',el.id);
+						_self.cache[cacheId].push(el);
+					}
+				}
+			});		
 	}
-	//Insert into cache
-	this.cache[cacheId].push(newElem);
+
+	var length = this.cache[cacheId].length;
+	var found = false;
+	for(var i=0; i<length; i++){
+		console.log(this.cache[cacheId][i].id == newElem.id);
+		if(this.cache[cacheId][i].id == newElem.id){
+			found = true;
+			break;
+		}
+	}
+	if(!found){
+		//Insert into cache
+		console.log(newElem.id);
+		this.cache[cacheId].push(newElem);
+	}
 	
 	wFORMS.applyBehaviors(newElem);
 		/*
@@ -423,7 +455,17 @@ _i.prototype.removeSection = function(elem){
 			var _self = this;
 			base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'\["][id$="\]"]').forEach(function(el){
 				if(el.id != cacheId+'[0]'){
-					_self.cache[cacheId].push(el);
+					var length = _self.cache[cacheId].length;
+					var found = false;
+					for(var i=0; i<length; i++){
+						if(_self.cache[cacheId][i].id == el.id){
+							found = true;
+							break;
+						}
+					}
+					if(!found){
+						_self.cache[cacheId].push(el);
+					}
 				}
 			});
 		}	
