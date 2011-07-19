@@ -162,8 +162,10 @@ wFORMS.behaviors.repeat = {
 				if(!(_i.cache[cacheId])){
 					_i.cache[cacheId] = Array();
 					//Insert all others into cache
-					base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'\["][id$="\]"]').forEach(function(el){
-						var regexp = new RegExp(cacheId+'\\[\\d+\\]');
+					//Is a challenge to find right subset for nested repeatables.
+					base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'"]').forEach(function(el){
+						//Need to handle cases where cacheId contains brackets
+						var regexp = new RegExp(cacheId.replace('\[','\\[').replace('\]','\\]')+'\\[\\d+\\]$');
 						if( (el.id != cacheId+'[0]') && (el.id.match(regexp))){
 							_i.cache.add(cacheId,el);
 						}

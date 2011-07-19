@@ -98,7 +98,63 @@
 		assertEquals("789",repeatedElement.value);
 	}	
 
-	
+	function testNestedRepeat2(){
+		//Make two copies of nestedTest2 parent div
+		var bParentInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest2'), 'repeat');
+		bParentInstance.run();
+		bParentInstance.run();
+		
+		//Make two copies of child field of second copy of nestedTest2 parent div
+		var bChildOfSecondCopyOfParentInstance = wFORMS.getBehaviorInstance(document.getElementById('nestedTest5[1]'), 'repeat');
+		bChildOfSecondCopyOfParentInstance.run();
+		bChildOfSecondCopyOfParentInstance.run();
+		
+		//Verify parent indices
+		var originalElement = document.getElementById('nestedTest2[0]');
+			assertNotNull(originalElement.id);
+		var repeatedElement1 = document.getElementById('nestedTest2[1]');
+			assertNotNull(repeatedElement1.id);		
+		var repeatedElement2 = document.getElementById('nestedTest2[2]');
+			assertNotNull(repeatedElement2.id);		
+			assertEquals("2",document.getElementById('nestedTest2[0]-RC').value);
+		
+		//Verify child indices
+		var originalChildElement = document.getElementById('nestedTest5[1][0]');
+			assertNotNull(originalChildElement.id);
+		var repeatedChildElement1 = document.getElementById('nestedTest5[1][1]');
+			assertNotNull(repeatedChildElement1.id);		
+		var repeatedChildElement2 = document.getElementById('nestedTest5[1][2]');
+			assertNotNull(repeatedChildElement2.id);		
+			assertEquals("2",document.getElementById('nestedTest5[1][0]-RC').value);
+
+		delete bParentInstance.cache['nestedTest2'];
+		delete bChildOfSecondCopyOfParentInstance.cache['nestedTest5[1]'];
+		
+		//Delete middle ([1]) child repeated element
+		var mockClick = {type:"click",preventDefault: function(){}};
+		bChildOfSecondCopyOfParentInstance.onRemoveLinkClick(mockClick,document.getElementById(repeatedChildElement1.id+'-wfDL'));		
+		
+		//Verify reindex of child elements
+		var originalChildElement = document.getElementById('nestedTest5[1][0]');
+		assertNotNull(originalChildElement.id);
+		var repeatedChildElement1 = document.getElementById('nestedTest5[1][1]');
+		assertNotNull(repeatedChildElement1.id);				
+		assertEquals("1",document.getElementById('nestedTest5[1][0]-RC').value);
+		
+		//Delete middle ([1]) parent repeated element
+		var mockClick = {type:"click",preventDefault: function(){}};
+		bParentInstance.onRemoveLinkClick(mockClick,document.getElementById(repeatedElement1.id+'-wfDL'));
+
+		//Verify removal of nested child indices after removal of parent section
+		assertNull(document.getElementById('nestedTest5[1][0]-RC'));
+		
+		//Verify reindex of parent
+		var originalElement = document.getElementById('nestedTest2[0]');
+		assertNotNull(originalElement.id);
+		var repeatedElement1 = document.getElementById('nestedTest2[1]');
+		assertNotNull(repeatedElement1.id);				
+		assertEquals("1",document.getElementById('nestedTest2[0]-RC').value);
+	}	
 	</script>
 	
 </head>
@@ -112,198 +168,7 @@
 
 
 	<form method="post" action="http://app.formassembly.com/responses/testprocessor" id="testRepeatForm" style="width: 550px">
-		<div class="repeat" id="test0">
-			<div class="oneField">
-				<label for="testInput0" class="preField" style="min-width:5em">Date</label>
-				<input type="text" id="testInput0" name="testInput0" value="" size="" />
-				<div class="field-hint-inactive" id="testInput0-H">
-					<span>JJ/MM/AAAA </span>
-				</div>						
-			</div>
-			<input type="button" value="Test" id="runButtonTest0"/>
-		</div>	
-		<br/>
-		<fieldset class="repeat" id="test1">
-			<div class="oneField">
-				<label for="wf_Texte" class="preField" style="min-width:5em">Texte</label>
-				<textarea cols="30" rows="3" id="wf_Texte" name="wf_Texte" class="required"></textarea>
-				<span class="errMsg" id="wf_Texte-E"></span>
-			</div>
-		</fieldset>
-		<div class="repeat" id="test2">
-			<div class="oneField">
-				<label for="tfa_Date" class="preField" style="min-width:5em">Date</label>
-				<input type="text" id="tfa_Date" name="tfa_Date" value="" size="" />
-				<div class="field-hint-inactive" id="tfa_Date-H">
-					<span>JJ/MM/AAAA </span>
-				</div>						
-			</div>
-		</div>
-		<table>
-			<tbody>
-				<tr class="repeat" id="trRepeat">
-					<td>Input:</td>
-					<td>						
-						<input id="listItemLabel" value="" maxlength="255" type="text" />
-					</td>
-					<td class="tdRepeatLink">&nbsp;</td>
-				</tr>
-			</tbody>
-		</table>
-		<fieldset class="repeat" id="nestedTest0"><legend>Parent Repeat</legend>
-			<div class="oneField">
-				<input id="nestedTestInput0" type="text" size="40" />
-			</div>
-			<fieldset class="repeat" id="nestedTest1"><legend>Nested Repeat</legend>
-				<div class="oneField">
-					<input id="nestedTestInput1" type="text" size="40" />
-				</div>
-				<div class="oneField">
-					<input id="nestedTestInput2" type="text" size="40" />
-				</div>			
-			</fieldset>
-			<div class="oneField">
-				<input id="nestedTestInput3" type="text"  size="40" />
-			</div>
-		</fieldset>
-		
-		<fieldset class="repeat" id="nestedTest2"><legend>Parent Repeat (nested test 2)</legend>
-			<div class="oneField">
-				<input id="nestedTestInput4" type="text" size="40" />
-			</div>
-			<fieldset class="repeat" id="nestedTest3"><legend>Nested Repeat</legend>
-				<div class="oneField">
-					<input id="nestedTestInput5" type="text" size="40" />
-				</div>
-				<div class="oneField">
-					<input id="nestedTestInput6" type="text" size="40" />
-				</div>			
-			</fieldset>
-			<div class="oneField">
-				<input id="nestedTestInput7" type="text"  size="40" />
-			</div>
-			
-			<input type="button" value="run test" onclick="testSecondNestedRepeat()"/> 
-		</fieldset>
-		
-		<a href="#" onclick="testSecondNestedRepeat(); return false">Run Test</a>
-		
-		
-		<div class="repeat" id="linkCreationTest1">			 
-			 <a href="#" id="linkCreationTest1-wfDL" class="duplicateLink">Add Me</a>
-		</div>
-		<div class="repeat" id="linkCreationTest2"></div>
-		
-		<div class="repeat" id="speedTest2">
-			<div id="tfa_DateofBirth1" class="inlineSection">
-				<label class="preField">Date of Birth:</label>
-				<div class="oneField">
-					<label for="tfa_Month10" class="inlineLabel">Month &nbsp;<span class="reqMark">*</span></label>
-					<select id="tfa_Month10" name="tfa_Month10" class="required">
-						<option value="">Please select...</option>
-						<option value="tfa_1" class="">January</option>
-						<option value="tfa_212" class="">February</option>
-						<option value="tfa_34" class="">March</option>
-						<option value="tfa_44" class="">April</option>
-						<option value="tfa_54" class="">May</option>
-						<option value="tfa_64" class="">June</option>
-						<option value="tfa_74" class="">July</option>
-						<option value="tfa_84" class="">August</option>
-						<option value="tfa_93" class="">September</option>
-						<option value="tfa_103" class="">October</option>
-						<option value="tfa_113" class="">November</option>
-						<option value="tfa_123" class="">December</option>
-					</select><span class="errMsg" id="tfa_Month10-E"></span>
-				</div>
-				<div class="oneField">
-					<label for="tfa_Day" class="inlineLabel">Day&nbsp;<span class="reqMark">*</span>
-					</label>
-					<select id="tfa_Day" name="tfa_Day" class="required">
-						<option value="">Please select...</option>
-						<option value="tfa_6076325415654" class="">1</option>
-						<option value="tfa_22" class="">2</option>
-						<option value="tfa_32" class="">3</option>
-						<option value="tfa_42" class="">4</option>
-						<option value="tfa_52" class="">5</option>
-						<option value="tfa_62" class="">6</option>
-						<option value="tfa_72" class="">7</option>
-						<option value="tfa_82" class="">8</option>
-						<option value="tfa_92" class="">9</option>
-						<option value="tfa_102" class="">10</option>
-						<option value="tfa_112" class="">11</option>
-						<option value="tfa_122" class="">12</option>
-						<option value="tfa_13" class="">13</option>
-						<option value="tfa_14" class="">14</option>
-						<option value="tfa_15" class="">15</option>
-						<option value="tfa_16" class="">16</option>
-						<option value="tfa_17" class="">17</option>
-						<option value="tfa_181" class="">18</option>
-						<option value="tfa_19" class="">19</option>
-						<option value="tfa_20" class="">20</option>
-						<option value="tfa_211" class="">21</option>
-						<option value="tfa_221" class="">22</option>
-						<option value="tfa_23" class="">23</option>
-						<option value="tfa_24" class="">24</option>
-						<option value="tfa_25" class="">25</option>
-						<option value="tfa_26" class="">26</option>
-						<option value="tfa_271" class="">27</option>
-						<option value="tfa_28" class="">28</option>
-						<option value="tfa_29" class="">29</option>
-						<option value="tfa_30" class="">30</option>
-						<option value="tfa_311" class="">31</option>
-					</select>
-					<span class="errMsg" id="tfa_Day-E"></span>
-				</div>
-				<div class="oneField">
-					<label for="tfa_Year" class="inlineLabel">Year
-						&nbsp;<span class="reqMark">*</span>
-					</label>
-					<input type="text" id="tfa_Year" name="tfa_Year" value="" size="4" class="validate-integer required" />
-					<span class="errMsg" id="tfa_Year-E"></span>
-				</div>
-				<div class="oneField">
-					<label for="tfa_Occupation" class="preField">Occupation&nbsp;<span class="reqMark">*</span></label>
-					<input type="text" id="tfa_Occupation" name="tfa_Occupation" value="" size="" class="required" /><br/>
-					<span class="errMsg" id="tfa_Occupation-E"></span>
-				</div>
-			</div>
-		</div>
-		
-		
-		<fieldset id="radioTest" class="repeat">
-			<legend>Test Radio Group</legend>
-			<div class="oneField">
-				<span class="oneChoice">
-		 			<input type="radio" value="yes" id="radioTestYes" name="radioTest">
-		 			<label class="postField">Yes</label>
-		 		</span>
-		 		<span class="oneChoice">
-		 			<input type="radio" value="no" id="radioTestNo" name="radioTest">
-		 			<label class="postField">No</label>
-		 		</span>
-			</div>			
-		</fieldset>
-
-
-		<fieldset id="repeatLabelTestParent"><legend>Parent Repeat - Label persistance</legend>
-			<fieldset class="repeat" id="repeatLabelTest"><legend>Repeat</legend>
-				<div class="oneField">
-					<input id="repeatLabelTest1" type="text" size="40" />
-				</div>
-				<fieldset class="repeat" id="repeatLabelTest2"><legend>Nested Repeat</legend>
-					<div class="oneField">
-						<input id="repeatLabelTest3" type="text" size="40" />
-					</div>
-					<div class="oneField">
-						<input id="repeatLabelTest4" type="text" size="40" />
-					</div>
-					<span class="duplicateSpan"><a id="repeatLabelTest2-wfDL" class="duplicateLink" href="#">RepeatNested_TEST</a></span>
-				</fieldset>
-				<span class="duplicateSpan"><a id="repeatLabelTest-wfDL" class="duplicateLink" href="#">Repeat_TEST</a></span>
-			</fieldset>
-			<input type="button" value="run test" onclick="testRepeatLabelRepeat()"/> 
-		</fieldset>
-		
+	
 		<div class="repeat" id="test4">
 			<div class="oneField">
 				<label for="testInput4" class="preField" style="min-width:5em">RepeatRemove</label>
@@ -314,6 +179,22 @@
 			</div>
 		</div>
 		
+		<fieldset class="repeat" id="nestedTest2"><legend>Parent Repeat</legend>
+			<div class="oneField">
+				<input id="nestedTestInput4" type="text" size="40" />
+			</div>
+			<fieldset class="repeat" id="nestedTest5"><legend>Nested Repeat</legend>
+				<div class="oneField">
+					<input id="nestedTestInput6" type="text" size="40" />
+				</div>
+				<div class="oneField">
+					<input id="nestedTestInput7" type="text" size="40" />
+				</div>			
+			</fieldset>
+			<div class="oneField">
+				<input id="nestedTestInput8" type="text"  size="40" />
+			</div>
+		</fieldset>		
 		
 	</form>
 </body>
