@@ -69,7 +69,7 @@
 		bInstance.run();
 		
 		//Simulate Save&Resume by killing the cache
-		bInstance.cache = {};
+		delete bInstance.cache['test4'];
 		//
 		
 		//Verify indices

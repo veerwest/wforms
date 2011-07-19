@@ -156,7 +156,54 @@ wFORMS.behaviors.repeat = {
 	instance : function(f) {
 		this.behavior = wFORMS.behaviors.repeat; 
 		this.target = f;
-		this.cache = {};
+		var _i = this;
+		this.cache = {
+			populateCache: function (cacheId){
+				if(!(_i.cache[cacheId])){
+					_i.cache[cacheId] = Array();
+					//Insert all others into cache
+					base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'\["][id$="\]"]').forEach(function(el){
+						var regexp = new RegExp(cacheId+'\\[\\d+\\]');
+						if( (el.id != cacheId+'[0]') && (el.id.match(regexp))){
+							_i.cache.add(cacheId,el);
+						}
+					});
+				}
+			},
+			
+			add: function(cacheId,newElem){
+				var length = _i.cache[cacheId].length;
+				var found = false;
+				for(var i=0; i<length; i++){
+					if(_i.cache[cacheId][i] == newElem){
+						found = true;
+						break;
+					}
+				}
+				if(!found && (newElem.id != cacheId+'[0]')){
+					//Insert into cache
+					_i.cache[cacheId].push(newElem);
+				}
+				return !found;
+			},
+			
+			remove: function(cacheId,elem){
+				_i.cache.populateCache(cacheId);
+				var cacheId = _i.clearLastSuffix(elem.id);
+				var deletedIndex = 0;
+				if(_i.cache[cacheId]){
+					var len = _i.cache[cacheId].length;
+					for(var i = 0; i<len; i++){
+						if(_i.cache[cacheId][i] == elem){
+							_i.cache[cacheId].splice(i,1);
+							deletedIndex = i;
+							break;
+						}
+					};
+				};
+				return deletedIndex;
+			}
+		};
 	}
 }
 
@@ -165,6 +212,8 @@ wFORMS.behaviors.repeat = {
  */
 var _b = wFORMS.behaviors.repeat;
 var _i = wFORMS.behaviors.repeat.instance;
+
+
 
 /**
  * Factory Method.
@@ -380,43 +429,9 @@ _i.prototype.duplicateSection = function(elem){
 	
 	//Create cache for elem if not already exists
 	var cacheId = this.clearLastSuffix(elem.id);
-	if(!(this.cache[cacheId])){
-		this.cache[cacheId] = Array();
-			//Insert all others into cache
-			var _self = this;
-			base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'\["][id$="\]"]').forEach(function(el){
-				if(el.id != cacheId+'[0]'){
-					var length = _self.cache[cacheId].length;
-					var found = false;
-					for(var i=0; i<length; i++){
-						console.log(_self.cache[cacheId][i].id == el.id);
-						if(_self.cache[cacheId][i].id == el.id){
-							found = true;
-							break;
-						}
-					}
-					if(!found){
-						console.log('el:',el.id);
-						_self.cache[cacheId].push(el);
-					}
-				}
-			});		
-	}
+	this.cache.populateCache(cacheId);
+	this.cache.add(cacheId,newElem);
 
-	var length = this.cache[cacheId].length;
-	var found = false;
-	for(var i=0; i<length; i++){
-		console.log(this.cache[cacheId][i].id == newElem.id);
-		if(this.cache[cacheId][i].id == newElem.id){
-			found = true;
-			break;
-		}
-	}
-	if(!found){
-		//Insert into cache
-		console.log(newElem.id);
-		this.cache[cacheId].push(newElem);
-	}
 	
 	wFORMS.applyBehaviors(newElem);
 		/*
@@ -449,26 +464,7 @@ _i.prototype.removeSection = function(elem){
 	
 		//Insert parent repeat node into cache if not already present.
 		var cacheId = this.clearLastSuffix(elem.id);
-		if(!(this.cache[cacheId])){
-			this.cache[cacheId] = Array();
-			//Insert all others into cache
-			var _self = this;
-			base2.DOM.Element.querySelectorAll(document,'*[id^="'+cacheId+'\["][id$="\]"]').forEach(function(el){
-				if(el.id != cacheId+'[0]'){
-					var length = _self.cache[cacheId].length;
-					var found = false;
-					for(var i=0; i<length; i++){
-						if(_self.cache[cacheId][i].id == el.id){
-							found = true;
-							break;
-						}
-					}
-					if(!found){
-						_self.cache[cacheId].push(el);
-					}
-				}
-			});
-		}	
+		this.cache.populateCache(cacheId);
 	
 		//Remove any counters for nested repeats
 		if(elem){			
@@ -487,18 +483,7 @@ _i.prototype.removeSection = function(elem){
 		var elem = elem.parentNode.removeChild(elem);
 		
 		// Remove from cache
-		var cacheId = this.clearLastSuffix(elem.id);
-        var deletedIndex = 0;
-		if(this.cache[cacheId]){
-			var len = this.cache[cacheId].length;
-			for(var i = 0; i<len; i++){
-				if(this.cache[cacheId][i].id == elem.id){
-					this.cache[cacheId].splice(i,1);
-                    deletedIndex = i;
-					break;
-				}
-			};
-		}
+		var deletedIndex = this.cache.remove(cacheId,elem);
 
 		//Decrement counter
 		var c = document.getElementById(this.clearLastSuffix(elem.id)+this.behavior.MASTER_ID_SUFFIX_COUNTER);
