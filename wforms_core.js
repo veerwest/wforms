@@ -223,7 +223,8 @@ wFORMS.helpers.activateStylesheet = function(sheetref) {
 	for(var i=0;ss[i];i++ ) {
 		if(ss[i].href.indexOf(sheetref) != -1) {
 			ss[i].disabled = true;
-			ss[i].disabled = false;			
+			ss[i].disabled = false;
+			ss[i].rel = "stylesheet";
 		}
 	}
 }

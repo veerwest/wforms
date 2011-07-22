@@ -68,7 +68,7 @@ wFORMS.behaviors.validation = {
 	onFail: function(f,e) {},
 
     dateRegex : (function(){
-        var p_month = "((January)|(Feburary)|(March)|(April)|(May)|(June)|(July)|(August)|(September)|(October)|(November)|(December)|(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec))";
+        var p_month = "((January)|(February)|(March)|(April)|(May)|(June)|(July)|(August)|(September)|(October)|(November)|(December)|(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec))";
         var p_num = '\\d{1,2}';
         var year = '(\\d{1,4}|\\d{1,2})';
         var month = '(' + p_num + '|' + p_month + ')';
