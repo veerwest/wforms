@@ -60,11 +60,9 @@
 		//Check that hint div didn't get moved with onFocus cycle.  Should be idempotent.
 		assertEquals("Hint element was moved in onFocus cycle",hint_element.parentNode,hint_parent_element); 
 		
-		//Force tests to run in proper order in firefox.
-		_testFieldsetRepeatWithFieldHints();
 	}
-
-	function _testFieldsetRepeatWithFieldHints() {
+	
+	function testFieldsetRepeatWithFieldHints() {
 		var fieldHint = document.getElementById('testInput0-H');
 		var placeholder = document.getElementById('testInput0-E');
 		
@@ -88,7 +86,7 @@
 		assertNotNull('testInput0[0][0]-H should exists',document.getElementById('testInput0[0][0]-H'));
 		
 		assertNotNull('Error Placeholder with id testInput0[1][0]-E should exists', document.getElementById('testInput0[1][0]-E'));
-	}	
+	}
 	
 	</script>
 	
@@ -131,9 +129,8 @@
 				</div>					
 				<div id="testInput0-E" class="errMsg">error placeholder</div>
 			</div>
-		</div>
-		<a href="#" onclick="try{_testFieldsetRepeatHintsDisplay(); } catch(x){ console.log(x);}; return false;">Test0</a>
-		<a href="#" onclick="try{testFieldsetRepeatWithFieldHints(); } catch(x){ console.log(x);}; return false;">Test1</a>
+		</div>	
+		<a href="#" onclick="try{testFieldsetRepeatWithFieldHints(); } catch(x){ console.log(x);}; return false;">Test</a>
 	</form>
 </body>
 </html>
