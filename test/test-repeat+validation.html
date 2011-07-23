@@ -65,18 +65,17 @@
 				var label = errorSpan.innerText;
 			}else{
 				var label = errorSpan.textContent;
-			}
+		}
 			assertNotEquals(-1,label.search(ERRORTEXT));
 		}
 
 		function testRepeatAndValidateErrorMessage(){
 			var ERRORTEXT = "Not 'ddd'";
 			var bRepeatInstance = wFORMS.getBehaviorInstance(document.getElementById('tfa_CustomValidation2-D'), 'repeat');
-				var form = wFORMS.helpers.getForm(document.getElementById('tfa_CustomValidation2-D'));				
+				var form = wFORMS.helpers.getForm(document.getElementById('tfa_CustomValidation2-D'));
 			var bValidationInstance = wFORMS.getBehaviorInstance(form, 'validation');
 		
 			bValidationInstance.run({},form);
-			//Repeat of previous validated section should *NOT* have validation error already triggered.
 			bRepeatInstance.run();
 			
 			var originalElement = document.getElementById('tfa_CustomValidation2[0]');
