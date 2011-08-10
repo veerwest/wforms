@@ -287,11 +287,11 @@ wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName
 	
 	// set class to show that the field has an error
 	if(div) {	
-		if(!div.hasClass) wFORMS.standardizeElement(div);
+		if(!div.hasClass || !div.addClass) wFORMS.standardizeElement(div);
 		div.addClass(this.behavior.styling.fieldError);
 	}else{
 		// set class to show that the field has an error
-		if(!element.hasClass) wFORMS.standardizeElement(element);
+		if(!element.hasClass || !element.addClass) wFORMS.standardizeElement(element);
 		element.addClass(this.behavior.styling.fieldError);	
 	}
 	
@@ -362,8 +362,10 @@ wFORMS.behaviors.validation.instance.prototype.removeErrorMessage = function(ele
 	var div = document.getElementById(element.id+'-D');
 	
 	if(!element.hasClass) wFORMS.standardizeElement(element);
+	if(!element.addClass) wFORMS.standardizeElement(element);
 	if(!element.removeClass) wFORMS.standardizeElement(element);
 	if(div && !div.hasClass) wFORMS.standardizeElement(div);
+	if(div && !div.addClass) wFORMS.standardizeElement(div);
 	if(div && !div.removeClass) wFORMS.standardizeElement(div);
 	
 	if(element.hasClass(this.behavior.styling.fieldError)) {
