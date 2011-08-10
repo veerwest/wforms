@@ -95,6 +95,13 @@
 			
 		}
 		
+		function testRepeatValidationSections(){
+		 var form = document.getElementById('id2814189');
+		 var b_v = wFORMS.getBehaviorInstance(form,'validation');
+		 var b_r = wFORMS.getBehaviorInstance(document.getElementById('tfa_Test1'),'repeat');
+				b_r.run();
+				b_v.run({},form);
+		}
 		
 	</script>
 	</head>
@@ -152,6 +159,23 @@
 				</div>				
 		</div>
 	</div>
+
+	<form method="post" action="http://www.tfaforms.com/responses/processor" id="id2814189" class="labelsAbove hintsTooltip"> 
+	<fieldset id="tfa_Test1" class="repeat wfSection"> 
+	<legend>Test 1</legend> 
+	<div id="tfa_2722977879302-D" class="oneField"> 
+	<span class="reqMark">*</span> <input type="text" id="tfa_2722977879302" name="tfa_2722977879302" value="" size="40" class="required"> <br> 
+	</div> 
+	<div id="tfa_2722977524385-D" class="oneField"> 
+	<span class="reqMark">*</span> <input type="text" id="tfa_2722977524385" name="tfa_2722977524385" value="" size="40" class="validate-integer required"> <br> 
+	</div> 
+	<div id="tfa_2722977724667-D" class="oneField"> <input type="text" id="tfa_2722977724667" name="tfa_2722977724667" value="" size="40" class=""> <br> 
+	</div> 
+	</fieldset> 
+	<div class="actions"> 
+	<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="822-f1c4bb8c20749b19186eb22ce8e2d553" name="tfa_dbCounters" id="tfa_dbCounters"><input type="hidden" value="214075" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="807d3f6b36e1f34067d770c369eb82ec" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="1312982989" name="tfa_dbTimeStarted" id="tfa_dbTimeStarted"><input type="hidden" value="1" name="tfa_dbVersionId" id="tfa_dbVersionId"> 
+	</div> 
+	</form>
 	
 </body>
 </html>
