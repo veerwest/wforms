@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Input Validation Behavior Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	<link href="../css/nicerblank/wforms.css" rel="stylesheet" type="text/css"></link>
+	
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2-dom.js"></script>
+    <script type="text/javascript" src="../wforms_core.js"></script>
+    <script type="text/javascript" src="../wforms_autoformat.js"></script>
+
+	<!--<script type="text/javascript" src="../customization/wforms_validation_length.js"></script>-->
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js" ></script>
+    <script type="text/javascript" language="JavaScript">
+        var parser = null;
+
+        $(document).ready(function(){
+            $('#code').click(function(){
+                parser = PEG.buildParser($('textarea').val());
+            });
+        });
+
+    </script>
+	</head>
+    <body class="default wFormWebPage">
+    <div style="width:700px; height:300px; vertical-align: middle; display: table-cell; padding-left: 50px">
+        <p>
+            $ stands for an alphanumeric character, # is a digital character.
+        </p>
+        <form method="post" action="" id="testForm" >
+
+        <div><input type="text" id="ssn"  name="testField" autoformat="###-##-####" class="" value=""/>
+        <label>###-##-####</label></div>
+
+        <div><input type="text" id="telephone"  name="testField" autoformat="(#) ### ## ####" class="" value=""/>
+        <label>(#) ### ## ####</label></div>
+
+        <div><input type="text" id="telephone_short"  name="testField" autoformat="### ## ####" class="" value=""/>
+        <label>### ## ####</label></div>
+
+        <div><input type="text" id="decimal"  name="testField" autoformat="###.##" class="" value=""/>
+        <label>###.##</label></div>
+
+        <div><input type="text" id="SN"  name="testField" autoformat="$$$$-$$$$-$$$$-$$$$" class="" value="" size="30"/>
+        <label>$$$$-$$$$-$$$$-$$$$</label></div>
+
+        <div><input type="text" id="IF_ELSE"  name="testField" autoformat="If($$$$$$){$$$$$$}else{$$$$$$}" class="" value="" size="30"/>
+        <label>If($$$$$$){$$$$$$}else{$$$$$$}</label></div>
+
+
+
+    <!--<input id="code" type="button" value="code">-->
+        </form>
+        </div>
+
+    </body>
+</html>
+
