@@ -15,6 +15,7 @@ wFORMS.behaviors.autoformat = {
     ATTRIBUTE_SELECTOR: 'autoformat',
     ALLOWED_ELEMENT_TYPE: ['input[type="text"]', 'textarea'],
     DELETED_PLACE_HOLDER : '_',
+    CASE_INSENSITIVE_MATCH: true,
 
     //lazy load constant
     ACTORS_SELECTOR : null,
@@ -255,7 +256,11 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.interpretRule = function(element
     var parser = wFORMS.behaviors.autoformat._getParser();
     var template = parser.parse(attributeValue), result = [];
     for(var i = 0 ; i < template.length; i++){  // add sequence info
-        result.push(new wFORMS.behaviors.autoformat.TemplateEntry(i, template[i].type, template[i].value));
+        if(template[i].type == 'L'){
+            result.push(new wFORMS.behaviors.autoformat.TemplateEntryLabel(i, template[i].value));
+            continue;
+        }
+        result.push(new wFORMS.behaviors.autoformat.TemplateEntryMask(i, template[i].type, template[i].value));
     }
     return result;
 };
@@ -301,13 +306,26 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleTyping = function(event){
     var templateEntry = this.getSymbolPosition(cur);
 
     if(templateEntry.type == 'L'){
-        if(templateEntry.fragmentOrder == 0){ // if caret is at the front boundary of fixed text fragment.
+        if(templateEntry.fragmentOrder == 0){ // if caret is at the front boundary of the fixed text fragment.
             //then prefilling (auto-complete) fixed text fragment
             nextInputPoint = this.prefill(cur);
         }
         //try to match a fixed text from current cur position
-
-//        templateEntry = this.getSymbolPosition(cur);
+        if(templateEntry.matchKey(event)){ //if matched, step ahead
+            cur++;
+        }else{//if not matched, try to match the next masked input
+            templateEntry = this.getSymbolPosition(nextInputPoint);
+            var result = templateEntry.matchKey(event);
+            if(!result.match){
+                return true; // failed to recognize a legal input, do nothing, the input of this time is handled
+            }
+            //update input cache
+            this.inputCache[nextInputPoint] = {type: 'I', value: result.character};
+            cur = nextInputPoint + 1;
+        }
+        this.displayCache();
+        wFORMS.behaviors.autoformat.setCaretPosition(this.element, cur);
+        return true; // handled
     }
 
     if(templateEntry.type == 'EOF'){
@@ -317,7 +335,9 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleTyping = function(event){
     //handle typing input
     var isUpdated = this.keyCodeCheck(templateEntry, event);
     if(isUpdated){
-        cur = this.autoFill(cur);
+        this.autoFill(cur);
+        wFORMS.behaviors.autoformat.setCaretPosition(this.element, cur+1);
+        return true;
     }
 
     return false;
@@ -350,33 +370,18 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.getSymbolPosition = function(car
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.keyCodeCheck = function(templateEntry, event){
     //test template type match
-    var acceptedInputType = ['D', 'T'], match = false, i;
-    for(i = 0 ; i < 2; i++){
-        if(templateEntry.type == acceptedInputType[i]){
-            match = true;
-            break;
-        }
+    if(templateEntry.type != 'D' && templateEntry.type != 'T'){
+        return false;
     }
-    if (!match) return false;
 
-    //test keyCode falls in range
-    var keyCodeMeta = wFORMS.behaviors.autoformat.keyCode[templateEntry.type];
-    var keyCode = event.which || event.keyCode, character = null, range = null;
-    for(i = 0 ; i < keyCodeMeta.length; i++){// enumerate ranges
-        range = keyCodeMeta[i];
-        if(keyCode >= range.keyCodeStart && keyCode <= range.keyCodeEnd){
-            //calculate character
-            character = String.fromCharCode(range.asciiStart + keyCode - range.keyCodeStart);
-            break;
-        }
-    }
-    if(!character){
-        return false;  // not fall in range
+    var result = templateEntry.matchKey(event);
+    if(!result.match){
+        return false;
     }
 
     //create entry in input cache
     var position = templateEntry.order;
-    this.inputCache[position] = {type: 'I', value: character};
+    this.inputCache[position] = {type: 'I', value: result.character};
 
     return true;
 };
@@ -421,7 +426,7 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.autoFill = function(caretPos){
     }
     this.displayCache();
 
-    wFORMS.behaviors.autoformat.setCaretPosition(this.element, caretPos);
+  //  wFORMS.behaviors.autoformat.setCaretPosition(this.element, caretPos);
 
     return caretPos;
 };
@@ -704,10 +709,70 @@ wFORMS.behaviors.autoformat.TemplateEntry.prototype.setTemplateFragment = functi
 //=============== TemplateFragment methods =============== //
 
 wFORMS.behaviors.autoformat.TemplateFragment.prototype.addEntry = function(entry){
-   var char = entry.type == 'L' ? entry.value : wFORMS.behaviors.autoformat.charSet[entry.type];
-   this.characters.push(char);
+   var character = entry.type == 'L' ? entry.value : wFORMS.behaviors.autoformat.charSet[entry.type];
+   this.characters.push(character);
    this.entries.push(entry);
 };
+
+//=============== TemplateEntryLabel Class Definition=============== //
+
+wFORMS.behaviors.autoformat.TemplateEntryLabel = (function(){
+    function TemplateEntryLabel(order, value){
+        wFORMS.behaviors.autoformat.TemplateEntry.call(this, order, 'L', value);
+    }
+    TemplateEntryLabel.prototype = new wFORMS.behaviors.autoformat.TemplateEntry();
+    TemplateEntryLabel.prototype.constructor = TemplateEntryLabel;
+    return TemplateEntryLabel;
+})();
+
+wFORMS.behaviors.autoformat.TemplateEntryLabel.prototype.matchKey = function(event){
+   var keyCode = event.which || event.keyCode;
+
+   var character = String.fromCharCode(keyCode);
+
+   if(wFORMS.behaviors.autoformat.CASE_INSENSITIVE_MATCH){
+       return character.toUpperCase() == this.value.toUpperCase();
+   }
+
+   return keyCode == this.value;
+};
+
+//=============== TemplateEntryMask Class Definition=============== //
+wFORMS.behaviors.autoformat.TemplateEntryMask = (function(){
+    function TemplateEntryMask(order, type, value){
+        wFORMS.behaviors.autoformat.TemplateEntry.call(this, order, type, value);
+    }
+    TemplateEntryMask.prototype = new wFORMS.behaviors.autoformat.TemplateEntry();
+    TemplateEntryMask.prototype.constructor = TemplateEntryMask;
+    return TemplateEntryMask;
+})();
+
+wFORMS.behaviors.autoformat.TemplateEntryMask.prototype.matchKey = function(event){
+    var keyCodeMeta = wFORMS.behaviors.autoformat.keyCode[this.type], result = {};
+    var keyCode = event.which || event.keyCode, character = null, range = null;
+    for(i = 0 ; i < keyCodeMeta.length; i++){// enumerate ranges
+        range = keyCodeMeta[i];
+        if(keyCode >= range.keyCodeStart && keyCode <= range.keyCodeEnd){
+            result.match = true;
+            //calculate character
+            character = String.fromCharCode(range.asciiStart + keyCode - range.keyCodeStart);
+            break;
+        }
+    }
+
+    if(!character){
+       result.match = false;
+       return result;  // not fall in range
+    }
+    result.character = character;
+
+    return result;
+};
+
+
+
+
+
 
 
 
