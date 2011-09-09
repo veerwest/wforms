@@ -65,6 +65,7 @@ wFORMS.behaviors.autoformat = {
         this.order = order;
         this.characters = [];
         this.entries = [];
+        this.next = null;
     },
 
     InputEntry: function(){
@@ -266,10 +267,14 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.interpretRule = function(element
 };
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.buildTemplateFragmentList = function(){
-    var j = 0, order = 0, fragment, templateEntry = null;
+    var j = 0, order = 0, fragment = null, templateEntry = null;
     for (var i = 0 ; i < this.template.length; i++){
-        if( this.template[i] != 'L' || templateEntry == null || (templateEntry.type != 'L' && this.template[i] == 'L') ){
-            fragment = new  wFORMS.behaviors.autoformat.TemplateFragment(j);
+        if( this.template[i].type != 'L' || templateEntry == null || (templateEntry.type == 'L' && this.template[i].type != 'L') ){
+            var newFragment = new wFORMS.behaviors.autoformat.TemplateFragment(j);
+            if(fragment!=null){
+                fragment.next = newFragment;
+            }
+            fragment = newFragment;
             this.templateFragments.push(fragment);
             order = 0;
         }
@@ -308,13 +313,17 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleTyping = function(event){
     if(templateEntry.type == 'L'){
         if(templateEntry.fragmentOrder == 0){ // if caret is at the front boundary of the fixed text fragment.
             //then prefilling (auto-complete) fixed text fragment
-            nextInputPoint = this.prefill(cur);
+            this.prefill(cur);
         }
+        nextInputPoint = templateEntry.templateFragment.getLastEntry().order + 1;
         //try to match a fixed text from current cur position
         if(templateEntry.matchKey(event)){ //if matched, step ahead
             cur++;
         }else{//if not matched, try to match the next masked input
             templateEntry = this.getSymbolPosition(nextInputPoint);
+            if(templateEntry.type == 'EOF'){
+                return false;
+            }
             var result = templateEntry.matchKey(event);
             if(!result.match){
                 return true; // failed to recognize a legal input, do nothing, the input of this time is handled
@@ -712,6 +721,10 @@ wFORMS.behaviors.autoformat.TemplateFragment.prototype.addEntry = function(entry
    var character = entry.type == 'L' ? entry.value : wFORMS.behaviors.autoformat.charSet[entry.type];
    this.characters.push(character);
    this.entries.push(entry);
+};
+
+wFORMS.behaviors.autoformat.TemplateFragment.prototype.getLastEntry = function(entry){
+   return this.entries[this.entries.length - 1];
 };
 
 //=============== TemplateEntryLabel Class Definition=============== //
