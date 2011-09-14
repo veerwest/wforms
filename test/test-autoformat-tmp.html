@@ -29,6 +29,28 @@
         });
 
     </script>
+
+
+    <style type="text/css" media="screen">
+        #test_background{
+            background-color: transparent;
+            position: relative;
+            z-index: 255;
+            font-family: arial,sans-serif;
+            font-size: 17px;
+        }
+
+        #test_underlying{
+            border: 1px solid green;
+            position: absolute;
+            z-index: 250;
+            font-family: arial,sans-serif;
+            color: green;
+            font-size: 17px;
+            left: 3px;
+            top: 2px;
+        }
+    </style>
 	</head>
     <body class="default wFormWebPage">
     <div style="width:700px; height:300px; vertical-align: middle; display: table-cell; padding-left: 50px">
@@ -55,11 +77,30 @@
         <div><input type="text" id="IF_ELSE"  name="testField" autoformat="If($$$$$$){$$$$$$}else{$$$$$$}" class="" value="" size="30"/>
         <label>If($$$$$$){$$$$$$}else{$$$$$$}</label></div>
 
-
+        <div><input type="text" id="alternate"  name="testField" autoformat="$#$#$#$#$#" class="" value="" size="30"/>
+        <label>$#$#$#$#$#</label></div>
 
     <!--<input id="code" type="button" value="code">-->
         </form>
+
+
+        <!--<form style="background-color: #ffb6c1;">-->
+            <!--<div style="position: relative">-->
+                <!--<div id="test_underlying">some text here</div>-->
+                <!--<input id="test_background" type="text" name="testField" class="" value=""/>-->
+            <!--</div>-->
+        <!--</form>-->
         </div>
+
+    <script type="text/javascript" language="JavaScript">
+        (function(){
+            var element = document.getElementById('test_background');
+            var newDiv = document.getElementById('test_underlying');
+
+//            newDiv.style.left = element.offsetLeft + 'px';
+//            newDiv.style.top = element.offsetTop + 'px';
+        })();
+    </script>
 
     </body>
 </html>
