@@ -261,16 +261,17 @@ wFORMS.behaviors.autoformat = {
             if(!infoEntry){
                 return ;
             }
+            var selection = wFORMS.behaviors.autoformat.getSelection(infoEntry.element);
 
             infoEntry._pasteMonitorHandler = window.setInterval((function(){
                 var entry = infoEntry;
                 var count = 0;
                 return function(){
-                    var result = entry.checkCacheTempered();
+                    var result = entry.checkCacheTempered(selection);
                     console.log(result);
                     if(result != false){
                         window.clearInterval(entry._pasteMonitorHandler);
-                        entry.handlePaste(result);
+                        entry.handlePaste(result, selection);
                     }
                     count++;
                     if(count >= wFORMS.behaviors.autoformat.MONITOR_CHECK_TIMES){
@@ -660,14 +661,22 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleBackspace = function(event
 
 };
 
-wFORMS.behaviors.autoformat.InfoEntry.prototype.handlePaste = function(difference){
+wFORMS.behaviors.autoformat.InfoEntry.prototype.handlePaste = function(difference, refSelection){
     var inputQueue = this.buildActiveInputQueueAtCaret(difference.start);
+    var removeCount = 0;
+    if(refSelection.length != 0){// need remove the active input characters in the selection
+        removeCount = this.inputMaskStatisticWithinRange(refSelection.caret, refSelection.length);
+    }
+    //remove 'removeCount' elements from the queue
+    while(removeCount > 0){
+        inputQueue.shift();
+        removeCount--;
+    }
     var insertionQueue = [];
     //build up insertion as entry list
     for(var i = 0; i < difference.diff.length; i++){
         insertionQueue.push({type: 'I', value: difference.diff[i]});
     }
-
     //splice the insertion with the successive input
     inputQueue = insertionQueue.concat(inputQueue);
 
@@ -750,8 +759,9 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.hidePrompt = function(){
     div.style.display = 'none';
 };
 
-wFORMS.behaviors.autoformat.InfoEntry.prototype.checkCacheTempered = function(){
+wFORMS.behaviors.autoformat.InfoEntry.prototype.checkCacheTempered = function(refSelection){
     var value = this.getTextValue(), valueLength = value.length, cacheLength = this.inputCache.length, diff, start;
+    cacheLength = cacheLength - refSelection.length;
 
     if(valueLength == cacheLength){// no change
         return false;
@@ -796,7 +806,6 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.buildActiveInputQueueAtCaret = f
             inputQueue.push(inputEntry);
         }
     }
-
     return inputQueue;
 };
 
@@ -832,19 +841,12 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.fillActiveInputIntoTemplate = fu
     this.inputCache.splice(templateMatchPosition, this.inputCache.length);  //delete until last
 
     templateEntry = this.template[templateMatchPosition];
-//    if(templateMatchPosition == 0 /*no proceeding fragment*/|| templateEntry == undefined){
-//        // ignore the unattached isolate fragment, not recover it
-//        return
-//    }
-//   //or otherwise
-
     if(templateEntry != undefined && templateEntry.type == 'L' && !isSuppressAutoFill){ //keep the fixed text fragment after the input tail
         templateFragment = templateEntry.templateFragment;
         for(i = 0; i < templateFragment.entries.length; i++){
             this.inputCache[templateMatchPosition++] = {type: 'L', value: templateFragment.entries[i].value};
         }
     }
-
 };
 
 //=============== TemplateEntry methods =============== //
