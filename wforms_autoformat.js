@@ -214,16 +214,6 @@ wFORMS.behaviors.autoformat = {
         element.setAttribute('autocomplete', 'off');
         element.style.imeMode = 'disabled';
 
-        //auto skip caret position
-//        element.addEventListener('click', function(){
-//            var id = this.id;
-//            var infoEntry = wFORMS.behaviors.autoformat._globalCache[id];
-//            if(!infoEntry){
-//                return ;
-//            }
-////            infoEntry.skipLabelSpan();
-//        });
-
         //handle input mask display/hide
         element.addEventListener('focus', function(){
             var id = this.id;
@@ -392,7 +382,7 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleTyping = function(event){
         }else{//if not matched, try to match the next masked input
             templateEntry = this.getSymbolPosition(nextInputPoint);
             if(templateEntry.type == 'EOF'){
-                return false;
+                return true;
             }
             var result = templateEntry.matchKey(event);
             if(!result.match){
@@ -520,18 +510,6 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.autoFill = function(caretPos){
     return caretPos;
 };
 
-wFORMS.behaviors.autoformat.InfoEntry.prototype.skipLabelSpan = function(){
-    var cur = wFORMS.behaviors.autoformat.getCaretPosition(this.element);
-    while(true){
-        var templateEntry = this.template[cur];
-        if( templateEntry == undefined || templateEntry.type != 'L' ){
-            break;
-        }
-        cur++;
-    }
-    wFORMS.behaviors.autoformat.setCaretPosition(this.element, cur);
-};
-
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleFunctionalKey = function(event){
     var keyCode = event.which || event.keyCode;
     var cur = wFORMS.behaviors.autoformat.getCaretPosition(this.element);
@@ -549,124 +527,75 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleFunctionalKey = function(e
 };
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleLeftMovement = function(event, cursorPosition){
-    var templateEntry;
-
-    if (cursorPosition == 0){ //already leftmost
-        return 0;
+    var templateEntry = this.template[cursorPosition], fragment;
+    if(templateEntry == undefined){
+        fragment = this.templateFragments[this.templateFragments.length - 1];
+    }else{
+        var fragmentOrder = templateEntry.templateFragment.order;
+        fragment =  this.templateFragments[fragmentOrder > 0? fragmentOrder - 1 : 0];
     }
 
-    while(cursorPosition!=0){
-        cursorPosition--;    //move left until reach the first non-stationary input entry
-        templateEntry = this.template[cursorPosition];
-        if( templateEntry.type != 'L' ){
-            break;
-        }
-    }
-    var inputCacheLength = this.inputCache.length;
-    if(cursorPosition == 0){ // if first entry is stationary entry, skip to the following non-stationary entry
-        while(cursorPosition < inputCacheLength){
-            templateEntry = this.template[cursorPosition];
-            if( templateEntry.type != 'L' ){
-                break;
-            }
-            cursorPosition ++;
-        }
-    }
-
+    cursorPosition = fragment.entries[0].order;
     wFORMS.behaviors.autoformat.setCaretPosition(this.element, cursorPosition);
-
     return cursorPosition;
 
 };
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleRightMovement = function(event, cursorPosition){
-    var templateEntry;
-    var rightMostBoundary = this.inputCache.length;
-
-    if (cursorPosition >= rightMostBoundary){ //already rightmost
-        return rightMostBoundary;
+    var templateEntry = this.template[cursorPosition], fragment;
+    if(templateEntry == undefined){
+        fragment = this.templateFragments[this.templateFragments.length - 1];
+    }else{
+        fragment =  templateEntry.templateFragment;
     }
-
-    while(cursorPosition< rightMostBoundary){
-        cursorPosition++;    //move right until reach the first non-stationary input entry
-        templateEntry = this.template[cursorPosition];
-        if( templateEntry ==undefined || templateEntry.type != 'L' ){
-            break;
-        }
-    }
-
-    while(cursorPosition < this.template.length){  // fill and skip the stationary symbols
-        templateEntry = this.template[cursorPosition];
-        if( templateEntry.type != 'L' ){
-            break;
-        }
-        cursorPosition++;
-        var position = templateEntry.order;
-        this.inputCache[position] = {type: 'L', value: templateEntry.value};
-    }
-
+    cursorPosition = fragment.getLastEntry().order + 1;
     wFORMS.behaviors.autoformat.setCaretPosition(this.element, cursorPosition);
-
     return cursorPosition;
 
 };
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleHome = function(event, cursorPosition){
-    cursorPosition = 0;
-
-    var inputCacheLength = this.inputCache.length;
-    while(cursorPosition < inputCacheLength){
-        var templateEntry = this.template[cursorPosition];
-        if( templateEntry.type != 'L' ){
-            break;
-        }
-        cursorPosition ++;
-    }
-
-    wFORMS.behaviors.autoformat.setCaretPosition(this.element, cursorPosition);
-
-    return cursorPosition;
+    wFORMS.behaviors.autoformat.setCaretPosition(this.element, 0);
+    return 0;
 
 };
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleEnd = function(event, cursorPosition){
-    var inputCacheLength = this.inputCache.length;
-    cursorPosition = inputCacheLength;
-    while(cursorPosition < this.template.length){  // fill and skip the stationary symbols
-        templateEntry = this.template[cursorPosition];
-        if( templateEntry.type != 'L' ){
-            break;
-        }
-        cursorPosition++;
-        var position = templateEntry.order;
-        this.inputCache[position] = {type: 'L', value: templateEntry.value};
-    }
-
-    wFORMS.behaviors.autoformat.setCaretPosition(this.element, cursorPosition);
+    cursorPosition = this.inputCache.length;
+    wFORMS.behaviors.autoformat.setCaretPosition(this.element, cursorPosition + 1);
     return cursorPosition;
 };
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleDelete = function(event, caret){
-    var templateEntry = this.template[caret], templateFragment;
+    var templateEntry = this.template[caret], templateFragment, suppressAutoFill = false;
     if(templateEntry.type == 'L'){
         templateFragment = templateEntry.templateFragment;
         if(templateFragment.next == null){
-            return true; //handled, already at the end boundary
+            return true; //handled, already at the end boundary, and is not the first entry of the fragment
         }
+
         templateFragment = templateFragment.next;
         if(templateFragment.type == 'L'){
             throw 'Exceptional case';
         }
-        caret = templateFragment.entries[0].order;
+        var firstEntryOrder = templateFragment.entries[0].order;
+        //input entry exist?
+        if(this.inputCache[firstEntryOrder] != undefined // if there is at least one Mask entry after the fragment
+            || templateEntry.fragmentOrder !=0){ // if caret is not at the first character of the fragment
+            caret = firstEntryOrder; // skip to first entry of the next adjacent fragment
+        }else{
+            caret = templateEntry.templateFragment.entries[0].order;
+            suppressAutoFill = true;
+        }
     }
 
     var inputQueue= this.buildActiveInputQueueAtCaret(caret), i;
     inputQueue.shift();
 
-    this.fillActiveInputIntoTemplate(caret, inputQueue);
+    this.fillActiveInputIntoTemplate(caret, inputQueue, suppressAutoFill);
     this.displayCache();
     wFORMS.behaviors.autoformat.setCaretPosition(this.element, caret);
 
     return true;
 };
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleBackspace = function(event, caret){
-    var templateFragment;
+    var templateFragment, suppressAutoFill = false;
     caret --;
     if(caret < 0){
         return true; //handled, though did nothing
@@ -675,19 +604,21 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleBackspace = function(event
     if(templateEntry.type == 'L'){
         templateFragment = templateEntry.templateFragment;
         if(templateFragment.order ==0){
-            return true; //handled, though already at the front boundary
+            caret = 0;
+            suppressAutoFill = true;
+        }else{
+            //TODO make it bidirectional linked list
+            templateFragment = this.templateFragments[templateFragment.order-1];
+            if(templateFragment.type == 'L'){
+                throw 'Exceptional case';
+            }
+            caret = templateFragment.entries[0].order;
         }
-        //TODO make it bidirectional linked list
-        templateFragment = this.templateFragments[templateFragment.order-1];
-        if(templateFragment.type == 'L'){
-            throw 'Exceptional case';
-        }
-        caret = templateFragment.entries[0].order;
     }
     var inputQueue= this.buildActiveInputQueueAtCaret(caret);
     inputQueue.shift();
 
-    this.fillActiveInputIntoTemplate(caret, inputQueue);
+    this.fillActiveInputIntoTemplate(caret, inputQueue, suppressAutoFill);
     this.displayCache();
     wFORMS.behaviors.autoformat.setCaretPosition(this.element, caret);
     return true;
@@ -847,7 +778,10 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.buildActiveInputQueueAtCaret = f
     return inputQueue;
 };
 
-wFORMS.behaviors.autoformat.InfoEntry.prototype.fillActiveInputIntoTemplate = function(caret, inputQueue){
+wFORMS.behaviors.autoformat.InfoEntry.prototype.fillActiveInputIntoTemplate = function(caret, inputQueue, isSuppressAutoFill){
+    if(isSuppressAutoFill == undefined){
+        isSuppressAutoFill = false;
+    }
     var templateMatchPosition = caret, templateFragment, inputQueueElement, i;
     while(inputQueue.length){
         var templateEntry = this.template[templateMatchPosition];
@@ -865,7 +799,7 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.fillActiveInputIntoTemplate = fu
             for(i = startOrder; i < templateFragment.entries.length; i++){
                 templateEntry = templateFragment.entries[i];
                 this.inputCache[templateMatchPosition++] = {type: 'L', value: templateEntry.value};
-                //if the input queue head element match the template by chance, consume that head node
+                //if the input queue head element match the template entry, consume that head element
                 inputQueueElement = inputQueue[0];
                 if(inputQueueElement != undefined && templateEntry.matchCharacter(inputQueueElement.value)){
                     inputQueue.shift();
@@ -876,7 +810,13 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.fillActiveInputIntoTemplate = fu
     this.inputCache.splice(templateMatchPosition, this.inputCache.length);  //delete until last
 
     templateEntry = this.template[templateMatchPosition];
-    if(templateEntry !=undefined && templateEntry.type == 'L'){ //keep the fixed text fragment after the input tail
+//    if(templateMatchPosition == 0 /*no proceeding fragment*/|| templateEntry == undefined){
+//        // ignore the unattached isolate fragment, not recover it
+//        return
+//    }
+//   //or otherwise
+
+    if(templateEntry != undefined && templateEntry.type == 'L' && !isSuppressAutoFill){ //keep the fixed text fragment after the input tail
         templateFragment = templateEntry.templateFragment;
         for(i = 0; i < templateFragment.entries.length; i++){
             this.inputCache[templateMatchPosition++] = {type: 'L', value: templateFragment.entries[i].value};
@@ -977,12 +917,4 @@ wFORMS.behaviors.autoformat.TemplateEntryMask.prototype.matchCharacter = functio
     var result = this.matchKey(null, keyCode);
     return result.match;
 };
-
-
-
-
-
-
-
-
 
