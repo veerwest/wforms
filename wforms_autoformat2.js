@@ -222,6 +222,8 @@ wFORMS.behaviors.autoformat = {
             if(handled){
                 mutex = true; // 'keydown' has a higher priority
                 event.preventDefault();
+            } else{
+                mutex = false; // pass process right to 'keypress'
             }
         }, true);
 
@@ -729,7 +731,11 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.getTextValue = function(){
 wFORMS.behaviors.autoformat.InfoEntry.prototype.calculateCachePresentation = function(){
     var output = '';
     for(var i = 0; i < this.inputCache.length; i++){
-        output += this.inputCache[i].value;
+        try{
+            output += this.inputCache[i].value;
+        }catch(e){
+            var aaa = 1;
+        }
     }
 
     return output;
