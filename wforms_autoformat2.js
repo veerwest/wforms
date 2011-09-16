@@ -9,7 +9,6 @@ if (typeof(wFORMS) == "undefined") {
 	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
 }
 
-
 wFORMS.behaviors.autoformat = {
 
     ATTRIBUTE_SELECTOR: 'autoformat',
@@ -54,6 +53,8 @@ wFORMS.behaviors.autoformat = {
         this.promptLayer = null;
         this.inputCache = [];
         this._pasteMonitorHandler = null;
+        this._cutMonitorHandler = null;
+        this.mutex = false;
     },
 
     TemplateEntry: function(order, type, value){
@@ -70,6 +71,7 @@ wFORMS.behaviors.autoformat = {
             this.characters = [];
             this.entries = [];
             this.next = null;
+            this.previous = null;
         }
         return TemplateFragment;
     })(),
@@ -107,15 +109,7 @@ wFORMS.behaviors.autoformat = {
     },
 
     getCaretPosition: function(element){
-        var cursurPosition=-1;
-        if(element.selectionStart >=0 ){
-            cursurPosition= element.selectionStart;
-        }else{//IE
-            var range = document.selection.createRange();
-            range.moveStart("character", -element.value.length);
-            cursurPosition = range.text.length;
-        }
-        return cursurPosition;
+        return this.getSelection(element).caret;
     },
 
     getSelection: function(element){
@@ -192,72 +186,79 @@ wFORMS.behaviors.autoformat = {
 
     _bindEventToElement: function(element){
         wFORMS.standardizeElement(element);
-        var mutex = false;
 
-        //TODO : make the anonymous event functions static
-        element.addEventListener('keypress', function(event){
+        element.addEventListener('keypress', wFORMS.behaviors.autoformat.eventHandler['keypress'], true);
+        element.addEventListener('keydown', wFORMS.behaviors.autoformat.eventHandler['keydown'], true);
+
+        for(var i = 0 ; i < 2 ; i++){
+            element.addEventListener(['drop', 'drag'][i], wFORMS.behaviors.autoformat.eventHandler.preventDefault, true);
+        }
+        //handle input mask display/hide
+        element.addEventListener('focus', wFORMS.behaviors.autoformat.eventHandler.focus, true);
+        //handle input mask display/hide
+        element.addEventListener('blur', wFORMS.behaviors.autoformat.eventHandler.blur, true);
+        //handle paste
+        element.addEventListener('paste', wFORMS.behaviors.autoformat.eventHandler.paste, true);
+
+        element.setAttribute('autocomplete', 'off');
+        element.style.imeMode = 'disabled';
+    },
+
+    eventHandler: {
+        keypress: function(event){
             var id = this.id;
             var infoEntry = wFORMS.behaviors.autoformat._globalCache[id];
             if(!infoEntry){
                 return ;
             }
-            if(mutex){
-                mutex = false;
+            if(infoEntry.mutex){ // mutex is set, flip it and return
+                infoEntry.mutex = false;
                 return;
             }
             var handled = infoEntry.handleTyping(event);
             if(handled){
                 event.preventDefault();
             }
-        }, true);
-
-        element.addEventListener('keydown', function(event){
+        },
+        keydown: function(event){
             var id = this.id;
             var infoEntry = wFORMS.behaviors.autoformat._globalCache[id];
             if(!infoEntry){
                 return ;
             }
-            var handled = infoEntry.handleControlKey(event);
-            //TODO disable other functional keys
-            if(handled){
-                mutex = true; // 'keydown' has a higher priority
+            var result = infoEntry.testCombinationKey(event);
+            if(result) {
+                infoEntry.mutex = true; // disable 'keypress' as well
+                return; // no processing, allow browser default behavior
+            }
+            if(infoEntry.handleControlKey(event)){ // return handled or not
+                infoEntry.mutex = true; // 'keydown' has a higher priority
                 event.preventDefault();
             } else{
-                mutex = false; // pass process right to 'keypress'
+                infoEntry.mutex = false; // pass process right to 'keypress'
             }
-        }, true);
-
-        for(var i = 0 ; i < 2 ; i++){
-            element.addEventListener(['drop', 'drag'][i], function(event){
-                event.preventDefault();
-                return false;
-            }, true);
-        }
-        element.setAttribute('autocomplete', 'off');
-        element.style.imeMode = 'disabled';
-
-        //handle input mask display/hide
-        element.addEventListener('focus', function(){
+        },
+        preventDefault:  function(event){
+            event.preventDefault();
+            return false;
+        },
+        focus: function(){
             var id = this.id;
             var infoEntry = wFORMS.behaviors.autoformat._globalCache[id];
             if(!infoEntry){
                 return ;
             }
             infoEntry.showPrompt();
-        });
-
-        //handle input mask display/hide
-        element.addEventListener('blur', function(){
+        },
+        blur: function(){
             var id = this.id;
             var infoEntry = wFORMS.behaviors.autoformat._globalCache[id];
             if(!infoEntry){
                 return ;
             }
             infoEntry.hidePrompt();
-        });
-
-        //handle paste
-        element.addEventListener('paste', function(event){
+        },
+        paste: function(event){
             var id = this.id;
             var infoEntry = wFORMS.behaviors.autoformat._globalCache[id];
             if(!infoEntry){
@@ -270,7 +271,6 @@ wFORMS.behaviors.autoformat = {
                 var count = 0;
                 return function(){
                     var result = entry.checkCacheTempered(selection);
-                    console.log(result);
                     if(result != false){
                         window.clearInterval(entry._pasteMonitorHandler);
                         entry.handlePaste(result, selection);
@@ -281,7 +281,7 @@ wFORMS.behaviors.autoformat = {
                     }
                 };
             })(), 10);
-        });
+        }
     },
 
     _attachGhostPromptLayer : function(element){
@@ -321,6 +321,7 @@ wFORMS.behaviors.autoformat.instance.prototype.run = function(){
 wFORMS.behaviors.autoformat.InfoEntry.prototype.interpretRule = function(element){
     var attributeValue = element.getAttribute(wFORMS.behaviors.autoformat.ATTRIBUTE_SELECTOR);
     var parser = wFORMS.behaviors.autoformat._getParser();
+
     var template = parser.parse(attributeValue), result = [];
     for(var i = 0 ; i < template.length; i++){  // add sequence info
         if(template[i].type == 'L'){
@@ -339,12 +340,13 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.buildTemplateFragmentList = func
         var newFragment = new wFORMS.behaviors.autoformat.TemplateFragment(fragmentOrder++);
         if(fragment!=null){
             fragment.next = newFragment;
+            newFragment.previous = fragment;
         }
         fragment = newFragment;
 
         if(templateEntry.type != 'L'){
-            templateEntry.setTemplateFragment(fragment);
-            templateEntry.setTemplateFragmentOrder(0);
+            templateEntry.templateFragment = fragment;
+            templateEntry.fragmentOrder = 0;
             fragment.addEntry(templateEntry);
         }else{
             //if type 'L', then match consecutive 'L's
@@ -354,8 +356,8 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.buildTemplateFragmentList = func
                 if(templateEntry.type != 'L'){
                     break;
                 }
-                templateEntry.setTemplateFragment(fragment);
-                templateEntry.setTemplateFragmentOrder(order++);
+                templateEntry.templateFragment = fragment;
+                templateEntry.fragmentOrder  = order++;
                 fragment.addEntry(templateEntry);
             }
             i=j - 1;
@@ -378,14 +380,10 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleControlKey = function(even
 /**
  * Event Handler for Keypress event, 'keypress' event is able to differentiate letter cases (Capital or Small), while 'keydown' is not.
  * @param event
- * return true: the data cache is changed. false:  the data cache isn't altered
+ * return   true:   the key event is processed.
+ *          false:  the key event is not proper for this method to handle(so other event handler should deal with it)
  */
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleTyping = function(event){
-
-    if(this.testCombinationKey(event)){
-        return false; // yield way for other procedures to deal with the combination keys.
-    }
-
     var cur = wFORMS.behaviors.autoformat.getCaretPosition(this.element), nextInputPoint;
     var templateEntry = this.getSymbolPosition(cur);
 
@@ -422,12 +420,11 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleTyping = function(event){
         return true; // handled
     }
 
-    //handle typing input
+    //handle normal typing input at a Mask position
     var isUpdated = this.keyCodeCheck(templateEntry, event);
     if(isUpdated){
-        this.autoFill(cur);
+        this.displayCache();
         wFORMS.behaviors.autoformat.setCaretPosition(this.element, cur+1);
-        return true;
     }
 
     return true;
@@ -439,19 +436,20 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.testSpecialKey = function(event)
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.testCombinationKey = function(event){
     var keyCode = event.which || event.keyCode;
-    var character = String.fromCharCode(keyCode);
-
-    if(event.ctrlKey && (character == 'C' || character == 'c') ){
+    //check for ctrl + x
+    if(event.ctrlKey && keyCode == 88){ /* Ctrl + X*/
+        this.handleCut(event);
         return true;
     }
-    if(event.ctrlKey && (character == 'V' || character == 'v') ){
-        return true;
-    }
-    if(event.ctrlKey && (character == 'A' || character == 'a') ){
-        return true;
-    }
-
-    return false;
+    return( (event.ctrlKey && ( keyCode == 65 ||    /* Ctrl + A*/
+                                keyCode == 67 ||    /* Ctrl + C*/
+                                keyCode == 86 )     /* Ctrl + V*/
+                              ) ||
+        (event.shiftKey && (keyCode == wFORMS.behaviors.autoformat.keyCode['LEFT'] ||  /* Shift + Left*/
+                            keyCode == wFORMS.behaviors.autoformat.keyCode['RIGHT']))|| /* Shift + Right*/
+        (keyCode == wFORMS.behaviors.autoformat.keyCode['END']) || /* end */
+        (keyCode == wFORMS.behaviors.autoformat.keyCode['HOME']) /* home */
+        )
 };
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.getSymbolPosition = function(caret){
@@ -491,19 +489,15 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.keyCodeCheck = function(template
     //create entry in input cache
     var position = templateEntry.order;
     this.insertInputEntry(position, {type: 'I', value: result.character});
-
     return true;
 };
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.displayCache = function(){
     var output = this.calculateCachePresentation();
 
-    //TODO deal with textarea
     this.element.value = output;
-
     this.updatePatternPrompt();
 };
-
 wFORMS.behaviors.autoformat.InfoEntry.prototype.prefill = function(caretPos){
      while(true){
         var templateEntry = this.template[caretPos];
@@ -519,27 +513,11 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.prefill = function(caretPos){
     return caretPos;
 };
 
-wFORMS.behaviors.autoformat.InfoEntry.prototype.autoFill = function(caretPos){
-
-    while(true){
-        caretPos++;
-        var templateEntry = this.template[caretPos];
-        if( templateEntry == undefined || templateEntry.type != 'L' ){
-            break;
-        }
-        var position = templateEntry.order;
-        this.inputCache[position] = {type: 'L', value: templateEntry.value};
-    }
-    this.displayCache();
-
-    return caretPos;
-};
-
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleFunctionalKey = function(event){
     var keyCode = event.which || event.keyCode;
     var cur = wFORMS.behaviors.autoformat.getCaretPosition(this.element);
-    var actionMapping = [['LEFT', 'handleLeftMovement'], ['RIGHT', 'handleRightMovement'], ['HOME', 'handleHome'],
-        ['END', 'handleEnd'], ['DELETE', 'handleDelete'],  ['BACKSPACE', 'handleBackspace']];
+    var actionMapping = [['LEFT', 'handleLeftMovement'], ['RIGHT', 'handleRightMovement'],
+        ['DELETE', 'handleDelete'],  ['BACKSPACE', 'handleBackspace']];
 
     for(var i = 0 ; i < actionMapping.length; i++){
         var entry = actionMapping[i];
@@ -556,8 +534,10 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleLeftMovement = function(ev
     if(templateEntry == undefined){
         fragment = this.templateFragments[this.templateFragments.length - 1];
     }else{
-        var fragmentOrder = templateEntry.templateFragment.order;
-        fragment =  this.templateFragments[fragmentOrder > 0? fragmentOrder - 1 : 0];
+        fragment = templateEntry.templateFragment;
+        if(fragment.previous){
+           fragment = fragment.previous;
+        }
     }
 
     cursorPosition = fragment.entries[0].order;
@@ -576,16 +556,6 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleRightMovement = function(e
     wFORMS.behaviors.autoformat.setCaretPosition(this.element, cursorPosition);
     return cursorPosition;
 
-};
-wFORMS.behaviors.autoformat.InfoEntry.prototype.handleHome = function(event, cursorPosition){
-    wFORMS.behaviors.autoformat.setCaretPosition(this.element, 0);
-    return 0;
-
-};
-wFORMS.behaviors.autoformat.InfoEntry.prototype.handleEnd = function(event, cursorPosition){
-    cursorPosition = this.inputCache.length;
-    wFORMS.behaviors.autoformat.setCaretPosition(this.element, cursorPosition + 1);
-    return cursorPosition;
 };
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handleDelete = function(event, caret){
     var selection = wFORMS.behaviors.autoformat.getSelection(this.element);
@@ -643,8 +613,7 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleBackspace = function(event
             noDeleteFlag = true;
             suppressAutoFill = true;
         }else{
-            //TODO make it bidirectional linked list
-            templateFragment = this.templateFragments[templateFragment.order-1];
+            templateFragment = templateFragment.previous;
             if(templateFragment.type == 'L'){
                 throw 'Exceptional case';
             }
@@ -662,7 +631,6 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handleBackspace = function(event
     return true;
 
 };
-
 wFORMS.behaviors.autoformat.InfoEntry.prototype.handlePaste = function(difference, refSelection){
     var inputQueue = this.buildActiveInputQueueAtCaret(difference.start);
     var removeCount = 0;
@@ -688,7 +656,42 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.handlePaste = function(differenc
     return true;
 };
 
-wFORMS.behaviors.autoformat.InfoEntry.prototype.groupSelectionRemove = function(selection){
+wFORMS.behaviors.autoformat.InfoEntry.prototype.handleCut = function(event){
+    var selection = wFORMS.behaviors.autoformat.getSelection(this.element);
+    if(selection.length==0){ // nothing will be cut, directly return
+        return;
+    }
+    this._valueBeforeCut = this.getTextValue();
+    var instance = this;
+    this.groupSelectionRemove(selection, false);
+
+    //since we dont know when the browser's behaviour will complete the cut operation, we have to poll the current value
+    // and compare it with the value last seen ('this._valueBeforeCut')
+    // after the value is changed, we are sure that the cut operation is fulfilled(content went to the clipboard), then
+    // we can synchronize the value with the inputCache
+    this._cutMonitorHandler = window.setInterval((function(entry){
+        var count = 0;
+        return function(){
+            var value = entry.getTextValue();
+            if(value != entry._valueBeforeCut){
+                entry._valueBeforeCut = undefined;
+                window.clearInterval(entry._cutMonitorHandler);
+                entry.displayCache();
+                wFORMS.behaviors.autoformat.setCaretPosition(entry.element, selection.caret);
+            }
+
+            count++;
+            if(count >= wFORMS.behaviors.autoformat.MONITOR_CHECK_TIMES){
+                window.clearInterval(entry._cutMonitorHandler);
+            }
+        };
+    })(this), 10);
+};
+
+wFORMS.behaviors.autoformat.InfoEntry.prototype.groupSelectionRemove = function(selection, updatePresentation){
+    if(updatePresentation == undefined){
+        updatePresentation = true;
+    }
     var caret = selection.caret;
     var inputQueue= this.buildActiveInputQueueAtCaret(caret);
     var activeInput = this.inputMaskStatisticWithinRange(caret, selection.length);
@@ -697,8 +700,10 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.groupSelectionRemove = function(
         activeInput--;
     }
     this.fillActiveInputIntoTemplate(caret, inputQueue);
-    this.displayCache();
-    wFORMS.behaviors.autoformat.setCaretPosition(this.element, caret);
+    if(updatePresentation){
+        this.displayCache();
+        wFORMS.behaviors.autoformat.setCaretPosition(this.element, caret);
+    }
     return true;
 };
 
@@ -724,20 +729,14 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.updatePatternPrompt = function()
 };
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.getTextValue = function(){
-    //TODO
     return this.element.value;
 };
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.calculateCachePresentation = function(){
     var output = '';
     for(var i = 0; i < this.inputCache.length; i++){
-        try{
-            output += this.inputCache[i].value;
-        }catch(e){
-            var aaa = 1;
-        }
+        output += this.inputCache[i].value;
     }
-
     return output;
 };
 
@@ -853,16 +852,6 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.fillActiveInputIntoTemplate = fu
             this.inputCache[templateMatchPosition++] = {type: 'L', value: templateFragment.entries[i].value};
         }
     }
-};
-
-//=============== TemplateEntry methods =============== //
-
-wFORMS.behaviors.autoformat.TemplateEntry.prototype.setTemplateFragmentOrder = function(order){
-   this.fragmentOrder = order;
-};
-
-wFORMS.behaviors.autoformat.TemplateEntry.prototype.setTemplateFragment = function(templateFragment){
-   this.templateFragment = templateFragment;
 };
 
 //=============== TemplateFragment methods =============== //
