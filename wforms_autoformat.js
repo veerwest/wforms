@@ -177,13 +177,6 @@ wFORMS.behaviors.autoformat = {
         return element.id;
     },
 
-    _getParser: function(){
-        if(wFORMS.behaviors.autoformat.PARSER == null){
-            wFORMS.behaviors.autoformat.PARSER = eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('(9(){3 C={1u:9(r,t){3 u={"15":S,"17":M,"N":U,"V":W,"18":O,"19":P,"1a":X,"1b":Y};6(t!==1c){6(u[t]===1c){1d 1e 1f("1v 1w 1g: "+Z(t)+".");}}8{t="V"}3 v=0;3 w=1h;3 x=0;3 y=[];3 z={};9 1i(a,b,c){3 d=a;3 e=c-a.G;10(3 i=0;i<e;i++){d=b+d}7 d}9 N(a){3 b=a.1x(0);6(b<=1y){3 c=\'x\';3 d=2}8{3 c=\'u\';3 d=4}7\'\\\\\'+c+1i(b.1z(16).1A(),\'0\',d)}9 Z(s){7\'"\'+s.J(/\\\\/g,\'\\\\\\\\\').J(/"/g,\'\\\\"\').J(/\\r/g,\'\\\\r\').J(/\\n/g,\'\\\\n\').J(/[\\1B-\\1C]/g,N)+\'"\'}9 H(a){6(v<x){7}6(v>x){x=v;y=[]}y.1j(a)}9 W(){3 c=\'V@\'+v;3 d=z[c];6(d){v=d.E;7 d.F}3 e=v;3 f=v;3 g=M();6(g!==5){3 h=W();6(h!==5){3 i=[g,h]}8{3 i=5;v=f}}8{3 i=5;v=f}3 j=i!==5?(9(a,b){7 a.1k(b)})(i[0],i[1]):5;6(j!==5){3 k=j}8{3 k=5;v=e}6(k!==5){3 l=k}8{3 m=M();6(m!==5){3 l=m}8{3 l=5}}z[c]={E:v,F:l};7 l}9 M(){3 a=\'17@\'+v;3 b=z[a];6(b){v=b.E;7 b.F}3 c=O();6(c!==5){3 d=c}8{3 e=Y();6(e!==5){3 d=e}8{3 f=X();6(f!==5){3 d=f}8{3 d=5}}}z[a]={E:v,F:d};7 d}9 Y(){3 a=\'1b@\'+v;3 b=z[a];6(b){v=b.E;7 b.F}3 c=v;6(r.K(v,1)==="$"){3 d="$";v+=1}8{3 d=5;6(w){H("\\"$\\"")}}3 e=d!==5?(9(){7[{Q:\'T\'}]})():5;6(e!==5){3 f=e}8{3 f=5;v=c}z[a]={E:v,F:f};7 f}9 O(){3 c=\'18@\'+v;3 d=z[c];6(d){v=d.E;7 d.F}3 e=v;3 f=v;3 g=P();6(g!==5){3 h=O();6(h!==5){3 i=[g,h]}8{3 i=5;v=f}}8{3 i=5;v=f}3 j=i!==5?(9(a,b){7[{Q:\'L\',1l:a}].1k(b)})(i[0],i[1]):5;6(j!==5){3 k=j}8{3 k=5;v=e}6(k!==5){3 m=k}8{3 n=v;3 o=P();3 p=o!==5?(9(l){7[{Q:\'L\',1l:l}]})(o):5;6(p!==5){3 q=p}8{3 q=5;v=n}6(q!==5){3 m=q}8{3 m=5}}z[c]={E:v,F:m};7 m}9 P(){3 a=\'19@\'+v;3 b=z[a];6(b){v=b.E;7 b.F}3 c=U();6(c!==5){3 d=c}8{3 e=S();6(e!==5){3 d=e}8{3 d=5}}z[a]={E:v,F:d};7 d}9 S(){3 a=\'15@\'+v;3 b=z[a];6(b){v=b.E;7 b.F}6(r.K(v).1D(/^[^$#]/)!==5){3 c=r.11(v);v++}8{3 c=5;6(w){H("[^$#]")}}z[a]={E:v,F:c};7 c}9 X(){3 a=\'1a@\'+v;3 b=z[a];6(b){v=b.E;7 b.F}3 c=v;6(r.K(v,1)==="#"){3 d="#";v+=1}8{3 d=5;6(w){H("\\"#\\"")}}3 e=d!==5?(9(){7[{Q:\'D\'}]})():5;6(e!==5){3 f=e}8{3 f=5;v=c}z[a]={E:v,F:f};7 f}9 U(){3 a=\'N@\'+v;3 b=z[a];6(b){v=b.E;7 b.F}3 c=v;6(r.K(v,2)==="%$"){3 d="%$";v+=2}8{3 d=5;6(w){H("\\"%$\\"")}}3 e=d!==5?(9(){7\'$\'})():5;6(e!==5){3 f=e}8{3 f=5;v=c}6(f!==5){3 g=f}8{3 h=v;6(r.K(v,2)==="%#"){3 i="%#";v+=2}8{3 i=5;6(w){H("\\"%#\\"")}}3 j=i!==5?(9(){7\'#\'})():5;6(j!==5){3 k=j}8{3 k=5;v=h}6(k!==5){3 g=k}8{3 g=5}}z[a]={E:v,F:g};7 g}9 1m(){9 1n(a){a.1E();3 b=5;3 c=[];10(3 i=0;i<a.G;i++){6(a[i]!==b){c.1j(a[i]);b=a[i]}}1F(c.G){1o 0:7\'1p 1q 1r\';1o 1:7 c[0];1G:7 c.1H(0,c.G-1).1I(\', \')+\' 1J \'+c[c.G-1]}}3 d=1n(y);3 e=1K.1L(v,x);3 f=e<r.G?Z(r.11(e)):\'1p 1q 1r\';7\'1M \'+d+\' 1N \'+f+\' 1O.\'}9 1s(){3 a=1;3 b=1;3 c=12;10(3 i=0;i<x;i++){3 d=r.11(i);6(d===\'\\n\'){6(!c){a++}b=1;c=12}8 6(d===\'\\r\'|d===\'\\1P\'||d===\'\\1Q\'){a++;b=1;c=1h}8{b++;c=12}}7{13:a,14:b}}3 A=u[t]();6(A===5||v!==r.G){3 B=1s();1d 1e I.R(1m(),B.13,B.14);}7 A},1R:9(){7 I.1S}};C.R=9(a,b,c){I.1g=\'R\';I.1T=a;I.13=b;I.14=c};C.R.1t=1f.1t;7 C})()',62,118,'|||var||null|if|return|else|function|||||||||||||||||||||||||||||||nextPos|result|length|matchFailed|this|replace|substr||parse_entity|escape|parse_literal|parse_literalchar|type|SyntaxError|parse_char||parse_escape|exp|parse_exp|parse_number|parse_text|quote|for|charAt|false|line|column|char||entity|literal|literalchar|number|text|undefined|throw|new|Error|name|true|padLeft|push|concat|value|buildErrorMessage|buildExpected|case|end|of|input|computeErrorPosition|prototype|parse|Invalid|rule|charCodeAt|0xFF|toString|toUpperCase|x80|uFFFF|match|sort|switch|default|slice|join|or|Math|max|Expected|but|found|u2028|u2029|toSource|_source|message'.split('|'),0,{}));
-        }
-        return wFORMS.behaviors.autoformat.PARSER;
-    },
-
     _bindEventToElement: function(element){
         wFORMS.standardizeElement(element);
 
@@ -320,14 +313,25 @@ wFORMS.behaviors.autoformat.instance.prototype.run = function(){
 
 wFORMS.behaviors.autoformat.InfoEntry.prototype.interpretRule = function(element){
     var attributeValue = element.getAttribute(wFORMS.behaviors.autoformat.ATTRIBUTE_SELECTOR);
-    var parser = wFORMS.behaviors.autoformat._getParser();
-    var template = parser.parse(attributeValue), result = [];
-    for(var i = 0 ; i < template.length; i++){  // add sequence info
-        if(template[i].type == 'L'){
-            result.push(new wFORMS.behaviors.autoformat.TemplateEntryLabel(i, template[i].value));
-            continue;
+    var reader = 0, counter = 0;
+    var result = [];
+    while(reader < attributeValue.length){
+        var token = attributeValue.charAt(reader);
+        if(token == '\\'){
+            token = attributeValue.charAt(++reader);
+            if(token == '$' || token == '#'){
+                result.push(new wFORMS.behaviors.autoformat.TemplateEntryLabel(counter++, token));
+            }else{
+                reader--;
+            }
+        }else if(token == '$' ){
+            result.push(new wFORMS.behaviors.autoformat.TemplateEntryMask(counter++, 'T', token));
+        }else if(token == '#' ){
+            result.push(new wFORMS.behaviors.autoformat.TemplateEntryMask(counter++, 'D', token));
+        }else{
+            result.push(new wFORMS.behaviors.autoformat.TemplateEntryLabel(counter++, token));
         }
-        result.push(new wFORMS.behaviors.autoformat.TemplateEntryMask(i, template[i].type, template[i].value));
+        reader++;
     }
     return result;
 };
@@ -698,7 +702,7 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.groupSelectionRemove = function(
         inputQueue.shift();
         activeInput--;
     }
-    this.fillActiveInputIntoTemplate(caret, inputQueue);
+    this.fillActiveInputIntoTemplate(caret, inputQueue, true);
     if(updatePresentation){
         this.displayCache();
         wFORMS.behaviors.autoformat.setCaretPosition(this.element, caret);
