@@ -16,20 +16,62 @@
     <script type="text/javascript" src="../wforms_core.js"></script>
     <script type="text/javascript" src="../wforms_autoformat.js"></script>
 
-	<!--<script type="text/javascript" src="../customization/wforms_validation_length.js"></script>-->
-
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js" ></script>
+
     <script type="text/javascript" language="JavaScript">
-        var parser = null;
+        function setUp() {}
 
-        $(document).ready(function(){
-            $('#code').click(function(){
-                parser = PEG.buildParser($('textarea').val());
-            });
-        });
+        function tearDown() {}
 
+        function testApplyTo(){
+            var ids = ['ssn', 'telephone', 'telephone_short', 'decimal', 'SN', 'IF_ELSE', 'alternate'];
+
+            var i = ids.length;
+            while(i--){
+                assertTrue('', ids[i] in wFORMS.behaviors.autoformat._globalCache );
+            }
+        }
+
+        function testTemplateInterpretation(){
+           var templateList = wFORMS.behaviors.autoformat._globalCache['ssn'].template;
+
+           assertEquals('', 11, templateList.length);
+           var types = ['D', 'D', 'D', 'L', 'D', 'D', 'L', 'D', 'D', 'D', 'D'];
+           var i = 11;
+           while(i--){
+               assertEquals('', types[i], templateList[i].type);
+           }
+        }
+
+        function testTemplateFragmentCreation(){
+           var templateFragments = wFORMS.behaviors.autoformat._globalCache['ssn'].templateFragments;
+
+            var previousFragment = null, nextFragment = null;
+
+            var i = templateFragments.length;
+            while(i--){
+               if(nextFragment){
+                   assertEquals('', nextFragment.previous, templateFragments[i]);
+               }
+               assertEquals('', nextFragment, templateFragments[i].next);
+               nextFragment = templateFragments[i];
+            }
+        }
+
+        function testCaretManipulation(){
+            var $input = document.getElementById('ssn');
+
+            $input.value = "dummy_data";
+
+            var caret = wFORMS.behaviors.autoformat.getCaretPosition($input);
+
+            assertEquals('', 0, caret);
+
+            wFORMS.behaviors.autoformat.setCaretPosition($input, 3);
+
+            assertEquals('', 3, wFORMS.behaviors.autoformat.getCaretPosition($input));
+        }
     </script>
-
 
 	</head>
     <body class="default wFormWebPage">
@@ -37,7 +79,7 @@
         <p>
             <ul>
                 <li>$ stands for an alphanumeric character, # is a digital character.</li>
-                <li>Copy & Paste is working now.</li>
+                <li>Copy & Paste works for the inputs.</li>
                 <li>Matching the fixed text parts is case-insensitive. (controlled by an option)</li>
             </ul>
         </p>
@@ -65,8 +107,6 @@
             <div><input type="text" id="alternate"  name="testField" autoformat="$#$#$#$#$#" class="" value="" size="30"/>
             <label>$#$#$#$#$#</label></div>
 
-
-    <!--<input id="code" type="button" value="code">-->
         </form>
 
         </div>
