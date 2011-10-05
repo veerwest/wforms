@@ -1,41 +1,41 @@
 // Localization for FormAssembly.com / wForms v3.0
-// Norsk - October 27, 2009, 4:19 pm
+// اُردوُ [Urdu] - October 26, 2009, 2:32 pm
 wFORMS.behaviors.validation.messages = {
-	isRequired 		: "Dette feltet er obligatorisk.",
+	isRequired 		: "This field is required.",
 	isAlpha 		: "The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",
-	isEmail 		: "Dette ser ut som du ikke har lagt til en gyldig epostadresse.",
-	isInteger 		: "Vennligst fyll ut.",
-	isFloat 		: "Vennligst fyll inn f.eks 1.0",
+	isEmail 		: "This does not appear to be a valid email address.",
+	isInteger 		: "Please enter a number (without decimals).",
+	isFloat 		: "Please enter a number (e.g. 1.9).",
 	isAlphanum 		: "Please use alpha-numeric characters only [a-z 0-9].",
-	isDate 			: "Dette er ikke en gyldig dato",
+	isDate 			: "This does not appear to be a valid date.",
 	isPhone			: "Please enter a valid phone number.",
 	isCustom		: "Please enter a valid value.",
-	notification_0	: "%% feil ble oppdaget. Skjemaet har enda ikke blitt sendt.\\nVennligst sjekk informasjonen du har angitt.",
-	notification	: "%% feil ble oppdaget. Skjemaet har enda ikke blitt sendt.\\nVennligst sjekk informasjonen du har angitt."
+	notification_0	: "The form is not complete and has not been submitted yet. There is %% problem with your submission.",
+	notification	: ""
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
-	ADD_CAPTION 	: "Legg til ekstra felt",
-	ADD_TITLE 		: "Vil duplisere dette spørsmålet eller avsnittet",
-	REMOVE_CAPTION 	: "Fjern",
+	ADD_CAPTION 	: "Add another response",
+	ADD_TITLE 		: "Will duplicate this question or section.",
+	REMOVE_CAPTION 	: "Remove",
 	REMOVE_TITLE 	: "Will remove this question or section"
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Neste side',
-	CAPTION_PREVIOUS : 'Forrige side',
+	CAPTION_NEXT 	 : 'Next Page',
+	CAPTION_PREVIOUS : 'Previous Page',
 	CAPTION_UNLOAD	 : 'Any data entered on ANY PAGE of this form will be LOST'
 }
 
 
 // Alpha Input Validation:
 wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element, value) {
-	var reg =  /^[a-zA-Z\s\u00C0-\u00FF]+$/;
+	var reg =  /^[a-zA-Z\s]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
 // Alphanumeric Input Validation:
 wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(element, value) {
-	var reg =  /^[\u0030-\u0039a-zA-Z\s\u00C0-\u00FF]+$/;
+	var reg =  /^[\u0030-\u0039a-zA-Z\s]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
 
