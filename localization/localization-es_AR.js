@@ -1,31 +1,30 @@
-// Localization for FormAssembly.com / wForms v3.2
-// Español - August 26, 2010, 1:13 pm
+// Localization for FormAssembly.com / wForms v3.0
+// Español (de América) - November 20, 2009, 10:51 am
 wFORMS.behaviors.validation.messages = {
-	oneRequired 	: "Sección obligatoria",
-	isRequired 		: "Campo obligatorio. ",
-	isAlpha 		: "Solo se admiten letras (a-z A-Z). No se permiten números.",
-	isEmail 		: "No es una dirección de correo electrónico válida.",
-	isInteger 		: "Introduzca un valor numérico (sin decimales).",
-	isFloat 		: "Introduzca un valor decimal (ej: 1.9) .",
-	isAlphanum 		: "Utilice únicamente caracteres alfanuméricos (a-z 0-9).",
-	isDate 			: "La fecha no es válida",
-	isPhone			: "Por favor ingrese un número telefónico válido",
-	isCustom		: "Por favor ingrese un dato válido",
-	notification_0	: "Se ha encontrado %% error. El formulario no se ha enviado. Verifique los datos introducidos.",
-	notification	: "Se han encontrado %% errores. El formulario no se ha enviado. Verifique los datos introducidos."
+	isRequired 		: "Campo Requerido",
+	isAlpha 		: "Letras (a-z, A-Z) permitidas unicamente, numeros NO permitidos",
+	isEmail 		: "Aparentemente no es una direccion de email valido",
+	isInteger 		: "Por favor registra un numero (sin decimales)",
+	isFloat 		: "Por favor registra un numero (p.e. 1.9)",
+	isAlphanum 		: "Por favor usa caracteres alfanumericos (a-z, 0-9) unicamente",
+	isDate 			: "Aparentemente no es un dato valido",
+	isPhone			: "Por favor registra un numero telefonico correcto",
+	isCustom		: "Por favor registra un valor valido",
+	notification_0	: "El formulario no se completo y no ha sido enviado aun. El problema presenta este problema %%",
+	notification	: "El formulario no se completo y no ha sido enviado aun. El problema presenta estos problemas %%"
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
 	ADD_CAPTION 	: "Agregar otra respuesta",
-	ADD_TITLE 		: "Se duplicará esta pregunta o sección.",
+	ADD_TITLE 		: "Duplicar esta seccion o pregunta.",
 	REMOVE_CAPTION 	: "Eliminar",
-	REMOVE_TITLE 	: "Borrará esta pregunta o sección."
+	REMOVE_TITLE 	: "Eliminar esta seccion o pregunta"
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Página siguiente',
-	CAPTION_PREVIOUS : 'Página anterior',
-	CAPTION_UNLOAD	 : 'Todo dato introducido en CUALQUIER PÁGINA de este formulario se PERDERÁ'
+	CAPTION_NEXT 	 : 'Pagina Siguiente',
+	CAPTION_PREVIOUS : 'Pagina Anterior',
+	CAPTION_UNLOAD	 : 'Algun dato registrado en alguna pagina de este formulario se PERDIO'
 }
 
 
@@ -49,7 +48,7 @@ if(!wFORMS.helpers.calendar.locale) {
 }
 var cfg = wFORMS.helpers.calendar.locale;
 
-cfg.TITLE 				= 'Selecciona una fecha';
+cfg.TITLE 				= 'Seleccione una fecha';
 cfg.START_WEEKDAY 		= 1;
 cfg.MONTHS_LONG			= [	'Enero',
 							'Febrero',

@@ -1,15 +1,5 @@
-// Localization for wForms v3.0 - a javascript extension to web forms.
-// LANGUAGE_HERE - July 19th 2006 - Thanks to AUTHOR_HERE
-
-// This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
-//
-// See http://formassembly.com/blog/how-to-localize-wforms/
-// Example: 
-// <head>...
-// <script type="text/javascript" src="wforms.js" ></script>
-// <script type="text/javascript" src="localization-XX.js" ></script>
-// </head>
-
+// Localization for FormAssembly.com / wForms v3.0
+// עברית - November 1, 2009, 6:32 pm
 wFORMS.behaviors.validation.messages = {
 	isRequired 		: "שדה זה הינו הכרחי",
 	isAlpha 		: "הטקסט חייב להיות אותיות בלבד (א-ת). מספרים אינם מותרים",
@@ -18,59 +8,70 @@ wFORMS.behaviors.validation.messages = {
 	isFloat 		: "אנא הכנס שבר",
 	isAlphanum 		: "אנא הכנס טקטס בלבד - מספרים או אותיות",
 	isDate 			: "הנתונים שהוכנסו אינם חוקים",
-	isCustom		: "",
-	notification	: "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."
+	isPhone			: "אנא הכנס מספר טלפון קיים",
+	isCustom		: "אנא הכנס ערך אמיתי",
+	notification_0	: "הטופס לא מולא כראוי עד סופו ועדיין לא נשלח.יש כ%% טעויות בהזנה",
+	notification	: "הטופס לא מולא כראוי עד סופו ועדיין לא נשלח.יש כ%% טעויות בהזנה"
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
 	ADD_CAPTION 	: "הוסף תגובה נוספת",
-	ADD_TITLE 		: "",
+	ADD_TITLE 		: "יעתיק שנית את השאלה או הנתון",
 	REMOVE_CAPTION 	: "הסר",
-	REMOVE_TITLE 	: ""	
+	REMOVE_TITLE 	: "יסיר את השאלה או הנתון"
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
 	CAPTION_NEXT 	 : 'דף הבא',
-	CAPTION_PREVIOUS : 'דף קודם'
+	CAPTION_PREVIOUS : 'דף קודם',
+	CAPTION_UNLOAD	 : 'המידע שהזנת לא ישמר'
 }
 
 
-// Alpha & Alphanumeric Input Validation: 
+// Alpha Input Validation:
 wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element, value) {
-	// Basic Latin
-	var reg =  /^[\u0590-\u05FF]+$/;
-	// Latin-1
-	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF]+$/;
-	// Latin Extended-A
-	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// See unicode range below for other languages
-	
+	var reg =  /^[a-zA-Z\s\u0590-\u05FF]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
+// Alphanumeric Input Validation:
 wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(element, value) {
-	// Basic Latin
-	var reg =  /^[\u0030-\u0039\u0590-\u05FF]+$/;
-	// Latin-1
-	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
-	// Latin Extended-A
-	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// See unicode range below for other languages
-	
+	var reg =  /^[\u0030-\u0039a-zA-Z\s\u0590-\u05FF]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
 
-// Unicode ranges (from http://www.unicode.org/) :
-// \u0030-\u0039 : Numbers 0-9
-// \u0041-\u007A : Basic Latin : For english, and ASCII only strings (ex: username, password, ..)
-// \u00C0-\u00FF : Latin-1 : For Danish, Dutch, Faroese, Finnish, Flemish, German, Icelandic, Irish, Italian, Norwegian, Portuguese, Spanish, and Swedish.
-// \u0100-\u017F : Latin Extended-A (to be used with Basic Latin and Latin-1) : Afrikaans, Basque, Breton, Catalan, Croatian, Czech, Esperanto, Estonian, French, Frisian, Greenlandic, Hungarian, Latin, Latvian, Lithuanian, Maltese, Polish, Proven�al, Rhaeto-Romanic, Romanian, Romany, Sami, Slovak, Slovenian, Sorbian, Turkish, Welsh, and many others.
-// \u0180-\u024F : Latin Extended-B (to be used with Basic Latin and Latin-1) : ?
-// \u1E00-\u1EFF : Latin Extended Additional : Vietnamese ?
-// \u0370-\u03FF : Greek
-// \u0400-\u04FF : Cyrillic : Russian, etc..
-// \u0590-\u05FF : Hebrew (and #FB1D - #FB4F ?)
-// \u0600-\u06FF : Arabic
-// \u0900-\u097F : Devanagari : Hindi, etc..
-// \u4E00-\u9FFF : Han - common ideographs : Chinese, Japanese, and Korean languages.
-// See http://www.unicode.org/charts/ for other languages
+// Calendar
+if(!wFORMS.helpers.calendar) {
+	wFORMS.helpers.calendar = {};
+}
+if(!wFORMS.helpers.calendar.locale) {
+	wFORMS.helpers.calendar.locale = {};
+}
+var cfg = wFORMS.helpers.calendar.locale;
 
+cfg.TITLE 				= 'בחר תאריך';
+cfg.START_WEEKDAY 		= 1;
+cfg.MONTHS_LONG			= [	'ינואר',
+							'פברואר',
+							'מרץ',
+							'אפריל',
+							'מאי',
+							'יוני',
+							'יולי',
+							'אוגוסט',
+							'ספטמבר',
+							'אוקטובר',
+							'נובמבר',
+							'דצמבר'
+							];
+cfg.WEEKDAYS_SHORT		= [ 'א\'',
+							'ב\'',
+							'ג\'',
+							'ד\'',
+							'ה\'',
+							'ו\'',
+							'ש\''
+							];
+cfg.MDY_DAY_POSITION 		= 1;
+cfg.MDY_MONTH_POSITION 		= 2;
+cfg.MDY_YEAR_POSITION		= 3;
+cfg.DATE_FIELD_DELIMITER	= '/';
