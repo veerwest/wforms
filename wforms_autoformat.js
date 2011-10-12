@@ -12,7 +12,7 @@ if (typeof(wFORMS) == "undefined") {
 wFORMS.behaviors.autoformat = {
 
     ATTRIBUTE_SELECTOR: 'autoformat',
-    ALLOWED_ELEMENT_TYPE: ['input[type="text"]', 'textarea'],
+    ALLOWED_ELEMENT_TYPE: ['input[type="text"]'],
     DELETED_PLACE_HOLDER : '_',
     CASE_INSENSITIVE_MATCH: true,
     MONITOR_CHECK_TIMES: 10,
@@ -89,6 +89,9 @@ wFORMS.behaviors.autoformat = {
         var elements = base2.DOM.Element.querySelectorAll(f, wFORMS.behaviors.autoformat._getActorsSelector());
         var IDGroups = [];
         elements.forEach(function(element){
+            if(!base2.DOM.Element.matchesSelector(element, wFORMS.behaviors.autoformat.ALLOWED_ELEMENT_TYPE[0])){
+                return;
+            }
             var id = wFORMS.behaviors.autoformat._getIDForActorElement(element);
             //add to group
             IDGroups.push(id);
@@ -278,27 +281,40 @@ wFORMS.behaviors.autoformat = {
     },
 
     _attachGhostPromptLayer : function(element){
-        var positioningDiv = document.createElement('div');
-        element.parentNode.insertBefore(positioningDiv, element);
-        positioningDiv.style.position = 'relative';
-        positioningDiv.style.display = 'inline-block';
-
-        positioningDiv.appendChild(element);
+        var positioningDiv = element.parentNode;
+        //test '.wForm .inputWrapper'
+        if(!base2.DOM.Element.matchesSelector(positioningDiv, wFORMS.INPUT_CONTROL_WRAPPER_SELECTOR)){
+            positioningDiv = wFORMS.behaviors.autoformat._mirrorWrapperDiv(element);
+        }
         element.addClass('autoformatprompt-control');
-
         var newDiv = document.createElement('div');
         positioningDiv.appendChild(newDiv);
-        newDiv.innerHTML = "Show something";
         newDiv.style.display = 'none';
         newDiv.className = 'autoformatprompt';
 
-        var elementHeight = element.offsetHeight;
-        var elementWidth = element.offsetWidth;
-
-        positioningDiv.style.height = elementHeight + 'px';
-        positioningDiv.style.width = elementWidth + 'px';
+        var properties = ['margin-left', 'margin-right', 'border-left-width', 'border-right-width', 'padding-left',
+                'padding-right', 'font-size'];
+        for(var i = 0, l = properties.length; i < l ; i++){
+            var property = properties[i];
+            var cssAttribute = property.replace(/\-([a-z])/g, function($1,$2){return $2.toUpperCase()});
+            newDiv.style[cssAttribute] = wFORMS.behaviors.autoformat._getCssPixelProperty(element, property) + 'px'|| 0;
+        }
+        newDiv.style.fontFamily = base2.DOM.AbstractView.getComputedStyle(window, element, '').getPropertyValue('font-family');
 
         return newDiv;
+    },
+    _mirrorWrapperDiv : function(element){
+        var positioningDiv = document.createElement('div');
+        element.parentNode.insertBefore(positioningDiv, element);
+        positioningDiv.style.position = 'relative';
+        positioningDiv.style.display = base2.DOM.AbstractView.getComputedStyle(window, element, '').getPropertyValue('display');
+        positioningDiv.appendChild(element);
+        positioningDiv.className = 'autoformatprompt-hook';
+        return positioningDiv;
+    },
+    _getCssPixelProperty: function(element, cssProperty){
+        return parseFloat(base2.DOM.AbstractView.getComputedStyle(window, element, '')
+            .getPropertyValue(cssProperty).replace(/px$/, '')) || 0 ;
     }
 
 };
@@ -753,8 +769,8 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.showPrompt = function(){
     div.style.display = '';
     div.style.top = this.element.offsetTop + 'px';
 
-    var elementHeight = this.element.offsetHeight;
-    var elementWidth = this.element.offsetWidth;
+    var elementWidth = this.element.offsetWidth || wFORMS.behaviors.autoformat._getCssPixelProperty(this.element, 'width');
+    var elementHeight = this.element.offsetHeight || wFORMS.behaviors.autoformat._getCssPixelProperty(this.element, 'height');
 
     this.element.parentNode.style.height = elementHeight + 'px';
     this.element.parentNode.style.width = elementWidth + 'px';

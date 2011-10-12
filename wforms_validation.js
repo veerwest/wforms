@@ -196,7 +196,7 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 				} 					
 				errorCount ++;
 			} else {
-				// If no previos rule has found an error on that field,
+				// If no previous rule has found an error on that field,
 				// remove any error message from a previous validation run.
 				if(!_self.elementsInError[element.id])
 					_self.removeErrorMessage(element);

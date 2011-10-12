@@ -432,18 +432,14 @@
 .autoformatprompt{
     position: absolute;
     z-index: 126;
-    font-family: arial,sans-serif;
-    font-size: 1em;
     padding: 3px 0px 0px 2px;
     white-space: nowrap;
 }
 
 .autoformatprompt-control{
     background-color: transparent;
-    position: absolute;
+    position: relative;
     z-index: 127;
-    font-family: arial,sans-serif;
-    font-size: 1em;
 }
 .autoformatprompt-hook{
     z-index: 125;
