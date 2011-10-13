@@ -413,34 +413,34 @@
 
 
 /* Auto Format related*/
-.autoformatprompt .label{
+.wForm .autoformatprompt .label{
     color: #dc143c;
 }
 
-.autoformatprompt .delete{
+.wForm .autoformatprompt .delete{
     color: #b0c4de;
 }
 
-.autoformatprompt .noinput{
+.wForm .autoformatprompt .noinput{
     color: #b0c4de;
 }
 
-.autoformatprompt .input{
+.wForm .autoformatprompt .input{
     font-weight: bold;
 }
 
-.autoformatprompt{
+.wForm .autoformatprompt{
     position: absolute;
     z-index: 126;
     padding: 3px 0px 0px 2px;
     white-space: nowrap;
 }
 
-.autoformatprompt-control{
+.wForm .autoformatprompt-control{
     background-color: transparent;
     position: relative;
     z-index: 127;
 }
-.autoformatprompt-hook{
+.wForm .autoformatprompt-hook{
     z-index: 125;
 }
