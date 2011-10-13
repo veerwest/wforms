@@ -455,7 +455,15 @@
 			
 			testField.value='.45';
 			// Test validation rule
-			assertTrue('.45 should pass float validation', bInstance.run(null, testForm)); 
+			assertTrue('.45 should pass float validation', bInstance.run(null, testForm));
+
+            testField.value='-.45';
+			// Test validation rule
+			assertTrue('-.45 should pass float validation', bInstance.run(null, testForm));
+
+            testField.value='+0.45';
+			// Test validation rule
+			assertTrue('.45 should pass float validation', bInstance.run(null, testForm));
 			
 			// Test error message removal
 			assertNull(document.getElementById('testField-E'));
