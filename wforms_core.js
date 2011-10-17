@@ -465,3 +465,12 @@ wFORMS.helpers.activateStylesheet('wforms-jsonly.css');
 if(navigator.userAgent.match(/iPad/i)){
 	wFORMS.helpers.activateStylesheet('wforms-layout-ipad.css');
 }
+
+//Constant Definition
+(function(ext){
+    for(key in ext){
+        wFORMS[key] = ext[key];
+    }
+})({
+    INPUT_CONTROL_WRAPPER_SELECTOR: '.wForm .inputWrapper'
+});

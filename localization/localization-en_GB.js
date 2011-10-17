@@ -14,13 +14,15 @@ wFORMS.behaviors.validation.messages = {
 	notification_0	: "The form is not complete and has not been submitted yet. There is %% problem with your submission.",
 	notification	: "The form is not complete and has not been submitted yet. There are %% problems with your submission."
 }
-if(wFORMS.behaviors.repeat)  wFORMS.behaviors.repeat.MESSAGES = {
+
+wFORMS.behaviors.repeat.MESSAGES = {
 	ADD_CAPTION 	: "Add another response",
 	ADD_TITLE 		: "Will duplicate this question or section.",
 	REMOVE_CAPTION 	: "Remove",
 	REMOVE_TITLE 	: "Will remove this question or section"
 }
-if(wFORMS.behaviors.paging) wFORMS.behaviors.paging.MESSAGES = {
+
+wFORMS.behaviors.paging.MESSAGES = {
 	CAPTION_NEXT 	 : 'Next Page',
 	CAPTION_PREVIOUS : 'Previous Page',
 	CAPTION_UNLOAD	 : 'Any data entered on ANY PAGE of this form will be LOST'
@@ -74,33 +76,3 @@ cfg.MDY_DAY_POSITION 		= 1;
 cfg.MDY_MONTH_POSITION 		= 2;
 cfg.MDY_YEAR_POSITION		= 3;
 cfg.DATE_FIELD_DELIMITER	= '/';
-
-/**
-* validateDate
-* @param {domElement} element 
-* @returns {boolean} 
-*/
-wFORMS.behaviors.validation.instance.prototype.validateDate = function(element, value) {
-   if(this.isEmpty(value)){
-       return true;
-   }
- 
-   var cfg = wFORMS.helpers.calendar.locale;
-   
-   var re = /^(\d{1,2})[\/\.\-](\d{1,2})[\/\.\-](\d{2,4})$/
-   if (re.test(value)) {
-      var dArr = value.split(/[\/\.\-]/);
-      
-      var yr = dArr[cfg.MDY_YEAR_POSITION-1]; 
-      if(yr.length==2) yr = (yr>50) ? '19'+yr : '20'+yr;
-      var mo = parseInt(dArr[cfg.MDY_MONTH_POSITION-1],10); 
-      var dy = parseInt(dArr[cfg.MDY_DAY_POSITION-1],10);
-      var d = new Date(yr,mo-1,dy);
-      return (d.getMonth() + 1 == mo && 
-    		  d.getDate() == dy && 
-    		  d.getFullYear() == yr);
-   }
-   else {
-	  return false;
-   }
-}
