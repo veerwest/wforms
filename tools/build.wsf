@@ -36,7 +36,9 @@
 		"wforms_repeat",
 		"wforms_switch",
 		"wforms_validation",
-		"wforms_calculation"
+		"wforms_calculation",
+		"wforms_autoformat",
+		"wforms_length_prompt"
 	];
 
 	var buildID = (new Date()).toUTCString();

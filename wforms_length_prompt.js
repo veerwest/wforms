@@ -1,10 +1,3 @@
-/**
- * Created by IntelliJ IDEA.
- * User: anch
- * Date: 10/5/11
- * Time: 2:05 PM
- */
-
 if (typeof(wFORMS) == "undefined") {
 	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
 }
