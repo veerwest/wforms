@@ -1,4 +1,3 @@
-
 if (typeof(wFORMS) == "undefined") {
 	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
 }
@@ -12,6 +11,8 @@ wFORMS.behaviors.validation = {
 	 * Suffix of the ID for the error message placeholder
  	 */
 	ERROR_PLACEHOLDER_SUFFIX : '-E',
+    LOWER_BOUND_ATTRIBUTE: 'min',
+    UPPER_BOUND_ATTRIBUTE: 'max',
 	
 	
 	rules: {	
@@ -19,11 +20,16 @@ wFORMS.behaviors.validation = {
 	    isRequired	: { selector: ".required", 			  check: 'validateRequired'}, 
 		isAlpha		: { selector: ".validate-alpha", 	  check: 'validateAlpha'},
 		isAlphanum	: { selector: ".validate-alphanum",	  check: 'validateAlphanum'}, 
-		isDate		: { selector: ".validate-date", 	  check: 'validateDate'}, 
-		isTime		: { selector: ".validate-time", 	  check: 'validateTime'}, 
+        isDateTime        : { selector: ".validate-datetime",       check: 'validateDateTime'},
+        isDate        : { selector: ".validate-date",       check: 'validateDate',
+            range_verifier: 'dateRangeTest', range_error_message: 'rangeDate'},
+        isTime        : { selector: ".validate-time",       check: 'validateTime',
+            range_verifier: 'timeRangeTest', range_error_message: 'rangeDate'},
 		isEmail		: { selector: ".validate-email", 	  check: 'validateEmail'}, 
-		isInteger	: { selector: ".validate-integer", 	  check: 'validateInteger'}, 
-		isFloat		: { selector: ".validate-float", 	  check: 'validateFloat'}, 
+        isInteger    : { selector: ".validate-integer",       check: 'validateInteger',
+            range_verifier: 'numberRangeTest', range_error_message: 'rangeNumber'},
+        isFloat        : { selector: ".validate-float",       check: 'validateFloat',
+            range_verifier: 'numberRangeTest', range_error_message : 'rangeNumber'},
 		isPhone		: { selector: ".validate-phone",	  check: 'validatePhone'},
 		isCustom	: { selector: ".validate-custom",	  check: 'validateCustom'}
 	},	
@@ -41,11 +47,21 @@ wFORMS.behaviors.validation = {
 		isInteger 		: "Please enter an integer.",
 		isFloat 		: "Please enter a number (ex. 1.9).",
 		isAlphanum 		: "Please use alpha-numeric characters only [a-z 0-9].",
+        isDateTime             : "This does not appear to be a valid date/time.",
 		isDate 			: "This does not appear to be a valid date.",
+        isTime             : "This does not appear to be a valid time.",
 		isPhone			: "Please enter a valid phone number.",
 		isCustom		: "Please enter a valid value.",
-		notification	: "The form is not complete and has not been submitted yet. There was %% problem(s) with your submission."  // %% will be replaced by the actual number of errors.
+        notification    : "The form is not complete and has not been submitted yet. There was %% problem(s) with your submission.",  // %% will be replaced by the actual number of errors.
+        rangeNumber    : {
+            max: 'The value must be smaller than the upper bound %1',
+            min: 'The value must be greater than the lower bound %1'
 	},
+        rangeDate    : {
+            max: 'The date must be before %1',
+            min: 'The date must be after %1'
+        }
+    },
 	
 	
 	instance: function(f) {
@@ -57,15 +73,19 @@ wFORMS.behaviors.validation = {
 			if(!f.addEventListener) {
 				wFORMS.standardizeElement(f);
 			}
-			f.addEventListener('submit', function(e){ return self.run(e, this)} ,false);
+            f.addEventListener('submit', function(e) {
+                return self.run(e, this)
+            }, false);
 			f.__wFormsValidationHandled = true;			
 		}
 
         
 	},
 	
-	onPass: function(f,e) {},
-	onFail: function(f,e) {},
+    onPass: function(f, e) {
+    },
+    onFail: function(f, e) {
+    },
 
     dateRegex : (function(){
         var p_month = "((January)|(February)|(March)|(April)|(May)|(June)|(July)|(August)|(September)|(October)|(November)|(December)|(Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|(Nov)|(Dec))";
@@ -79,7 +99,7 @@ wFORMS.behaviors.validation = {
 
         var reg_date = '((' + year + spliter + reg_month_day +')|'
                 + '(' + reg_month_day + spliter + year +')|' + reg_month_day + ')';
-        var time = '(\\d{1,2}\\s*[:-]?\\s*\\d{1,2}(\\s*[:-]?\\s*\\d{1,2})?)'
+        var time = '(\\d{1,2}\\s*[:-]?\\s*\\d{1,2}(\\s*[:-]?\\s*\\d{1,2})?)';
 
         return [
             new RegExp('^' + reg_date + '\\s+' + time + '$', 'i'),
@@ -88,7 +108,8 @@ wFORMS.behaviors.validation = {
             new RegExp('^' + time  + '$', 'i')
         ];
     })()
-}
+
+};
 
 /**
  * Factory Method
@@ -183,20 +204,34 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 		} else {
 			var passed = _self[rule.check].call(_self, element, value);
 		}				
+
+        var errorMessage = ruleName;
+        //Check range as well
+        if(passed && rule.range_verifier !== undefined){
+            var result = _self[rule.range_verifier].call( _self, element, value,
+                wFORMS.behaviors.validation.messages[rule.range_error_message] );
+            if( result !== true ){
+                passed = false;
+                if( result !== false ){
+                    errorMessage = result;
+                }
+            }
+        }
+
 			if(!passed) { 
 				if(!element.id) element.id = wFORMS.helpers.randomId();
 				_self.elementsInError[element.id] = { id:element.id, rule: ruleName };
 				_self.removeErrorMessage(element); 
 				if(rule.fail) {
 					// custom fail method
-					rule.fail.call(_self, element, ruleName);
+                rule.fail.call(_self, element, errorMessage);
 				} else {
 					// default fail method
-					_self.fail.call(_self, element, ruleName);
+                _self.fail.call(_self, element, errorMessage);
 				} 					
 				errorCount ++;
 			} else {
-				// If no previos rule has found an error on that field,
+				// If no previous rule has found an error on that field,
 				// remove any error message from a previous validation run.
 				if(!_self.elementsInError[element.id])
 					_self.removeErrorMessage(element);
@@ -209,7 +244,7 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
  				_self.pass.call(_self, element);
  			}	 			
 		}
-	}
+    };
 	
 
  	var errorCount = 0;
@@ -257,8 +292,6 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 }
 
 
-
-
 /**
  * fail
  * @param {domElement} element 
@@ -295,15 +328,17 @@ wFORMS.behaviors.validation.instance.prototype.fail = function(element, ruleName
 		element.addClass(this.behavior.styling.fieldError);	
 	}
 	
+    var message = (ruleName in this.behavior.messages) ? this.behavior.messages[ruleName] : ruleName;
 	// show error message.
-	this.addErrorMessage(element, this.behavior.messages[ruleName]);			
+    this.addErrorMessage(element, message);
 },
 	
 /**
  * pass
  * @param {domElement} element 
  */	
-wFORMS.behaviors.validation.instance.prototype.pass = function(element) { /* no implementation needed */ }
+    wFORMS.behaviors.validation.instance.prototype.pass = function(element) { /* no implementation needed */
+    }
 
 /**
  * addErrorMessage
@@ -550,7 +585,7 @@ wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(eleme
  * @param {domElement} element 
  * @returns {boolean} 
  */
-wFORMS.behaviors.validation.instance.prototype.validateDate = function(element, value) {
+wFORMS.behaviors.validation.instance.prototype.validateDateTime = function(element, value) {
     if(this.isEmpty(value)){
         return true;
     }
@@ -563,7 +598,61 @@ wFORMS.behaviors.validation.instance.prototype.validateDate = function(element, 
     }
 
 	return false;
+};
+
+wFORMS.behaviors.validation.instance.prototype.validateDate = function(element, value) {
+    if (this.isEmpty(value)) {
+        return true;
 }
+    var date = this.analyzeDateComponents(value);
+    return !(date === null);
+};
+/**
+ * @param value
+ * @return null for failure or otherwise a Date object
+ */
+wFORMS.behaviors.validation.instance.prototype.analyzeDateComponents = function(value){
+    var cfg, e;
+    try{
+        cfg =  wFORMS.helpers.calendar.locale;
+    }catch(e){
+        cfg = {
+            MDY_DAY_POSITION : 1,
+            MDY_MONTH_POSITION : 2,
+            MDY_YEAR_POSITION : 3
+        }
+    }
+
+    var splitter = /[\/\.\-\s]/;
+    var dArr = value.split(splitter);
+    if(dArr.length != 3){
+        return null;
+    }
+    for(var i = 0; i < 3; i++){
+        if( !/^\d+$/g.test(dArr[i]) ){
+            return null;
+        }
+    }
+
+    var yr = dArr[cfg.MDY_YEAR_POSITION-1];
+    if(yr.length==2) yr = (yr>50) ? '19'+yr : '20'+yr;
+    if(yr < 0 || yr > 3000){
+        return null;
+    }
+    var mo = parseInt(dArr[cfg.MDY_MONTH_POSITION-1],10);
+    if(mo < 0 || mo > 12){
+        return null;
+    }
+    var dy = parseInt(dArr[cfg.MDY_DAY_POSITION-1],10);
+    if(dy < 0 || dy > 31){
+        return null;
+    }
+    var d = new Date(yr,mo-1,dy);
+    if (!(d.getMonth() + 1 == mo &&  d.getDate() == dy && d.getFullYear() == yr)){
+        return null;
+    }
+    return d;
+};
 
 /**
  * validateTime
@@ -572,8 +661,70 @@ wFORMS.behaviors.validation.instance.prototype.validateDate = function(element, 
  */
 wFORMS.behaviors.validation.instance.prototype.validateTime = function(element, value) {
 	/* not yet implemented */	
+    if (this.isEmpty(value)) {
 	return true;
 }
+    return this.analyzeTimeComponents(value) !== null;
+};
+
+wFORMS.behaviors.validation.instance.prototype.analyzeTimeComponents = function(value){
+    var isAm = false, isPm = false, match;
+    //detect am or pm
+    if(match = value.match(/a[^\da-z]?m/ig)){
+        if( match.length > 1 ){
+            // too many a.m definitions
+            return null;
+        }else if(match.length == 1){
+            isAm = true;
+        }
+    }
+
+    if(match = value.match(/p[^\da-z]?m/ig)){
+        if(match.length > 1){
+            // too many p.m definitions
+            return null;
+        }else if(match.length == 1){
+            isPm = true;
+        }
+    }
+
+    if(isAm && isPm){
+        return null;
+    }
+
+    var parts = null;
+    var hour = 0, minute = 0, second = 0; match = false;
+    if( (parts = value.match(/(\d{1,2})[-:](\d{1,2})[-:](\d{1,2})/))  && parts.length == 4){
+        hour = parseInt(parts[1]);
+        minute = parseInt(parts[2]);
+        second = parseInt(parts[3]);
+        match = true;
+    }else if((parts = value.match(/(\d{1,2})[-:](\d{1,2})/)) && parts.length == 3){
+        hour = parseInt(parts[1]);
+        minute = parseInt(parts[2]);
+        match = true;
+    }else if((parts = value.match(/(\d{1,2})/)) && parts.length == 2){
+        hour = parseInt(parts[1]);
+        match = true;
+    }
+    if(!match){
+        return null;
+    }
+
+    if(isPm){
+        hour+=12;
+        if(hour == 24){
+            hour = 0
+        }
+    }else if(isAm && hour > 12){
+        return null;
+    }
+    if(hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59){
+        return null;
+    }
+
+    return new Date(0, 0, 0, hour, minute, second, 0);
+};
 
 /**
  * validateEmail
@@ -601,7 +752,7 @@ wFORMS.behaviors.validation.instance.prototype.validateInteger = function(elemen
  * @returns {boolean} 
  */
 wFORMS.behaviors.validation.instance.prototype.validateFloat = function(element, value) {
-	var regexp = /^((([1-9]\d*|0)?\.\d+)|([1-9]\d*))$/;
+	var regexp = /^[\-+]?((([1-9]\d*|0)?\.\d+)|([1-9]\d*))$/;
 	return this.isEmpty(value) || regexp.test(value);
 }
 
@@ -646,3 +797,86 @@ wFORMS.behaviors.validation.instance.prototype.validateCustom = function(element
 	}		
 	return true;
 }
+
+wFORMS.behaviors.validation.instance.prototype.numberRangeTest = function(element, value, errMessage){
+    var lbound = null, ubound = null, lboundRaw, uboundRaw;
+    if(this.isEmpty(value)){
+        return true;
+    }
+    lboundRaw = element.getAttribute(wFORMS.behaviors.validation.LOWER_BOUND_ATTRIBUTE);
+    if(lboundRaw && (this.validateFloat(lboundRaw) || this.validateInteger(lboundRaw))){
+        lbound = parseFloat(lboundRaw);
+    }
+
+    uboundRaw = element.getAttribute(wFORMS.behaviors.validation.UPPER_BOUND_ATTRIBUTE);
+    if(uboundRaw  && (this.validateFloat(uboundRaw) || this.validateInteger(uboundRaw))){
+        ubound = parseFloat(uboundRaw);
+    }
+
+    value = parseFloat(value);
+    if(isNaN(value) || value === undefined || value === null){
+        return false;
+    }
+
+    if( lbound && (value < lbound) ){
+        if(ubound){
+            return errMessage.min.replace(/%1/g, lbound) + ' ' + errMessage.max.replace(/%1/g, ubound);
+        }
+        return errMessage.min.replace(/%1/g, lbound);
+    }
+
+
+    if( ubound && (value > ubound) ){
+        if(lbound){
+            return errMessage.min.replace(/%1/g, lbound) + ' ' + errMessage.max.replace(/%1/g, ubound);
+        }
+        return errMessage.max.replace(/%1/g, ubound);
+    }
+
+    return true;
+};
+
+wFORMS.behaviors.validation.instance.prototype.dateRangeTest = function(element, value, errMessage){
+    return this.dateTimeRangeTestCommon(element, value, errMessage, 'analyzeDateComponents');
+};
+
+wFORMS.behaviors.validation.instance.prototype.timeRangeTest = function(element, value, errMessage){
+    return this.dateTimeRangeTestCommon(element, value, errMessage, 'analyzeTimeComponents');
+};
+
+wFORMS.behaviors.validation.instance.prototype.dateTimeRangeTestCommon = function(element, value, errMessage, conversionFunc){
+    var lbound = null, ubound = null, lboundRaw, uboundRaw;
+    if(this.isEmpty(value)){
+        return true;
+    }
+    lboundRaw = element.getAttribute(wFORMS.behaviors.validation.LOWER_BOUND_ATTRIBUTE);
+    if(lboundRaw ){
+        lbound = this[conversionFunc](lboundRaw);
+    }
+
+    uboundRaw = element.getAttribute(wFORMS.behaviors.validation.UPPER_BOUND_ATTRIBUTE);
+    if(uboundRaw ){
+        ubound = this[conversionFunc](uboundRaw);
+    }
+
+    if( (value = this[conversionFunc](value) ) === null ){
+        return false;
+    }
+
+    if( lbound && (value.getTime() < lbound.getTime()) ){
+        if(ubound){
+            return errMessage.min.replace(/%1/g, lboundRaw) + ' ' + errMessage.max.replace(/%1/g, uboundRaw);
+        }
+        return errMessage.min.replace(/%1/g, lboundRaw);
+    }
+
+
+    if( ubound && (value.getTime() > ubound.getTime()) ){
+        if(lbound){
+            return errMessage.min.replace(/%1/g, lboundRaw) + ' ' + errMessage.max.replace(/%1/g, uboundRaw);
+        }
+        return errMessage.max.replace(/%1/g, uboundRaw);
+    }
+
+    return true;
+};

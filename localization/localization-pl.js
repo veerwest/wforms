@@ -1,76 +1,77 @@
-// Localization for wForms v3.0 - a javascript extension to web forms.
-// LANGUAGE_HERE - July 19th 2006 - Thanks to AUTHOR_HERE
-
-// This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
-//
-// See http://formassembly.com/blog/how-to-localize-wforms/
-// Example: 
-// <head>...
-// <script type="text/javascript" src="wforms.js" ></script>
-// <script type="text/javascript" src="localization-XX.js" ></script>
-// </head>
-
+// Localization for FormAssembly.com / wForms v3.0
+// Polski - November 25, 2009, 11:22 pm
 wFORMS.behaviors.validation.messages = {
-	isRequired 		: "Pole jest wymagane! ",
-	isAlpha 		: "Warto musi zawiera tylko litery z zakresu (a-z, A-Z). Liczby s niedozwolone.",
-	isEmail 		: "To nie jest prawidowy adres email.",
-	isInteger 		: "Prosz wprowadzi liczb cakowit.",
-	isFloat 		: "Prosz wprowadzi liczb zmiennoprzecinkow (np. 1.9).",
-	isAlphanum 		: "Warto musi zawiera tylko znaki alfanumeryczne [a-z 0-9].",
-	isDate 			: "To nie jest prawidowa data. ",
-	isCustom		: "",
-	notification	: "Ilo wykrytych bdw: %%. Formularz nie zosta przesany.\nSprawd wartoci ktre podae."
+	isRequired 		: "To pole jest wymagane.",
+	isAlpha 		: "Tekst musi składać się tylko ze znaków alfabetycznych (a-z, A-Z). Cyfry są niedozwolone.",
+	isEmail 		: "Podany adres jest nieprawidłowy.",
+	isInteger 		: "Prosimy podać numer (bez ułamków).",
+	isFloat 		: "Prosimy podać numer (np. 1.9).",
+	isAlphanum 		: "Użyj tylko znaków alfa-numerycznych [a-z 0-9].",
+	isDate 			: "Podana data jest nieprawidłowa.",
+	isPhone			: "Proszę wprowadzić poprawny numer telefonu",
+	isCustom		: "Proszę wprowadzić poprawną wartość",
+	notification_0	: "%% błędów wykrytych. Twój formularz nie został wysłany. Prosimy o sprawdzenie podanych informacji.",
+	notification	: "%% błędów wykrytych. Twój formularz nie został wysłany. Prosimy o sprawdzenie podanych informacji."
 }
 
 wFORMS.behaviors.repeat.MESSAGES = {
-	ADD_CAPTION 	: "Dodaj wiersz",
-	ADD_TITLE 		: "Powtarza poprzedzajce pole lub grup p.",
-	REMOVE_CAPTION 	: "Usu",
-	REMOVE_TITLE 	: "Usuwa poprzedzajce pole lub grup p."	
+	ADD_CAPTION 	: "Dodaj kolejną odpowiedź",
+	ADD_TITLE 		: "Wykonaj duplikat tej sekcji lub zapytania",
+	REMOVE_CAPTION 	: "Usuń",
+	REMOVE_TITLE 	: "Przenieś tą sekcję lub zapytanie"
 }
 
 wFORMS.behaviors.paging.MESSAGES = {
-	CAPTION_NEXT 	 : 'Nastpna Strona',
-	CAPTION_PREVIOUS : 'Poprzednia Strona'
+	CAPTION_NEXT 	 : 'Następna strona',
+	CAPTION_PREVIOUS : 'Poprzednia strona',
+	CAPTION_UNLOAD	 : 'Wprowadzone dane na każdej stronie tego formularza zostaną utracone'
 }
 
 
-// Alpha & Alphanumeric Input Validation: 
+// Alpha Input Validation:
 wFORMS.behaviors.validation.instance.prototype.validateAlpha = function(element, value) {
-	// Basic Latin
-	var reg =  /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// Latin-1
-	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF]+$/;
-	// Latin Extended-A
-	// var reg =  /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// See unicode range below for other languages
-	
+	var reg =  /^[a-zA-Z\s\u00C0-\u00FF\u0100-\u017F]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
+// Alphanumeric Input Validation:
 wFORMS.behaviors.validation.instance.prototype.validateAlphanum = function(element, value) {
-	// Basic Latin
-	var reg =  /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// Latin-1
-	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
-	// Latin Extended-A
-	// var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
-	// See unicode range below for other languages
-	
+	var reg =  /^[\u0030-\u0039a-zA-Z\s\u00C0-\u00FF\u0100-\u017F]+$/;
 	return this.isEmpty(value) || reg.test(value);
 }
 
-// Unicode ranges (from http://www.unicode.org/) :
-// \u0030-\u0039 : Numbers 0-9
-// \u0041-\u007A : Basic Latin : For english, and ASCII only strings (ex: username, password, ..)
-// \u00C0-\u00FF : Latin-1 : For Danish, Dutch, Faroese, Finnish, Flemish, German, Icelandic, Irish, Italian, Norwegian, Portuguese, Spanish, and Swedish.
-// \u0100-\u017F : Latin Extended-A (to be used with Basic Latin and Latin-1) : Afrikaans, Basque, Breton, Catalan, Croatian, Czech, Esperanto, Estonian, French, Frisian, Greenlandic, Hungarian, Latin, Latvian, Lithuanian, Maltese, Polish, Proven�al, Rhaeto-Romanic, Romanian, Romany, Sami, Slovak, Slovenian, Sorbian, Turkish, Welsh, and many others.
-// \u0180-\u024F : Latin Extended-B (to be used with Basic Latin and Latin-1) : ?
-// \u1E00-\u1EFF : Latin Extended Additional : Vietnamese ?
-// \u0370-\u03FF : Greek
-// \u0400-\u04FF : Cyrillic : Russian, etc..
-// \u0590-\u05FF : Hebrew (and #FB1D - #FB4F ?)
-// \u0600-\u06FF : Arabic
-// \u0900-\u097F : Devanagari : Hindi, etc..
-// \u4E00-\u9FFF : Han - common ideographs : Chinese, Japanese, and Korean languages.
-// See http://www.unicode.org/charts/ for other languages
+// Calendar
+if(!wFORMS.helpers.calendar) {
+	wFORMS.helpers.calendar = {};
+}
+if(!wFORMS.helpers.calendar.locale) {
+	wFORMS.helpers.calendar.locale = {};
+}
+var cfg = wFORMS.helpers.calendar.locale;
 
+cfg.TITLE 				= 'Wybierz date';
+cfg.START_WEEKDAY 		= 1;
+cfg.MONTHS_LONG			= [	'Styczeń',
+							'Luty',
+							'Marzec',
+							'Kwiecień',
+							'Maj',
+							'Czerwiec',
+							'Lipiec',
+							'Sierpień',
+							'Wrzesień',
+							'Październik',
+							'Listopad',
+							'Grudzień'
+							];
+cfg.WEEKDAYS_SHORT		= [ 'Ni',
+							'Po',
+							'Wt',
+							'Śr',
+							'Cz',
+							'Pi',
+							'So'
+							];
+cfg.MDY_DAY_POSITION 		= 3;
+cfg.MDY_MONTH_POSITION 		= 2;
+cfg.MDY_YEAR_POSITION		= 1;
+cfg.DATE_FIELD_DELIMITER	= '/';

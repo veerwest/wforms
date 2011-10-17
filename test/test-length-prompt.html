@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Input Length Indicator Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	<link href="../css/nicerblank/wforms.css" rel="stylesheet" type="text/css"></link>
+	
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2-dom.js"></script>
+    <script type="text/javascript" src="../wforms_core.js"></script>
+    <script type="text/javascript" src="../wforms_length_prompt.js"></script>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js" ></script>
+
+    <script type="text/javascript" language="JavaScript">
+        function setUp() {}
+
+        function tearDown() {}
+
+        function testApplyTo(){
+            var ids = ['ssn', 'textarea_test'];
+
+            var i = ids.length;
+            while(i--){
+                assertTrue('', ids[i] in wFORMS.behaviors.lengthPrompt._globalCache );
+            }
+        }
+
+    </script>
+
+	</head>
+    <body class="default wFormWebPage">
+    <div style="width:700px; height:300px; vertical-align: middle; display: table-cell; padding-left: 50px">
+        <p>
+            <ul>
+                <li>'maxlength' attribute works automatically for W3C/Gecko/IE9+ </li>
+                <li>Special code is written for IE ?< 8</li>
+                <li>The code handles copy/paste, cut, delete, select&overwrite</li>
+            </ul>
+        </p>
+
+        <form method="post" action="" id="testForm" >
+
+            <fieldset>
+                <p><script type="text/javascript" language="JavaScript">
+                        document.write($('<div></div>').text('<input type="text" id="ssn"  name="testField" maxlength="13" class="" value=""/>').html());
+                    </script>
+                </p>
+                <input type="text" id="ssn"  name="testField" maxlength="13" class="" value=""/>
+            </fieldset> .
+            <fieldset>
+                <p><script type="text/javascript" language="JavaScript">
+                        document.write($('<div></div>').text('<textarea id="textarea_test"  name="testField" maxlength="25" class=""></textarea>').html());
+                    </script>
+                </p>
+                <textarea id="textarea_test"  name="testField" maxlength="25" class=""></textarea>
+            </fieldset> .
+
+        </form>
+
+        </div>
+
+    </body>
+</html>
+

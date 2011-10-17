@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    <title>wForms 3.0 - Input Validation Behavior Test Suite</title>
+    <meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+    <meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+	
+	<script type="text/javascript" src="jsunit/app/jsUnitCore.js"></script>
+
+	<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+    <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+	<link href="../css/nicerblank/wforms.css" rel="stylesheet" type="text/css"></link>
+	
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2.js"></script>
+	<script type="text/javascript" src="../lib/base2/v1.0.1/src/base2-dom.js"></script>
+    <script type="text/javascript" src="../wforms_core.js"></script>
+    <script type="text/javascript" src="../wforms_autoformat.js"></script>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js" ></script>
+
+    <script type="text/javascript" language="JavaScript">
+        function setUp() {}
+
+        function tearDown() {}
+
+        function testApplyTo(){
+            var ids = ['ssn', 'telephone', 'telephone_short', 'decimal', 'SN', 'IF_ELSE', 'alternate'];
+
+            var i = ids.length;
+            while(i--){
+                assertTrue('', ids[i] in wFORMS.behaviors.autoformat._globalCache );
+            }
+        }
+
+        function testTemplateInterpretation(){
+           var templateList = wFORMS.behaviors.autoformat._globalCache['ssn'].template;
+
+           assertEquals('', 11, templateList.length);
+           var types = ['D', 'D', 'D', 'L', 'D', 'D', 'L', 'D', 'D', 'D', 'D'];
+           var i = 11;
+           while(i--){
+               assertEquals('', types[i], templateList[i].type);
+           }
+        }
+
+        function testTemplateFragmentCreation(){
+           var templateFragments = wFORMS.behaviors.autoformat._globalCache['ssn'].templateFragments;
+
+            var previousFragment = null, nextFragment = null;
+
+            var i = templateFragments.length;
+            while(i--){
+               if(nextFragment){
+                   assertEquals('', nextFragment.previous, templateFragments[i]);
+               }
+               assertEquals('', nextFragment, templateFragments[i].next);
+               nextFragment = templateFragments[i];
+            }
+        }
+
+        function testCaretManipulation(){
+            var $input = document.getElementById('ssn');
+
+            $input.value = "dummy_data";
+
+            var caret = wFORMS.behaviors.autoformat.getCaretPosition($input);
+
+            assertEquals('', 0, caret);
+
+            wFORMS.behaviors.autoformat.setCaretPosition($input, 3);
+
+            assertEquals('', 3, wFORMS.behaviors.autoformat.getCaretPosition($input));
+        }
+    </script>
+
+	</head>
+    <body class="default wFormWebPage">
+    <div style="width:700px; height:300px; vertical-align: middle; display: table-cell; padding-left: 50px">
+        <p>
+            <ul>
+                <li>$ stands for an alphanumeric character, # is a digital character.</li>
+                <li>Copy & Paste works for the inputs.</li>
+                <li>Matching the fixed text parts is case-insensitive. (controlled by an option)</li>
+            </ul>
+        </p>
+
+        <form method="post" action="" id="testForm" >
+
+            <div><input type="text" id="ssn"  name="testField" autoformat="###-##-####" class="" value=""/>
+            <label>###-##-####</label></div>
+
+            <div><input type="text" id="telephone"  name="testField" autoformat="(#) ### ## ####" class="" value=""/>
+            <label>(#)### ## ####</label></div>
+
+            <div><input type="text" id="telephone_short"  name="testField" autoformat="### ## ####" class="" value=""/>
+            <label>### ## ####</label></div>
+
+            <div><input type="text" id="decimal"  name="testField" autoformat="###.##" class="" value=""/>
+            <label>###.##</label></div>
+
+            <div><input type="text" id="SN"  name="testField" autoformat="$$$$-$$$$-$$$$-$$$$" class="" value="" size="30"/>
+            <label>$$$$-$$$$-$$$$-$$$$</label></div>
+
+            <div><input type="text" id="IF_ELSE"  name="testField" autoformat="If($$$$$$){$$$$$$}else{$$$$$$}" class="" value="" size="30"/>
+            <label>If($$$$$$){$$$$$$}else{$$$$$$}</label></div>
+
+            <div><input type="text" id="alternate"  name="testField" autoformat="$#$#$#$#$#" class="" value="" size="30"/>
+            <label>$#$#$#$#$#</label></div>
+
+        </form>
+
+        </div>
+
+    </body>
+</html>
+

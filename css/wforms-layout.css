@@ -410,3 +410,37 @@
 .wForm input[type='checkbox'], input[type="radio"]{
 	padding: inherit !important;
 }
+
+
+/* Auto Format related*/
+.wForm .autoformatprompt .label{
+    color: #dc143c;
+}
+
+.wForm .autoformatprompt .delete{
+    color: #b0c4de;
+}
+
+.wForm .autoformatprompt .noinput{
+    color: #b0c4de;
+}
+
+.wForm .autoformatprompt .input{
+    font-weight: bold;
+}
+
+.wForm .autoformatprompt{
+    position: absolute;
+    z-index: 126;
+    padding: 3px 0px 0px 2px;
+    white-space: nowrap;
+}
+
+.wForm .autoformatprompt-control{
+    background-color: transparent;
+    position: relative;
+    z-index: 127;
+}
+.wForm .autoformatprompt-hook{
+    z-index: 125;
+}
