@@ -1,31 +1,22 @@
-/*
- wFORMS 3.0 Stylesheet - Minimal Stylesheet
- See http://www.formassembly.com/wForms
 
- To be used along with wforms-jsonly.css
- This stylesheet and the associated images are Copyright (c) 2007-2008 Veer West LLC (http://www.veerwest.com)	
- and licensed under the Creative Commons Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/) 
-*/
+.inputWrapper {
+	/* workaround for: display: inline-block; */  
+	zoom: 1; display: inline; 
+}
+#preview .inlineSection .oneField { 
+	/* workaround for: display: inline-block; */  
+	zoom: 1; display: inline;  
+}
 
-/* IE6 BUG FIXES ==================================================================== */
- /* IE Pick-a-boo bug fix */
-* html .wForm form {
-	height: 1%; 
+#preview .oneField {
+	/* workaround for: border-color: transparent;
+	    zoom:1 (hasLayout) is required for hack to work.
+	 */  
+	zoom: 1; border-color: #123456; filter: chroma(color=#123456);
 }
-/* Fixes IE 6 problem with fieldset+legend boundaries */
-* html .wForm form fieldset {	
-	position: relative; 
-	margin-top: 1em;
-	padding-top: 2em;
-}
-* html .wForm form fieldset legend {
-	position: absolute; 
-	top: -.5em; 
-	left: .5em;
-} 
-/* Fix min-width support */
-* html .wForm label.preField,
-* html .wForm .labelsLeftAligned  label.preField,
-* html .wForm .labelsRightAligned label.preField {
-	width: 13em;	
+#preview h3 {
+	/* workaround for: border-color: transparent;
+	   zoom:1 (hasLayout) is required for hack to work but causes messy font rendering.  
+	*/
+	zoom: 1; border-color: #123456; filter: chroma(color=#123456);
 }
