@@ -1,0 +1,22 @@
+
+.inputWrapper {
+	/* workaround for: display: inline-block; */  
+	zoom: 1; display: inline; 
+}
+#preview .inlineSection .oneField { 
+	/* workaround for: display: inline-block; */  
+	zoom: 1; display: inline;  
+}
+
+#preview .oneField {
+	/* workaround for: border-color: transparent;
+	    zoom:1 (hasLayout) is required for hack to work.
+	 */  
+	zoom: 1; border-color: #123456; filter: chroma(color=#123456);
+}
+#preview h3 {
+	/* workaround for: border-color: transparent;
+	   zoom:1 (hasLayout) is required for hack to work but causes messy font rendering.  
+	*/
+	zoom: 1; border-color: #123456; filter: chroma(color=#123456);
+}

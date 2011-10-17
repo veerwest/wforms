@@ -1,0 +1,6 @@
+
+.inputWrapper {
+	/* workaround for: display: inline-block; */  
+	zoom: 1;
+    display: inline; 
+} 
