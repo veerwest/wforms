@@ -159,7 +159,7 @@
 /* Wrapper around the input and related content (hint, validation error message).
    Allows display of input on same line as label (for left/right aligned labels), 
    while keeping related content flush against the input. */
-.wForm .inputWrapper { display: -moz-inline-box; /* For Firefox 2.x */ display: inline-block; vertical-align: top; }
+.wForm .inputWrapper { display: -moz-inline-box; /* For Firefox 2.x */ display: inline-block; vertical-align: top; position: relative; }
 
 .wForm .inputWrapper .delimiter { display: inline; }
 .wForm .inputWrapper .delimiterBefore { padding-right: 4px; }
