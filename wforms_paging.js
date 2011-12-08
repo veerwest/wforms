@@ -219,6 +219,43 @@ wFORMS.behaviors.paging.applyTo = function(f) {
  */
 wFORMS.behaviors.paging.instance.prototype.onApply = function() {}
 
+/**
+ * Move from one page to another without validation or other action.
+ */
+wFORMS.behaviors.paging.instance.prototype.jumpTo = function(i){
+				var b = this;
+				var index = i;
+				
+				if(b.currentPageIndex!=index) {	
+					b.behavior.hidePage(b.behavior.getPageByIndex(b.currentPageIndex));
+					b.setupManagedControls(index);
+					b.behavior.showPage(b.behavior.getPageByIndex(index));
+					b.currentPageIndex = index;
+				}
+}
+
+/**
+ * Create a list of tabs to move users around the form.
+ * Append into element e
+ */
+wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
+
+	var _b = this;
+	var d = document.createElement('div');
+	d.id = 'tab-nav';
+	this.target.parentNode.insertBefore(d,this.target);
+	
+	var pages = base2.DOM.Element.querySelectorAll(this.target,'.wfPage, .wfCurrentPage');
+	pages.forEach(function(elem,i){
+		tab = document.createElement('a');
+		tab.setAttribute("href","#");
+		tab.textContent=" _"+i+"_ ";
+		base2.DOM.Element.addEventListener(tab,'click',function(){_b.jumpTo(i+1);});
+		d.appendChild(tab);
+	});
+	return pages;
+}
+
 /** On submit advance the page instead, until the last page. */
 wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
 	if (!wFORMS.behaviors.paging.isLastPageIndex(b.currentPageIndex)) {
@@ -245,7 +282,8 @@ wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
 		if(window.onbeforeunload) {
 			window.onbeforeunload = null;
 		}
-}
+		e.pagingStopPropagation = false;
+	}
 }
 
 /**

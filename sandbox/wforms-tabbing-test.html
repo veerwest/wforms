@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Test Bug Report #81</title>
+
 <link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
 <link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
 
@@ -37,6 +38,7 @@
 	<link href="http://www.tfaforms.com/wForms/3.4/css/nicerblank/wforms.css" rel="stylesheet" type="text/css"></link>
 	<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-jsonly.css" rel="alternate stylesheet" title="This stylesheet activated by javascript" type="text/css"></link>
 <link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout.css" rel="stylesheet" type="text/css"></link>
+
 <!--[if IE 8]>
 <link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ie8.css" rel="stylesheet" type="text/css" />
 <![endif]-->
@@ -74,7 +76,13 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 		location.hash="#"+firstErrorId;
 	}
 	alert(m);
+	
 }
+
+wFORMS.behaviors.paging.runValidationOnPageNext=false;
+wFORMS.behaviors.paging.instance.prototype.onApply = function(){
+this.generateTabs();
+};
 </script>
 
 <!-- FORM: BODY SECTION -->
