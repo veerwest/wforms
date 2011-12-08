@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Test Bug Report #81</title>
+<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../lib/base2/v1.0.1/base2-p.js"></script>
+<script type="text/javascript" src="../lib/base2/v1.0.1/base2-dom-p.js"></script>
+<script type="text/javascript" src="../wforms_core.js"></script>
+<script type="text/javascript" src="../wforms_validation.js"></script>	
+<script type="text/javascript" src="../wforms_paging.js"></script>
+
+<style type="text/css">
+	.offstate-bm { display: none !important; }
+	form .onstate-bm { display: block !important; }
+	.offstate-bn { display: none !important; }
+	form .onstate-bn { display: block !important; }
+	.offstate-bo { display: none !important; }
+	form .onstate-bo { display: block !important; }
+	.offstate-bp { display: none !important; }
+	form .onstate-bp { display: block !important; }
+	.offstate-bq { display: none !important; }
+	form .onstate-bq { display: block !important; }
+	.offstate-br { display: none !important; }
+	form .onstate-br { display: block !important; }
+	.offstate-bs { display: none !important; }
+	form .onstate-bs { display: block !important; }
+	.offstate-bt { display: none !important; }
+	form .onstate-bt { display: block !important; }
+</style>
+</head>
+
+<body>
+<!-- FORM: HEAD SECTION -->
+	<link href="http://www.tfaforms.com/wForms/3.4/css/nicerblank/wforms.css" rel="stylesheet" type="text/css"></link>
+	<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-jsonly.css" rel="alternate stylesheet" title="This stylesheet activated by javascript" type="text/css"></link>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout.css" rel="stylesheet" type="text/css"></link>
+<!--[if IE 8]>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ie8.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<!--[if IE 7]>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ie7.css" rel="stylesheet" type="text/css"></link>
+<![endif]-->
+<!--[if IE 6]>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ie6.css" rel="stylesheet" type="text/css"></link>
+<![endif]-->
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ipad.css" rel="alternate stylesheet" title="This stylesheet activated for iPad only" type="text/css" />
+
+<link href="http://www.tfaforms.com/css/form.css" rel="stylesheet" type="text/css"></link>
+<style type="text/css">
+</style>
+
+<script>
+/**
+ * Display of validation error. Alert message + scroll into view of the first field in error.
+ */
+wFORMS.behaviors.validation.onFail = function(bInstance) {
+	var m = wFORMS.behaviors.validation.messages.notification;
+	var firstErrorId = null;
+	var c = 0;
+	for (var id in bInstance.elementsInError) {
+		c++;
+		if(!firstErrorId) 
+			firstErrorId = id;
+	}
+	m = m.replace('%%', c);
+	
+	var elem = document.getElementById(firstErrorId);
+	if(elem.scrollIntoView) {	
+		elem.scrollIntoView();
+	} else {
+		location.hash="#"+firstErrorId;
+	}
+	alert(m);
+}
+</script>
+
+<!-- FORM: BODY SECTION -->
+<div class="wFormContainer">
+<div class="wForm wFormdefaultWidth"><form method="post" action="http://www.tfaforms.com/responses/processor" id="id2427759" class="labelsAbove hintsTooltip">
+<div class="wfPage " id="wfPgIndex-1"><div id="tfa_Field1-D" class="oneField">
+<label class="preField" for="tfa_Field1">Field 1 <span class="reqMark">*</span></label> <input type="text" id="tfa_Field1" name="tfa_Field1" value="" size="40" class="required"> <br>
+</div></div>
+<div class="wfPage " id="wfPgIndex-2">
+<h3>My Second Page</h3>
+<div id="tfa_Field2-D" class="oneField">
+<label class="preField" for="tfa_Field2">Field 2 <span class="reqMark">*</span></label> <input type="text" id="tfa_Field2" name="tfa_Field2" value="" size="40" class="required"> <br>
+</div>
+</div>
+<div class="wfPage " id="wfPgIndex-3">
+<h3>My Third Page</h3>
+<div id="tfa_Mythirdfield-D" class="oneField">
+<label class="preField" for="tfa_Mythirdfield">My third field <span class="reqMark">*</span></label> <input type="text" id="tfa_Mythirdfield" name="tfa_Mythirdfield" value="" size="40" class="required"> <br>
+</div>
+</div>
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="submit"><input type="hidden" value="227457" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="fdba22a979dd021c6db27ae0bf973daf" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="1" name="tfa_dbVersionId" id="tfa_dbVersionId">
+</div>
+</form></div>
+
+      <p class="supportInfo" >
+                              <a href="http://www.tfaforms.com/forms/help/227457" target="new" style="font-size: 0.7em;">
+                    Need assistance with this form?               </a>
+
+                      </p>
+
+</div>
+
+</body>
+</html>
