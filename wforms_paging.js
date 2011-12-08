@@ -156,16 +156,16 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 			// If first page add just Next button
 			if(index == 1){
 				var ctrl = base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));
-				
-				if(isValidationAccepted){					
+									
 					ctrl.addEventListener('click', function(event) {							
-							var v = wFORMS.getBehaviorInstance(b.target,'validation'); 
-							if(v.run(event, elem)){b.run(event, ctrl);} 
+							var v = wFORMS.getBehaviorInstance(b.target,'validation');
+							var result = true;
+							if((wFORMS.behaviors.validation && wFORMS.behaviors.paging.runValidationOnPageNext)){
+								result = v.run(event,elem);
+							}
+							if(result){b.run(event, ctrl);}
 						}, 
-						false);					
-				}else{
-					ctrl.addEventListener('click', function(event) { b.run(event, ctrl); }, false);
-				}
+						false);
 
 				wFORMS.behaviors.paging.showPage(elem);
 			}else{
