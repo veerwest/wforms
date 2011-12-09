@@ -1,0 +1,1178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Test Bug Report #81</title>
+
+<link href="../css/wforms-jsonly.css" type="text/css" rel="stylesheet" />
+<link href="../css/wforms-layout.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="../lib/base2/v1.0.1/base2-p.js"></script>
+<script type="text/javascript" src="../lib/base2/v1.0.1/base2-dom-p.js"></script>
+<script type="text/javascript" src="../wforms_core.js"></script>
+<script type="text/javascript" src="../wforms_validation.js"></script>	
+<script type="text/javascript" src="../wforms_paging.js"></script>
+
+<style type="text/css">
+	.offstate-bm { display: none !important; }
+	form .onstate-bm { display: block !important; }
+	.offstate-bn { display: none !important; }
+	form .onstate-bn { display: block !important; }
+	.offstate-bo { display: none !important; }
+	form .onstate-bo { display: block !important; }
+	.offstate-bp { display: none !important; }
+	form .onstate-bp { display: block !important; }
+	.offstate-bq { display: none !important; }
+	form .onstate-bq { display: block !important; }
+	.offstate-br { display: none !important; }
+	form .onstate-br { display: block !important; }
+	.offstate-bs { display: none !important; }
+	form .onstate-bs { display: block !important; }
+	.offstate-bt { display: none !important; }
+	form .onstate-bt { display: block !important; }
+</style>
+</head>
+
+<body>
+
+<!-- FORM: HEAD SECTION -->
+	<link href="http://www.tfaforms.com/themes/get/13384" rel="stylesheet" type="text/css"></link>
+	<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-jsonly.css" rel="alternate stylesheet" title="This stylesheet activated by javascript" type="text/css"></link>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout.css" rel="stylesheet" type="text/css"></link>
+<!--[if IE 8]>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ie8.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<!--[if IE 7]>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ie7.css" rel="stylesheet" type="text/css"></link>
+<![endif]-->
+<!--[if IE 6]>
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ie6.css" rel="stylesheet" type="text/css"></link>
+<![endif]-->
+<link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ipad.css" rel="alternate stylesheet" title="This stylesheet activated for iPad only" type="text/css" />
+
+<script type="text/javascript" src="http://www.tfaforms.com/wForms/3.4/js/localization-en_GB.js"></script>
+
+	
+<link href="http://www.tfaforms.com/css/form.css" rel="stylesheet" type="text/css"></link>
+<style type="text/css">
+</style>
+
+<script>
+/**
+ * Display of validation error. Alert message + scroll into view of the first field in error.
+ */
+wFORMS.behaviors.validation.onFail = function(bInstance) {
+	var m = wFORMS.behaviors.validation.messages.notification;
+	var firstErrorId = null;
+	var c = 0;
+	for (var id in bInstance.elementsInError) {
+		c++;
+		if(!firstErrorId) 
+			firstErrorId = id;
+	}
+	m = m.replace('%%', c);
+	
+	var elem = document.getElementById(firstErrorId);
+	console.log(firstErrorId);
+	
+	if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(elem)){
+		var pInstance = wFORMS.getBehaviorInstance(bInstance.target,"paging");
+		pInstance.jumpTo(wFORMS.behaviors.paging.getPageIndex(wFORMS.behaviors.paging.helpers.findPage(elem)));
+	}
+	
+	if(elem.scrollIntoView) {	
+		elem.scrollIntoView();
+	} else {
+		location.hash="#"+firstErrorId;
+	}
+	
+	bInstance.errorPages = new Array();
+	for (var id in bInstance.elementsInError){
+		var page = wFORMS.behaviors.paging.helpers.findPage(document.getElementById(id));
+		console.log(page);
+		if(page){
+			var index = wFORMS.behaviors.paging.getPageIndex(page) - 1;
+			if( typeof bInstance.errorPages[index] == 'object' ){
+				bInstance.errorPages[index].push(id);
+			}else{
+				bInstance.errorPages[index] = new Array();
+				bInstance.errorPages[index].push(id);
+			}
+		}
+	}
+	console.log(bInstance.elementsInError,bInstance.errorPages);
+	
+	base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="wfTab_page"]').forEach(function(i){
+		if(!i.removeClass){wFORMS.standardizeElement(i);}
+		i.removeClass("errMsg");
+	});
+	
+	bInstance.errorPages.forEach(function(id,index){
+		var tab = base2.DOM.Element.querySelector(bInstance.target.parentNode,'#wfTab_page_'+index);
+		if(tab){
+			if(!tab.addClass){wFORMS.standardizeElement(tab);}
+			tab.addClass("errMsg");
+		}
+	});
+	
+	alert(m);
+}
+
+wFORMS.behaviors.paging.runValidationOnPageNext=false;
+wFORMS.behaviors.paging.instance.prototype.onApply = function(){
+this.generateTabs();
+};
+</script>
+
+<!-- FORM: BODY SECTION -->
+<div class="wFormContainer">
+<div class="wForm wFormdefaultWidth"><form method="post" action="http://www.tfaforms.com/responses/testprocessor" id="id2311236" class="labelsAbove hintsSide" enctype="multipart/form-data">
+<input type="hidden" name="MAX_FILE_SIZE" value="20971520"><div class="saveAndResume"><div class="oneField">
+<span class="oneChoice"><input type="checkbox" id="tfa_saveForLater" name="tfa_saveForLater" value="1" class="switch-resumelater"><label for="tfa_saveForLater" class="postField">Save my progress and resume later</label></span>
+				
+				| <a href="http://www.tfaforms.com/forms/resume/222773" onclick="return confirm('Are you sure you want to resume a previous response? Any information you just entered on this page will be discarded.');">resume a previously saved form</a>
+</div></div>
+<div class="saveAndResume" id="saveAndResumeFieldset"><fieldset class="offstate-resumelater">
+<legend>Resume Later</legend>
+<p class="instructions">In order to be able to resume this form later, please enter your email and choose a password.</p>
+<div class="oneField">
+<label class="preField" for="tfa_resumeEmail">Your Email:</label><input type="text" value="" name="tfa_resumeEmail" id="tfa_resumeEmail">
+</div>
+<div class="oneField">
+<label class="preField" for="tfa_resumePassword">A Password:</label><input type="password" value="" name="tfa_resumePassword" id="tfa_resumePassword">
+</div>
+<div class="actions"><input type="button" class="primaryAction" id="tfa_resumeLater" name="tfa_resumeLater" value="Save"></div>
+</fieldset></div>
+<div class="wfPage " id="wfPgIndex-1">
+<div class="htmlsection" id="html-tmp-0210520893984"><h3 style="text-align: right;">Page 1 of 23</h3></div>
+<fieldset id="tfa_Instructionstoth1" class="wfSection">
+<legend>Instructions to the Coach</legend>
+<div class="htmlsection" id="html-tmp-3846575746912">
+<p style="text-align: justify;">Welcome to the Comp Int Coach Portfolio.</p>
+<p style="text-align: justify;">This online form contains all of the instructions and resources required to complete your Comp Int Coach Portfolio.</p>
+<p>The portfolio consists of an in-person assessment of you coaching during a practice sessions, a self-assessment against the Comp Int criteria, and nine evaluated tasks.&nbsp; Your responses to each task must be typed into the space provided, or uploaded. &nbsp; Some tasks require use of the template provided, while others can be created by the coach from scratch.&nbsp;&nbsp;</p>
+<p>Each task offers an objective, evaluation method, resources, templates (where applicable) and specific instructions for the task.&nbsp;&nbsp;&nbsp;</p>
+<p>Where files must be uploaded, an upload file field is provided <span style="text-decoration: underline;"><strong>at the end of the form</strong></span>.&nbsp;&nbsp;&nbsp; You may navigate through the form and review all of the tasks...however a completed portfolio must include ALL fields completed and ALL tasks uploaded.</p>
+<p>Coaches are encouraged to SAVE their work as they complete tasks.&nbsp; Use the<em><span> Save my progress and resume later </span></em><span>option located conveniently at the top and bottom of each page.&nbsp;&nbsp; The form system will provide instructions on accessing the saved form, and an email will be sent to the coach with a link to their saved form.&nbsp;&nbsp;</span></p>
+<p><span> When saving a form, all entered text and uploaded files are preserved, however the system will return the user to the first page.&nbsp;&nbsp; Simply move through the pages using the NEXT button, until you reach the page where you wish to resume.<br></span></p>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-2">
+<div class="htmlsection" id="html-tmp-0356543188341"><h3 style="text-align: right;">Page 2 of 23</h3></div>
+<fieldset id="tfa_CompletedPortfol" class="wfSection">
+<legend>Completing the Comp Int Coach Portfolio</legend>
+<div class="htmlsection" id="html-tmp-4901136109087">
+<h2>Peer Review</h2>
+<p>Coaches are encouraged to have a peer review your completed tasks before submitting the final version.</p>
+<p>The purpose of the review is to see the portfolio from a new perspective, with a fresh set of eyes and understand there are different coaching techniques that can be used.</p>
+<p>Feel free to incorporate the feedback received into your final submission.</p>
+<h2>Uploading Files</h2>
+<p>Tasks may be uploaded at any time, and new versions of a task will overwrite previously uploaded versions.&nbsp;&nbsp; Once you reach the final page and SUBMIT the Portfolio, this is considered your final submission.</p>
+<p>Coaches should SAVE a copy of their tasks on their own computer or storage device.</p>
+<p>If you wish to upload a task, then return later to continue with the next task, use the SAVE and RESUME Later link AFTER uploading your file.</p>
+<h2>Once your completed portfolio has been submitted;</h2>
+<ul>
+<li>A confirmation email will be sent to you, and the Provincial Swimming office.</li>
+<li>A $300 payment is required for the Portfolio evaluation.&nbsp; Payment is made to the Provincial Swimming office where the club you coach with is located.</li>
+<li>Once your portfolio and evaluation payment has been received, your Provincial Swimming office will notify the NCCP Administrator.&nbsp;&nbsp; The NCCP Administrator will then assign a Comp Int Portfolio evaluator to mark your portfolio.&nbsp;&nbsp; The Comp Int Portfolio evaluator will review your portfolio tasks.</li>
+<li>If the Comp Int Portfolio evaluator deems the portfolio incomplete against the published NCCP criteria, a coach is provided <strong>ONE </strong>follow up opportunity to make the required adjustments.&nbsp;&nbsp; Should the requested adjustments fall short of the minimum NCCP criteria, the Comp Int Portfolio evaluator will submit an incomplete evaluation to the NCCP Administrator, and a recommended set of next steps for the coach to pursue before re-submission of the Comp Int Portfolio.&nbsp;&nbsp; A marking fee of $150 will again be due to the Provincial Swimming office for Comp Int Portfolio re-submissions.</li>
+<li>When the Comp Int Portfolio evaluation is complete, the Comp Int Portfolio evaluator will submit a complete evaluation to the NCCP Administrator.&nbsp; A copy of the evaluation form will be emailed to you and the Provincial Swimming office.</li>
+<li>The final step of the Comp Int evaluation is an evaluation at a competition. After completing the Portfolio you will be provided with the information to complete your competition evaluation.</li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_Help" class="wfSection">
+<legend>Help</legend>
+<div class="htmlsection" id="html-tmp-6545439714734">
+<p>If you have questions, please contact;<br><br>NCCP Administrator &ndash; Carol Vadeika - nccp@swimming.ca</p>
+<p>Provincial Swimming Office - <a href="https://www.swimming.ca/ProvincialOffices.aspx" target="_blank">https://www.swimming.ca/ProvincialOffices.aspx</a></p>
+<p>NCCP Master Evaluator &ndash; Mark Fellner &ndash; nccpwest@gmail.com</p>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-3">
+<div class="htmlsection" id="html-tmp-0389618236957"><h3 style="text-align: right;">Page 3 of 23</h3></div>
+<fieldset id="tfa_CoachInformation" class="wfSection">
+<legend>Coach Information</legend>
+<div id="tfa_Name-D" class="oneField">
+<label class="preField" for="tfa_Name">Full Name <span class="reqMark">*</span></label> <input type="text" id="tfa_Name" name="tfa_Name" value="" size="40" class="required"> <br>
+</div>
+<div id="tfa_Email-D" class="oneField">
+<label class="preField" for="tfa_Email">Email <span class="reqMark">*</span></label> <input type="text" id="tfa_Email" name="tfa_Email" value="" size="40" class="validate-email required"> <br>
+</div>
+<div id="tfa_Phone-D" class="oneField">
+<label class="preField" for="tfa_Phone">Phone <span class="reqMark">*</span></label> <input type="text" id="tfa_Phone" name="tfa_Phone" value="" size="40" class="required"> <br>
+</div>
+<div id="tfa_NCCP-D" class="oneField">
+<label class="preField" for="tfa_NCCP">NCCP CC# <span class="reqMark">*</span></label> <input type="text" id="tfa_NCCP" name="tfa_NCCP" value="" size="40" class="required"> <br>
+</div>
+<div id="tfa_Tellusaboutyourc-D" class="oneField">
+<label class="preField" for="tfa_Tellusaboutyourc">Please describe your coaching role within your Club, and your assigned duties in that role. <span class="reqMark">*</span></label> <textarea cols="70" rows="5" id="tfa_Tellusaboutyourc" name="tfa_Tellusaboutyourc" class="required"></textarea> <br>
+</div>
+<div id="tfa_ProvincialSwimmi-D" class="oneField">
+<label class="preField" for="tfa_ProvincialSwimmi">In which province do you coach? <span class="reqMark">*</span></label> <select id="tfa_ProvincialSwimmi" name="tfa_ProvincialSwimmi" class="required calc-PSO"><option value="">Please select...</option>
+<option value="tfa_SwimAB" class="calcval-kevin@swimalberta.ca">Swim AB</option>
+<option value="tfa_SwimBC" class="calcval-mikeflegel@swimbc.ca">Swim BC</option>
+<option value="tfa_SwimYK" class="calcval-mikeflegel@swimbc.ca">Swim YK</option>
+<option value="tfa_SwimSK" class="calcval-marjwalton@swimsask.ca">Swim SK</option>
+<option value="tfa_SwimMB" class="calcval-swim.ed@sportmanitoba.ca">Swim MB</option>
+<option value="tfa_SwimON" class="calcval-christy@swimontario.com">Swim ON</option>
+<option value="tfa_FNQ" class="calcval-pstpierre@fnq.qc.ca">FNQ</option>
+<option value="tfa_SwimNB" class="calcval-swimnb@nb.aibn.com">Swim NB</option>
+<option value="tfa_SwimPEI" class="calcval-amoss@swimming.ca">Swim PEI</option>
+<option value="tfa_SwimNS" class="calcval-swimming@sportnovascotia.ca">Swim NS</option>
+<option value="tfa_SwimNL" class="calcval-swimnl@sportnl.ca">Swim NL</option>
+<option value="tfa_SwimmingCanada" class="calcval-amoss@swimming.ca">Swimming Canada</option></select> <br>
+</div>
+<input type="hidden" id="tfa_PSO" name="tfa_PSO" value="" class="formula=PSO"><div id="tfa_LocationofSwimmi-D" class="oneField">
+<label class="preField" for="tfa_LocationofSwimmi">Location of Swimming 201 Course You Participated in: <span class="reqMark">*</span></label> <select id="tfa_LocationofSwimmi" name="tfa_LocationofSwimmi" class="required"><option value="">Please select...</option>
+<option value="tfa_5300400885613" class="calcval-nccp@swimming.ca">British Columbia</option>
+<option value="tfa_Yukon" class="calcval-nccp@swimming.ca">Yukon</option>
+<option value="tfa_Alberta" class="calcval-nccp@swimming.ca">Alberta</option>
+<option value="tfa_NorthwestTerrito" class="calcval-nccp@swimming.ca">Northwest Territories</option>
+<option value="tfa_Nunavut" class="calcval-nccp@swimming.ca">Nunavut</option>
+<option value="tfa_Saskatchewan" class="calcval-nccp@swimming.ca">Saskatchewan</option>
+<option value="tfa_Manitoba" class="calcval-nccp@swimming.ca">Manitoba</option>
+<option value="tfa_Ontario" class="calcval-nccp@swimming.ca">Ontario</option>
+<option value="tfa_Quebec" class="calcval-nccp@swimming.ca">Quebec</option>
+<option value="tfa_NewBrunswick" class="calcval-nccp@swimming.ca">New Brunswick</option>
+<option value="tfa_PrinceEdwardIsla" class="calcval-nccp@swimming.ca">Prince Edward Island</option>
+<option value="tfa_NovaScotia" class="calcval-nccp@swimming.ca">Nova Scotia</option>
+<option value="tfa_NewfoundlandandL" class="calcval-nccp@swimming.ca">Newfoundland and Labrador</option>
+<option value="tfa_NotApplicable" class="calcval-nccp@swimming.ca">Not Applicable</option></select> <br>
+</div>
+<div id="tfa_StartDateofSwimm-D" class="oneField">
+<label class="preField" for="tfa_StartDateofSwimm">Start Date of Swimming 201 Course: <span class="reqMark">*</span></label> <input type="text" id="tfa_StartDateofSwimm" name="tfa_StartDateofSwimm" value="" size="40" class="validate-datecal required"> <br>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-4">
+<fieldset id="tfa_PracticeAssessme" class="wfSection">
+<legend>Assessment at a practice session</legend>
+<div class="htmlsection" id="html-tmp-8465506464002">
+<p>In order to complete the Comp Int Portfolio you are required to have an assessor observe you during one of your normal practices. The practice must take place with your normal group of swimmers, with an assessor that meets minimum qualifications.</p>
+<p><strong>Assessment Steps</strong>:</p>
+<ol>
+<li>Select your assessor - assessor requiremetns are listed below.</li>
+<li>Provide the assessor with a copy of the Assessor Guide (see below)</li>
+<li>Schedule a practice for the assessment to take place.</li>
+<li>Meet 30 to 60 minutes prior to the pracitce for the assessor to complete their pre-practice questions and observation. During the pre observation, make sure you outline to your assessor what age and stage your group of swimmers are.</li>
+<li>Allow the assessor to observe you coach your group of swimmers, without interruption for the duration of the practice.</li>
+<li>The assesor wiill conduct a debrief discussion with you after the practice, so ensure you have tme after the chosen practice to meet with the assessor.</li>
+<li>
+<strong>The assesor will complete an online form with the practice assessment results. The form will be emailed to you as a PDF document once completed. &nbsp;&nbsp; </strong>A copy of the form will also be sent to the NCCP Administrator for record keeping.</li>
+<li>Upload the assessment PDF to your Comp Int Coach portfolio.</li>
+</ol>
+<p style="color: #ff0000;"><strong>Although this is the first task, you can continue working on the remainder of the portfolio tasks and upload the practice assessment once completed. The tasks are not required to be completed in the order they are presented.</strong></p>
+<h2>Select Your Assessor</h2>
+<p>An assessor will play an important role in the completion of your Fundamentals Coach certification process.<br><br>When selecting an assessor, be sure of the following;<br><br></p>
+<ul>
+<li>Assessor is Level 2 / Comp Int certified or above with a minimum 3 years coaching experience at the Comp Int level;</li>
+<li>Assessor will be available to view you coaching a full session with your regular group;</li>
+<li>Assessor will be available to complete the assessment tool provided to them, and meet with you to discuss their observations in a debrief meeting;</li>
+<li>Assessor will submit a summary of their feedback to the coach and complete an online assessment evaluation form.</li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_AssessorForms" class="wfSection">
+<legend>Assessor Guide</legend>
+<div class="htmlsection" id="html-tmp-2150793325554">
+<p>Provide your assessor with the Comp Int Coach Assessor Guide below to print and bring with them to the practice. The Assessor Guide is required for the assessor to complete the assessment.</p>
+<p><a href="http://nccpswimming.org/NCCP-Files/ENGLISH/CompIntCoach/Evaluation/Comp%20Int%20Portfolio/Comp%20Int%20Coach%20Assessor%20Guide.pdf" target="_blank">Comp Int Coach Assessor Guide</a></p>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-5">
+<div class="htmlsection" id="html-tmp-0648889153797"><h3 style="text-align: right;">Page 4 of 23</h3></div>
+<div class="htmlsection" id="html-tmp-7369779332404">
+<p>Before you proceed with the tasks, take some time to review the Comp Int Coach Evaluation Guide. This document outlines the standards a coach is expected to reach in order to be certified at the Comp Intr Coach context;</p>
+<p><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Misc/EN+-+Comp+Int+Coach+Evaluation+Guide.pdf" target="_blank">DOWNLOAD Comp Int Coach Evaluation Guide</a></p>
+</div>
+</div>
+<div class="wfPage " id="wfPgIndex-6">
+<div class="htmlsection" id="html-tmp-0685085410686"><h3 style="text-align: right;">Page 5 of 23</h3></div>
+<fieldset id="tfa_IntroductionSelf" class="wfSection">
+<legend>Introduction - Self Assessment</legend>
+<div class="htmlsection" id="html-tmp-7589934740490">
+<p><strong>Objective</strong></p>
+<p>Coaches will provide a self-assessment of their coaching competencies, using the NCCP criteria for Comp Int Coach certification.</p>
+<p><strong>Activity</strong></p>
+<p>Complete the self-assessment questions that follow.&nbsp;&nbsp; These questions reflect the core criteria that are required for a coach to be certified at Comp Int Coach.&nbsp;&nbsp;</p>
+<p>Your responses will provide evaluators reviewing your portfolio a better understanding of your coaching strengths and weaknesses, and should help you to reflect on areas where you can focus self driven professional development.</p>
+<p>Complete the 1 to 5 scale self assessment to determine how frequently you do each of the coaching activites:</p>
+<p>1 - I never do that!</p>
+<p>3 - Sometimes I do that, but not all the time</p>
+<p>5 - I always do that!</p>
+<p>Reference your Comp Int Coach Evaluation Guide for specific examples of the criteria listed below.</p>
+</div>
+</fieldset>
+<fieldset id="tfa_0822657878665" class="wfSection">
+<legend>Support the Swimmer in Training</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th> </th>
+</tr>
+<tr id="tfa_Iensuretheenviro" class="required-one alternate-0">
+<th>&gt; I ensure the environment is safe for my swimmers and myself when planning and delivering my practice. </th>
+<td><div id="tfa_0654706303894-D" class="oneField"> <span id="tfa_0654706303894" class="choices"><span class="oneChoice"><input type="radio" value="tfa_191" class="" id="tfa_191" name="tfa_0654706303894"><label for="tfa_191" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_291" class="" id="tfa_291" name="tfa_0654706303894"><label for="tfa_291" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_391" class="" id="tfa_391" name="tfa_0654706303894"><label for="tfa_391" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_491" class="" id="tfa_491" name="tfa_0654706303894"><label for="tfa_491" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_591" class="" id="tfa_591" name="tfa_0654706303894"><label for="tfa_591" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Mypracticeplansa" class="required-one alternate-1">
+<th>&gt; My practice plans and practice delivery are structured and well organized. </th>
+<td><div id="tfa_0654762519498-D" class="oneField"> <span id="tfa_0654762519498" class="choices"><span class="oneChoice"><input type="radio" value="tfa_192" class="" id="tfa_192" name="tfa_0654762519498"><label for="tfa_192" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_292" class="" id="tfa_292" name="tfa_0654762519498"><label for="tfa_292" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_392" class="" id="tfa_392" name="tfa_0654762519498"><label for="tfa_392" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_492" class="" id="tfa_492" name="tfa_0654762519498"><label for="tfa_492" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_592" class="" id="tfa_592" name="tfa_0654762519498"><label for="tfa_592" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Duringmypractice" class="required-one alternate-0">
+<th>&gt; During my practices I actively move around the practice space, creating opportunities to interact with swimmers and promote learning. </th>
+<td><div id="tfa_0654819600602-D" class="oneField"> <span id="tfa_0654819600602" class="choices"><span class="oneChoice"><input type="radio" value="tfa_193" class="" id="tfa_193" name="tfa_0654819600602"><label for="tfa_193" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_293" class="" id="tfa_293" name="tfa_0654819600602"><label for="tfa_293" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_393" class="" id="tfa_393" name="tfa_0654819600602"><label for="tfa_393" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_493" class="" id="tfa_493" name="tfa_0654819600602"><label for="tfa_493" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_593" class="" id="tfa_593" name="tfa_0654819600602"><label for="tfa_593" class="postField">5</label></span></span> </div></td>
+</tr>
+</table>
+</fieldset>
+<fieldset id="tfa_PlanaPractice" class="wfSection">
+<legend>Plan a Practice</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th> </th>
+</tr>
+<tr id="tfa_Mypracticeplansi" class="required-one alternate-0">
+<th>&gt; My practice plans include logistics for the practice (eg. objectives, duration of each segment of the practice, equipment requirements). </th>
+<td><div id="tfa_2884629606540-D" class="oneField"> <span id="tfa_2884629606540" class="choices"><span class="oneChoice"><input type="radio" value="tfa_194" class="" id="tfa_194" name="tfa_2884629606540"><label for="tfa_194" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_294" class="" id="tfa_294" name="tfa_2884629606540"><label for="tfa_294" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_394" class="" id="tfa_394" name="tfa_2884629606540"><label for="tfa_394" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_494" class="" id="tfa_494" name="tfa_2884629606540"><label for="tfa_494" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_594" class="" id="tfa_594" name="tfa_2884629606540"><label for="tfa_594" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Mypracticeplansi1" class="required-one alternate-1">
+<th>&gt; My practice plans include appropriate activities for each segment of the practice (introduction, warm up, main-part, cool down). </th>
+<td><div id="tfa_2884687140402-D" class="oneField"> <span id="tfa_2884687140402" class="choices"><span class="oneChoice"><input type="radio" value="tfa_195" class="" id="tfa_195" name="tfa_2884687140402"><label for="tfa_195" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_295" class="" id="tfa_295" name="tfa_2884687140402"><label for="tfa_295" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_395" class="" id="tfa_395" name="tfa_2884687140402"><label for="tfa_395" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_495" class="" id="tfa_495" name="tfa_2884687140402"><label for="tfa_495" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_595" class="" id="tfa_595" name="tfa_2884687140402"><label for="tfa_595" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Uniqueactivities" class="required-one alternate-0">
+<th>&gt; Unique activities are identified for swimmers of different age/stage. </th>
+<td><div id="tfa_2884749708154-D" class="oneField"> <span id="tfa_2884749708154" class="choices"><span class="oneChoice"><input type="radio" value="tfa_196" class="" id="tfa_196" name="tfa_2884749708154"><label for="tfa_196" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_296" class="" id="tfa_296" name="tfa_2884749708154"><label for="tfa_296" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_396" class="" id="tfa_396" name="tfa_2884749708154"><label for="tfa_396" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_496" class="" id="tfa_496" name="tfa_2884749708154"><label for="tfa_496" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_596" class="" id="tfa_596" name="tfa_2884749708154"><label for="tfa_596" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Mypracticeplansi2" class="required-one alternate-1">
+<th>&gt; My practice plans include a clear emergency action plan, specific to the facility where we are training. </th>
+<td><div id="tfa_2884814869219-D" class="oneField"> <span id="tfa_2884814869219" class="choices"><span class="oneChoice"><input type="radio" value="tfa_197" class="" id="tfa_197" name="tfa_2884814869219"><label for="tfa_197" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_297" class="" id="tfa_297" name="tfa_2884814869219"><label for="tfa_297" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_397" class="" id="tfa_397" name="tfa_2884814869219"><label for="tfa_397" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_497" class="" id="tfa_497" name="tfa_2884814869219"><label for="tfa_497" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_597" class="" id="tfa_597" name="tfa_2884814869219"><label for="tfa_597" class="postField">5</label></span></span> </div></td>
+</tr>
+</table>
+</fieldset>
+<fieldset id="tfa_AnalyzePerforman" class="wfSection">
+<legend>Analyze Performance</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th> </th>
+</tr>
+<tr id="tfa_DuringpracticeIa" class="required-one alternate-0">
+<th>&gt; During practice I actively position myself around the practice space to better view my swimmers technique. </th>
+<td><div id="tfa_2884878083942-D" class="oneField"> <span id="tfa_2884878083942" class="choices"><span class="oneChoice"><input type="radio" value="tfa_198" class="" id="tfa_198" name="tfa_2884878083942"><label for="tfa_198" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_298" class="" id="tfa_298" name="tfa_2884878083942"><label for="tfa_298" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_398" class="" id="tfa_398" name="tfa_2884878083942"><label for="tfa_398" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_498" class="" id="tfa_498" name="tfa_2884878083942"><label for="tfa_498" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_598" class="" id="tfa_598" name="tfa_2884878083942"><label for="tfa_598" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Iamabletodetectt" class="required-one alternate-1">
+<th>&gt; I am able to detect technical errors being made by my swimmers, and identify the potential causes of the error. </th>
+<td><div id="tfa_2884941771064-D" class="oneField"> <span id="tfa_2884941771064" class="choices"><span class="oneChoice"><input type="radio" value="tfa_199" class="" id="tfa_199" name="tfa_2884941771064"><label for="tfa_199" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_299" class="" id="tfa_299" name="tfa_2884941771064"><label for="tfa_299" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_399" class="" id="tfa_399" name="tfa_2884941771064"><label for="tfa_399" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_499" class="" id="tfa_499" name="tfa_2884941771064"><label for="tfa_499" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_599" class="" id="tfa_599" name="tfa_2884941771064"><label for="tfa_599" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Ioffercorrection" class="required-one alternate-0">
+<th>&gt; I offer corrections for technical skill errors, using teaching methods best suited to the swimmers learning style. </th>
+<td><div id="tfa_2885008690613-D" class="oneField"> <span id="tfa_2885008690613" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1100" class="" id="tfa_1100" name="tfa_2885008690613"><label for="tfa_1100" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2100" class="" id="tfa_2100" name="tfa_2885008690613"><label for="tfa_2100" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3100" class="" id="tfa_3100" name="tfa_2885008690613"><label for="tfa_3100" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4100" class="" id="tfa_4100" name="tfa_2885008690613"><label for="tfa_4100" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5100" class="" id="tfa_5100" name="tfa_2885008690613"><label for="tfa_5100" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Whenofferingcorr" class="required-one alternate-1">
+<th>&gt; When offering corrections to technical skill errors, I verbally and visually check that the swimmer has understood the correction I have provided. </th>
+<td><div id="tfa_2885076080115-D" class="oneField"> <span id="tfa_2885076080115" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1101" class="" id="tfa_1101" name="tfa_2885076080115"><label for="tfa_1101" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2101" class="" id="tfa_2101" name="tfa_2885076080115"><label for="tfa_2101" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3101" class="" id="tfa_3101" name="tfa_2885076080115"><label for="tfa_3101" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4101" class="" id="tfa_4101" name="tfa_2885076080115"><label for="tfa_4101" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5101" class="" id="tfa_5101" name="tfa_2885076080115"><label for="tfa_5101" class="postField">5</label></span></span> </div></td>
+</tr>
+</table>
+</fieldset>
+<fieldset id="tfa_SupporttheCompet" class="wfSection">
+<legend>Support the Competitive Experience</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th> </th>
+</tr>
+<tr id="tfa_Beforeacompetiti" class="required-one alternate-0">
+<th>&gt; Before a competition, I plan and clearly communicate logistics and expectations for the competition. </th>
+<td><div id="tfa_2885145253443-D" class="oneField"> <span id="tfa_2885145253443" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1102" class="" id="tfa_1102" name="tfa_2885145253443"><label for="tfa_1102" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2102" class="" id="tfa_2102" name="tfa_2885145253443"><label for="tfa_2102" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3102" class="" id="tfa_3102" name="tfa_2885145253443"><label for="tfa_3102" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4102" class="" id="tfa_4102" name="tfa_2885145253443"><label for="tfa_4102" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5102" class="" id="tfa_5102" name="tfa_2885145253443"><label for="tfa_5102" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Iworkwithmyswimm" class="required-one alternate-1">
+<th>&gt; I work with my swimmers to prepare and implement a mental skills plan leading up to, and at competitions. </th>
+<td><div id="tfa_2885215440865-D" class="oneField"> <span id="tfa_2885215440865" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1103" class="" id="tfa_1103" name="tfa_2885215440865"><label for="tfa_1103" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2103" class="" id="tfa_2103" name="tfa_2885215440865"><label for="tfa_2103" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3103" class="" id="tfa_3103" name="tfa_2885215440865"><label for="tfa_3103" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4103" class="" id="tfa_4103" name="tfa_2885215440865"><label for="tfa_4103" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5103" class="" id="tfa_5103" name="tfa_2885215440865"><label for="tfa_5103" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Iprovidenutritio" class="required-one alternate-0">
+<th>&gt; I provide nutritional advice to swimmers and parents prior to competitions, and take appropriate measures to monitor swimmers nutrition during the competition. </th>
+<td><div id="tfa_2885285763313-D" class="oneField"> <span id="tfa_2885285763313" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1104" class="" id="tfa_1104" name="tfa_2885285763313"><label for="tfa_1104" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2104" class="" id="tfa_2104" name="tfa_2885285763313"><label for="tfa_2104" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3104" class="" id="tfa_3104" name="tfa_2885285763313"><label for="tfa_3104" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4104" class="" id="tfa_4104" name="tfa_2885285763313"><label for="tfa_4104" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5104" class="" id="tfa_5104" name="tfa_2885285763313"><label for="tfa_5104" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Duringacompetiti" class="required-one alternate-1">
+<th>&gt; During a competition, I create opportunities to interact with swimmers prior to and after their race. </th>
+<td><div id="tfa_2885357779827-D" class="oneField"> <span id="tfa_2885357779827" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1105" class="" id="tfa_1105" name="tfa_2885357779827"><label for="tfa_1105" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2105" class="" id="tfa_2105" name="tfa_2885357779827"><label for="tfa_2105" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3105" class="" id="tfa_3105" name="tfa_2885357779827"><label for="tfa_3105" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4105" class="" id="tfa_4105" name="tfa_2885357779827"><label for="tfa_4105" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5105" class="" id="tfa_5105" name="tfa_2885357779827"><label for="tfa_5105" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Iuseopportunitie" class="required-one alternate-0">
+<th>&gt; I use opportunities to interact with swimmers at competitions to provide constructive and strategic feedback that will help the swimmer to improve in their next performance. </th>
+<td><div id="tfa_2885435467074-D" class="oneField"> <span id="tfa_2885435467074" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1106" class="" id="tfa_1106" name="tfa_2885435467074"><label for="tfa_1106" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2106" class="" id="tfa_2106" name="tfa_2885435467074"><label for="tfa_2106" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3106" class="" id="tfa_3106" name="tfa_2885435467074"><label for="tfa_3106" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4106" class="" id="tfa_4106" name="tfa_2885435467074"><label for="tfa_4106" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5106" class="" id="tfa_5106" name="tfa_2885435467074"><label for="tfa_5106" class="postField">5</label></span></span> </div></td>
+</tr>
+</table>
+</fieldset>
+<fieldset id="tfa_DesignaSwimmingP" class="wfSection">
+<legend>Design a Swimming Program</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th> </th>
+</tr>
+<tr id="tfa_Ihaveaseasonalpl" class="required-one alternate-0">
+<th>&gt; I have a seasonal plan that outlines training and competition schedules. </th>
+<td><div id="tfa_2885512510186-D" class="oneField"> <span id="tfa_2885512510186" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1107" class="" id="tfa_1107" name="tfa_2885512510186"><label for="tfa_1107" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2107" class="" id="tfa_2107" name="tfa_2885512510186"><label for="tfa_2107" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3107" class="" id="tfa_3107" name="tfa_2885512510186"><label for="tfa_3107" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4107" class="" id="tfa_4107" name="tfa_2885512510186"><label for="tfa_4107" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5107" class="" id="tfa_5107" name="tfa_2885512510186"><label for="tfa_5107" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Myseasonalplanpr" class="required-one alternate-1">
+<th>&gt; My seasonal plan prioritizes technical, tactical, mental and physical priorities throughout the season. </th>
+<td><div id="tfa_6875971485007-D" class="oneField"> <span id="tfa_6875971485007" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1" class="" id="tfa_1" name="tfa_6875971485007"><label for="tfa_1" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2" class="" id="tfa_2" name="tfa_6875971485007"><label for="tfa_2" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3" class="" id="tfa_3" name="tfa_6875971485007"><label for="tfa_3" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4" class="" id="tfa_4" name="tfa_6875971485007"><label for="tfa_4" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5" class="" id="tfa_5" name="tfa_6875971485007"><label for="tfa_5" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Myseasonalplanin" class="required-one alternate-0">
+<th>&gt; My seasonal plan includes measures to identify swimmer progress, both in training and competition. </th>
+<td><div id="tfa_2885888124662-D" class="oneField"> <span id="tfa_2885888124662" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1108" class="" id="tfa_1108" name="tfa_2885888124662"><label for="tfa_1108" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2108" class="" id="tfa_2108" name="tfa_2885888124662"><label for="tfa_2108" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3108" class="" id="tfa_3108" name="tfa_2885888124662"><label for="tfa_3108" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4108" class="" id="tfa_4108" name="tfa_2885888124662"><label for="tfa_4108" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5108" class="" id="tfa_5108" name="tfa_2885888124662"><label for="tfa_5108" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Mypracticeplansa1" class="required-one alternate-1">
+<th>&gt; My practice plans address specific priorities outlined in my season plan. </th>
+<td><div id="tfa_2886136811463-D" class="oneField"> <span id="tfa_2886136811463" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1109" class="" id="tfa_1109" name="tfa_2886136811463"><label for="tfa_1109" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2109" class="" id="tfa_2109" name="tfa_2886136811463"><label for="tfa_2109" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3109" class="" id="tfa_3109" name="tfa_2886136811463"><label for="tfa_3109" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4109" class="" id="tfa_4109" name="tfa_2886136811463"><label for="tfa_4109" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5109" class="" id="tfa_5109" name="tfa_2886136811463"><label for="tfa_5109" class="postField">5</label></span></span> </div></td>
+</tr>
+</table>
+</fieldset>
+<fieldset id="tfa_ManageaProgram" class="wfSection">
+<legend>Manage a Program</legend>
+<table>
+<tr class="headerRow">
+<th> </th>
+<th> </th>
+</tr>
+<tr id="tfa_Iamwellorganized" class="required-one alternate-0">
+<th>&gt; I am well organized, and communicate administrative logistics related to training and competition in an effective manner. </th>
+<td><div id="tfa_2886366946911-D" class="oneField"> <span id="tfa_2886366946911" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1110" class="" id="tfa_1110" name="tfa_2886366946911"><label for="tfa_1110" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2110" class="" id="tfa_2110" name="tfa_2886366946911"><label for="tfa_2110" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3110" class="" id="tfa_3110" name="tfa_2886366946911"><label for="tfa_3110" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4110" class="" id="tfa_4110" name="tfa_2886366946911"><label for="tfa_4110" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5110" class="" id="tfa_5110" name="tfa_2886366946911"><label for="tfa_5110" class="postField">5</label></span></span> </div></td>
+</tr>
+<tr id="tfa_Ihaveasystemtotr" class="required-one alternate-1">
+<th>&gt; I have a system to track and report on my swimmers training and competition progress throughout the season. </th>
+<td><div id="tfa_2886600574887-D" class="oneField"> <span id="tfa_2886600574887" class="choices"><span class="oneChoice"><input type="radio" value="tfa_1111" class="" id="tfa_1111" name="tfa_2886600574887"><label for="tfa_1111" class="postField">1</label></span><span class="oneChoice"><input type="radio" value="tfa_2111" class="" id="tfa_2111" name="tfa_2886600574887"><label for="tfa_2111" class="postField">2</label></span><span class="oneChoice"><input type="radio" value="tfa_3111" class="" id="tfa_3111" name="tfa_2886600574887"><label for="tfa_3111" class="postField">3</label></span><span class="oneChoice"><input type="radio" value="tfa_4111" class="" id="tfa_4111" name="tfa_2886600574887"><label for="tfa_4111" class="postField">4</label></span><span class="oneChoice"><input type="radio" value="tfa_5111" class="" id="tfa_5111" name="tfa_2886600574887"><label for="tfa_5111" class="postField">5</label></span></span> </div></td>
+</tr>
+</table>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-7">
+<div class="htmlsection" id="html-tmp-0714256152760"><h3 style="text-align: right;">Page 6 of 23</h3></div>
+<fieldset id="tfa_Task1DesignaSeas" class="wfSection">
+<legend>Task #1 Design a Seasonal Training Plan</legend>
+<div class="htmlsection" id="html-tmp-9262758086220">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their ability to create a 16-28 week Seasonal Training Plan.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Comp Int Coach Evaluation Guide - Design a Sport Program criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Template</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+1/Seasonal%2BTraining%2BPlan%2BTemplate.xls" target="_self">Seasonal Training Plan Template</a></li>
+</ul>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+1/Seasonal%2BTraining%2BPlan%2BGlossary.pdf" target="_blank">Seasonal Training Plan Glossary of Terms</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+1/Seasonal%2BTraining%2BPlan%2BSample.pdf" target="_blank">Sample Seasonal Training Plan</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+1/Design%2Ba%2BSport%2BProgram%2BReference%2BMaterial%2BPg%2B62-64.pdf" target="_blank">Design a Basic Sport Porgram Reference Book Pages 62-64</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+1/Design%2Ba%2BSport%2BProgram%2BCoach%2BWorkbook.pdf" target="_blank">Design a Basic Sport Program Coach Workbook</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+1/Guidelines%2Bfor%2Bthe%2BTraining%2Bof%2BAthletic%2BAbilities.pdf" target="_blank">Guidelines for Training of Athletic Abilities and Athlete's Age</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+1/Swimming%2BCanada%2BLTAD%2BModel.pdf" target="_blank">Swimming Canada LTAD Model</a></li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_Activities" class="wfSection">
+<legend>Part 1 - Seasonal Training Plan</legend>
+<div class="htmlsection" id="html-tmp-3377918756500">
+<p>Create a seasonal training plan that covers 16-28 weeks of training and competitive opportunities for the group of swimmers you coach. You will need to access information from your Provincial Sport Organization, Region, Club and School Board to help you develop this plan (e.g. practice and meet schedule, holidays and school exam times, etc).</p>
+<p>The training plan you design should be a single periodization, with one peak competition phase.</p>
+<p>The seasonal training plan template provided is an excel file called <em>Seasonal Training Plan Template. </em>To complete the template, follow the coding instructions provided on the template.&nbsp;&nbsp;</p>
+<p>Your final seasonal plan must allow another coach to read the plan and pick up where you left off without any question as to what stroke, turn, or programming element was planned and prioritized for that week.</p>
+<p>The key steps for a seasonal training plan can be found in the resources above titled <em>CAC Design a Basic Sport Program Reference Book.</em> The seasonal training plan should include the following elements:</p>
+<ol>
+<li>Length of the season, breaks and other planning logistics (e.g. holidays, travel, school, exams, etc.)</li>
+<li>The plan must include the three main periods of your season, preparation, competition and transition.</li>
+<li>The number of training sessions and competition sessions in your season.</li>
+<li>Major program objectives related to the specifics of: Physical, motor skills, lifestyle, mental, tactical and technical</li>
+<li>Prioritization of training through the season, and monitoring of all training areas.</li>
+</ol>
+<h3>Save the file as STP_YOUR NAME and then upload at the end of the portfolio.</h3>
+</div>
+</fieldset>
+<fieldset id="tfa_Part2" class="wfSection">
+<legend>Part #2 - LTAD Reflection on Seasonal Training Plan</legend>
+<div class="htmlsection" id="html-tmp-3821011346437">
+<p>Referring to the Swimming Canada Long Term Athlete Development model found in the resources above, and the seasonal training plan you created in Part #1, answer the following questions in the spaces provided below.</p>
+<p>Based on the LTAD stage and skill level of the swimmers in your group;</p>
+</div>
+<div id="tfa_Writeabriefexpla-D" class="oneField">
+<label class="preField">Do you think your seasonal training plan provides an appropriate balance of training and competition opportunities?</label> <span id="tfa_Writeabriefexpla" class="choices"><span class="oneChoice"><input type="radio" value="tfa_7357531789479" class="" id="tfa_7357531789479" name="tfa_Writeabriefexpla"><label for="tfa_7357531789479" class="postField">Yes</label></span><span class="oneChoice"><input type="radio" value="tfa_No" class="" id="tfa_No" name="tfa_Writeabriefexpla"><label for="tfa_No" class="postField">No</label></span><span class="oneChoice"><input type="radio" value="tfa_Unsure" class="" id="tfa_Unsure" name="tfa_Writeabriefexpla"><label for="tfa_Unsure" class="postField">Unsure</label></span></span> <br>
+</div>
+<div id="tfa_Identifypossible-D" class="oneField">
+<label class="preField" for="tfa_Identifypossible">Explain your answer:</label> <textarea cols="80" rows="10" id="tfa_Identifypossible" name="tfa_Identifypossible" class=""></textarea> <br>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-8">
+<div class="htmlsection" id="html-tmp-0738900553089"><h3 style="text-align: right;">Page 7 of 23</h3></div>
+<fieldset id="tfa_Task2DevelopingS" class="wfSection">
+<legend>Task #2 Developing Swimmers Abilities</legend>
+<div class="htmlsection" id="html-tmp-5046744454912">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their ability to plan a week of training for the three specific phases used in a Seasonal Training Plan.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Comp Int Coach Evaluation Guide - Design a Sport Program criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Template</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+2/One%2BWeek%2BPractice%2BPlan%2BTemplate.doc" target="_blank">One Week Practice Plan Template</a></li>
+</ul>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+2/Sample%2BOne%2BWeek%2BPlan.pdf" target="_blank">Sample One Week Plan</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+2/Design%2Ba%2BSport%2BProgram%2BReference%2BMaterial%2BPg%2B4-28.pdf" target="_blank">Design a Basic Sport Program Reference Materials</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+2/Athletic%2BAbilities%2BDefinition%2BGuide.pdf" target="_blank">Athletic Abilities Definitions Guide (AADG)</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+2/Guidelines%2Bfor%2Bthe%2BTraining%2Bof%2BAthletic%2BAbilities.pdf" target="_blank">Guidelines for the Training of Athletic Abilities and Athlete's Age</a></li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+</ul>
+<p>&nbsp;</p>
+</div>
+</fieldset>
+<fieldset id="tfa_Part1PlanYourWee1" class="wfSection">
+<legend>Part #1 Plan Your Week</legend>
+<div class="htmlsection" id="html-tmp-9020302649243">
+<p>Using the <em>One Week Practice Plan Template </em>provided, you will start by noting the week # from your seasonal plan, and then identify your "Top 2 Objectives" for dryland and in the water, <span style="text-decoration: underline;">for the week</span>.&nbsp;&nbsp;&nbsp; Complete your planned schedule for the week, indicating the timeslots for morning (AM) and afternoon (PM) dryland and water sessions.</p>
+<p>For each planned training session, provide a very brief note referencing the athletic abilities you will focus on for each session.</p>
+<p>You are required to provide <span style="text-decoration: underline;">three plans</span>, representing a week from each of the three phases of the season;</p>
+<ul>
+<li>General Preparatory Phase (page 1 of template)</li>
+<li>Specific Preparatory Phase (page 2 of template)</li>
+<li>Competition Phase (page 3 of template)</li>
+</ul>
+<h3>Save the Template as Week Practice Plan_YOUR NAME and then upload at the end of the portfolio.</h3>
+</div>
+</fieldset>
+<fieldset id="tfa_Part1PlanYourWee" class="wfSection">
+<legend>Part #2 Weekly Plan Reflection</legend>
+<div class="htmlsection" id="html-tmp-8138969440360">
+<p>In the space provided for each of your planned weeks, explain how you are going to measure the success of your week, specific to the top athletic abilities you had identified for water and dryland.</p>
+<p>Using your <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+2/Athletic%2BAbilities%2BDefinition%2BGuide.pdf" target="_blank">Athletic Abilities Definitions Guide</a> as a resource.</p>
+</div>
+<div id="tfa_OneWeekPlanGener-D" class="oneField">
+<label class="preField" for="tfa_OneWeekPlanGener">One Week Plan - General Preparation Phase</label> <textarea cols="80" rows="5" id="tfa_OneWeekPlanGener" name="tfa_OneWeekPlanGener" class=""></textarea> <br>
+</div>
+<div id="tfa_OneWeekPlanSpeci-D" class="oneField">
+<label class="preField" for="tfa_OneWeekPlanSpeci">One Week Plan - Specific Preparation Phase</label> <textarea cols="80" rows="5" id="tfa_OneWeekPlanSpeci" name="tfa_OneWeekPlanSpeci" class=""></textarea> <br>
+</div>
+<div id="tfa_OneWeekPlanCompe-D" class="oneField">
+<label class="preField" for="tfa_OneWeekPlanCompe">One Week Plan - Competition Phase</label> <textarea cols="80" rows="5" id="tfa_OneWeekPlanCompe" name="tfa_OneWeekPlanCompe" class=""></textarea> <br>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-9">
+<div class="htmlsection" id="html-tmp-0776734797078"><h3 style="text-align: right;">Page 8 of 23</h3></div>
+<fieldset id="tfa_Task3PlanEffecti" class="wfSection">
+<legend>Task #3 Plan Effective Practices</legend>
+<div class="htmlsection" id="html-tmp-9571124316901">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their ability to plan by:</p>
+<p>Part 1. Planning an effective practice for each one of the three phases used in a Seasonal Training Plan.</p>
+<p>Part 2. Planning an action plan in case of an emergency.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Comp Int Coach Evaluation Guide - Plan a Practice criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+3/Key%2BQuestions%2Bto%2BAsk%2BWhen%2BPlanning%2Ba%2BPractice.pdf" target="_blank">Key Questions for Planning a Practice</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+3/Key%2BElements%2Bof%2Ba%2BPractice.pdf" target="_blank">Key Elements in a Practice</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+3/Guidelines%2Bfor%2Bthe%2BTraining%2Bof%2BAthletic%2BAbilities.pdf" target="_blank">Guidelines for Training Athltic Abilities and Athlete's Ages</a></li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_Part21" class="wfSection">
+<legend>Part #1 - Plan a Practice</legend>
+<div class="htmlsection" id="html-tmp-1684428653504">
+<p>It is important for coaches to have a detailed plan for every practice coached so you can efficiently guide your swimmers.</p>
+<p>In Task #2 you created a week plan for your swimmers in each of the three season phases, General Preparatory Phase, Specific Preparatory Phase and Competition Phase.</p>
+<p>Using the three one week plans created in Task #2, create one   detailed practice plan for a morning or afternoon session from each of   the one week plans.</p>
+<p>The selected practice shall all be from the same session in each of   the three plans. (e.g. Wednesday PM from each of: General Preparatory   Phase,  Specific Preparatory Phase and Competition Phase)</p>
+<p>Your practice plans should be well organized and your objectives,   activities, drills etc. explained clearly enough that another coach   could easily step in, run your practice in your absence and complete the   practice in the time available.</p>
+<p>Each of your practice plans should include the following:</p>
+<ol>
+<li>Introductory activities that review and reinforce previous learning.</li>
+<li>Drills and Activities that contribute to the development of swimming skills and athletic abilities.</li>
+<li>Drills and activities that are appropriate for the age and skill level of the swimmers you coach.</li>
+<li>Clearly explained drills and activities that match the overall objective of your practice.</li>
+<li>Drills that support the main teaching points you want to focus on  for stroke technique (e.g. if your plan indicated a focus on freestyle  body position, your drills should focus on the same skill).</li>
+<li>Drills and activities that minimize the risk of damage or harm to swimmers or equipment.</li>
+<li>A constructive contingency plan and strategies for dealing with unforeseen challenges.</li>
+</ol>
+<h4>Create your practice plans as three (3) separate documents:</h4>
+<h4 style="padding-left: 30px;">General_Prep_Practice_YOURNAME</h4>
+<h4 style="padding-left: 30px;">Specific_Prep_Practice_YOURNAME</h4>
+<h4 style="padding-left: 30px;">Competition_Practice_YOURNAME</h4>
+<h4><span style="text-decoration: underline;">Uploaded files must be Word, Text, RTF, Excel or PDF format.</span></h4>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-10">
+<div class="htmlsection" id="html-tmp-0618322261591"><h3 style="text-align: right;">Page 9 of 23</h3></div>
+<fieldset id="tfa_PracticePlanGene" class="wfSection">
+<legend>Practice Plans</legend>
+<div class="htmlsection" id="html-tmp-0436337889906">
+<p>Practice plans must include structure as outlined in the <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+3/Key%2BElements%2Bof%2Ba%2BPractice.pdf" target="_blank">Key Elements Of Each Part Of A Practice</a> resource manual.</p>
+<p>Identify timelines and equipment needs for each segment of the practice session.</p>
+<h4><span style="text-decoration: underline;">Uploaded files must be Word, Text, RTF, Excel or PDF format.</span></h4>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-11">
+<div class="htmlsection" id="html-tmp-0825009520335"><h3 style="text-align: right;">Page 10 of 23</h3></div>
+<fieldset id="tfa_Part1" class="wfSection">
+<legend>Part #2 - Emergency Action Plan</legend>
+<div class="htmlsection" id="html-tmp-0410276920566">
+<p>Provide your Emergency Action Plan (EAP) for the primary facility where your practices are held. Make sure that the information is current and stored in a safe and secure place on the site. In addition to your EAP you will document the steps you will follow when an injury or incident occurs with a swimmer in your care. See the EAP reference material and template in the resources provided.</p>
+<p>Hint: See page 5 of the EAP Reference Material and Template in the resources provided</p>
+<p><strong>Template</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+3/Emergency%2BAction%2BPlan%2BTemplate.doc" target="_blank">Emergency Action Plan (EAP) Template</a></li>
+</ul>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+3/EAP%2BReference%2BMaterial.pdf" target="_blank">Emergency Action Plan (EAP) Reference Material</a></li>
+</ul>
+<h3>Save Your File as EAP_YOUR NAME</h3>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-12">
+<div class="htmlsection" id="html-tmp-0799660133413"><h3 style="text-align: right;">Page 11 of 23</h3></div>
+<fieldset id="tfa_Task4KeyPerforma" class="wfSection">
+<legend>Task #4 Key Performance Factors</legend>
+<div class="htmlsection" id="html-tmp-3318158662968">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their knowledge of starts, turns and finishes technique.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Comp Int Coach Evaluation Guide - Analyze Performance criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Resources</strong></p>
+<p>Please review the resources <em>Swimming 101 Starts, Turns and Strokes Pictures, Swimming 101 Key Performance Factors and Turns Reference Material. </em>These resources review the skills covered in the Swimming 101 course with still frame photos, description and metaphors for each.</p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/Swimming%2B101%2BStarts%2BTurns%2Band%2BStroke%2BPictures.pdf" target="_blank">Swimming 101 Starts, Turns, and Stroke Pictures</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf">Swimming 101 Key Performance Factors Starts and Turns Reference Material</a></li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+</ul>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-13">
+<div class="htmlsection" id="html-tmp-1177831976818"><h3 style="text-align: right;">Page 12 of 23</h3></div>
+<fieldset id="tfa_Part11" class="wfSection">
+<legend>Part #1 - Key Performance Factors Standard Relay Start</legend>
+<div class="htmlsection" id="html-tmp-7182772058179">
+<p>Complete the Key Performance Factor sections found below the video, for the following skill:</p>
+<h2>Standard Relay Start - Lane 6</h2>
+<p><iframe src="http://www.youtube.com/embed/MxUAwO-7yKo" width="560" height="349" frameborder="0"></iframe></p>
+<p>The <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf" target="_blank">Swimming 101 Key Performance Factors Starts and Turns Reference Material</a> in the resources will help you complete the KPFs if you have any difficulties.</p>
+<p>Please include descriptions and age appropriate metaphors (word pictures) that you would use to address the various learning styles of your swimmers.</p>
+</div>
+<div id="tfa_READYZEROPositio" class="inlineSection">
+<label class="preField">READY-ZERO Position </label><div id="tfa_Description-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description">Description</label> <textarea cols="35" rows="5" id="tfa_Description" name="tfa_Description" class=""></textarea> </div>
+<div id="tfa_Metaphor-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor" name="tfa_Metaphor" class=""></textarea> </div>
+</div>
+<div id="tfa_REACTION" class="inlineSection">
+<label class="preField">REACTION</label><div id="tfa_Description3-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description3">Description</label> <textarea cols="35" rows="5" id="tfa_Description3" name="tfa_Description3" class=""></textarea> </div>
+<div id="tfa_Metaphor3-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor3">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor3" name="tfa_Metaphor3" class=""></textarea> </div>
+</div>
+<div id="tfa_ARMS" class="inlineSection">
+<label class="preField">ARMS</label><div id="tfa_Description4-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description4">Description</label> <textarea cols="35" rows="5" id="tfa_Description4" name="tfa_Description4" class=""></textarea> </div>
+<div id="tfa_Metaphor4-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor4">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor4" name="tfa_Metaphor4" class=""></textarea> </div>
+</div>
+<div id="tfa_FLIGHT" class="inlineSection">
+<label class="preField">FLIGHT</label><div id="tfa_Description5-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description5">Description</label> <textarea cols="35" rows="5" id="tfa_Description5" name="tfa_Description5" class=""></textarea> </div>
+<div id="tfa_Metaphor5-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor5">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor5" name="tfa_Metaphor5" class=""></textarea> </div>
+</div>
+<div id="tfa_ENTRY" class="inlineSection">
+<label class="preField">ENTRY</label><div id="tfa_Description6-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description6">Description</label> <textarea cols="35" rows="5" id="tfa_Description6" name="tfa_Description6" class=""></textarea> </div>
+<div id="tfa_Metaphor6-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor6">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor6" name="tfa_Metaphor6" class=""></textarea> </div>
+</div>
+</fieldset>
+<fieldset id="tfa_Part2Application" class="wfSection">
+<legend>Part #2 - Application of Rules</legend>
+<div class="htmlsection" id="html-tmp-6396598186890"><p>Review the <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/SNC-Rulebook-Part%2BII.pdf" target="_blank">Swimming Canada Rule Book Part II</a> and outline which rules impact the performance of the skills covered in the video above. Write out the rule number associated with the rules found to impact performance.</p></div>
+<div id="tfa_7003217707154-D" class="oneField"> <textarea cols="70" rows="5" id="tfa_7003217707154" name="tfa_7003217707154" class=""></textarea> <br>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-14">
+<div class="htmlsection" id="html-tmp-1184802088720"><h3 style="text-align: right;">Page 13 of 23</h3></div>
+<fieldset id="tfa_Part1KeyPerforma" class="wfSection">
+<legend>Part #1 - Key Performance Factors Backstroke Turn</legend>
+<div class="htmlsection" id="html-tmp-3052191181269">
+<p>Complete the Key Performance Factor sections found below the video, for the following skill:</p>
+<h2>Underwater Back Turn</h2>
+<p><iframe src="http://www.youtube.com/embed/WDITHSTqOO4" width="560" height="349" frameborder="0"></iframe></p>
+<p>The <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf" target="_blank">Swimming 101 Key Performance Factors Starts and Turns Reference Material</a> in the resources will help you complete the KPFs if you have any difficulties.</p>
+<p>Please include descriptions and age appropriate metaphors (word pictures) that you would use to address the various learning styles of your swimmers.</p>
+</div>
+<div id="tfa_APPROACH" class="inlineSection">
+<label class="preField">APPROACH</label><div id="tfa_Description7-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description7">Description</label> <textarea cols="35" rows="5" id="tfa_Description7" name="tfa_Description7" class=""></textarea> </div>
+<div id="tfa_Metaphor7-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor7">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor7" name="tfa_Metaphor7" class=""></textarea> </div>
+</div>
+<div id="tfa_TURN" class="inlineSection">
+<label class="preField">TURN</label><div id="tfa_Description8-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description8">Description</label> <textarea cols="35" rows="5" id="tfa_Description8" name="tfa_Description8" class=""></textarea> </div>
+<div id="tfa_Metaphor8-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor8">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor8" name="tfa_Metaphor8" class=""></textarea> </div>
+</div>
+<div id="tfa_PUSHOFF" class="inlineSection">
+<label class="preField">PUSH-OFF</label><div id="tfa_Description9-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description9">Description</label> <textarea cols="35" rows="5" id="tfa_Description9" name="tfa_Description9" class=""></textarea> </div>
+<div id="tfa_Metaphor9-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor9">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor9" name="tfa_Metaphor9" class=""></textarea> </div>
+</div>
+<div id="tfa_GLIDE" class="inlineSection">
+<label class="preField">GLIDE</label><div id="tfa_Description10-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description10">Description</label> <textarea cols="35" rows="5" id="tfa_Description10" name="tfa_Description10" class=""></textarea> </div>
+<div id="tfa_Metaphor10-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor10">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor10" name="tfa_Metaphor10" class=""></textarea> </div>
+</div>
+<div id="tfa_TRANSITION" class="inlineSection">
+<label class="preField">TRANSITION</label><div id="tfa_Description11-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description11">Description</label> <textarea cols="35" rows="5" id="tfa_Description11" name="tfa_Description11" class=""></textarea> </div>
+<div id="tfa_Metaphor11-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor11">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor11" name="tfa_Metaphor11" class=""></textarea> </div>
+</div>
+</fieldset>
+<fieldset id="tfa_Part2Application1" class="wfSection">
+<legend>Part #2 - Application of Rules</legend>
+<div class="htmlsection" id="html-tmp-8315624405719"><p>Review the <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/SNC-Rulebook-Part%2BII.pdf" target="_blank">Swimming Canada Rule Book Part II</a> and outline which rules impact the performance of the skills covered in the video above. Write out the rule number associated with the rules found to impact performance.</p></div>
+<div id="tfa_0645157011733-D" class="oneField"> <textarea cols="70" rows="5" id="tfa_0645157011733" name="tfa_0645157011733" class=""></textarea> <br>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-15">
+<div class="htmlsection" id="html-tmp-0863418362063"><h3 style="text-align: right;">Page 14 of 23</h3></div>
+<fieldset id="tfa_Part1KeyPerforma1" class="wfSection">
+<legend>Part #1 - Key Performance Factors Backstroke Finish</legend>
+<div class="htmlsection" id="html-tmp-3057038619703">
+<p>Complete the Key Performance Factor sections found below the video, for the following skill:</p>
+<h2>Backstroke Finish Touch</h2>
+<p><iframe src="http://www.youtube.com/embed/5E5rYqGCCm0" width="560" height="349" frameborder="0"></iframe></p>
+<p>The <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf" target="_blank">Swimming 101 Key Performance Factors Starts and Turns Reference Material</a> in the resources will help you complete the KPFs if you have any difficulties.</p>
+<p>Please include descriptions and age appropriate metaphors (word pictures) that you would use to address the various learning styles of your swimmers.</p>
+</div>
+<div id="tfa_BODYPOSITION" class="inlineSection">
+<label class="preField">BODY POSITION</label><div id="tfa_Description12-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description12">Description</label> <textarea cols="35" rows="5" id="tfa_Description12" name="tfa_Description12" class=""></textarea> </div>
+<div id="tfa_Metaphor12-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor12">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor12" name="tfa_Metaphor12" class=""></textarea> </div>
+</div>
+<div id="tfa_LEGACTION" class="inlineSection">
+<label class="preField">LEG ACTION</label><div id="tfa_Description13-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description13">Description</label> <textarea cols="35" rows="5" id="tfa_Description13" name="tfa_Description13" class=""></textarea> </div>
+<div id="tfa_Metaphor13-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor13">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor13" name="tfa_Metaphor13" class=""></textarea> </div>
+</div>
+<div id="tfa_ARMS1" class="inlineSection">
+<label class="preField">ARMS</label><div id="tfa_Description14-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description14">Description</label> <textarea cols="35" rows="5" id="tfa_Description14" name="tfa_Description14" class=""></textarea> </div>
+<div id="tfa_Metaphor14-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor14">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor14" name="tfa_Metaphor14" class=""></textarea> </div>
+</div>
+<div id="tfa_BREATHING" class="inlineSection">
+<label class="preField">BREATHING</label><div id="tfa_Description15-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description15">Description</label> <textarea cols="35" rows="5" id="tfa_Description15" name="tfa_Description15" class=""></textarea> </div>
+<div id="tfa_Metaphor15-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor15">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor15" name="tfa_Metaphor15" class=""></textarea> </div>
+</div>
+<div id="tfa_TIMINGOFTOUCH" class="inlineSection">
+<label class="preField">TIMING OF TOUCH</label><div id="tfa_Description16-D" class="oneField">
+<label class="inlineLabel" for="tfa_Description16">Description</label> <textarea cols="35" rows="5" id="tfa_Description16" name="tfa_Description16" class=""></textarea> </div>
+<div id="tfa_Metaphor16-D" class="oneField">
+<label class="inlineLabel" for="tfa_Metaphor16">Metaphor</label> <textarea cols="35" rows="5" id="tfa_Metaphor16" name="tfa_Metaphor16" class=""></textarea> </div>
+</div>
+</fieldset>
+<fieldset id="tfa_Part2Application2" class="wfSection">
+<legend>Part #2 - Application of Rules</legend>
+<div class="htmlsection" id="html-tmp-8673386324922"><p>Review the <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+4/SNC-Rulebook-Part%2BII.pdf" target="_self">Swimming Canada Rule Book Part II</a> and outline which rules impact the performance of the skills covered in the video above. Write out the rule number associated with the rules found to impact performance.</p></div>
+<div id="tfa_0645159628665-D" class="oneField"> <textarea cols="75" rows="5" id="tfa_0645159628665" name="tfa_0645159628665" class=""></textarea> <br>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-16">
+<div class="htmlsection" id="html-tmp-1141048914703"><h3 style="text-align: right;">Page 15 of 23</h3></div>
+<fieldset id="tfa_Task5DetectandCo" class="wfSection">
+<legend>Task #5 Detect and Correct Performance</legend>
+<div class="htmlsection" id="html-tmp-9953886879813">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their ability to detect and correct technique errors.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Comp Int Coach Evaluation Guide - Analyze Performance criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf" target="_blank">Swimming 101 Starts and Turns Reference</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BStarts%2BTurns%2Band%2BStroke%2BPictures.pdf" target="_blank">Swimming 101 Starts, Turns, and Stroke Pictures</a></li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+<li>Video resources and questions for this task are provided on the three pages that follow</li>
+</ul>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-17">
+<div class="htmlsection" id="html-tmp-1102528021274"><h3 style="text-align: right;">Page 16 of 23</h3></div>
+<div class="htmlsection" id="html-tmp-3073253145509">
+<h2>Track Start</h2>
+<p><iframe src="http://www.youtube.com/embed/REuCo-d4FkU" width="560" height="349" frameborder="0"></iframe></p>
+</div>
+<div class="htmlsection" id="html-tmp-4172364300866">
+<p>After watching the video, indicate the following in the answer boxes provided below.</p>
+<ol>
+<li>At least 2 detected errors from the video</li>
+<li>At least 1 possible cause for each detected error (Refer to your Swimming 201 Coach Workbook for the 7 Causes that Affect Performance Module 6)</li>
+<li>At least 1 detailed explanation of how you would communicate the correction of each detected error</li>
+</ol>
+</div>
+<div id="tfa_4845404941022" class="inlineSection">
+<div id="tfa_DetectedError1-D" class="oneField">
+<label class="inlineLabel" for="tfa_DetectedError1">Detected Error #1</label> <textarea cols="35" rows="5" id="tfa_DetectedError1" name="tfa_DetectedError1" class=""></textarea> </div>
+<div id="tfa_DetectedError2-D" class="oneField">
+<label class="inlineLabel" for="tfa_DetectedError2">Detected Error #2</label> <textarea cols="35" rows="5" id="tfa_DetectedError2" name="tfa_DetectedError2" class=""></textarea> </div>
+<div id="tfa_PossibleCauseofD-D" class="oneField">
+<label class="inlineLabel" for="tfa_PossibleCauseofD">Possible Cause of Detected Error #1</label> <textarea cols="35" rows="5" id="tfa_PossibleCauseofD" name="tfa_PossibleCauseofD" class=""></textarea> </div>
+<div id="tfa_PossibleCauseofD1-D" class="oneField">
+<label class="inlineLabel" for="tfa_PossibleCauseofD1">Possible Cause of Detected Error #2</label> <textarea cols="35" rows="5" id="tfa_PossibleCauseofD1" name="tfa_PossibleCauseofD1" class=""></textarea> </div>
+<div id="tfa_YourCorrectionfo-D" class="oneField">
+<label class="inlineLabel" for="tfa_YourCorrectionfo">Your Correction for Detected Error #1</label> <textarea cols="35" rows="10" id="tfa_YourCorrectionfo" name="tfa_YourCorrectionfo" class=""></textarea> </div>
+<div id="tfa_YourCorrectionfo1-D" class="oneField">
+<label class="inlineLabel" for="tfa_YourCorrectionfo1">Your Correction for Detected Error #2</label> <textarea cols="35" rows="10" id="tfa_YourCorrectionfo1" name="tfa_YourCorrectionfo1" class=""></textarea> </div>
+</div>
+<fieldset id="tfa_6298385200633" class="wfSection"><div class="htmlsection" id="html-tmp-4886425590788">
+<p>Review your <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf" target="_blank">Swimming 101 Starts and Turns Reference</a> material when completing this task.</p>
+<p>Consider the segments that make up each skill, and if possible, reference the segment you are detecting and correcting.&nbsp;&nbsp; To refresh on these segments, review <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BStarts%2BTurns%2Band%2BStroke%2BPictures.pdf" target="_blank">Swimming 101 Starts, Turns, and Stroke Pictures</a> and the Key Performance Factors section of your Swimming 201 Coach Workbook.</p>
+<p>In the description of your correction, consider including metaphors that would work for a swimmer of this age/stage.</p>
+</div></fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-18">
+<div class="htmlsection" id="html-tmp-1069709384345"><h3 style="text-align: right;">Page 17 of 23</h3></div>
+<div class="htmlsection" id="html-tmp-3355298578874">
+<h2>Individual Medley Back to Breast Turn</h2>
+<p><iframe src="http://www.youtube.com/embed/4XocZBhCDZE" width="560" height="349" frameborder="0"></iframe></p>
+</div>
+<div class="htmlsection" id="html-tmp-5851511052672">
+<p>After watching the video, indicate the following in the answer boxes provided below.</p>
+<ol>
+<li>At least 2 detected errors from the video</li>
+<li>At least 1 possible cause for each detected error (Refer to your Swimming 201 Coach Workbook for the 7 Causes that Affect Performance Module 6)</li>
+<li>At least 1 detailed explanation of how you would communicate the correction of each detected error</li>
+</ol>
+</div>
+<div id="tfa_6298386144251" class="inlineSection">
+<div id="tfa_DetectedError11-D" class="oneField">
+<label class="inlineLabel" for="tfa_DetectedError11">Detected Error #1</label> <textarea cols="35" rows="5" id="tfa_DetectedError11" name="tfa_DetectedError11" class=""></textarea> </div>
+<div id="tfa_DetectedError21-D" class="oneField">
+<label class="inlineLabel" for="tfa_DetectedError21">Detected Error #2</label> <textarea cols="35" rows="5" id="tfa_DetectedError21" name="tfa_DetectedError21" class=""></textarea> </div>
+<div id="tfa_PossibleCauseofD2-D" class="oneField">
+<label class="inlineLabel" for="tfa_PossibleCauseofD2">Possible Cause of Detected Error #1</label> <textarea cols="35" rows="5" id="tfa_PossibleCauseofD2" name="tfa_PossibleCauseofD2" class=""></textarea> </div>
+<div id="tfa_PossibleCauseofD3-D" class="oneField">
+<label class="inlineLabel" for="tfa_PossibleCauseofD3">Possible Cause of Detected Error #2</label> <textarea cols="35" rows="5" id="tfa_PossibleCauseofD3" name="tfa_PossibleCauseofD3" class=""></textarea> </div>
+<div id="tfa_YourCorrectionfo2-D" class="oneField">
+<label class="inlineLabel" for="tfa_YourCorrectionfo2">Your Correction for Detected Error #1</label> <textarea cols="35" rows="10" id="tfa_YourCorrectionfo2" name="tfa_YourCorrectionfo2" class=""></textarea> </div>
+<div id="tfa_YourCorrectionfo3-D" class="oneField">
+<label class="inlineLabel" for="tfa_YourCorrectionfo3">Your Correction for Detected Error #2</label> <textarea cols="35" rows="10" id="tfa_YourCorrectionfo3" name="tfa_YourCorrectionfo3" class=""></textarea> </div>
+</div>
+<fieldset id="tfa_6298396014800" class="wfSection"><div class="htmlsection" id="html-tmp-5870660168730">
+<p>Review your <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf" target="_blank">Swimming 101 Starts and Turns Reference</a> material when completing this task.</p>
+<p>Consider the segments that make up each skill, and if possible, reference the segment you are detecting and correcting.&nbsp;&nbsp; To refresh on these segments, review <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BStarts%2BTurns%2Band%2BStroke%2BPictures.pdf" target="_blank">Swimming 101 Starts, Turns, and Stroke Pictures</a> and the Key Performance Factors section of your Swimming 201 Coach Workbook.</p>
+<p>In the description of your correction, consider including metaphors that would work for a swimmer of this age/stage.</p>
+</div></fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-19">
+<div class="htmlsection" id="html-tmp-1017487616074"><h3 style="text-align: right;">Page 18 of 23</h3></div>
+<div class="htmlsection" id="html-tmp-3350412172882">
+<h2>Breaststroke Race Finish</h2>
+<p><iframe src="http://www.youtube.com/embed/U2Ll-ahXUxk" width="560" height="349" frameborder="0"></iframe></p>
+</div>
+<div class="htmlsection" id="html-tmp-5856807919679">
+<p>After watching the video, indicate the following in the answer boxes provided below.</p>
+<ol>
+<li>At least 2 detected errors from the video</li>
+<li>At least 1 possible cause for each detected error (Refer to your Swimming 201 Coach Workbook for the 7 Causes that Affect Performance Module 6)</li>
+<li>At least 1 detailed explanation of how you would communicate the correction of each detected error</li>
+</ol>
+</div>
+<div id="tfa_6298397026596" class="inlineSection">
+<div id="tfa_DetectedError12-D" class="oneField">
+<label class="inlineLabel" for="tfa_DetectedError12">Detected Error #1</label> <textarea cols="35" rows="5" id="tfa_DetectedError12" name="tfa_DetectedError12" class=""></textarea> </div>
+<div id="tfa_DetectedError22-D" class="oneField">
+<label class="inlineLabel" for="tfa_DetectedError22">Detected Error #2</label> <textarea cols="35" rows="5" id="tfa_DetectedError22" name="tfa_DetectedError22" class=""></textarea> </div>
+<div id="tfa_PossibleCauseofD4-D" class="oneField">
+<label class="inlineLabel" for="tfa_PossibleCauseofD4">Possible Cause of Detected Error #1</label> <textarea cols="35" rows="5" id="tfa_PossibleCauseofD4" name="tfa_PossibleCauseofD4" class=""></textarea> </div>
+<div id="tfa_PossibleCauseofD5-D" class="oneField">
+<label class="inlineLabel" for="tfa_PossibleCauseofD5">Possible Cause of Detected Error #2</label> <textarea cols="35" rows="5" id="tfa_PossibleCauseofD5" name="tfa_PossibleCauseofD5" class=""></textarea> </div>
+<div id="tfa_YourCorrectionfo4-D" class="oneField">
+<label class="inlineLabel" for="tfa_YourCorrectionfo4">Your Correction for Detected Error #1</label> <textarea cols="35" rows="10" id="tfa_YourCorrectionfo4" name="tfa_YourCorrectionfo4" class=""></textarea> </div>
+<div id="tfa_YourCorrectionfo5-D" class="oneField">
+<label class="inlineLabel" for="tfa_YourCorrectionfo5">Your Correction for Detected Error #2</label> <textarea cols="35" rows="10" id="tfa_YourCorrectionfo5" name="tfa_YourCorrectionfo5" class=""></textarea> </div>
+</div>
+<fieldset id="tfa_6298408679538" class="wfSection"><div class="htmlsection" id="html-tmp-5884949740456">
+<p>Review your <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BKey%2BPerformance%2BFactors%2BStarts%2Band%2BTurns%2BReference%2BMaterial.pdf" target="_blank">Swimming 101 Starts and Turns Reference</a> material when completing this task.</p>
+<p>Consider the segments that make up each skill, and if possible, reference the segment you are detecting and correcting.&nbsp;&nbsp; To refresh on these segments, review <a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+5/Swimming%2B101%2BStarts%2BTurns%2Band%2BStroke%2BPictures.pdf" target="_blank">Swimming 101 Starts, Turns, and Stroke Pictures</a> and the Key Performance Factors section of your Swimming 201 Coach Workbook.</p>
+<p>In the description of your correction, consider including metaphors that would work for a swimmer of this age/stage.</p>
+</div></fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-20">
+<div class="htmlsection" id="html-tmp-0978431879611"><h3 style="text-align: right;">Page 19 of 23</h3></div>
+<fieldset id="tfa_Task6PrepareaSwi" class="wfSection">
+<legend>Task #6 Prepare a Swimmer for a Competition</legend>
+<div class="htmlsection" id="html-tmp-1467837098223">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their ability to plan the three week period leading up to a specific swim meet.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Comp Int Coach Evaluation Guide - Support the Competitive Experience criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Template</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+6/Competition%2BPlan%2BTemplate.doc" target="_blank">Competition Plan Template</a></li>
+</ul>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+6/Competition%2BPlan%2BSample.pdf" target="_blank">Sample Competition Plan</a></li>
+<li>Completed Seasonal Training Plan from Task #1</li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+6/Guidelines%2Bfor%2Bthe%2BTraining%2Bof%2BAthletic%2BAbilities.pdf" target="_blank">Guidelines for Training Athletic Abilities and Ages</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+6/Swimming%2BCanada%2BLTAD%2BModel.pdf" target="_blank">Swimming Canada LTAD Model</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+6/Debrief%2BTips%2Bfor%2Ba%2BCoach.pdf" target="_blank">Debrief Tips for a Coach</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+6/Eating%2BWell%2BBefore%2C%2BDuring%2Band%2BAfter%2BActivity.pdf" target="_blank">Eating Well, Before, After and During Activity</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+6/Hydration.pdf" target="_blank">Hydration</a></li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_Part12" class="wfSection">
+<legend>Part #1 - Competition Plan</legend>
+<div class="htmlsection" id="html-tmp-1801573109886">
+<p>Using the Competition Plan Template in the resources above, create a competition plan which covers the final 21 days leading up to the first day of competition at a medium or high priority swim meet from your seasonal plan. List all the tasks you as a coach need to prepare and complete. Once you have determined the list of tasks, prioritize them by importance. Identify any individuals who may also be assisting you and their responsibilities.</p>
+<p>Your plan should detail the specific activities you will do to address your group of swimmer's physical, technical, tactical and psychological preparation for the swim meet. Include travel arrangements, parental contact etc.</p>
+<p>Be sure to include warm-up and cool-down procedures, group/team meetings, etc. that will be used throughout the swim meet.</p>
+</div>
+</fieldset>
+<fieldset id="tfa_Part22" class="wfSection">
+<legend>Part #2 - Nutrition Advice</legend>
+<div class="htmlsection" id="html-tmp-1981722415780">
+<p>Proper nutrition is an important factor in your swimmers ability to perform to their fullest potential.</p>
+<p>In your Competition Plan Template, provide details on how you will advise and monitor your swimmers nutrition and hydration within your 21 day plan, at the competition and after the competition.</p>
+</div>
+</fieldset>
+<div class="htmlsection" id="html-tmp-1601120598980"><h3>Save Your Template File as Competition Plan_YOUR NAME</h3></div>
+</div>
+<div class="wfPage " id="wfPgIndex-21">
+<div class="htmlsection" id="html-tmp-0952621379151"><h3 style="text-align: right;">Page 20 of 23</h3></div>
+<fieldset id="tfa_Task7PrepareaMen" class="wfSection">
+<legend>Task #7 Prepare a Mental Plan</legend>
+<div class="htmlsection" id="html-tmp-2444695441542">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their ability to address mental preparation by integrating a mental preparation plan into their Seasonal Training Plan.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Competition Introduction Coach Evaluation Guide - Support the Competitive Experience criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Template</strong><strong></strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+7/Prepare%2Ba%2BMental%2BPlan%2BTemplate.doc" target="_blank">Prepare a Mental Plan Template</a></li>
+</ul>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+7/Prepare%2Ba%2BMental%2BPlan%2BSample.pdf" target="_blank">Prepare a Mental Plan Sample</a></li>
+<li>Multi-Sport Part B Reference Guide - Basic Mental Skills (received at Part B course)</li>
+<li>Multi-Sport Part B Coach Workbook - Basic Mental Skills (received at Part B course)</li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+7/Planning%2Bfor%2BMental%2BPreparation%2BWithin%2Ba%2BSeason.pdf" target="_blank">Planning for Mental Preparation Within a Season &amp; Practice</a></li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_Activity1" class="wfSection">
+<legend>Activity</legend>
+<div class="htmlsection" id="html-tmp-2543181573091">
+<p>Three key mental skill areas were covered in your Multi-Sport Part B and Swimming 201 training;</p>
+<ul>
+<li>Attentional Control</li>
+<li>Emotional Control</li>
+<li>Goal Setting</li>
+</ul>
+<p>FOR EACH mental skill area, use the Mental Plan Template to describe and schedule 5 activities you will integrate into your Seasonal Training Plan.</p>
+<p>Provide an explanation of the activity you will integrate, and indicate the week of your Seasonal Training Plan when this activity will take place.</p>
+<h3>Save Your Template File as Mental Plan_YOUR NAME</h3>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-22">
+<div class="htmlsection" id="html-tmp-0921613409237"><h3 style="text-align: right;">Page 21 of 23</h3></div>
+<fieldset id="tfa_Task8GrouporProg" class="wfSection">
+<legend>Task #8 Group or Program Management</legend>
+<div class="htmlsection" id="html-tmp-3766199242324">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their management ability by implementing a communication plan covering key aspects of their Club and group.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Comp Int Coach Evaluation Guide - Manage a Program criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Resources</strong></p>
+<ul>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+8/Sample%2BSwimmer%2BCode%2Bof%2BConduct.pdf" target="_blank">Sample Swimmer Code of Conduct</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+8/Sample%2BProgram%2BPhilosophy.pdf" target="_blank">Sample Program Philosophy</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+8/Sample%2BChaperone%2BPolicy.pdf" target="_blank">Sample Chaperone Policy</a></li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_Activity2" class="wfSection">
+<legend>Activity</legend>
+<div class="htmlsection" id="html-tmp-3949705159290">
+<p>Present a current communication tool you are using, or a tool you create for this task for the following areas of coaching management;</p>
+<p>1. Create <span style="text-decoration: underline;"><strong>or</strong></span> upload an existing communication tool that outlines your Club philosophy and the objectives of your Club and group.<br><br>Communication tools may include a meeting agenda with key speaking notes, letter to swimmers &amp; parents, newsletter article, etc.</p>
+<p>2. Create <span style="text-decoration: underline;"><strong>or</strong></span> upload an existing schedule of competition and training that is distributed to the swimmers and parents in your group.</p>
+<p>3.  Create <span style="text-decoration: underline;"><strong>or</strong></span> upload an existing Club approved communication tool that identifies expectations of Club member conduct (swimmer, coach, parent, volunteers), and consequences for actions that do not meet these expectations.</p>
+</div>
+</fieldset>
+<div class="htmlsection" id="html-tmp-7379279761265">
+<h3>Save Your Template File as Communication_Tool_FileName_YOURNAME</h3>
+<p>You may upload ONE or MULTIPLE files to complete all 3 requirements.</p>
+<p>To add additional files, use the <strong><em>Add another file</em></strong> link located to the right of the file upload area on the final page of the portfolio.</p>
+</div>
+</div>
+<div class="wfPage " id="wfPgIndex-23">
+<div class="htmlsection" id="html-tmp-0891310816342"><h3 style="text-align: right;">Page 22 of 23</h3></div>
+<fieldset id="tfa_4521254797685" class="wfSection">
+<legend>Task #9 Tracking Swimmer Performance</legend>
+<div class="htmlsection" id="html-tmp-5922484155333">
+<p><strong>Objective</strong></p>
+<p>Coaches will demonstrate their ability to manage and interpret collected competition data.</p>
+<p><strong>Evaluation</strong></p>
+<p>This task will be evaluated based on the Competition Introduction Coach Evaluation Guide - Manage a Program and Support the Competitive Experience criteria and evidences.&nbsp;&nbsp; Coaches should reference this information while completing the task.</p>
+<p><strong>Template</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+9/Swimmer%2BData%2BTracking%2BTemplate.doc" target="_blank">Swimmer Data Tracking Template</a></li>
+</ul>
+<p><strong>Resources</strong></p>
+<ul>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+9/Swimmer%2BData%2BTracking%2BSample.pdf" target="_blank">Swimmer Data Tracking Sample</a></li>
+<li>Completed Seasonal Training Plan from Task #1</li>
+<li>Swimming 201 Coach Workbook (received at Swimming 201 course)</li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+9/Guidelines%2Bfor%2Bthe%2BTraining%2Bof%2BAthletic%2BAbilities.pdf" target="_blank">Guidelines for Training Athlete's Abilities and Athlete's Age</a></li>
+<li><a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+9/Design%2Ba%2BSport%2BProgram%2BReference%2BMaterial.pdf" target="_blank">Design a Basic Sport Program Reference Material</a></li>
+<li>
+<a href="https://s3.amazonaws.com/nccpswimming/Comp+Int+Coach+Portfolio/Task+9/Performance%2BBenchmarks.pdf" target="_blank">Performance Benchmarks</a> (Note these benchmarks are Train to Train and Learn to Train elite level samples)</li>
+</ul>
+</div>
+</fieldset>
+<fieldset id="tfa_Activity3" class="wfSection">
+<legend>Activity</legend>
+<div class="htmlsection" id="html-tmp-6062238134837">
+<p>Use the Swimmer Data Tracking Template Tool.</p>
+<p>Select a swimmer in your group that you have personal best benchmark data for, and specific goal times for an upcoming competition.</p>
+<p>At an upcoming competition, use the template to record your swimmers data in a 100m race that you have personal best data for.</p>
+<p>Once the competition is complete, input the race data and use this information for comparison of swimmer performance.</p>
+<p>At the bottom of the template, complete the assessment of performance factors impacting the final result.&nbsp;&nbsp; Briefly indicate how a particular performance factor impacted the result.</p>
+<h3>Save Your Template File as Swimmer_Performance_Tracking_YOURNAME</h3>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-24">
+<h3>Upload Your Completed Tasks</h3>
+<fieldset id="tfa_UploadTask1Seaso" class="wfSection">
+<legend>Task #1 - Seasonal Training Plan</legend>
+<div id="tfa_7357533365986-D" class="oneField">
+<label class="preField" for="tfa_7357533365986">Upload Task #1 - Seasonal Training Plan <span class="reqMark">*</span></label> <input type="file" id="tfa_7357533365986" name="tfa_7357533365986" size="80" class="required"> <br>
+</div>
+</fieldset>
+<fieldset id="tfa_UploadTask2WeekP" class="wfSection">
+<legend>Task #2 - Week Practice Plan</legend>
+<div id="tfa_UploadYourWeekLo-D" class="oneField">
+<label class="preField" for="tfa_UploadYourWeekLo">Upload Task #2 - Week Practice Plan <span class="reqMark">*</span></label> <input type="file" id="tfa_UploadYourWeekLo" name="tfa_UploadYourWeekLo" size="80" class="required"> <br>
+</div>
+</fieldset>
+<fieldset id="tfa_UploadTask3Pract" class="wfSection">
+<legend>Task #3 - Practice Plans & Emergency Action Plan</legend>
+<div class="htmlsection" id="html-tmp-9823579127862"><h4><span style="text-decoration: underline;">Uploaded files must be Word, Text, RTF, Excel or PDF format.</span></h4></div>
+<div id="tfa_PracticePlan12-D" class="oneField">
+<label class="preField" for="tfa_PracticePlan12">Upload Practice Plan #1 - General Preparation Phase <span class="reqMark">*</span></label> <input type="file" id="tfa_PracticePlan12" name="tfa_PracticePlan12" size="80" class="required"> <br>
+</div>
+<div id="tfa_PracticePlan21-D" class="oneField">
+<label class="preField" for="tfa_PracticePlan21">Upload Practice Plan #2 - Specific Preparation Phase <span class="reqMark">*</span></label> <input type="file" id="tfa_PracticePlan21" name="tfa_PracticePlan21" size="80" class="required"> <br>
+</div>
+<div id="tfa_PracticePlan31-D" class="oneField">
+<label class="preField" for="tfa_PracticePlan31">Upload Practice Plan #3 - Competition Phase <span class="reqMark">*</span></label> <input type="file" id="tfa_PracticePlan31" name="tfa_PracticePlan31" size="80" class="required"> <br>
+</div>
+<div id="tfa_EmergencyActionP-D" class="oneField">
+<label class="preField" for="tfa_EmergencyActionP">Upload Your Emergency Action Plan <span class="reqMark">*</span></label> <input type="file" id="tfa_EmergencyActionP" name="tfa_EmergencyActionP" size="80" class="required"> <br>
+</div>
+</fieldset>
+<fieldset id="tfa_Task4KeyPerforma1" class="wfSection">
+<legend>Task #4 - Key Performance Factors</legend>
+<div class="htmlsection" id="html-tmp-9911308739916"><p>Please check that you have completed all required fields for this task.</p></div>
+</fieldset>
+<fieldset id="tfa_Task5Competition" class="wfSection">
+<legend>Task #5 - Competition Plan</legend>
+<div class="htmlsection" id="html-tmp-9944238814811"><p>Please check that you have completed all required fields for this task.</p></div>
+</fieldset>
+<fieldset id="tfa_UploadTask6Compe" class="wfSection">
+<legend>Task #6 - Competition Plan</legend>
+<div id="tfa_UploadCompetitio-D" class="oneField">
+<label class="preField" for="tfa_UploadCompetitio">Upload Competition Plan <span class="reqMark">*</span></label> <input type="file" id="tfa_UploadCompetitio" name="tfa_UploadCompetitio" size="80" class="required"> <br>
+</div>
+</fieldset>
+<fieldset id="tfa_UploadTask7Menta" class="wfSection">
+<legend>Task #7 - Mental Plan</legend>
+<div id="tfa_UploadMentalPlan-D" class="oneField">
+<label class="preField" for="tfa_UploadMentalPlan">Upload Mental Plan <span class="reqMark">*</span></label> <input type="file" id="tfa_UploadMentalPlan" name="tfa_UploadMentalPlan" size="80" class="required"> <br>
+</div>
+</fieldset>
+<fieldset id="tfa_UploadTask8Commu" class="wfSection">
+<legend>Task #8 - Communication Tool</legend>
+<div id="tfa_4521253394630-D" class="repeat oneField">
+<label class="preField" for="tfa_4521253394630">Upload Communication Tool <span class="reqMark">*</span></label> <input type="file" id="tfa_4521253394630" name="tfa_4521253394630" size="80" class="required"> <br><span class="duplicateSpan"><a id="tfa_4521253394630-D-wfDL" class="duplicateLink" href="#">Add another file</a></span>
+</div>
+</fieldset>
+<fieldset id="tfa_UploadTask9Track" class="wfSection">
+<legend>Task #9 - Tracking Swimmer Performance</legend>
+<div id="tfa_UploadtheDataTra-D" class="oneField">
+<label class="preField" for="tfa_UploadtheDataTra">Upload the Swimmer Data Tracking Tool <span class="reqMark">*</span></label> <input type="file" id="tfa_UploadtheDataTra" name="tfa_UploadtheDataTra" size="80" class="required"> <br>
+</div>
+</fieldset>
+<fieldset id="tfa_Assessmentatapra" class="wfSection">
+<legend>Assessment at a practice session</legend>
+<div id="tfa_YouwillreceiveaP-D" class="oneField">
+<label class="preField" for="tfa_YouwillreceiveaP">You will receive a PDF document by email once your assessor has submitted their feedback and comments from the assessment.   You must upload the PDF document here.  Instructions for the assessor to submit their feedback are containted in the Assessor Guide. <span class="reqMark">*</span></label> <input type="file" id="tfa_YouwillreceiveaP" name="tfa_YouwillreceiveaP" size="80" class="required"> <br>
+</div>
+</fieldset>
+</div>
+<div class="wfPage " id="wfPgIndex-25">
+<h3>You have now completed the Comp Int Portfolio.</h3>
+<fieldset id="tfa_4911885618131" class="wfSection"><div class="htmlsection" id="html-tmp-3510263252425">
+<h3>YOU MUST CLICK THE SUBMIT BUTTON FOR THE PORTFOLIO TO BE SUBMITTED FOR EVALUATION.</h3>
+<p>Once you submit the portfolio you will receive a confirmation email that included your submitted answers and uploads, as well as a summary of next steps to complete the portfolio evaluation process.</p>
+<h3>REMINDER: The Comp Int Coach evaluation fee of $300 is now due to your Provincial Swimming Organization.</h3>
+<p>This evaluation fee covers both the Portfolio evaluation and the Competition evaluation.&nbsp; You may be asked to contribute to the travel expenses of the evaluator conducting the competition evaluation - please confirm with your PSO.</p>
+<p>Payment should sent to your PSO with reference to <strong>NCCP Comp Int Evaluation</strong>.</p>
+<p>Provincial Swimming office contact information: <a href="https://www.swimming.ca/ProvincialOffices.aspx" target="_blank">https://www.swimming.ca/ProvincialOffices.aspx</a></p>
+</div></fieldset>
+</div>
+<div class="actions">
+<input type="submit" class="primaryAction" id="submit-" name="tfa_submitAction" value="SUBMIT"><input type="hidden" value="222773" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="c87ac258850e38ae77c2d18ec28bd5f2" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="23" name="tfa_dbVersionId" id="tfa_dbVersionId">
+</div>
+<div class="saveAndResume"><div class="oneField">
+<a href="#" id="tfa_saveForLaterLink">Save my progress and resume later</a>
+				
+				| <a href="http://www.tfaforms.com/forms/resume/222773" onclick="return confirm('Are you sure you want to resume a previous response? Any information you just entered on this page will be discarded.');">resume a previously saved form</a>
+</div></div>
+</form></div>
+
+      <p class="supportInfo" >
+                              <a href="http://www.tfaforms.com/forms/help/222773" target="new" style="font-size: 0.7em;">
+                    Need assistance with this form?               </a>
+
+                      </p>
+
+</div>
+
+</body>
+</html>

@@ -221,11 +221,11 @@ if(!wFORMS.behaviors.paging.helpers){
  *	Find the page the given element is associated with.
  */
 wFORMS.behaviors.paging.helpers.findPage = function(e){
-	if (e.className=="wfPage" || e.className=="wfCurrentPage") {
+	if (e.className.match("wfPage") || e.className.match("wfCurrentPage")) {
 		wFORMS.standardizeElement(e);
 		return e;
 	} else if (e.parentNode) {
-		if (e.parentNode.className == "wfPage" || e.parentNode.className == "wfCurrentPage") {
+		if (e.parentNode.className.match("wfPage") || e.parentNode.className.match("wfCurrentPage")) {
 			wFORMS.standardizeElement(e.parentNode);
 			return e.parentNode;
 		} else {
