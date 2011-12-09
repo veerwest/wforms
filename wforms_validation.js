@@ -190,7 +190,7 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 		
 		//Scope validation to currently visible page only if being called by a page button.
 		//Otherwise, run full validation.
-		if(e.pagingStopPropagation){
+		if(e && e.pagingStopPropagation){
 			// Workaround for apparent bug in querySelectorAll not being limited to descendants of 'element':
 			// See bug #172 - Check if the element is not on the current page of a multi-page form			
 			if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(element)) {
