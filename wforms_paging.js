@@ -213,6 +213,29 @@ wFORMS.behaviors.paging.applyTo = function(f) {
 	return b;
 }
 
+if(!wFORMS.behaviors.paging.helpers){
+	wFORMS.behaviors.paging.helpers = {};
+}
+
+/**
+ *	Find the page the given element is associated with.
+ */
+wFORMS.behaviors.paging.helpers.findPage = function(e){
+	if (e.className=="wfPage" || e.className=="wfCurrentPage") {
+		wFORMS.standardizeElement(e);
+		return e;
+	} else if (e.parentNode) {
+		if (e.parentNode.className == "wfPage" || e.parentNode.className == "wfCurrentPage") {
+			wFORMS.standardizeElement(e.parentNode);
+			return e.parentNode;
+		} else {
+			return wFORMS.behaviors.paging.helpers.findPage(e.parentNode);
+		}
+	} else {
+		return null;
+	}
+}
+
 /**
  * Executed once the behavior has been applied to the document.
  * Can be overwritten.
@@ -232,6 +255,14 @@ wFORMS.behaviors.paging.instance.prototype.jumpTo = function(i){
 					b.behavior.showPage(b.behavior.getPageByIndex(index));
 					b.currentPageIndex = index;
 				}
+				
+				//If there's a page with an error, jump to that first.
+				if(b.errorPages && b.errorPages[index]){
+					var elem = document.getElementById(b.errorPages[0]);
+					if(elem.scrollIntoView) {
+						elem.scrollIntoView();
+					}
+				};
 }
 
 /**
@@ -243,22 +274,35 @@ wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
 	var _b = this;
 	var d = document.createElement('div');
 	d.id = 'tab-nav';
-	this.target.parentNode.insertBefore(d,this.target);
+	d.style.fontSize="smaller";
+	
+	if(e){
+		e.appendChild(d);
+	}else{
+		this.target.parentNode.insertBefore(d,this.target);
+	}
 	
 	var pages = base2.DOM.Element.querySelectorAll(this.target,'.wfPage, .wfCurrentPage');
 	pages.forEach(function(elem,i){
-		tab = document.createElement('a');
+		var tab = document.createElement('a');
+		tab.setAttribute("class","tabs");
+		tab.setAttribute("id","wfTab_page_"+i);
 		tab.setAttribute("href","#");
-		tab.textContent=" _"+i+"_ ";
+		var label = base2.DOM.Element.querySelector(elem,'h3');
+		tab.textContent=label?label.textContent:"Page "+(i+1);
+		if(i<pages.length-1){
+			var text = document.createTextNode(" | ");
+		}
 		base2.DOM.Element.addEventListener(tab,'click',function(){_b.jumpTo(i+1);});
 		d.appendChild(tab);
+		if(text){d.appendChild(text);}
 	});
 	return pages;
 }
 
 /** On submit advance the page instead, until the last page. */
 wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
-	if (!wFORMS.behaviors.paging.isLastPageIndex(b.currentPageIndex)) {
+	if (!wFORMS.behaviors.paging.isLastPageIndex(b.currentPageIndex) && wFORMS.behaviors.paging.runValidationOnPageNext) {
 		var currentPage = wFORMS.behaviors.paging.getPageByIndex(b.currentPageIndex);
 		var nextPage = b.findNextPage(b.currentPageIndex);
 		

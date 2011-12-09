@@ -70,13 +70,44 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 	m = m.replace('%%', c);
 	
 	var elem = document.getElementById(firstErrorId);
+	
+	if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(elem)){
+		var pInstance = wFORMS.getBehaviorInstance(bInstance.target,"paging");
+		pInstance.jumpTo(wFORMS.behaviors.paging.getPageIndex(wFORMS.behaviors.paging.helpers.findPage(elem)));
+	}
+	
 	if(elem.scrollIntoView) {	
 		elem.scrollIntoView();
 	} else {
 		location.hash="#"+firstErrorId;
 	}
-	alert(m);
 	
+	bInstance.errorPages = new Array();
+	for (var id in bInstance.elementsInError){
+		var page = wFORMS.behaviors.paging.helpers.findPage(document.getElementById(id));
+		if(page){
+			var index = wFORMS.behaviors.paging.getPageIndex(page) - 1;
+			if( typeof bInstance.errorPages[index] == 'object' ){
+				bInstance.errorPages[index].push(id);
+			}else{
+				bInstance.errorPages[index] = new Array();
+				bInstance.errorPages[index].push(id);
+			}
+		}
+	}
+	
+	base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="wfTab_page"]').forEach(function(i){
+		if(!i.removeClass){wFORMS.standardizeElement(i);}
+		i.removeClass("errMsg");
+	});
+	
+	bInstance.errorPages.forEach(function(id,index){
+		var tab = base2.DOM.Element.querySelector(bInstance.target.parentNode,'#wfTab_page_'+index);
+		if(tab){
+			if(!tab.addClass){wFORMS.standardizeElement(tab);}
+			tab.addClass("errMsg");
+		}
+	});
 }
 
 wFORMS.behaviors.paging.runValidationOnPageNext=false;
