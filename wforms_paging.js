@@ -257,8 +257,9 @@ wFORMS.behaviors.paging.instance.prototype.jumpTo = function(i){
 				}
 				
 				//If there's a page with an error, jump to that first.
-				if(b.errorPages && b.errorPages[index]){
-					var elem = document.getElementById(b.errorPages[0]);
+				vInstance = wFORMS.getBehaviorInstance(b.target, 'validation');
+				if(vInstance.errorPages && vInstance.errorPages[index]){
+					var elem = document.getElementById(vInstance.errorPages[index][0]);
 					if(elem.scrollIntoView) {
 						elem.scrollIntoView();
 					}
@@ -286,7 +287,7 @@ wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
 	pages.forEach(function(elem,i){
 		var tab = document.createElement('a');
 		tab.setAttribute("class","tabs");
-		tab.setAttribute("id","wfTab_page_"+i);
+		tab.setAttribute("id","wfTab_page_"+(i+1));
 		tab.setAttribute("href","#");
 		var label = base2.DOM.Element.querySelector(elem,'h3');
 		tab.textContent=label?label.textContent:"Page "+(i+1);
