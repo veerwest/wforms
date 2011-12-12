@@ -69,38 +69,32 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 	}
 	m = m.replace('%%', c);
 	
-	var elem = document.getElementById(firstErrorId);
-	
-	if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(elem)){
-		var pInstance = wFORMS.getBehaviorInstance(bInstance.target,"paging");
-		pInstance.jumpTo(wFORMS.behaviors.paging.getPageIndex(wFORMS.behaviors.paging.helpers.findPage(elem)));
-	}
-	
-	if(elem.scrollIntoView) {	
-		elem.scrollIntoView();
-	} else {
-		location.hash="#"+firstErrorId;
-	}
-	
-	bInstance.errorPages = new Array();
-	for (var id in bInstance.elementsInError){
-		var page = wFORMS.behaviors.paging.helpers.findPage(document.getElementById(id));
-		if(page){
-			var index = wFORMS.behaviors.paging.getPageIndex(page) - 1;
-			if( typeof bInstance.errorPages[index] == 'object' ){
-				bInstance.errorPages[index].push(id);
-			}else{
-				bInstance.errorPages[index] = new Array();
-				bInstance.errorPages[index].push(id);
+	/*
+	 * Let's break the individual error messages into their respective pages
+	 * and save it into bInstance.errorPages for later use.
+	 */
+	if(wFORMS.behaviors.paging){
+		bInstance.errorPages = new Array();
+		for (var id in bInstance.elementsInError){
+			var page = wFORMS.behaviors.paging.helpers.findPage(document.getElementById(id));
+			var firstpage = null;
+			if(page){
+				var index = wFORMS.behaviors.paging.getPageIndex(page);
+				if( typeof bInstance.errorPages[index] == 'object' ){
+					bInstance.errorPages[index].push(id);
+				}else{
+					bInstance.errorPages[index] = new Array();
+					bInstance.errorPages[index].push(id);
+				}
 			}
 		}
 	}
 	
+	//Clear any errMsg on tabs, then add new ones for this validation cycle.
 	base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="wfTab_page"]').forEach(function(i){
 		if(!i.removeClass){wFORMS.standardizeElement(i);}
 		i.removeClass("errMsg");
-	});
-	
+	});	
 	bInstance.errorPages.forEach(function(id,index){
 		var tab = base2.DOM.Element.querySelector(bInstance.target.parentNode,'#wfTab_page_'+index);
 		if(tab){
@@ -108,6 +102,42 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 			tab.addClass("errMsg");
 		}
 	});
+	//
+	
+	var elem = document.getElementById(firstErrorId);
+	
+	/*
+	 * Let's find the first page, if any, where an error occurs in the form
+	 * then the first error on that page and jump to it.
+	 */
+	if(wFORMS.behaviors.paging && !wFORMS.behaviors.paging.isElementVisible(elem)){
+		var firstpage = null;
+		//Find first page with error, if any.
+		for(var i=0; i<bInstance.errorPages.length; i++){
+			if(bInstance.errorPages[i] && bInstance.errorPages[i].length > 0){
+				//Found first page with errors on it.
+				firstpage = i;
+				//Assume first error id in the page is the first visible error
+				firstErrorId = bInstance.errorPages[i][0];
+				elem = document.getElementById(firstErrorId);
+				break;
+			}
+		}
+		if(firstpage){
+			console.log(firstpage);
+			//If a first error page is found, jump to it, 
+			//so scroll into view should work
+			var pInstance = wFORMS.getBehaviorInstance(bInstance.target,"paging");
+			pInstance.jumpTo(firstpage,true);
+		}
+	}
+	
+	if(elem.scrollIntoView) {
+		console.log("scroll1",elem);
+		elem.scrollIntoView();
+	} else {
+		location.hash="#"+firstErrorId;
+	}	
 	
 	alert(m);
 }
@@ -116,6 +146,7 @@ wFORMS.behaviors.paging.runValidationOnPageNext=false;
 wFORMS.behaviors.paging.instance.prototype.onApply = function(){
 this.generateTabs();
 };
+</script>
 </script>
 
 <!-- FORM: BODY SECTION -->

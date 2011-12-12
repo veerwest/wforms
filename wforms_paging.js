@@ -257,11 +257,15 @@ wFORMS.behaviors.paging.instance.prototype.jumpTo = function(i){
 				}
 				
 				//If there's a page with an error, jump to that first.
+			
 				vInstance = wFORMS.getBehaviorInstance(b.target, 'validation');
-				if(vInstance.errorPages && vInstance.errorPages[index]){
+				if(vInstance.errorPages && vInstance.errorPages[index] && !arguments[1]){
 					var elem = document.getElementById(vInstance.errorPages[index][0]);
 					if(elem.scrollIntoView) {
-						elem.scrollIntoView();
+						console.log("scroll2",elem);
+						//Fix for very stange rendering bug.  
+						//Page would lock up in Chrome if scrollIntoView was called
+						setTimeout(function(){elem.scrollIntoView();},1);
 					}
 				};
 }

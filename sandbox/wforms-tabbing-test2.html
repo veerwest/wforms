@@ -50,7 +50,7 @@
 <![endif]-->
 <link href="http://www.tfaforms.com/wForms/3.4/css/wforms-layout-ipad.css" rel="alternate stylesheet" title="This stylesheet activated for iPad only" type="text/css" />
 
-<script type="text/javascript" src="http://www.tfaforms.com/wForms/3.4/js/localization-en_GB.js"></script>
+<!-- <script type="text/javascript" src="http://www.tfaforms.com/wForms/3.4/js/localization-en_GB.js"></script>  -->
 
 	
 <link href="http://www.tfaforms.com/css/form.css" rel="stylesheet" type="text/css"></link>
@@ -131,11 +131,12 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 			//If a first error page is found, jump to it, 
 			//so scroll into view should work
 			var pInstance = wFORMS.getBehaviorInstance(bInstance.target,"paging");
-			pInstance.jumpTo(firstpage);
+			pInstance.jumpTo(firstpage,true);
 		}
 	}
 	
-	if(elem.scrollIntoView) {	
+	if(elem.scrollIntoView) {
+		console.log("scroll1",elem);
 		elem.scrollIntoView();
 	} else {
 		location.hash="#"+firstErrorId;
