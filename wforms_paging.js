@@ -262,12 +262,13 @@ wFORMS.behaviors.paging.instance.prototype.jumpTo = function(i){
 				if(vInstance.errorPages && vInstance.errorPages[index] && !arguments[1]){
 					var elem = document.getElementById(vInstance.errorPages[index][0]);
 					if(elem.scrollIntoView) {
-						console.log("scroll2",elem);
 						//Fix for very stange rendering bug.  
 						//Page would lock up in Chrome if scrollIntoView was called
 						setTimeout(function(){elem.scrollIntoView();},1);
 					}
 				};
+				
+				this.onPageChange(this);
 }
 
 /**
@@ -302,6 +303,9 @@ wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
 		d.appendChild(tab);
 		if(text){d.appendChild(text);}
 	});
+	
+	this.onPageChange(this);
+	
 	return pages;
 }
 
@@ -351,7 +355,18 @@ wFORMS.behaviors.paging.instance.prototype.onPagePrevious = function(p) { this.b
  * instance-specific pageChange event handlers (can be overriden).
  * @param	{HTMLElement}	page element 
  */ 
- wFORMS.behaviors.paging.instance.prototype.onPageChange = function(p) { this.behavior.onPageChange(p);}
+ wFORMS.behaviors.paging.instance.prototype.onPageChange = function(p) {
+ 				currentIndex = this.currentPageIndex;
+				base2.DOM.Element.querySelectorAll(this.target.parentNode,'a[id^="wfTab_page"]').forEach(function(i){
+					if(!i.removeClass || !i.hasClass || !i.addClass){wFORMS.standardizeElement(i);}
+					i.removeClass("currentPage");
+					if(i.getAttribute("id")==("wfTab_page_"+currentIndex)){
+					  i.addClass("currentPage");
+					}
+				});	
+				
+				this.behavior.onPageChange(p);
+ }
 
 
 /**
