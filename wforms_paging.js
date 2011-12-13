@@ -139,78 +139,78 @@ wFORMS.behaviors.paging = {
  * @return {object} an instance of the behavior 
  */	
 wFORMS.behaviors.paging.applyTo = function(f) {
-	var b = null;
-	var behavior = wFORMS.behaviors.paging;
-	var isValidationAccepted = (wFORMS.behaviors.validation && wFORMS.behaviors.paging.runValidationOnPageNext);
-	
-	
-	// Iterates over the elements with specified class names
-	f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR).forEach(
-		function(elem){
-			if(!b) {
-				b = new wFORMS.behaviors.paging.instance(f)
-			}			
-			// Creates placeholder for buttons
-			var ph = b.getOrCreatePlaceHolder(elem);
-			var index = wFORMS.behaviors.paging.getPageIndex(elem);
-			// If first page add just Next button
-			if(index == 1){
-				var ctrl = base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));
-									
-					ctrl.addEventListener('click', function(event) {							
-							var v = wFORMS.getBehaviorInstance(b.target,'validation');
-							var result = true;
-							if((wFORMS.behaviors.validation && wFORMS.behaviors.paging.runValidationOnPageNext)){
-								result = v.run(event,elem);
-							}
-							if(result){b.run(event, ctrl);}
-						}, 
-						false);
+        var b = null;
+        var behavior = wFORMS.behaviors.paging;
+        var isValidationAccepted = (wFORMS.behaviors.validation && wFORMS.behaviors.paging.runValidationOnPageNext);
+        
+        
+        // Iterates over the elements with specified class names
+        f.querySelectorAll(wFORMS.behaviors.paging.SELECTOR).forEach(
+                function(elem){
+                        if(!b) {
+                                b = new wFORMS.behaviors.paging.instance(f)
+                        }                       
+                        // Creates placeholder for buttons
+                        var ph = b.getOrCreatePlaceHolder(elem);
+                        var index = wFORMS.behaviors.paging.getPageIndex(elem);
+                        // If first page add just Next button
+                        if(index == 1){
+                                var ctrl = base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));
+                                
+                                if(isValidationAccepted){                                       
+                                        ctrl.addEventListener('click', function(event) {                                                        
+                                                        var v = wFORMS.getBehaviorInstance(b.target,'validation'); 
+                                                        if(v.run(event, elem)){b.run(event, ctrl);} 
+                                                }, 
+                                                false);                                 
+                                }else{
+                                        ctrl.addEventListener('click', function(event) { b.run(event, ctrl); }, false);
+                                }
 
-				wFORMS.behaviors.paging.showPage(elem);
-			}else{
-				// Adds previous button
-				var ctrl = base2.DOM.bind(behavior._createPreviousPageButton(index));
-				ph.insertBefore(ctrl, ph.firstChild);
+                                wFORMS.behaviors.paging.showPage(elem);
+                        }else{
+                                // Adds previous button
+                                var ctrl = base2.DOM.bind(behavior._createPreviousPageButton(index));
+                                ph.insertBefore(ctrl, ph.firstChild);
 
-				ctrl.addEventListener('click', function(event) { b.run(event, ctrl)}, false);
+                                ctrl.addEventListener('click', function(event) { b.run(event, ctrl)}, false);
 
-				// If NOT last page adds next button also
-				if(!wFORMS.behaviors.paging.isLastPageIndex(index, true)){
-					var _ctrl = base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));
+                                // If NOT last page adds next button also
+                                if(!wFORMS.behaviors.paging.isLastPageIndex(index, true)){
+                                        var _ctrl = base2.DOM.bind(ph.appendChild(behavior._createNextPageButton(index)));
 
-					if(isValidationAccepted){						
-						_ctrl.addEventListener('click', function(event) {
-							var v = wFORMS.getBehaviorInstance(b.target,'validation'); 							 
-							if(v.run(event, elem)){b.run(event, _ctrl);} 
-						}, false);
-					}else{
-						_ctrl.addEventListener('click', function(event) { b.run(event, _ctrl); }, false);
-					}
-				}
-			}
-		}
-	);
-	// Looking for the first active page from 0. 0 is a "fake page"
-	if(b){		
-		p = b.findNextPage(0);
-		b.currentPageIndex = 0;
-		b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
-	
-		// Add a unload handler to prevent accidental loss of data when navigating away from the page
-		if(!window.onbeforeunload) {	
-			window.onbeforeunload = function() { 
-				if(b.behavior.warnOnUnload)
-					return b.behavior.MESSAGES.CAPTION_UNLOAD;
-				// don't return anything to skip the warning 
-			};
-		}
-		b.onApply();	
-		
-		// intercept the submit event
-		base2.DOM.Element.addEventListener(f, 'submit', function (e) {b.onSubmit(e, b)});	
-	}
-	return b;
+                                        if(isValidationAccepted){                                               
+                                                _ctrl.addEventListener('click', function(event) {
+                                                        var v = wFORMS.getBehaviorInstance(b.target,'validation');                                                       
+                                                        if(v.run(event, elem)){b.run(event, _ctrl);} 
+                                                }, false);
+                                        }else{
+                                                _ctrl.addEventListener('click', function(event) { b.run(event, _ctrl); }, false);
+                                        }
+                                }
+                        }
+                }
+        );
+        // Looking for the first active page from 0. 0 is a "fake page"
+        if(b){          
+                p = b.findNextPage(0);
+                b.currentPageIndex = 0;
+                b.activatePage(wFORMS.behaviors.paging.getPageIndex(p), false); // no scrolling to the top of the page here
+        
+                // Add a unload handler to prevent accidental loss of data when navigating away from the page
+                if(!window.onbeforeunload) {    
+                        window.onbeforeunload = function() { 
+                                if(b.behavior.warnOnUnload)
+                                        return b.behavior.MESSAGES.CAPTION_UNLOAD;
+                                // don't return anything to skip the warning 
+                        };
+                }
+                b.onApply();    
+                
+                // intercept the submit event
+                base2.DOM.Element.addEventListener(f, 'submit', function (e) {b.onSubmit(e, b)});       
+        }
+        return b;
 }
 
 if(!wFORMS.behaviors.paging.helpers){
