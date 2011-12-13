@@ -335,7 +335,7 @@ wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
 		if(window.onbeforeunload) {
 			window.onbeforeunload = null;
 		}
-		e.pagingStopPropagation = false;
+	
 	}
 }
 
