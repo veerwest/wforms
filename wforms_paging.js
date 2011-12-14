@@ -20,7 +20,7 @@ wFORMS.behaviors.paging = {
      * @final
 	 */
 	CSS_PAGE : 'wfPage',
-
+	
 	/**
 	 * CSS class for current page
      * @final
@@ -88,9 +88,19 @@ wFORMS.behaviors.paging = {
 	MESSAGES : {
 		CAPTION_NEXT : 'Next Page',
 		CAPTION_PREVIOUS : 'Previous Page',
-		CAPTION_UNLOAD : 'Any data entered on ANY PAGE of this form will be LOST.'
+		CAPTION_UNLOAD : 'Any data entered on ANY PAGE of this form will be LOST.',
+		TABS_LABEL: 'Page: '
 	},
 
+	/**
+	 * CSS class indicates page tabs
+	 * @final
+	 */
+	CSS_PAGETAB: 'wfPageTab',
+	CSS_TABS: 'wfTabs',
+	CSS_TABSID: 'wfTabNav',
+	CSS_TABSCURRENT: 'wfTabCurrentPage',
+	
 	/**
      * Indicates that form should be validated on Next clicked
      * TODO		Possible refactor functionality with validation
@@ -279,8 +289,9 @@ wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
 
 	var _b = this;
 	var d = document.createElement('div');
-	d.id = 'tab-nav';
+	d.id = this.behavior.CSS_TABSID;
 	d.style.fontSize="smaller";
+	d.textContent = this.behavior.MESSAGES.TABS_LABEL;
 	
 	if(e){
 		e.appendChild(d);
@@ -288,14 +299,14 @@ wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
 		this.target.parentNode.insertBefore(d,this.target);
 	}
 	
-	var pages = base2.DOM.Element.querySelectorAll(this.target,'.wfPage, .wfCurrentPage');
+	var pages = base2.DOM.Element.querySelectorAll(this.target,"."+this.behavior.CSS_PAGE+", ."+this.behavior.CSS_CURRENT_PAGE);
 	pages.forEach(function(elem,i){
 		var tab = document.createElement('a');
-		tab.setAttribute("class","tabs");
-		tab.setAttribute("id","wfTab_page_"+(i+1));
+		tab.setAttribute("class",_b.behavior.CSS_TABS);
+		tab.setAttribute("id",_b.behavior.CSS_PAGETAB+"_"+(i+1));
 		tab.setAttribute("href","#");
 		var label = base2.DOM.Element.querySelector(elem,'h3');
-		tab.textContent=label?label.textContent:"Page "+(i+1);
+		tab.textContent=i+1;
 		if(i<pages.length-1){
 			var text = document.createTextNode(" | ");
 		}
@@ -339,6 +350,18 @@ wFORMS.behaviors.paging.instance.prototype.onSubmit = function (e, b) {
 	}
 }
 
+wFORMS.behaviors.paging.instance.prototype.labelCurrentPageTab = function(p){
+				_b = this;
+ 				currentIndex = this.currentPageIndex;
+				base2.DOM.Element.querySelectorAll(this.target.parentNode,'a[id^="'+this.behavior.CSS_PAGETAB+'"]').forEach(function(i){
+					if(!i.removeClass || !i.hasClass || !i.addClass){wFORMS.standardizeElement(i);}
+					i.removeClass(_b.behavior.CSS_TABSCURRENT);
+					if(i.getAttribute("id")==(_b.behavior.CSS_PAGETAB+"_"+currentIndex)){
+					  i.addClass(_b.behavior.CSS_TABSCURRENT);
+					}
+				});	
+}
+
 /**
  * instance-specific pageNext event handler (can be overriden).
  * @param	{HTMLElement}	page element 
@@ -356,15 +379,7 @@ wFORMS.behaviors.paging.instance.prototype.onPagePrevious = function(p) { this.b
  * @param	{HTMLElement}	page element 
  */ 
  wFORMS.behaviors.paging.instance.prototype.onPageChange = function(p) {
- 				currentIndex = this.currentPageIndex;
-				base2.DOM.Element.querySelectorAll(this.target.parentNode,'a[id^="wfTab_page"]').forEach(function(i){
-					if(!i.removeClass || !i.hasClass || !i.addClass){wFORMS.standardizeElement(i);}
-					i.removeClass("currentPage");
-					if(i.getAttribute("id")==("wfTab_page_"+currentIndex)){
-					  i.addClass("currentPage");
-					}
-				});	
-				
+				this.labelCurrentPageTab(p);
 				this.behavior.onPageChange(p);
  }
 

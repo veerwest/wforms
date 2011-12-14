@@ -55,7 +55,7 @@
 	
 <link href="http://www.tfaforms.com/css/form.css" rel="stylesheet" type="text/css"></link>
 <style type="text/css">
-.currentPage { font-weight: bold !important; };
+.wfTabCurrentPage { font-weight: bold !important; };
 </style>
 
 <script>
@@ -128,12 +128,12 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 	}	
 
 	//Clear any errMsg on tabs, then add new ones for this validation cycle.
-	base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="wfTab_page"]').forEach(function(i){
+	base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="'+pInstance.behavior.CSS_PAGETAB+'"]').forEach(function(i){
 		if(!i.removeClass || !i.hasClass || !i.addClass){wFORMS.standardizeElement(i);}
 		i.removeClass("errMsg");
 	});	
 	bInstance.errorPages.forEach(function(id,index){
-		var tab = base2.DOM.Element.querySelector(bInstance.target.parentNode,'#wfTab_page_'+index);
+		var tab = base2.DOM.Element.querySelector(bInstance.target.parentNode,'#'+pInstance.behavior.CSS_PAGETAB+'_'+index);
 		if(tab){
 			if(!tab.addClass){wFORMS.standardizeElement(tab);}
 			tab.addClass("errMsg");
