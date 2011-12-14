@@ -85,7 +85,8 @@ wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
 	var d = document.createElement('div');
 	d.id = this.behavior.CSS_TABSID;
 	d.style.fontSize="smaller";
-	d.textContent = this.behavior.MESSAGES.TABS_LABEL;
+	var d_text = document.createTextNode(this.behavior.MESSAGES.TABS_LABEL);
+	d.appendChild(d_text);
 	
 	if(e){
 		e.appendChild(d);
@@ -100,9 +101,15 @@ wFORMS.behaviors.paging.instance.prototype.generateTabs = function(e){
 		tab.setAttribute("id",_b.behavior.CSS_PAGETAB+"_"+(i+1));
 		tab.setAttribute("href","#");
 		var label = base2.DOM.Element.querySelector(elem,'h3');
-		tab.setAttribute("title",label?label.textContent:_b.behavior.MESSAGES.TAB_LABEL+(i+1));
+		var label_text = null;
+		if(label){
+		 label_text = label.innerText?label.innerText:label.textContent;
+		}
+		tab.setAttribute("title",label_text?label_text:_b.behavior.MESSAGES.TAB_LABEL+(i+1));
 		
-		tab.textContent=i+1;
+		var tab_text = document.createTextNode(i+1);
+		tab.appendChild(tab_text);
+		
 		if(i<pages.length-1){
 			var text = document.createTextNode(" | ");
 		}
@@ -385,10 +392,13 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 	}	
 
 	//Clear any errMsg on tabs, then add new ones for this validation cycle.
-	base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="'+pInstance.behavior.CSS_PAGETAB+'"]').forEach(function(i){
+	var a = base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="'+pInstance.behavior.CSS_PAGETAB+'"]');
+	if(!a.forEach){wFORMS.standardizeElement(bInstance.errorPages);}
+	a.forEach(function(i){
 		if(!i.removeClass || !i.hasClass || !i.addClass){wFORMS.standardizeElement(i);}
 		i.removeClass("errMsg");
 	});	
+	if(!bInstance.errorPages.forEach){wFORMS.standardizeElement(bInstance.errorPages);}
 	bInstance.errorPages.forEach(function(id,index){
 		var tab = base2.DOM.Element.querySelector(bInstance.target.parentNode,'#'+pInstance.behavior.CSS_PAGETAB+'_'+index);
 		if(tab){
