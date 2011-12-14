@@ -393,12 +393,12 @@ wFORMS.behaviors.validation.onFail = function(bInstance) {
 
 	//Clear any errMsg on tabs, then add new ones for this validation cycle.
 	var a = base2.DOM.Element.querySelectorAll(bInstance.target.parentNode,'a[id^="'+pInstance.behavior.CSS_PAGETAB+'"]');
-	if(!a.forEach){wFORMS.standardizeElement(bInstance.errorPages);}
+	if(!a.forEach){a = base2.JavaScript.Array2(a);}
 	a.forEach(function(i){
 		if(!i.removeClass || !i.hasClass || !i.addClass){wFORMS.standardizeElement(i);}
 		i.removeClass("errMsg");
 	});	
-	if(!bInstance.errorPages.forEach){wFORMS.standardizeElement(bInstance.errorPages);}
+	if(!bInstance.errorPages.forEach){bInstance.errorPages = base2.JavaScript.Array2(bInstance.errorPages);}
 	bInstance.errorPages.forEach(function(id,index){
 		var tab = base2.DOM.Element.querySelector(bInstance.target.parentNode,'#'+pInstance.behavior.CSS_PAGETAB+'_'+index);
 		if(tab){
