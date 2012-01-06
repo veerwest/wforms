@@ -818,16 +818,16 @@ wFORMS.behaviors.validation.instance.prototype.numberRangeTest = function(elemen
         return false;
     }
 
-    if( lbound && (value < lbound) ){
-        if(ubound){
+    if(ubound !== null && !isNaN(lbound) && (value < lbound) ){
+        if(lbound !== null && !isNaN(ubound)){
             return errMessage.min.replace(/%1/g, lbound) + ' ' + errMessage.max.replace(/%1/g, ubound);
         }
         return errMessage.min.replace(/%1/g, lbound);
     }
 
 
-    if( ubound && (value > ubound) ){
-        if(lbound){
+    if(ubound !== null && !isNaN(ubound) && (value > ubound) ){
+        if(lbound !== null && !isNaN(lbound)){
             return errMessage.min.replace(/%1/g, lbound) + ' ' + errMessage.max.replace(/%1/g, ubound);
         }
         return errMessage.max.replace(/%1/g, ubound);

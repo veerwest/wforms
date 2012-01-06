@@ -504,28 +504,28 @@
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
-			testField.value='554654dfg565';			
+			testField.value='554654dfg565';
 			// Test validation rule
 			assertFalse(bInstance.run(null, testForm));
-			
-			testField.value='4.5';			
+
+			testField.value='4.5';
 			// Test validation rule
-			assertFalse(bInstance.run(null, testForm)); 
-			
+			assertFalse(bInstance.run(null, testForm));
+
 			testField.value='44444';
 			// Test validation rule
-			assertTrue('Should pass integer validation', bInstance.run(null, testForm)); 
+			assertTrue('Should pass integer validation', bInstance.run(null, testForm));
 
 			testField.value='-44444';
 			// Test validation rule
-			assertTrue('Should pass integer validation (-)', bInstance.run(null, testForm)); 			
+			assertTrue('Should pass integer validation (-)', bInstance.run(null, testForm));
 
 			testField.value='+44444';
 			// Test validation rule
-			assertTrue('Should pass integer validation (+)', bInstance.run(null, testForm)); 
-			
+			assertTrue('Should pass integer validation (+)', bInstance.run(null, testForm));
+
 			// Test error message removal
-			assertNull(document.getElementById('testField-E'));			
+			assertNull(document.getElementById('testField-E'));
 
             testField.value='3';
             //test range
@@ -547,6 +547,11 @@
             //Should pass
             assertTrue(bInstance.run(null, testForm));
 
+            testField.value='1';
+            testField.setAttribute('min', '-4');
+            testField.setAttribute('max', '0');
+            //Should fail
+            assertFalse(bInstance.run(null, testForm));
 
             testField.removeAttribute('max');
             testField.removeAttribute('min');
