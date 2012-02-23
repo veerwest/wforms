@@ -206,7 +206,7 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 		} else {
 			_processedVariables.push(v.name);
 		}
-		 
+		
 		// TODO: Exclude switched-off variables?
 		
 		/* 
@@ -217,15 +217,14 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 		base2.DOM.Document.querySelectorAll(f,"*[class*=\""+_self.behavior.VARIABLE_SELECTOR_PREFIX+v.name+"\"]").forEach(
 			function(variable){
 								
+				
 				// make sure the variable is an exact match.
 				var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+v.name+' ')!=-1);
 				if(!exactMatch) return;
-				
-				
+								
 				if(!_self.inScope(calculation.field, variable)){
 					return;
-				}
-				
+				}				
 				
 				// If field value has a different purpose, the value for the calculation can be set in the
 				// class attribute, prefixed with CHOICE_VALUE_SELECTOR_PREFIX
@@ -286,7 +285,7 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 	// If the calculated field is also a variable, recursively update dependant calculations
 	if(calculation.field.className && (calculation.field.className.indexOf(this.behavior.VARIABLE_SELECTOR_PREFIX)!=-1)) {
 		// TODO: Check for infinite loops?
-		//console.log('rec',this);
+		//console.log('rec',this);		
 		this.run(null,calculation.field);
 	} 
 }
@@ -407,8 +406,11 @@ wFORMS.behaviors['calculation'].removeHandledFlag = function(elem){
 			}
 			while (formulaRepeat && !formulaRepeat.hasClass(br.CSS_REMOVEABLE) &&  !formulaRepeat.hasClass(br.CSS_REPEATABLE)) {						
 				formulaRepeat = formulaRepeat.parentNode;
-				if(formulaRepeat) {
+				if(formulaRepeat && formulaRepeat.tagName!='HTML' ) {
 					wFORMS.standardizeElement(formulaRepeat);
+				} else {
+					formulaRepeat = null;
+					break;
 				}			
 			}
 			
@@ -416,7 +418,7 @@ wFORMS.behaviors['calculation'].removeHandledFlag = function(elem){
 				// formula is in a repeated section. Check if variable belong to same.
 				
 				var isInRepeat = false;			
-				while(variable) {
+				while(variable && variable.tagName !='HTML') {
 					if(!variable.hasClass) {
 						wFORMS.standardizeElement(variable);
 					}
@@ -426,12 +428,8 @@ wFORMS.behaviors['calculation'].removeHandledFlag = function(elem){
 					if(variable==formulaRepeat) {
 						return true;
 					}
-					variable = variable.parentNode;
-					if(variable) {
-						wFORMS.standardizeElement(variable);
-					}	
+					variable = variable.parentNode;					
 				}
-				
 				return !isInRepeat;
 			}
 		}

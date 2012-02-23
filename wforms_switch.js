@@ -703,26 +703,28 @@ wFORMS.behaviors['switch'].instance.prototype.inScope = function(trigger, target
 		var triggerRepeat = trigger;
 		while (triggerRepeat && !triggerRepeat.hasClass(br.CSS_REMOVEABLE) &&  !triggerRepeat.hasClass(br.CSS_REPEATABLE)) {						
 			triggerRepeat = triggerRepeat.parentNode;
-			if(triggerRepeat) {
+			if(triggerRepeat && triggerRepeat.tagName !='HTML' ) {
 				wFORMS.standardizeElement(triggerRepeat);
-			}			
+			} else {
+				triggerRepeat = null;
+			}
 		}
 		
 		if (triggerRepeat) {
 			// trigger is in a repeated section. Check if target belong to same.
 			
 			var isInRepeat = false;			
-			while(target) {
+			while(target && target.tagName !='HTML') {
+				if(!target.hasClass) {
+					wFORMS.standardizeElement(target);
+				}
 				if(target.hasClass(br.CSS_REMOVEABLE) ||  target.hasClass(br.CSS_REPEATABLE)) {
 					isInRepeat = true;
 				}
 				if(target==triggerRepeat) {
 					return true;
 				}
-				target = target.parentNode;
-				if(target) {
-					wFORMS.standardizeElement(target);
-				}	
+				target = target.parentNode;					
 			}
 			
 			return !isInRepeat;

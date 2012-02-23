@@ -348,6 +348,9 @@ wFORMS.onLoadHandler = function() {
  * note: should be in wFORMS.helpers
  */
 wFORMS.standardizeElement = function(elem) {
+	if(elem.tagName=='HTML') {
+		return;
+	}
 	if(!elem.addEventListener) {
 		elem.addEventListener = function(event,handler,p) {
 			base2.DOM.Element.addEventListener(this,event,handler,p);
