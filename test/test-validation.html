@@ -541,7 +541,7 @@
 
             testField.setAttribute('min', '5');
             //Should fail
-            assertFalse(bInstance.run(null, testForm));
+            assertFalse('field value of 3 should fail min attribute of 5', bInstance.run(null, testForm));
 
             testField.setAttribute('min', '-3.1415926');
             //Should pass
