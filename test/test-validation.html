@@ -84,7 +84,7 @@
 			// Test validation rule
 			assertFalse(bInstance.run(null, testForm)); 
 			// Test error message creation
-			assertNotNull(document.getElementById('testField-E'))
+			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
 			
@@ -176,23 +176,23 @@
 		
 		function testValidateDateTime() {
 			// setup
-			
+
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
-			
+
 			wFORMS.behaviors.validation.messages.isDateTime = "my error message";
 			testField.className='validate-datetime';
 			testField.value='not a date';
 			document.getElementById('testDiv').className='';
 			document.getElementById('testField3').className='';
-			
+
 			// Test validation rule
-			assertFalse(bInstance.run(null, testForm)); 
+			assertFalse(bInstance.run(null, testForm));
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
-			
+
 			testField.value='2/2/2008';
 			// Test validation rule
 			 assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
@@ -264,165 +264,48 @@
             testField.value='10/10/10*';
             assertFalse('Should not pass date validation:'+testField.value, bInstance.run(null, testForm));
 		}
-		
-        function testValidateDate(){
-            //assume to correspond localization-??.js only
-            var testForm  = document.getElementById('testForm');
-			var testField = document.getElementById('testField');
 
-			wFORMS.behaviors.validation.messages.isDate = "my error message";
-			testField.className='validate-date';
-			testField.value='not a date';
-			document.getElementById('testDiv').className='';
-			document.getElementById('testField3').className='';
+//
 
-			// Test validation rule
-			assertFalse(bInstance.run(null, testForm));
-			// Test error message creation
-			assertNotNull(document.getElementById('testField-E'));
-			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
-
-			testField.value='2/2/2008';
-			// Test validation rule
-			 assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
-			// Test error message removal
-			assertNull(document.getElementById('testField-E'));
-
-            //case 2
-            testField.value='12/2/2008';
-            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
-
-            //test range
-            testField.setAttribute('max', '1 1 2008');
-            //Should fail
-            assertFalse(bInstance.run(null, testForm));
-
-            testField.setAttribute('max', '1-1-2009');
-            //should pass
-            assertTrue(bInstance.run(null, testForm));
-
-            testField.removeAttribute('max');
-            testField.setAttribute('min', '1 1 2009');
-            //Should fail
-            assertFalse(bInstance.run(null, testForm));
-
-            testField.setAttribute('min', '1-1-2008');
-            //should pass
-            assertTrue(bInstance.run(null, testForm));
-
-            testField.setAttribute('max', '12-1-2008');
-            assertFalse(bInstance.run(null, testForm));
-
-            testField.removeAttribute('max');
-            testField.removeAttribute('min');
-        }
-
-        function testValidateTime(){
-            //assume to correspond localization-??.js only
-            var testForm  = document.getElementById('testForm');
-			var testField = document.getElementById('testField');
-
-			wFORMS.behaviors.validation.messages.isTime = "my error message";
-			testField.className='validate-time';
-			testField.value='not a date';
-			document.getElementById('testDiv').className='';
-			document.getElementById('testField3').className='';
-
-			// Test validation rule
-			assertFalse(bInstance.run(null, testForm));
-			// Test error message creation
-			assertNotNull(document.getElementById('testField-E'));
-			// Test error message content
-			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
-
-			testField.value='12:10:10 a.m';
-			// Test validation rule
-			 assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
-			// Test error message removal
-			assertNull(document.getElementById('testField-E'));
-
-            //case 2
-            testField.value='12:10:10 pm';
-            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
-
-            //case 3
-            testField.value='12:10:10 am pm';
-            assertFalse('Should fail date validation:'+testField.value, bInstance.run(null, testForm));
-
-            //case 4
-            testField.value='17:10:10 p.m';
-            assertFalse('Should fail date validation:'+testField.value, bInstance.run(null, testForm));
-
-            //case 5
-            testField.value='13:10:10 am';
-            assertFalse('Should fail date validation:'+testField.value, bInstance.run(null, testForm));
-
-            testField.value='11:10:10 am';
-            //test range
-            testField.setAttribute('max', '1:1:08');
-            //Should fail
-            assertFalse(bInstance.run(null, testForm));
-
-            testField.setAttribute('max', '12:00:00');
-            //should pass
-            assertTrue(bInstance.run(null, testForm));
-
-            testField.removeAttribute('max');
-            testField.setAttribute('min', '12:00:09');
-            //Should fail
-            assertFalse(bInstance.run(null, testForm));
-
-            testField.setAttribute('min', '1:00:09');
-            //should pass
-            assertTrue(bInstance.run(null, testForm));
-
-            testField.setAttribute('max', '11:10:08');
-            assertFalse(bInstance.run(null, testForm));
-
-            testField.removeAttribute('max');
-            testField.removeAttribute('min');
-        }
-		
 		function testValidateEmail() {
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
-			
+
 			wFORMS.behaviors.validation.messages.isEmail = "my error message";
 			testField.className='validate-email';
 			testField.value='not@an_email';
 			document.getElementById('testDiv').className='';
 			document.getElementById('testField2').className='';
 			document.getElementById('testField3').className='';
-			
+
 			// Test validation rule
-			assertFalse(bInstance.run(null, testForm)); 
+			assertFalse(bInstance.run(null, testForm));
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
-			
+
 			testField.value='test@test.co.uk';
 			// Test validation rule
-			assertTrue('test@test.co.uk should pass email validation', bInstance.run(null, testForm)); 
+			assertTrue('test@test.co.uk should pass email validation', bInstance.run(null, testForm));
 			// Test error message removal
-			assertNull(document.getElementById('testField-E'));			
-			
+			assertNull(document.getElementById('testField-E'));
+
 			testField.value='test.test@test.test.uk';
 			// Test validation rule
-			assertTrue('test.test@test.test.uk should pass email validation', bInstance.run(null, testForm)); 
+			assertTrue('test.test@test.test.uk should pass email validation', bInstance.run(null, testForm));
 
 			testField.value='test_9999+test@test.test.uk';
 			// Test validation rule
-			assertTrue('test_9999+test@test.test.uk should pass email validation', bInstance.run(null, testForm)); 
-			
+			assertTrue('test_9999+test@test.test.uk should pass email validation', bInstance.run(null, testForm));
+
 			testField.value='test@abc.e.mail.co.jp';
 			// Test validation rule
-			assertTrue('test@abc.e.mail.co.jp should pass email validation', bInstance.run(null, testForm)); 
-			
+			assertTrue('test@abc.e.mail.co.jp should pass email validation', bInstance.run(null, testForm));
+
 		}
-		
+
 		function testValidatePhone() {
 			var cases = [
 				['780-9080', true],
@@ -440,35 +323,35 @@
 				['1-897-234-4009 #x', false],
 				['1-419-625-4375 ext b', false]
 			];
-			
+
 			// retrieve form and field
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
 			document.getElementById('testDiv').className='';
 			document.getElementById('testField2').className='';
 			document.getElementById('testField3').className='';
-			
+
 			// apply validation class to field
 			testField.className = 'validate-phone';
-			
+
 			// override error message
 			var error = 'phone error message test';
 			wFORMS.behaviors.validation.messages.isPhone = error;
-			
+
 			for (var c in cases) {
 				var value = cases[c][0];
-				
+
 				// apply case value and run validation behavior
 				testField.value = value;
 				bInstance.run(null, testForm);
-				
+
 				// check for validity
 				if (cases[c][1]) {
 					assertNull(
 						'"'+ value +'" should validate, but failed.',
 						document.getElementById('testField-E')
 					);
-					
+
 				// check for invalidity
 				} else {
 					var m = document.getElementById('testField-E');
@@ -498,12 +381,12 @@
 			testField.value='not an integer';
 			
 			// Test validation rule
-			assertFalse(bInstance.run(null, testForm)); 
+			assertFalse(bInstance.run(null, testForm));
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
-			
+
 			testField.value='554654dfg565';
 			// Test validation rule
 			assertFalse(bInstance.run(null, testForm));
@@ -556,70 +439,193 @@
             testField.removeAttribute('max');
             testField.removeAttribute('min');
 		}
-		
-		function testValidateFloat() {
-			// setup
-			var testForm  = document.getElementById('testForm');
+
+        function testValidateFloat() {
+            // setup
+            var testForm  = document.getElementById('testForm');
+            var testField = document.getElementById('testField');
+            document.getElementById('testDiv').className='';
+            document.getElementById('testField2').className='';
+            document.getElementById('testField3').className='';
+
+            wFORMS.behaviors.validation.messages.isFloat = "my error message";
+            testField.className='validate-float';
+            testField.value='not a float';
+
+            // Test validation rule
+            assertFalse(bInstance.run(null, testForm));
+            // Test error message creation
+            assertNotNull(document.getElementById('testField-E'));
+            // Test error message content
+            assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
+
+            testField.value='4a.5';
+            // Test validation rule
+            assertFalse('4a.5 should fail float validation',bInstance.run(null, testForm))
+
+            testField.value='4.a5';
+            // Test validation rule
+            assertFalse('4.a5 should fail float validation',bInstance.run(null, testForm))
+
+            testField.value='1a.a';
+            // Test validation rule
+            assertFalse('1a.a should fail float validation',bInstance.run(null, testForm))
+
+            testField.value='4.5';
+            // Test validation rule
+            assertTrue('4.5 should pass float validation',bInstance.run(null, testForm));
+
+            testField.value='44';
+            // Test validation rule
+            assertTrue('44 should pass float validation', bInstance.run(null, testForm));
+
+            testField.value='0.45';
+            // Test validation rule
+            assertTrue('0.45 should pass float validation', bInstance.run(null, testForm));
+
+            testField.value='.45';
+            // Test validation rule
+            assertTrue('.45 should pass float validation', bInstance.run(null, testForm));
+
+            testField.value='-.45';
+            // Test validation rule
+            assertTrue('-.45 should pass float validation', bInstance.run(null, testForm));
+
+            testField.value='+0.45';
+            // Test validation rule
+            assertTrue('.45 should pass float validation', bInstance.run(null, testForm));
+
+            // Test error message removal
+            assertNull(document.getElementById('testField-E'));
+
+            testField.removeAttribute('max');
+            testField.removeAttribute('min');
+        }
+
+        function testValidateTime(){
+            //assume to correspond localization-??.js only
+            var testForm  = document.getElementById('testForm');
+            var testField = document.getElementById('testField');
+
+            wFORMS.behaviors.validation.messages.isTime = "my error message";
+            testField.className='validate-time';
+            testField.value='not a date';
+            document.getElementById('testDiv').className='';
+            document.getElementById('testField3').className='';
+
+            // Test validation rule
+            assertFalse(bInstance.run(null, testForm));
+            // Test error message creation
+            assertNotNull(document.getElementById('testField-E'));
+            // Test error message content
+            assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
+
+            testField.value='12:10:10 a.m';
+            // Test validation rule
+             assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
+            // Test error message removal
+            assertNull(document.getElementById('testField-E'));
+
+            //case 2
+            testField.value='12:10:10 pm';
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
+
+            //case 3
+            testField.value='12:10:10 am pm';
+            assertFalse('Should fail date validation:'+testField.value, bInstance.run(null, testForm));
+
+            //case 4
+            testField.value='17:10:10 p.m';
+            assertFalse('Should fail date validation:'+testField.value, bInstance.run(null, testForm));
+
+            //case 5
+            testField.value='13:10:10 am';
+            assertFalse('Should fail date validation:'+testField.value, bInstance.run(null, testForm));
+
+            testField.value='11:10:10 am';
+            //test range
+            testField.setAttribute('max', '1:1:08');
+            //Should fail
+            assertFalse(bInstance.run(null, testForm));
+
+            testField.setAttribute('max', '12:00:00');
+            //should pass
+            assertTrue(bInstance.run(null, testForm));
+
+            testField.removeAttribute('max');
+            testField.setAttribute('min', '12:00:09');
+            //Should fail
+            assertFalse(bInstance.run(null, testForm));
+
+            testField.setAttribute('min', '1:00:09');
+            //should pass
+            assertTrue(bInstance.run(null, testForm));
+
+            testField.setAttribute('max', '11:10:08');
+            assertFalse(bInstance.run(null, testForm));
+
+            testField.removeAttribute('max');
+            testField.removeAttribute('min');
+        }
+
+        function testValidateDate(){
+            //assume to correspond localization-??.js only
+            var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField');
+
+			wFORMS.behaviors.validation.messages.isDate = "my error message";
+			testField.className='validate-date';
+			testField.value='not a date';
 			document.getElementById('testDiv').className='';
-			document.getElementById('testField2').className='';
 			document.getElementById('testField3').className='';
-			
-			wFORMS.behaviors.validation.messages.isFloat = "my error message";
-			testField.className='validate-float';
-			testField.value='not a float';
-			
+
 			// Test validation rule
-			assertFalse(bInstance.run(null, testForm)); 
+			assertFalse(bInstance.run(null, testForm));
 			// Test error message creation
 			assertNotNull(document.getElementById('testField-E'));
 			// Test error message content
 			assertEquals('my error message',document.getElementById('testField-E').firstChild.innerHTML);
-			
-			testField.value='4a.5';			
-			// Test validation rule
-			assertFalse('4a.5 should fail float validation',bInstance.run(null, testForm))
-			
-			testField.value='4.a5';			
-			// Test validation rule
-			assertFalse('4.a5 should fail float validation',bInstance.run(null, testForm))
-			
-			testField.value='1a.a';			
-			// Test validation rule
-			assertFalse('1a.a should fail float validation',bInstance.run(null, testForm))
-						
-			testField.value='4.5';			
-			// Test validation rule
-			assertTrue('4.5 should pass float validation',bInstance.run(null, testForm)); 
-			
-			testField.value='44';
-			// Test validation rule
-			assertTrue('44 should pass float validation', bInstance.run(null, testForm)); 
-			
-			testField.value='0.45';
-			// Test validation rule
-			assertTrue('0.45 should pass float validation', bInstance.run(null, testForm));
-			
-			testField.value='.45';
-			// Test validation rule
-			assertTrue('.45 should pass float validation', bInstance.run(null, testForm));
 
-            testField.value='-.45';
+			testField.value='2/2/2008';
 			// Test validation rule
-			assertTrue('-.45 should pass float validation', bInstance.run(null, testForm));
-
-            testField.value='+0.45';
-			// Test validation rule
-			assertTrue('.45 should pass float validation', bInstance.run(null, testForm));
-			
+			 assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
 			// Test error message removal
 			assertNull(document.getElementById('testField-E'));
-		}
-		
-		// not fully implemented
+
+            //case 2
+            testField.value='12/2/2008';
+            assertTrue('Should pass date validation:'+testField.value, bInstance.run(null, testForm));
+
+            //test range
+            testField.setAttribute('max', '1 1 2008');
+            //Should fail
+            assertFalse(bInstance.run(null, testForm));
+
+            testField.value='12/2/2008';
+            testField.setAttribute('max', '1-1-2009');
+            //should pass
+            assertTrue(bInstance.run(null, testForm));
+
+            testField.removeAttribute('max');
+            testField.setAttribute('min', '1 1 2009');
+            //Should fail
+            assertFalse(bInstance.run(null, testForm));
+
+            testField.setAttribute('min', '1-1-2008');
+            //should pass
+            assertTrue(bInstance.run(null, testForm));
+
+            testField.setAttribute('max', '12-1-2008');
+            assertFalse(bInstance.run(null, testForm));
+
+            testField.removeAttribute('max');
+            testField.removeAttribute('min');
+        }
+
+        // not fully implemented
 		function testValidateLength() {
 		
-			return				
+			return
 			// setup
 			var testForm  = document.getElementById('testForm');
 			var testField = document.getElementById('testField2');
@@ -795,7 +801,7 @@
 
      window.setTimeout(function(){
          setUp();
-//         testValidateDateTime();
+         testValidateDate();
      }, 100)
  </script>
 

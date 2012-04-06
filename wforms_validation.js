@@ -202,8 +202,8 @@ wFORMS.behaviors.validation.instance.prototype.run = function(e, element) {
 		if(rule.check.call) {
 			var passed = rule.check.call(_self, element, value);
 		} else {
-			var passed = _self[rule.check].call(_self, element, value);
-		}				
+			passed = _self[rule.check].call(_self, element, value);
+		}
 
         var errorMessage = ruleName;
         //Check range as well
@@ -628,8 +628,9 @@ wFORMS.behaviors.validation.instance.prototype.analyzeDateComponents = function(
     if(dArr.length != 3){
         return null;
     }
+
     for(var i = 0; i < 3; i++){
-        if( !/^\d+$/g.test(dArr[i]) ){
+        if( !/^\d+$/.test(dArr[i]) ){
             return null;
         }
     }
@@ -807,10 +808,15 @@ wFORMS.behaviors.validation.instance.prototype.numberRangeTest = function(elemen
     if(lboundRaw && (this.validateFloat(lboundRaw) || this.validateInteger(lboundRaw))){
         lbound = parseFloat(lboundRaw);
     }
-
+    if(lbound == null){
+        lbound = -Infinity;
+    }
     uboundRaw = element.getAttribute(wFORMS.behaviors.validation.UPPER_BOUND_ATTRIBUTE);
     if(uboundRaw  && (this.validateFloat(uboundRaw) || this.validateInteger(uboundRaw))){
         ubound = parseFloat(uboundRaw);
+    }
+    if(ubound == null){
+        ubound = Infinity;
     }
 
     value = parseFloat(value);
@@ -818,22 +824,19 @@ wFORMS.behaviors.validation.instance.prototype.numberRangeTest = function(elemen
         return false;
     }
 
-    if(ubound !== null && !isNaN(lbound) && (value < lbound) ){
-        if(lbound !== null && !isNaN(ubound)){
-            return errMessage.min.replace(/%1/g, lbound) + ' ' + errMessage.max.replace(/%1/g, ubound);
-        }
-        return errMessage.min.replace(/%1/g, lbound);
+    var errorMessageOutput = null;
+
+    if( value < lbound){
+        errorMessageOutput = (errorMessageOutput == null ? '' : errorMessageOutput)
+            + errMessage.min.replace(/%1/g, lbound);
     }
 
-
-    if(ubound !== null && !isNaN(ubound) && (value > ubound) ){
-        if(lbound !== null && !isNaN(lbound)){
-            return errMessage.min.replace(/%1/g, lbound) + ' ' + errMessage.max.replace(/%1/g, ubound);
-        }
-        return errMessage.max.replace(/%1/g, ubound);
+    if( value > ubound){
+        errorMessageOutput = (errorMessageOutput == null ? '' : errorMessageOutput + ' ')
+            + errMessage.max.replace(/%1/g, ubound);
     }
 
-    return true;
+    return errorMessageOutput == null ? true : errorMessageOutput;
 };
 
 wFORMS.behaviors.validation.instance.prototype.dateRangeTest = function(element, value, errMessage){
@@ -849,6 +852,7 @@ wFORMS.behaviors.validation.instance.prototype.dateTimeRangeTestCommon = functio
     if(this.isEmpty(value)){
         return true;
     }
+
     lboundRaw = element.getAttribute(wFORMS.behaviors.validation.LOWER_BOUND_ATTRIBUTE);
     if(lboundRaw ){
         lbound = this[conversionFunc](lboundRaw);
@@ -862,6 +866,8 @@ wFORMS.behaviors.validation.instance.prototype.dateTimeRangeTestCommon = functio
     if( (value = this[conversionFunc](value) ) === null ){
         return false;
     }
+
+
 
     if( lbound && (value.getTime() < lbound.getTime()) ){
         if(ubound){
