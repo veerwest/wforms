@@ -464,10 +464,6 @@ base2.DOM.Element.addEventListener(document, 'DOMContentLoaded',wFORMS.onLoadHan
 // Enable JS only stylesheet.
 wFORMS.helpers.activateStylesheet('wforms-jsonly.css');
 
-// Enable user-agent specific stylesheets
-if(navigator.userAgent.match(/iPad/i)){
-	wFORMS.helpers.activateStylesheet('wforms-layout-ipad.css');
-}
 
 //Constant Definition
 (function(ext){
