@@ -50,23 +50,32 @@
 				'test-field-4',
 				'test-field-5'
 			];
+            var i = 0;
 			for (var f in fields) {
 				var field = document.getElementById(fields[f]);
-				var hint = document.getElementById(fields[f] +'-H');
 				var behavior = wFORMS.getBehaviorInstance(form, 'hint');
-				
-				behavior.setup(hint, field);
-				
-				var fp = wFORMS.helpers.position(field);
-				var hp = wFORMS.helpers.position(hint);
-				
+                var hint = document.getElementById(fields[f] +'-H');
+                behavior.setup(hint, field);
+
+                behavior.run({type:'focus'}, field);
+
+                var fp = wFORMS.helpers.position(field);
+                var hp = wFORMS.helpers.position(hint);
+                var computedStyle = document.defaultView.getComputedStyle(hint, "");
+                var marginLeft = computedStyle.getPropertyValue('margin-left');
+                marginLeft = parseInt( marginLeft );
+                var marginTop = computedStyle.getPropertyValue('margin-top');
+                marginTop = parseInt( marginTop );
+
 				if (field.tagName.toLowerCase() == 'select') {
-					assertEquals(fp.left + field.offsetWidth, hp.left);
-					assertEquals(fp.top, hp.top);
+                    assertEquals(fp.left + field.offsetWidth + marginLeft, hp.left);
+                    assertEquals(fp.top + marginTop, hp.top);
 				} else {
-					assertEquals(fp.left, hp.left);
-					assertEquals(fp.top + field.offsetHeight, hp.top);
+                    assertEquals(fp.left + marginLeft, hp.left);
+                    assertEquals(fp.top + field.offsetHeight + marginTop, hp.top);
 				}
+
+                behavior.run({type:'blur'}, field);
 			}
 		}
 
@@ -75,8 +84,7 @@
 			var behavior = wFORMS.getBehaviorInstance(form, 'hint');
 			var h = document.getElementById('test-field-0-H');
 			var h_p = h.parentNode;
-			
-			
+
 			assertEquals(h.className, 'field-hint-inactive');
 						
 			behavior.run({type:'focus'}, document.getElementById('test-field-0'));
@@ -154,4 +162,9 @@
         </form>
     </body>
 </html>
-
+<script type="text/javascript" language="JavaScript">
+//    window.setTimeout(function(){
+//        setUp();
+//        testRun();
+//    }, 100)
+</script>

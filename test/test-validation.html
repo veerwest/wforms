@@ -495,6 +495,10 @@
             // Test validation rule
             assertTrue('.45 should pass float validation', bInstance.run(null, testForm));
 
+            testField.value='0';
+            // Test validation rule
+            assertTrue('0 should pass float validation', bInstance.run(null, testForm));
+
             // Test error message removal
             assertNull(document.getElementById('testField-E'));
 
@@ -799,10 +803,10 @@
  <script language="javascript" type="text/javascript">
 
 
-     window.setTimeout(function(){
-         setUp();
-         testValidateDate();
-     }, 100)
+//     window.setTimeout(function(){
+//         setUp();
+//         testValidateDate();
+//     }, 100)
  </script>
 
         
