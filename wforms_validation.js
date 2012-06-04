@@ -603,7 +603,7 @@ wFORMS.behaviors.validation.instance.prototype.validateDateTime = function(eleme
 wFORMS.behaviors.validation.instance.prototype.validateDate = function(element, value) {
     if (this.isEmpty(value)) {
         return true;
-}
+    }
     var date = this.analyzeDateComponents(value);
     return !(date === null);
 };
@@ -753,7 +753,7 @@ wFORMS.behaviors.validation.instance.prototype.validateInteger = function(elemen
  * @returns {boolean} 
  */
 wFORMS.behaviors.validation.instance.prototype.validateFloat = function(element, value) {
-	var regexp = /^[\-+]?((([1-9]\d*|0)?\.\d+)|([1-9]\d*))$/;
+    var regexp = /^[+\-]?(0|[1-9]\d*)?(\.\d*)?$/;
 	return this.isEmpty(value) || regexp.test(value);
 }
 
