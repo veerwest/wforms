@@ -31,7 +31,8 @@ wFORMS.behaviors.autoformat = {
         'END': 35,
         'HOME': 36,
         'DELETE': 46,
-        BACKSPACE: 8
+        BACKSPACE: 8,
+        'TAB' : 9
     },
 
     _globalCache: {
@@ -213,12 +214,12 @@ wFORMS.behaviors.autoformat = {
             var id = this.id;
             var infoEntry = wFORMS.behaviors.autoformat._globalCache[id];
             if(!infoEntry){
-                return ;
+                return true;
             }
             var result = infoEntry.testCombinationKey(event);
             if(result) {
                 infoEntry.mutex = true; // disable 'keypress' as well
-                return; // no processing, allow browser default behavior
+                return true; // no processing, allow browser default behavior
             }
             if(infoEntry.handleControlKey(event)){ // return handled or not
                 infoEntry.mutex = true; // 'keydown' has a higher priority
@@ -460,7 +461,8 @@ wFORMS.behaviors.autoformat.InfoEntry.prototype.testCombinationKey = function(ev
         (event.shiftKey && (keyCode == wFORMS.behaviors.autoformat.keyCode['LEFT'] ||  /* Shift + Left*/
                             keyCode == wFORMS.behaviors.autoformat.keyCode['RIGHT']))|| /* Shift + Right*/
         (keyCode == wFORMS.behaviors.autoformat.keyCode['END']) || /* end */
-        (keyCode == wFORMS.behaviors.autoformat.keyCode['HOME']) /* home */
+        (keyCode == wFORMS.behaviors.autoformat.keyCode['HOME']) ||   /* home */
+        (keyCode == wFORMS.behaviors.autoformat.keyCode['TAB'])
         )
 };
 
