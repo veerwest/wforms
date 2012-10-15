@@ -303,28 +303,15 @@
 /* JS ONLY CSS - Normally present is separate wforms-jsonly.css ------------- */
 
 /* Handle conditional section visibility */
-.offstate-a,  .offstate-b,  .offstate-c,  .offstate-d, 
-.offstate-e,  .offstate-f,  .offstate-g,  .offstate-h, 
-.offstate-i,  .offstate-j,  .offstate-k,  .offstate-l,
-.offstate-m,  .offstate-n,  .offstate-o,  .offstate-p, 
-.offstate-q,  .offstate-r,  .offstate-s,  .offstate-t,
-.offstate-u,  .offstate-v,  .offstate-w,  .offstate-x,  
-.offstate-y,  .offstate-z,  .offstate-aa, .offstate-ab,
-.offstate-ac, .offstate-ad, .offstate-ae, .offstate-af,
-.offstate-ag, .offstate-ah, .offstate-ai, .offstate-aj,
-.offstate-ak, .offstate-al, .offstate-am, .offstate-an,
-.offstate-ao, .offstate-ap, .offstate-aq, .offstate-ar,
-.offstate-as, .offstate-at, .offstate-au, .offstate-av,
-.offstate-aw, .offstate-ax, .offstate-ay, .offstate-az,
-.offstate-ba, .offstate-bb, .offstate-bc, .offstate-bd,
-.offstate-be, .offstate-bf, .offstate-bg, .offstate-bh,
-.offstate-bi, .offstate-bj, .offstate-bk, .offstate-bl { 
-	display: none !important;
+*[class^="onstate-"], *[class*=" onstate-"]{
+    display: block !important;
+}
+tr[class^="onstate-"], tr[class*=" onstate-"]{
+    display: table-row !important;
 }
 
 .respondant .offstate-a, .respondant .offstate-b, .respondant .offstate-c {
 	display: block !important;
-	
 }
 
 /* Handle page visibility */

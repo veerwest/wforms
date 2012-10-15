@@ -9,25 +9,10 @@
 /* These are the rules that should *not* apply if javascript is disabled. */
 /* see: http://formassembly.com/blog/?p=14 */
 
-.offstate-a,  .offstate-b,  .offstate-c,  .offstate-d, 
-.offstate-e,  .offstate-f,  .offstate-g,  .offstate-h, 
-.offstate-i,  .offstate-j,  .offstate-k,  .offstate-l,
-.offstate-m,  .offstate-n,  .offstate-o,  .offstate-p, 
-.offstate-q,  .offstate-r,  .offstate-s,  .offstate-t,
-.offstate-u,  .offstate-v,  .offstate-w,  .offstate-x,  
-.offstate-y,  .offstate-z,  .offstate-aa, .offstate-ab,
-.offstate-ac, .offstate-ad, .offstate-ae, .offstate-af,
-.offstate-ag, .offstate-ah, .offstate-ai, .offstate-aj,
-.offstate-ak, .offstate-al, .offstate-am, .offstate-an,
-.offstate-ao, .offstate-ap, .offstate-aq, .offstate-ar,
-.offstate-as, .offstate-at, .offstate-au, .offstate-av,
-.offstate-aw, .offstate-ax, .offstate-ay, .offstate-az,
-.offstate-ba, .offstate-bb, .offstate-bc, .offstate-bd,
-.offstate-be, .offstate-bf, .offstate-bg, .offstate-bh,
-.offstate-bi, .offstate-bj, .offstate-bk, .offstate-bl { 
-	display: none !important;
+*[class^="offstate-"], *[class*=" offstate-"]{
+    display: none !important;
 }
-html .wForm form .wfPage, html .wForm form .wfHideSubmit { 
+html .wForm form .wfPage, html .wForm form .wfHideSubmit {
 	display: none !important;
 }
 html .wForm form .saveAndResume .actions  .wfHideSubmit {
