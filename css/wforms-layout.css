@@ -310,10 +310,6 @@ tr[class^="onstate-"], tr[class*=" onstate-"]{
     display: table-row !important;
 }
 
-.respondant .offstate-a, .respondant .offstate-b, .respondant .offstate-c {
-	display: block !important;
-}
-
 /* Handle page visibility */
 html .wForm form .wfPage, html .wForm form .wfHideSubmit { 
 	display: none !important;
@@ -321,7 +317,6 @@ html .wForm form .wfPage, html .wForm form .wfHideSubmit {
 html .wForm form .wfCurrentPage {
 	display: block !important;
 }
-
 
 /* Auto Format related*/
 .wForm .autoformatprompt .label{
