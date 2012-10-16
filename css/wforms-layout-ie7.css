@@ -1,6 +1,18 @@
 
-.inputWrapper {
-	/* workaround for: display: inline-block; */  
+/* workaround for: display: inline-block; */
+.wForm .inputWrapper, 
+.label, 
+.wForm .preField, 
+.wForm form .oneChoice, 
+.wForm form .oneChoice label, 
+.wForm form .oneChoice .label, 
+.wForm .inline div.oneField, 
+.wForm form .wfPagingButtons, 
+.wForm .hintsSide .field-hint, 
+.wForm .hintsSide .field-hint-inactive, 
+.wForm .oneField.hintsSide .field-hint,
+.wForm .oneField.hintsSide .field-hint-inactive {
 	zoom: 1;
     display: inline; 
-} 
+}
+

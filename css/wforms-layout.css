@@ -1,3 +1,5 @@
+
+
 /* Reset CSS - scope limited to .wForm - based on YUI reset
  * -------------------------------------------------------- 
  */
@@ -97,7 +99,8 @@
    For instance to highlight a field that failed the input validation. 
  */ 
 .wForm h3, .wForm h4 	{ border: 2px solid transparent; padding: 2px;  }
-.wForm .oneField 		{ border: 2px solid transparent; padding: 2px 6px; }
+.wForm .oneField		{ border: 2px solid transparent; padding: 2px 6px; }
+.wForm .oneFieldWrapper	{ display: inline-block; }
 .wForm .section			{  }
 
 /* Set a visible border on fieldset and a decent default padding. */
@@ -117,12 +120,15 @@
 
 .wForm .preField	{ display: -moz-inline-box; /* For Firefox 2.x */ display: inline-block;  }
 
-/* Label positionning, using the labelsAbove|labelsLeftAligned|labelsRightAligned classes */
+/* Label positionning, using the labelsAbove|labelsBelow|labelsLeftAligned|labelsRightAligned classes */
 .wForm .labelsLeftAligned  .preField	{ text-align: left; }
 .wForm .labelsRightAligned .preField	{ text-align: right; }
 .wForm .labelsAbove .preField			{ padding-bottom: 4px; } /* add 4px to match spacing of inline section's label with below field (which has a 2px border+2px padding) */
-.wForm .labelsHidden  > .label			{ visibility: hidden;}
-.wForm .labelsRemoved  > .label			{ display: none; }
+.wForm .labelsBelow .preField			{ padding-bottom: 4px; } /* add 4px to match spacing of inline section's label with below field (which has a 2px border+2px padding) */
+.wForm .labelsHidden >  .label,
+.wForm .labelsHidden > .oneFieldWrapper > .label { visibility: hidden;}  /* div.oneFieldWrapper is only present in the form-builder for now */
+.wForm .labelsRemoved  > .label,
+.wForm .labelsRemoved  > .oneFieldWrapper  > .label	{ display: none; }  /* div.oneFieldWrapper is only present in the form-builder for now */
 /* Make sure our labels align correctly with the input when left/right aligned (input may occupy several vertical lines) */
 .wForm label, .wForm .label  			{ vertical-align: top;  }
 .wForm label *, .wForm .label * 		{ vertical-align: top;  } /* bold, italic and underline content */
@@ -165,18 +171,30 @@
 .wForm .inputWrapper .delimiterBefore { padding-right: 4px; }
 .wForm .inputWrapper .delimiterAfter { padding-left: 4px; }
 
-.wForm input[type=text], .wForm input[type=number], .wForm input[type=url], .wForm input[type=email], .wForm select, .wForm textarea {
+.wForm input[type=text], .wForm input[type=time], .wForm input[type=number], .wForm input[type=url], .wForm input[type=email], .wForm textarea {
     border-top: 1px #acaeb4 solid;
     border-left: 1px #dde1e7 solid;
     border-right: 1px #dde1e7 solid;
     border-bottom: 1px #e3e9ef solid;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
+    border-radius: 2px;
     padding: 2px;
     border-width: 1px;
 }
-.wForm input[type=text]:hover, .wForm input[type=number]:hover, .wForm input[type=url]:hover, .wForm input[type=email]:hover, .wForm select:hover, .wForm textarea:hover, 
-.wForm input[type=text]:focus, .wForm input[type=number]:focus, .wForm input[type=url]:focus, .wForm input[type=email]:focus, .wForm select:focus, .wForm textarea:focus {
+.wForm select {
+	margin-top:0 !important;
+	border-top: 1px #acaeb4 solid;
+	border-left: 1px #dde1e7 solid;
+    border-right: 1px #dde1e7 solid;
+    border-bottom: 1px #e3e9ef solid;
+    border-radius: 2px;
+    padding: 1px;
+    border-width: 1px;
+   
+}
+.wForm input[type=text]:hover, .wForm input[type=time], .wForm input[type=number]:hover, .wForm input[type=url]:hover, .wForm input[type=email]:hover, .wForm select:hover, .wForm textarea:hover, 
+.wForm input[type=text]:focus, .wForm input[type=time], .wForm input[type=number]:focus, .wForm input[type=url]:focus, .wForm input[type=email]:focus, .wForm select:focus, .wForm textarea:focus {
     border-top: 1px #5794bf solid;
     border-left: 1px #c5daed solid;
     border-right: 1px #b7d5ea solid;
@@ -191,29 +209,47 @@
 .wForm .columnLayout td { vertical-align: top; }
 
 /* Grid section */
+.wForm .gridLayout		{ width: 100%; } 
 .wForm .gridLayout td 	{ vertical-align: top; }
-.wForm .gridLayout th 	{ vertical-align: top; }
-.wForm .gridLayout .headerRow td  { vertical-align: bottom; }
+.wForm .gridLayout th 	{ vertical-align: top; font-weight: normal; }
+.wForm .gridLayout .headerRow th  { vertical-align: bottom; text-align: left;   padding: 0 0 0 8px }
+
+/* Align section title like other labels */
+.wForm .gridLayout .headerCol { text-align: left; }
+.wForm .gridLayout .headerCol > div { padding: 5px 2px 0 8px;  }
+.wForm .labelsLeftAligned  .gridLayout .headerCol	{ text-align: left; }
+.wForm .labelsRightAligned .gridLayout .headerCol	{ text-align: right; }
 
 /* Fields of inline sections are displayed on the same line. */
-.wForm .inline .oneField 	{ display: inline-block; vertical-align: top; }
+.wForm .inline div.oneField { display: inline-block; vertical-align: top; }
 
 /* Align title of inline section with other fields (min-width accounts for 2px border + 2px padding on following .oneField class, to match other label's 200px */
 .wForm div.section > .preField { padding: 0 2px 0 8px; } 
 .wForm .labelsRightAligned .inline .preField { padding-top:4px } 	/* align label vertically by accounting for following .oneField class adding 4px (border+padding) to line height. */
 .wForm .labelsLeftAligned .inline .preField { padding-top:4px } 	/* align label vertically by accounting for following .oneField class adding 4px (border+padding) to line height. */
 
+
+/* Matrix layout */ 
+.wForm .matrixLayout { width: 100%; }
+
 /* Center checkbox/radio button in a matrix cell. */
-.wForm .matrixSection td { text-align: center; }
+.wForm .matrixLayout td { text-align: center; }
 
 /* Add padding on column headers (choice label) */
-.wForm .matrixSection tr.headerRow th { padding-left:8px; padding-right:8px; font-weight: normal; }
+.wForm .matrixLayout tr.headerRow th { padding-left:8px; padding-right:8px; font-weight: normal; }
 
-/* Override font-weight and cell alignment for the first cell in a matrix row (contains question label) */
-.wForm .matrixSection th.headerCol { text-align: left; font-weight: normal; }
+/* Override font-weight and cell alignment for the first cell in a matrix row (contains question label). */
+.wForm .matrixLayout th.headerCol { text-align: left; font-weight: normal; }
 
-/* Align question label like other fields using the .oneField class (accounts for 2x8px of padding on TD */
-.wForm .matrixSection .label { padding: 0 2px 0 8px; min-width: 184px; } 
+/* Align question label like other fields using the .oneField class*/
+.wForm .matrixLayout .label { padding: 2px 2px 2px 8px; } 
+.wForm .labelsLeftAligned  .matrixLayout .headerCol	{ text-align: left; }
+.wForm .labelsRightAligned .matrixLayout .headerCol	{ text-align: right; }
+
+/* Alternate table row in grid and matrix layouts */
+.wForm .alternate-0 { background-color: rgba(0,0,0,.040); }
+.wForm .alternate-1 { background-color: rgba(0,0,0,.025); }
+
 
 /* HTML Section (aka Text/Image section) --------------------------------- */
 .wForm .htmlSection { overflow:auto; border:2px solid transparent; padding: 2px 6px; } 
@@ -221,7 +257,8 @@
 /* BUTTONS --------------------------------------------------------------- */
 
 /* Align buttons with field labels (accounts for 2px left-border + 2px left-padding on .oneField class */
-.wForm .actions { border: 2px solid transparent; margin: 8px 0; padding: 10px 2px; }
+/* float: left ensures fix aligment issue with pagination buttons because of the way margins are collapsed between preceding form elements (e.g fieldset) */
+.wForm .actions { border: 2px solid transparent; margin: 8px 0; padding: 10px 2px;/* float: left; */}   
 
 /* Make submit/cancel buttons fairly large, set mouse pointer appropriately */
 .wForm .primaryAction, .wForm .secondaryAction { padding: 4px 15px; cursor: pointer; }
@@ -230,7 +267,7 @@
 .wForm .secondaryAction			{ margin-right: 15px; } 
 
 /* Paging behavior buttons */
-.wForm form .wfPagingButtons 	{ display: inline-block; border: 2px solid transparent; margin: 8px 0; padding: 10px 2px; float: left; width: auto;  }
+.wForm form .wfPagingButtons 	{ display: inline-block; border: 2px solid transparent; margin: 8px 15px 8px 0; padding: 10px 2px; float: left; width: auto;  }
 .wForm .wfPagePreviousButton, 
 .wForm .wfPageNextButton		{ padding: 4px 15px; cursor: pointer; }
 .wForm .wfPagePreviousButton 	{ margin-right: 15px; }
@@ -293,9 +330,16 @@
 
 /* Asterisk on required fields - provide sensible default color and size */
 .wForm .required > .label:after { content: " *"; color: #F00; font-size: 90%; }
+.wForm .required > .oneFieldWrapper > .label:after { content: " *"; color: #F00; font-size: 90%; }  /* div.oneFieldWrapper is only present in the form-builder for now */
 
-.wFormContainer .errMsg { color: #CC3333; }
-.wFormContainer .errFld { border-width: 2px !important } 
+.wFormContainer .errMsg { color: #CC3333; margin-top:2px; }
+.wFormContainer .errFld { border-color: rgba(255,0,0,0.04);  } 
+
+/* align form title with .oneField element */
+.wFormContainer .wFormTitle { border: 2px solid transparent; padding: 2px 6px; }
+
+/* align support info with .oneField element */
+.wFormContainer .supportInfo	{ font-size: 12px;  border: 2px solid transparent; padding: 2px 17px; clear: left; }
 
 /* Make readonly calculated fields look like plain text */
 .wForm .readonly { background-color: transparent !important; border: none !important; background-image: none !important; }
@@ -309,6 +353,7 @@
 tr[class^="onstate-"], tr[class*=" onstate-"]{
     display: table-row !important;
 }
+/* offstate classes for the Switch Behavior are in wforms-jsonly.css */
 
 /* Handle page visibility */
 html .wForm form .wfPage, html .wForm form .wfHideSubmit { 
@@ -350,3 +395,193 @@ html .wForm form .wfCurrentPage {
 .wForm .autoformatprompt-hook{
     z-index: 125;
 }
+
+/* "Response Submitted" confirmation page */
+.wForm .wFormThankYou  					{  } 
+
+/* "Response Saved" confirmation page */
+ .wForm .wFormsCustomMessage 			{ font-size: 22px; }
+ .wForm .wFormsResumeInstructions li 	{ font-size:16px; line-height:150%; }
+
+
+/* Responsive Design Elements, structure taken from http://css-tricks.com/snippets/css/media-queries-for-standard-devices/
+
+/* Smartphones in portrait and landscape ----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+	/* Scales all text */
+	html {
+	-webkit-text-size-adjust:110%
+	}
+	
+	body {
+	margin:0px !important
+	}
+	
+	.wForm {
+	width: 95% !important;
+	margin:0px auto !important;
+	padding:0px !important;
+	}
+	
+	.wFormContainer {
+	width: 95% !important;
+	margin:0px auto !important; 
+	padding:0px !important; 
+	}
+	.wForm .oneField {
+	padding: 2px 0px !important; 
+	}
+	
+	.wForm input {
+	font-size: 110%;
+	}
+	
+	.wForm input[type="checkbox"] { 
+   	width: 30px;
+   	height: 30px;
+	}
+	
+	.wForm input[type="radio"] {
+	width: 30px;
+	height: 30px;
+	}
+	
+	.wForm select { 
+	font-size: 100%;
+	padding: 0 0 0 10px;
+	}
+	
+	.wForm .labelsLeftAligned .preField, .wForm .labelsRightAligned .preField {
+	text-align:left !important;
+	display:block;
+	}
+}
+
+/* Smartphones in portrait  */
+@media only screen
+and (max-width: 320px) {
+	.wForm input, .wForm textarea   {
+	max-width: 260px !important	;
+	}
+
+}
+
+/* Smartphones in landscape */
+@media only screen
+and (max-width: 481px) {
+	.wForm input, .wForm textarea  {
+	max-width: 440px !important;
+	}
+}
+
+/* Tablets in portrait and landscape ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+ {
+	
+	/* Scales all of the fonts on the page  */
+	html {-webkit-text-size-adjust:110%}
+	
+	.wForm .oneField {
+	padding: 2px 0px; 
+	}
+	
+	/* Ajusts the fontsize to increase the hit area for each input field */
+	.wForm input { font-size: 110%; }
+	.wForm input[type="checkbox"] { 
+	   width: 30px;
+	   height: 30px;
+	}
+	.wForm input[type="radio"] {
+	   width: 30px;
+	   height: 30px;
+	}
+	.wForm select { 
+		font-size: 100%;
+		padding: 0 0 0 10px;
+	}
+	
+	h3{
+		text-shadow: 0px 1px 1px #fff;
+	}
+	
+	fieldset {
+		-moz-border-radius: 7px;
+		-webkit-border-radius: 7px;
+		border-radius: 7px;
+	}
+	
+	.wForm form .actions .primaryAction {
+	   margin-top: 20px;
+	}
+	
+	.wForm .yui-calendar{
+	   font-size: 2em;
+	}
+	
+	.wForm .yui-calendar .calheader{
+	   line-height: 40px;
+	}
+	
+	.wForm .yui-calendar .calnavleft {
+	   height: 30px;
+	   width: 40px;
+	}
+	
+	.wForm .yui-calendar .calnavright {
+	   height: 30px;
+	   width: 40px;
+	}
+	
+	.wForm .yui-calcontainer .close-icon {
+	   height: 30px;
+	   width: 40px;
+	}
+	
+	
+}
+
+/* Tablets in landscape ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape) {
+
+	.wForm {
+	margin:0px  auto;
+	padding:0px;
+	}
+	
+	 .wFormContainer {
+	width: 770px; 
+	margin:0px  auto;
+	padding:20px; 
+	}
+	.wForm .oneField {
+	padding: 2px 0px; 
+	}
+}
+
+/* Tablets in portrait ----------- */
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+	.wForm {
+	margin:0px  auto;
+	padding:0px;
+	}
+	
+	.wFormContainer {
+	width: 600px;
+	margin:0px  auto;
+	padding:20px; 
+	}
+	.wForm .oneField {
+	padding: 2px 0px; 
+	}
+} 
+
