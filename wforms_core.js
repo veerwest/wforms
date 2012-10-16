@@ -105,6 +105,43 @@ wFORMS.helpers.getFieldValue = function(element) {
 	} 	 
 }
 
+wFORMS.helpers.detectLocaleDecimalSeparator = function() {
+	// locale dependent separator (',' or '.')
+	var n = 1.1;
+	n = n.toLocaleString().substring(1, 2);
+		return n;
+}
+
+wFORMS.helpers.normalizeNumberToUSLocale = function(value) {
+	var sep = wFORMS.helpers.detectLocaleDecimalSeparator();
+	if(sep==',') {
+		value = String(value).replace(',','.');	 // use '.' as the decimal separator.
+	} else {
+		value = String(value).replace(',','');	 // strip thousand separator.
+	}
+	return value;
+}
+
+wFORMS.helpers.isNumericValue = function (value){
+	value = wFORMS.helpers.normalizeNumberToUSLocale(value);
+	
+	// now match against en_US number format
+	if(String(value).match(/^\s*(\+|-)?[0-9]*[\.]?[0-9]*\s*$/)){			
+		return true;
+	}
+	return false;
+}
+
+wFORMS.helpers.getNumericValue = function (value){
+	var h = wFORMS.helpers;
+	
+	if(h.isNumericValue(value)){
+		value = h.normalizeNumberToUSLocale(value);
+	}
+	return parseFloat(value);
+}
+
+
 /**
  * DEPRECATED
  * Returns computed style from the element by style name

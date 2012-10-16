@@ -499,6 +499,16 @@
             // Test validation rule
             assertTrue('0 should pass float validation', bInstance.run(null, testForm));
 
+			testField.value='555.555.5555';
+			// Test validation rule
+            assertFalse('555.555.5555 should fail float validation', bInstance.run(null, testForm));
+
+            testField.value='1,5';
+            var v = bInstance.run(null, testForm);
+            // Test validation rule
+            assertTrue('1,5 should pass float validation', v);
+
+
             // Test error message removal
             assertNull(document.getElementById('testField-E'));
 

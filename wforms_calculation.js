@@ -236,23 +236,27 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 				if(!value) value=0;
 				
 				if(value.constructor==Array) { // array (multiple select)
+
 					for(var j=0;j<value.length;j++) { 
-						if(String(value[j]).search(/^[\d\.,]*$/) != -1)
-							varval += parseFloat(value[j]);
-						else
+						if(wFORMS.helpers.isNumericValue(value[j])){
+							varval += wFORMS.helpers.getNumericValue(value[j]);
+						} else {
 							(!varval)?(varval=value[j]):(varval=String(varval).concat(value[j]));
+						}
 					}
 				} else {
-						if(String(value).search(/^[\d\.,]*$/) != -1) 
-							varval += parseFloat(value);
-						else
-							(!varval)?(varval=value):(varval=String(varval).concat(value));
+					
+					if(wFORMS.helpers.isNumericValue(value)){
+						varval += wFORMS.helpers.getNumericValue(value);
+					} else {
+						(!varval)?(varval=value):(varval=String(varval).concat(value));
+					}
 				}
 			}
 		);		
 		
 		// prepend variable assignment to the formula
-		if(String(varval).search(/^[\d\.,]*$/) != -1) {
+		if(wFORMS.helpers.isNumericValue(varval)) {
 			formula = 'var '+ v.name +' = '+ varval +'; '+ formula;
 		} else {
 			formula = 'var '+ v.name +' = "'+ varval.replace(/\"/g, '\\"') +'"; '+ formula;
@@ -280,14 +284,15 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 			validationBehavior.fail(calculation.field, 'calculation');
 		}
 	}
+	
 	calculation.field.value = result;
 	
 	// If the calculated field is also a variable, recursively update dependant calculations
 	if(calculation.field.className && (calculation.field.className.indexOf(this.behavior.VARIABLE_SELECTOR_PREFIX)!=-1)) {
 		// TODO: Check for infinite loops?
-		//console.log('rec',this);		
 		this.run(null,calculation.field);
-	} 
+	}
+	
 }
 	
 wFORMS.behaviors.calculation.instance.prototype.hasValueInClassName = function(element) {
