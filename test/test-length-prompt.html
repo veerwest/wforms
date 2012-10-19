@@ -24,7 +24,7 @@
         function tearDown() {}
 
         function testApplyTo(){
-            var ids = ['ssn', 'textarea_test'];
+            var ids = ['ssn', 'email', 'url', 'textarea_test'];
 
             var i = ids.length;
             while(i--){
@@ -52,7 +52,9 @@
                         document.write($('<div></div>').text('<input type="text" id="ssn"  name="testField" maxlength="13" class="" value=""/>').html());
                     </script>
                 </p>
-                <input type="text" id="ssn"  name="testField" maxlength="13" class="" value=""/>
+                <input type="text" id="ssn"  name="testField" maxlength="13" class="" value=""/> <br/>
+                <input type="email" id="email"  name="testField" maxlength="7" class="" value=""/> <br/>
+                <input type="url" id="url"  name="testField" maxlength="5" class="" value=""/>
             </fieldset> .
             <fieldset>
                 <p><script type="text/javascript" language="JavaScript">

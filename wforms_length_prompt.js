@@ -2,10 +2,14 @@ if (typeof(wFORMS) == "undefined") {
 	throw new Error("wFORMS core not found. This behavior depends on the wFORMS core.");
 }
 
+
 wFORMS.behaviors.lengthPrompt = {
 
     ATTRIBUTE_SELECTOR: 'maxLength',
-    ALLOWED_ELEMENT_TYPE: ['input[type="text"]', 'textarea'],
+    ALLOWED_ELEMENT_TYPE: ['input[type="text"]', 'input[type="color"]', 'input[type="date"]', 'input[type="datetime"]',
+        , 'input[type="datetime-local"]', 'input[type="email"]', 'input[type="month"]', 'input[type="number"]',
+        'input[type="range"]', 'input[type="search"]', 'input[type="tel"]', 'input[type="time"]', 'input[type="url"]',
+        'input[type="week"]','textarea'],
     MONITOR_CHECK_TIMES: 10,
     CUSTOM_INDICATOR_STYLE: 'lengthIndicator',
 
